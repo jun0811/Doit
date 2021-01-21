@@ -13,6 +13,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 public class Feed {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feedPk;
