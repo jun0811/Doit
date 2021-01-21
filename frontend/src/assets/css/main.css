@@ -29,3 +29,7 @@ body {
   align-items: center; */
   font-family: maruburi;
 }
+a{
+  text-decoration:none !important;
+  color: black !important;
+}
