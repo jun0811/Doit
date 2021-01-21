@@ -1,5 +1,5 @@
 <template>
-  <header class="Header">
+  <header class="header">
 
     <span> Doit</span>
     <div>  

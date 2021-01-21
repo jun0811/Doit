@@ -2,6 +2,7 @@
 @font-face {
   font-family: maruburi;
   src: url("../fonts/MARUBuriBetaot-Regular00.woff") format("woff");
+  letter-spacing: 0.1px; 
 }
 
 html,
@@ -10,7 +11,8 @@ body {
   padding: 0;
   /* font-family: maruburi; */
 }
-.Header {
+
+.header {
   padding: 1rem;
   height: 50px;
   display: flex;
@@ -18,14 +20,11 @@ body {
   align-items: center;
   font-family: maruburi;
 }
-.Header span {
+
+.header span {
   margin: 5px;
 }
-.Footer {
-  /* padding-top: 5rem;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center; */
+
+.footer {
   font-family: maruburi;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="wordCloud">
+  <div class="word-cloud">
     <div class="box"></div>
   </div>
 </template>
