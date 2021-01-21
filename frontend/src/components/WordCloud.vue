@@ -15,7 +15,7 @@ export default {
     margin : 30px;
   }
   .box{
-    border: 1em solid;
+    border: 0.1em solid;
     height: 400px;
   background: rgba(0, 0, 0, 0.003);
 

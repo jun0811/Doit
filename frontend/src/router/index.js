@@ -16,7 +16,7 @@ import MileageShop from "../views/MileageShop.vue"
 Vue.use(VueRouter)
 const routes = [
   {
-    path: "/",
+    path: "/asdsaaaaaasdasdsa",
     name: "Main",
     component: Main
   },

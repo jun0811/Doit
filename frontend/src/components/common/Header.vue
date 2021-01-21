@@ -1,9 +1,10 @@
 <template>
   <header class="Header">
+
     <span> Doit</span>
     <div>  
       <span>Login</span>
-      <span><router-link to="/user/join">Join</router-link></span>
+      <span><router-link to="/user/join">SignUp</router-link></span>
     </div>
   </header>
 </template>
