@@ -1,10 +1,12 @@
 <template>
-  <div class = "Main">
-      <Header></Header>
-      <WordCloud></WordCloud>
-      <Aside></Aside>
-      <Footer></Footer>
-  </div>
+    <v-app class = "Main">
+        <div >
+            <Header></Header>
+            <WordCloud></WordCloud>
+            <Aside></Aside>
+            <Footer></Footer>
+        </div>
+    </v-app>
 </template>
 
 <script>
