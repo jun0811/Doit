@@ -9,5 +9,5 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tagPk;
     private String keyword;
-    private int cnt;
+    private Integer cnt;
 }
