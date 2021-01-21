@@ -8,6 +8,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  /* font-family: maruburi; */
 }
 .Header {
   padding: 1rem;
@@ -21,10 +22,10 @@ body {
   margin: 5px;
 }
 .Footer {
-  padding-top: 5rem;
+  /* padding-top: 5rem;
   height: 50px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
   font-family: maruburi;
 }
