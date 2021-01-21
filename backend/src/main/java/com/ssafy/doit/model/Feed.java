@@ -13,6 +13,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 public class Feed {
+    //피드 model
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
