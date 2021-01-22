@@ -3,26 +3,44 @@
     <Header></Header>
   <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15" width=50%>
     <div class="text-h4 my-5">회원가입</div>
-    <form>
-      <v-text-field
-        v-model="name"
-        :error-messages="nameErrors"
-        :counter="8"
-        label="닉네임"
-        required
-        clearable
-        @input="$v.name.$touch()"
-        @blur="$v.name.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="email"
-        :error-messages="emailErrors"
-        label="E-mail"
-        required
-        clearable
-        @input="$v.email.$touch()"
-        @blur="$v.email.$touch()"
-      ></v-text-field>
+    <form class="">
+      <v-container class="px-0 ">
+        <v-row no-gutters class="d-flex flex-nowrap">
+          <v-col md="12">
+            <v-text-field
+              v-model="name"
+              :error-messages="nameErrors"
+              :counter="8"
+              label="닉네임"
+              required
+              clearable
+              @input="$v.name.$touch()"
+              @blur="$v.name.$touch()"
+            ></v-text-field>
+          </v-col>
+          <v-btn text class="uncheck mt-4 mx-0"> 
+            <font-awesome-icon icon="check-circle"/> 
+          </v-btn>
+        </v-row>
+      </v-container>
+      <v-container class="px-0">
+        <v-row no-gutters class="d-flex flex-nowrap">
+          <v-col md="12">
+            <v-text-field
+              v-model="email"
+              :error-messages="emailErrors"
+              label="E-mail"
+              required
+              clearable
+              @input="$v.email.$touch()"
+              @blur="$v.email.$touch()"
+            ></v-text-field>
+          </v-col>
+            <v-btn text class="uncheck mt-4"> 
+                <font-awesome-icon icon="check-circle"/> 
+            </v-btn>
+        </v-row>
+      </v-container>
       <v-text-field
         v-model="password"
         :error-messages="passwordErrors"
@@ -52,7 +70,7 @@
 
       <button class="join input">가입하기</button>
       <div class="mt-3 d-flex justify-end">
-        <span><router-link to="/user/join">메인페이지로 돌아가기</router-link></span>
+        <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
       </div>
     </form>
   </v-card>
@@ -71,7 +89,6 @@ export default {
     validations: {
       name: { required, maxLength: maxLength(8) },
       email: { required, email },
-      select: { required },
       password:{ required, minLength: minLength(8)},
       passwordConfirm:{ sameAsPassword: sameAs("password")},
       checkbox: {
@@ -86,14 +103,9 @@ export default {
       email: '',
       password: '',
       passwordConfirm: '',
-      select: null,
-      items: [
-        'Item 1',
-        'Item 2',
-        'Item 3',
-        'Item 4',
-      ],
       checkbox: false,
+      checkid: false,
+      checkemail: false
     }),
 
     computed: {
@@ -153,11 +165,16 @@ export default {
   }
 </script>
 <style scoped>
-
+  .check {
+    color: #F9802D;
+  }
+  .uncheck {
+    color: black;
+  }
   .join.input{
-    width:220px;
+    width:100%;
     border:2px solid #F9802D;
-    border-radius: 4px;
+    border-radius: 8px;
     color: #F9802D;
   }
 </style>
