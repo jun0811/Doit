@@ -5,11 +5,14 @@
   letter-spacing: 0.1px; 
 }
 
+* {
+  font-family: maruburi;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
-  /* font-family: maruburi; */
 }
 
 .header {
@@ -18,8 +21,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: maruburi;
-  margin-bottom: 50px;
+  margin-bottom: 100px;
 }
 
 .header span {
@@ -27,7 +29,7 @@ body {
 }
 
 .footer {
-  font-family: maruburi;
+  margin-top: 50px;
 }
 
 a{
@@ -39,13 +41,25 @@ a{
   margin : 30px;
 }
 
-.box{
-  border: 0.1em solid;
+.word-cloud-box{
+  border: 0.05em solid;
   height: 300px;
   width: 700px;
   background: rgba(0, 0, 0, 0.003);
+  text-align: center;
+  line-height: 300px;
 }
 
 .search-bar {
   width: 400px;
+}
+
+.temporary-part {
+  width: 700px;
+  margin-top: 50px;
+}
+
+.temporary-box {
+  border: 0.05em solid;
+  height: 180px;
 }

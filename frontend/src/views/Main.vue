@@ -1,5 +1,5 @@
 <template>
-    <v-app class = "Main">
+    <v-app>
         <div>
             <Header></Header>
             <SearchBar></SearchBar>
@@ -20,6 +20,7 @@ import Aside from "@/components/common/Aside.vue";
 import SearchBar from "@/components/common/SearchBar.vue";
 import WordCloud from "@/components/WordCloud.vue";
 import Category from "@/components/Category.vue";
+import Ranking from "@/components/Ranking.vue";
 
 export default {
     name: "Main",
@@ -30,6 +31,7 @@ export default {
         WordCloud,
         SearchBar,
         Category,
+        Ranking
     }
 }
 </script>
