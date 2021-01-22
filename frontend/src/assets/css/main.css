@@ -2,11 +2,12 @@
 @font-face {
   font-family: maruburi;
   src: url("../fonts/MARUBuriBetaot-Regular00.woff") format("woff");
-  letter-spacing: 0.1px; 
+  
 }
 
 * {
   font-family: maruburi;
+  letter-spacing: 0.1px; 
 }
 
 html,

@@ -1,6 +1,5 @@
 <template>
   <header class="header">
-
     <span> Doit</span>
     <div>  
       <span>Login</span>
@@ -19,6 +18,3 @@ export default {
 <style scoped>
 
 </style>
-
-
-
