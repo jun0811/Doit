@@ -3,13 +3,11 @@ package com.ssafy.doit.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 @Getter
 @NoArgsConstructor
 public class Feed {
