@@ -5,6 +5,7 @@ import com.ssafy.doit.model.BasicResponse;
 import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.UserRepository;
+import com.ssafy.doit.service.EmailSendService;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,10 @@ public class UserController {
 
     @Autowired
     private JwtUtil jwtUtil;
-
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EmailSendService emailSendService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -86,11 +88,13 @@ public class UserController {
     public Object signup(@RequestBody User request) {
         BasicResponse result = new BasicResponse();
         try {
+            String authKey = emailSendService.sendAuthMail(request.getEmail());
             userRepository.save(User.builder()
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .nickname(request.getNickname())
-                    .userRole(UserRole.USER) // 최초 가입시 USER 로 설정
+                    .userRole(UserRole.GUEST) // 최초 가입시 인증 받기 전에는 GUEST
+                    .authKey(authKey)
                     .build()).getId();
 
             result.status = true;
@@ -98,9 +102,31 @@ public class UserController {
         }
         catch (Exception e){
             result.status = false;
-            result.data = "중복";
+            result.data = "실패";
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 이메일 인증 재전송
+    @PostMapping("/sendEmail")
+    public void sendEmail(@RequestBody User request){
+        String authKey = emailSendService.sendAuthMail(request.getEmail());
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+
+        user.ifPresent(selectUser ->{
+            selectUser.setAuthKey(authKey);
+            userRepository.save(selectUser);
+        });
+    }
+    // 이메일 인증 확인
+    @GetMapping("/authEmail")
+    public void confirmEmail(@RequestParam String email, @RequestParam String authKey){
+        Optional<User> user = userRepository.findByEmailAndAuthKey(email, authKey);
+
+        user.ifPresent(selectUser ->{
+            selectUser.setUser_role(UserRole.USER);
+            userRepository.save(selectUser);
+        });
     }
 
     // 로그인
@@ -123,7 +149,6 @@ public class UserController {
             result.status = true;
             result.object = jwtUtil.generateToken(member);
         }
-
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
