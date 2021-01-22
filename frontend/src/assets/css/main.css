@@ -2,34 +2,65 @@
 @font-face {
   font-family: maruburi;
   src: url("../fonts/MARUBuriBetaot-Regular00.woff") format("woff");
+  
+}
+
+* {
+  font-family: maruburi;
+  letter-spacing: 0.1px; 
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
-  /* font-family: maruburi; */
 }
-.Header {
+
+.header {
   padding: 1rem;
   height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: maruburi;
+  margin-bottom: 100px;
 }
-.Header span {
+
+.header span {
   margin: 5px;
 }
-.Footer {
-  /* padding-top: 5rem;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center; */
-  font-family: maruburi;
+
+.footer {
+  margin-top: 50px;
 }
+
 a{
   text-decoration:none !important;
   color: black !important;
+}
+
+.word-cloud{
+  margin : 30px;
+}
+
+.word-cloud-box{
+  border: 0.05em solid;
+  height: 300px;
+  width: 700px;
+  background: rgba(0, 0, 0, 0.003);
+  text-align: center;
+  line-height: 300px;
+}
+
+.search-bar {
+  width: 400px;
+}
+
+.temporary-part {
+  width: 700px;
+  margin-top: 50px;
+}
+
+.temporary-box {
+  border: 0.05em solid;
+  height: 180px;
 }
