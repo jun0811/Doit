@@ -1,7 +1,6 @@
 package com.ssafy.doit.model.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ssafy.doit.domain.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -22,8 +22,12 @@ public class User {
     private Long id;
 
     private String password;
-    private String email;
     private String phone;
+
+    @Column(unique = true)
+    private String email;
+
+    @Column(unique = true)
     private String nickname;
 
     @ColumnDefault("0")
@@ -43,4 +47,5 @@ public class User {
     public String getRoleKey() {
         return this.user_role.getKey();
     }
+
 }
