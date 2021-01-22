@@ -1,41 +1,42 @@
 package com.ssafy.doit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
-@Getter
+
+@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Builder
-@Table(name="Group")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Group {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long groupPk;
+    @Column(name = "group_pk")
+    private Long id;
 
-    @Column(length = 255, nullable = false)
-    private String name; // 그룹 명
+    @JsonIgnore
+    private String name;    // 그룹 명
+    private String content; // 그룹 소개글
+    private int max;    // 최대 인원
+    private int leader; // 팀장
 
-    @Setter
-    @Column(columnDefinition = "LONGTEXT", nullable = false)
-    private String content; //그룹 소개글
+    @ColumnDefault("0")
+    private int score;  // 그룹 점수
 
-    @Setter
-    @ColumnDefault("0") //default 0
-    private Integer score; // 그룹 점수
+    @ColumnDefault("1")
+    private int total;  // 총 인원
 
-    @Setter
-    //@ColumnDefault("1") //default 1 팀원
-    private Integer total; // 총인원
-
-    @Setter
-    private Integer max; // 최대인원
-
-    @Setter
-    @Column(nullable = false)
-    private Integer leader; // 팀장
-
+    @Builder
+    public Group(String name, String content, int max, int leader ){
+        this.name = name;
+        this.content = content;
+        this.max = max;
+        this.leader = leader;
+    }
 }

@@ -18,6 +18,7 @@ public class Feed {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feedPk;
 
+    private Long groupPk;
     private String writer;
     private String media;
 
