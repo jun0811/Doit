@@ -1,6 +1,13 @@
 <template>
   <header class="header">
-    <span> Doit</span>
+
+    <img 
+      src="@/assets/logo/logo.png" 
+      alt="Logo"
+      class="logo"
+      @click="logoClick"
+    >
+
     <div>  
       <v-dialog
         v-model="dialog"
@@ -112,8 +119,11 @@ export default {
     },
 
     methods: {
-      signup(){
+      signup() {
         this.$router.push("/user/join")
+      },
+      logoClick() {
+        this.$router.push("/")
       }
     }
 }
