@@ -1,5 +1,5 @@
 <template>
-  <aside class="Aside">
+  <aside class="aside">
     
   </aside>
 </template>
