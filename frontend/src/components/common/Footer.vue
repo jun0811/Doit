@@ -3,7 +3,7 @@
       color="white lighten-1"
       flat
       padless
-      class="Footer"
+      class="footer"
     >
       <v-row
         justify="center"

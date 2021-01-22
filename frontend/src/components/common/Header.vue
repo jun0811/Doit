@@ -1,7 +1,13 @@
 <template>
-  <header class="Header">
+  <header class="header">
 
-    <span> Doit</span>
+    <img 
+      src="@/assets/logo/logo.png" 
+      alt="Logo"
+      class="logo"
+      @click="logoClick"
+    >
+
     <div>  
       <v-dialog
         v-model="dialog"
@@ -24,7 +30,7 @@
             <font-awesome-icon icon="times-circle"/>
           </v-btn>
           <v-card-title>
-            <span class="text-h3 my-7">로그인</span>
+            <h3 class="my-7">로그인</h3>
           </v-card-title>
           <v-card-text>
            <v-container>
@@ -73,9 +79,7 @@
       <v-btn
         text
         @click="signup"
-      >
-        Sign up
-      </v-btn>
+      >Sign up</v-btn>
     </div>
   </header>
 </template>
@@ -115,8 +119,11 @@ export default {
     },
 
     methods: {
-      signup(){
+      signup() {
         this.$router.push("/user/join")
+      },
+      logoClick() {
+        this.$router.push("/")
       }
     }
 }
@@ -124,12 +131,11 @@ export default {
 
 <style scoped>
   .login.input{
-    width:350px;
+    width:60%;
     border:2px solid #F9802D;
     border-radius: 8px;
     color: #F9802D;
   }
 </style>
-
 
 
