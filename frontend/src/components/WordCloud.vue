@@ -1,6 +1,6 @@
 <template>
-  <div class="word-cloud">
-    <div class="box"></div>
+  <div class="word-cloud d-flex justify-center">
+    <div class="box "></div>
   </div>
 </template>
 
@@ -11,13 +11,5 @@ export default {
 </script>
 
 <style>
-  .wordCloud{
-    margin : 30px;
-  }
-  .box{
-    border: 0.1em solid;
-    height: 400px;
-  background: rgba(0, 0, 0, 0.003);
 
-}
 </style>

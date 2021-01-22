@@ -19,6 +19,7 @@ body {
   justify-content: space-between;
   align-items: center;
   font-family: maruburi;
+  margin-bottom: 50px;
 }
 
 .header span {
@@ -28,7 +29,23 @@ body {
 .footer {
   font-family: maruburi;
 }
+
 a{
   text-decoration:none !important;
   color: black !important;
+}
+
+.word-cloud{
+  margin : 30px;
+}
+
+.box{
+  border: 0.1em solid;
+  height: 300px;
+  width: 700px;
+  background: rgba(0, 0, 0, 0.003);
+}
+
+.search-bar {
+  width: 400px;
 }
