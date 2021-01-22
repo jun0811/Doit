@@ -73,9 +73,7 @@
       <v-btn
         text
         @click="signup"
-      >
-        Sign up
-      </v-btn>
+      >Sign up</v-btn>
     </div>
   </header>
 </template>
@@ -124,7 +122,7 @@ export default {
 
 <style scoped>
   .login.input{
-    width:350px;
+    width:60%;
     border:2px solid #F9802D;
     border-radius: 8px;
     color: #F9802D;

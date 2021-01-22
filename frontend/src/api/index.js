@@ -1,7 +1,7 @@
 import http from '../http-common';
-import axios from 'axios';
+// import axios from 'axios';
 
-import  router  from '../router/index'
+// import  router  from '../router/index'
 import  account  from '../store/modules/account'
 
 const onUnauthorized = () => {
