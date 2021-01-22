@@ -2,7 +2,7 @@
   <div>
     <Header></Header>
   <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15" width=50%>
-    <div class="text-h4 my-5">회원가입</div>
+    <h3 class="my-5">회원가입</h3>
     <form class="">
       <v-container class="px-0 ">
         <v-row no-gutters class="d-flex flex-nowrap">

@@ -23,7 +23,7 @@
             <font-awesome-icon icon="times-circle"/>
           </v-btn>
           <v-card-title>
-            <span class="text-h3 my-7">로그인</span>
+            <h3 class="my-7">로그인</h3>
           </v-card-title>
           <v-card-text>
            <v-container>
