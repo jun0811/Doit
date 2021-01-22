@@ -1,6 +1,5 @@
 <template>
-  <header class="Header">
-
+  <header class="header">
     <span> Doit</span>
     <div>  
       <v-dialog
@@ -128,6 +127,5 @@ export default {
     color: #F9802D;
   }
 </style>
-
 
 

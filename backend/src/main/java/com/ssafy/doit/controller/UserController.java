@@ -1,6 +1,6 @@
 package com.ssafy.doit.controller;
 
-import com.ssafy.doit.domain.UserRole;
+import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.model.BasicResponse;
 import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
@@ -48,20 +48,48 @@ public class UserController {
             result.status = false;
             result.data = "error";
         }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
+    // 닉네임 중복 확인
+    @PostMapping("/checkNick")
+    public Object checkNickname(@RequestBody String nickname){
+        BasicResponse result = new BasicResponse();
+        if(userRepository.findByNickname(nickname).isPresent()){
+            result.status = true;
+            result.data = "success";
+        }else{
+            System.out.println("닉네임 중복");
+            result.status = false;
+            result.data = "중복된 닉네임 입니다.";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 이메일 중복 확인
+    @PostMapping("/checkEmail")
+    public Object checkEmail(@RequestBody String email) {
+        BasicResponse result = new BasicResponse();
+        if (userRepository.findByEmail(email).isPresent()) {
+            result.status = true;
+            result.data = "success";
+        } else {
+            System.out.println("이메일 중복");
+            result.status = false;
+            result.data = "중복된 이메일 입니다.";
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 회원가입
-    @PostMapping("/join")
-    public Object join(@RequestBody User user) {
+    @PostMapping("/signup")
+    public Object signup(@RequestBody User request) {
         BasicResponse result = new BasicResponse();
-
         try {
             userRepository.save(User.builder()
-                    .email(user.getEmail())
-                    .password(passwordEncoder.encode(user.getPassword()))
-                    .nickname(user.getNickname())
+                    .email(request.getEmail())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .nickname(request.getNickname())
                     .userRole(UserRole.USER) // 최초 가입시 USER 로 설정
                     .build()).getId();
 
@@ -70,9 +98,8 @@ public class UserController {
         }
         catch (Exception e){
             result.status = false;
-            result.data = "중복된 이메일 입니다.";
+            result.data = "중복";
         }
-
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
