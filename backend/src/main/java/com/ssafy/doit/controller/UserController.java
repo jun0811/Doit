@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,6 +29,28 @@ public class UserController {
     private UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    @GetMapping("/info")
+    public Object info(HttpServletRequest req){
+        BasicResponse result = new BasicResponse();
+
+        try {
+            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
+            System.out.println(userMap);
+            User user = userRepository.findByEmail((String) userMap.get("email")).get();
+
+            result.status = true;
+            result.data = "success";
+            result.object = user;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result.status = false;
+            result.data = "error";
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     // 회원가입
     @PostMapping("/join")

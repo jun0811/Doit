@@ -2,10 +2,7 @@ package com.ssafy.doit.service.jwt;
 
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.service.UserDetailsServiceImpl;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
@@ -47,12 +45,12 @@ public class JwtUtil {
                 .getBody();
     }
 
-    public User getUser(String token) {
-        return extractAllClaims(token).get("User", User.class);
+    public Map<String, Object> getUser(String token) {
+        return (Map<String, Object>) extractAllClaims(token).get("User");
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUser(token).getEmail());
+        UserDetails userDetails = userDetailsService.loadUserByUsername((String) getUser(token).get("email"));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -81,6 +79,6 @@ public class JwtUtil {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("accessToken");
+        return request.getHeader(ACCESS_TOKEN_NAME);
     }
 }

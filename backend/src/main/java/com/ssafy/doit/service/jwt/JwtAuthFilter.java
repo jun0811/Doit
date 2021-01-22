@@ -20,9 +20,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtUtil.resolveToken((HttpServletRequest) request);
+        String token = jwtUtil.resolveToken(request);
 
-        if (token != null && jwtUtil.isTokenExpired(token)) {
+        if (token != null && !jwtUtil.isTokenExpired(token)) {
             // 토큰이 유효하면 토큰으로부터 유저 정보를 받아옵니다.
             Authentication authentication = jwtUtil.getAuthentication(token);
             // SecurityContext 에 Authentication 객체를 저장합니다.
