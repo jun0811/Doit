@@ -1,14 +1,14 @@
 <template>
   <header class="header">
-    <span> Doit</span>
-    <div>
-      <v-btn
-        depressed
-        text
-        @click="mypage"
-      >
-        My Page
-      </v-btn>
+
+    <img 
+      src="@/assets/logo/logo.png" 
+      alt="Logo"
+      class="logo"
+      @click="logoClick"
+    >
+
+    <div>  
       <v-dialog
         v-model="dialog"
         persistent
@@ -129,23 +129,11 @@ export default {
     },
 
     methods: {
-      signup(){
+      signup() {
         this.$router.push("/user/join")
       },
-      profile(){
-        this.$router.push("/user/profile")
-      },
-      passwordFind(){
-        this.$router.push("/user/pwdfind")
-      },
-      mypage(){
-        console.log('mypage')
-      },
-      login(){
-        // 전체 유저에서 해당 이메일로 찾는다.
-        
-        // 그 유저의 비밀번호와 입력된 비밀번호를 비교.
-        console.log(this.email , this.password)
+      logoClick() {
+        this.$router.push("/")
       }
     }
 }

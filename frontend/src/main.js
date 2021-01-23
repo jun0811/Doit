@@ -11,5 +11,12 @@ new Vue({
   router,
   store,
   vuetify,
-  render: h => h(App)
+  render: h => h(App),
+  created() {
+    const accessToken = localStorage.getItem("accessToken");
+    console.log(accessToken);
+    if (accessToken) {
+        this.$store.commit("SET_ACCESSTOKEN", accessToken);
+    }
+  }
 }).$mount('#app')

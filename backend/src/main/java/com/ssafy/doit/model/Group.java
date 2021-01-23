@@ -18,9 +18,8 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_pk")
-    private Long id;
+    private Long groupPk;
 
-    @JsonIgnore
     private String name;    // 그룹 명
     private String content; // 그룹 소개글
     private int max;    // 최대 인원

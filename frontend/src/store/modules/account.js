@@ -14,13 +14,18 @@ const getters = {
 };
 
 const mutations = {
+  SET_ACCESSTOKEN(state, token) {
+    state.accessToken = token;
+  },
   LOGIN(state, { object }) {
     if (!object) return;
     state.accessToken = object;
+    localStorage.accessToken = object;
   },
   LOGOUT(state) {
     state.accessToken = null;
-  },
+    localStorage.removeItem("accessToken");
+  }
 };
 
 const actions = {
