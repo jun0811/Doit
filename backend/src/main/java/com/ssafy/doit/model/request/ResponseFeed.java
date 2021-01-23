@@ -19,12 +19,12 @@ public class ResponseFeed {
     private String check;
     private String feedType;
 
-    public ResponseFeed(Feed entity){
-        this.feedPk = entity.getFeedPk();
-        this.groupPk = entity.getGroupPk();
-        this.writer = entity.getUserPk();
-        this.content = entity.getContent();
-        this.authCnt = entity.getAuthCnt();
-        this.authDate = entity.getAuthDate();
-    }
+//    public ResponseFeed(Feed entity){
+//        this.feedPk = entity.getFeedPk();
+//        this.groupPk = entity.getGroupPk();
+//        this.writer = entity.getUserPk();
+//        this.content = entity.getContent();
+//        this.authCnt = entity.getAuthCnt();
+//        this.authDate = entity.getAuthDate();
+//    }
 }
