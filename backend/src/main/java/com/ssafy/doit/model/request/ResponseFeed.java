@@ -10,17 +10,21 @@ import java.util.Date;
 @Getter
 public class ResponseFeed {
     private Long feedPk;
+    private Long groupPk;
     private String writer;
     private String media;
     private String content;
+    private int authCnt;
     private Date authDate;
     private String check;
     private String feedType;
 
     public ResponseFeed(Feed entity){
         this.feedPk = entity.getFeedPk();
-        this.writer = entity.getWriter();
+        this.groupPk = entity.getGroupPk();
+        this.writer = entity.getUserPk();
         this.content = entity.getContent();
+        this.authCnt = entity.getAuthCnt();
         this.authDate = entity.getAuthDate();
     }
 }

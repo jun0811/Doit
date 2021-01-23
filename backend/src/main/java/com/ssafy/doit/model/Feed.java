@@ -17,16 +17,18 @@ public class Feed {
     private Long feedPk;
 
     private Long groupPk;
-    private String writer;
+    private String userPk;
     private String media;
 
     @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
+    private int authCnt;
+
     @CreatedDate
     private Date authDate;
 
-    private String check;
+    private String authCheck;
 
     private String feedType;
 }
