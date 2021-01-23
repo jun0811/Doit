@@ -14,8 +14,12 @@
     width: 120px;
 }
 
+.profile-mileage {
+  font-size: medium;
+}
+
 .grass {
-    border: 0.5px solid;
+    border: 0.3px solid grey;
     height: 200px;
     width: auto;
     text-align: center;
@@ -23,6 +27,6 @@
 }
 
 .box {
-  border: 0.5px solid;
+  border: 0.3px solid grey;
   height: 400px;
 }
