@@ -1,5 +1,6 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.model.BasicResponse;
 import com.ssafy.doit.model.request.RequestLoginUser;
@@ -7,6 +8,7 @@ import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.EmailSendService;
 import com.ssafy.doit.service.jwt.JwtUtil;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,6 +56,7 @@ public class UserController {
     }
 
     // 닉네임 중복 확인
+    @ApiOperation(value = "닉네임 중복 확인")
     @PostMapping("/checkNick")
     public Object checkNickname(@RequestBody String nickname){
         BasicResponse result = new BasicResponse();
@@ -69,6 +72,7 @@ public class UserController {
     }
 
     // 이메일 중복 확인
+    @ApiOperation(value = "이메일 중복 확인")
     @PostMapping("/checkEmail")
     public Object checkEmail(@RequestBody String email) {
         BasicResponse result = new BasicResponse();
@@ -84,11 +88,12 @@ public class UserController {
     }
 
     // 회원가입
+    @ApiOperation(value = "회원가입")
     @PostMapping("/signup")
     public Object signup(@RequestBody User request) {
         BasicResponse result = new BasicResponse();
         try {
-            String authKey = emailSendService.sendAuthMail(request.getEmail());
+            String authKey = emailSendService.sendSignupMail(request.getEmail());
             userRepository.save(User.builder()
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
@@ -107,10 +112,11 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // 이메일 인증 재전송
-    @PostMapping("/sendEmail")
-    public void sendEmail(@RequestBody User request){
-        String authKey = emailSendService.sendAuthMail(request.getEmail());
+    // 회원가입 이메일 인증 전송
+    @ApiOperation(value = "회원가입 이메일 인증 전송")
+    @PostMapping("/sendSignupEmail")
+    public void sendSignupEmail(@RequestBody User request){
+        String authKey = emailSendService.sendSignupMail(request.getEmail());
         Optional<User> user = userRepository.findByEmail(request.getEmail());
 
         user.ifPresent(selectUser ->{
@@ -118,18 +124,65 @@ public class UserController {
             userRepository.save(selectUser);
         });
     }
-    // 이메일 인증 확인
-    @GetMapping("/authEmail")
-    public void confirmEmail(@RequestParam String email, @RequestParam String authKey){
+
+    // 회원가입 이메일 인증 확인
+    @ApiOperation(value = "회원가입 이메일 인증 확인")
+    @GetMapping("/signupEmail")
+    public Object signupEmail(@RequestParam String email, @RequestParam String authKey){
         Optional<User> user = userRepository.findByEmailAndAuthKey(email, authKey);
 
         user.ifPresent(selectUser ->{
             selectUser.setUser_role(UserRole.USER);
             userRepository.save(selectUser);
         });
+        BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.data = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 비밀번호 변경 이메일 인증 전송
+    @ApiOperation(value = "비밀번호 변경 이메일 인증 전송")
+    @PostMapping("/sendChangePwEmail")
+    public Object sendChangePwEmail(@RequestBody User request){
+        BasicResponse result = new BasicResponse();
+
+        String authKey = emailSendService.sendChangePwMail(request.getEmail());
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+
+        if(!user.isPresent()) {
+            result.status = false;
+            result.data = "해당 이메일이 존재하지 않습니다.";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        user.ifPresent(selectUser -> {
+                selectUser.setAuthKey(authKey);
+                userRepository.save(selectUser);
+        });
+        result.status = true;
+        result.data = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 비밀번호 변경 이메일 인증 확인
+    @ApiOperation(value = "비밀번호 변경 이메일 인증 확인")
+    @PostMapping("/changePwEmail")
+    public Object ChangePwEmail(@RequestBody RequestChangePw request){
+        Optional<User> user = userRepository.findByEmailAndAuthKey(request.getEmail(), request.getAuthKey());
+
+        user.ifPresent(selectUser ->{
+            selectUser.setPassword(passwordEncoder.encode(request.getPassword()));
+            userRepository.save(selectUser);
+        });
+        BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.data = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 로그인
+    @ApiOperation(value = "로그인")
     @PostMapping("/login")
     public Object login(@RequestBody RequestLoginUser user) {
         Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
