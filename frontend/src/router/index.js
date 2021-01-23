@@ -12,6 +12,8 @@ import PasswordChange from "../views/User/PasswordChange.vue"
 import Profile from "../views/User/Profile.vue"
 import Update from "../views/User/Update.vue"
 import MileageShop from "../views/MileageShop.vue"
+import PasswordFind from "../views/User/PasswordFind.vue"
+
 
 Vue.use(VueRouter)
 const routes = [
@@ -34,6 +36,11 @@ const routes = [
     path: "/user/pwchange",
     name: "PasswordChange",
     component: PasswordChange
+  },
+  {
+    path: "/user/pwdfind",
+    name: "PasswordFind",
+    component: PasswordFind
   },
   {
     path: "/user/profile",
