@@ -1,0 +1,32 @@
+@charset "UTF-8";
+@font-face {
+  font-family: maruburi;
+  src: url("../fonts/MARUBuriBetaot-Regular00.woff") format("woff");
+  
+}
+
+* {
+  font-family: maruburi;
+  letter-spacing: 0.1px; 
+}
+
+.profile-img {
+    width: 120px;
+}
+
+.profile-mileage {
+  font-size: medium;
+}
+
+.grass {
+    border: 0.3px solid grey;
+    height: 200px;
+    width: auto;
+    text-align: center;
+    line-height: 200px;
+}
+
+.box {
+  border: 0.3px solid grey;
+  height: 400px;
+}

@@ -22,7 +22,7 @@ public class User {
     private Long id;
 
     private String password;
-    private String phone;
+    private String authKey;
 
     @Column(unique = true)
     private String email;
@@ -36,12 +36,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole user_role;
 
+
     @Builder
-    public User(String email, String password, String nickname, UserRole userRole) {
+    public User(String email, String password, String nickname, UserRole userRole, String authKey) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.user_role = userRole;
+        this.authKey = authKey;
     }
 
     public String getRoleKey() {

@@ -6,7 +6,7 @@
     <form class="">
       <v-container class="px-0 ">
         <v-row no-gutters class="d-flex flex-nowrap">
-          <v-col md="12">
+          <v-col md="12" sm="12">
             <v-text-field
               v-model="name"
               :error-messages="nameErrors"
@@ -25,7 +25,7 @@
       </v-container>
       <v-container class="px-0">
         <v-row no-gutters class="d-flex flex-nowrap">
-          <v-col md="12">
+          <v-col md="12" sm="12">
             <v-text-field
               v-model="email"
               :error-messages="emailErrors"
@@ -83,7 +83,7 @@ import { validationMixin } from 'vuelidate'
 import { required, maxLength, sameAs, minLength, email } from 'vuelidate/lib/validators'
 
 export default {
-  name: 'HelloWorld',
+  name: 'Join',
   components: { Header},
   mixins: [validationMixin],
     validations: {

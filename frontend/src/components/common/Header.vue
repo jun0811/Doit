@@ -1,6 +1,13 @@
 <template>
   <header class="header">
-    <span> Doit</span>
+
+    <img 
+      src="@/assets/logo/logo.png" 
+      alt="Logo"
+      class="logo"
+      @click="logoClick"
+    >
+
     <div>  
       <v-dialog
         v-model="dialog"
@@ -53,8 +60,9 @@
             </v-col>
           </v-row>
           </v-container>
-          </v-card-text>
-          <button class="login input">로그인</button>
+        </v-card-text>
+    
+        <button class="login input" @click="login()">로그인</button>
           <v-card-actions > 
             <v-container class="d-flex justify-space-between mb-6">
               <v-btn
@@ -64,15 +72,20 @@
               <v-btn
                 color="#F9802D"
                 text
+                @click="passwordFind"
               >비밀번호 찾기</v-btn>
             </v-container>
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <!-- 로그인창 끝 -->
+
       <v-btn
         text
         @click="signup"
-      >Sign up</v-btn>
+      >
+        Sign up
+      </v-btn>
     </div>
   </header>
 </template>
@@ -91,8 +104,12 @@ export default {
 
     data: () => ({
       dialog: false,
-      email: '',
-      password: '',
+      email: "",
+      password: "",
+      users: [
+        {id: 1, name: "LSJ",email:"nate1994@naver.com", password:"12345678"},
+        {id: 2, name: "KSJ",email:"itoggi0328@naver.com", password:"12345678"}
+      ],
     }),
     computed: {
       emailErrors () {
@@ -112,8 +129,11 @@ export default {
     },
 
     methods: {
-      signup(){
+      signup() {
         this.$router.push("/user/join")
+      },
+      logoClick() {
+        this.$router.push("/")
       }
     }
 }
@@ -121,7 +141,7 @@ export default {
 
 <style scoped>
   .login.input{
-    width:60%;
+    width:50%;
     border:2px solid #F9802D;
     border-radius: 8px;
     color: #F9802D;

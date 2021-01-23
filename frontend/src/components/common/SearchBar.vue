@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-auto search-bar">
+    <div class="mx-auto search-bar mx-2">
         <v-text-field
             v-model="word"
             solo
