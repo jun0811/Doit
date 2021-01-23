@@ -1,14 +1,4 @@
-@charset "UTF-8";
-@font-face {
-  font-family: maruburi;
-  src: url("../fonts/MARUBuriBetaot-Regular00.woff") format("woff");
-  
-}
-
-* {
-  font-family: maruburi;
-  letter-spacing: 0.1px; 
-}
+ 
 
 html,
 body {
@@ -43,17 +33,12 @@ a{
   color: black !important;
 }
 
-.word-cloud{
-  margin : 30px;
-}
-
-.word-cloud-box{
-  border: 0.05em solid;
-  height: 300px;
-  width: 700px;
-  background: rgba(0, 0, 0, 0.003);
+.temp-box{
+  border: 0.3px solid grey;
+  height: 200px;
+  width: auto;
   text-align: center;
-  line-height: 300px;
+  line-height: 200px;
 }
 
 .search-bar {

@@ -19,7 +19,7 @@
           text
           v-on="on"
           >
-          Login
+          로그인
           </v-btn>
         </template>
         <v-card class="d-flex align-center flex-column mx-auto">
@@ -84,7 +84,13 @@
         text
         @click="signup"
       >
-        Sign up
+        회원가입
+      </v-btn>
+      <v-btn
+        text
+        @click="mypage"
+      >
+        마이페이지
       </v-btn>
     </div>
   </header>
@@ -134,6 +140,9 @@ export default {
       },
       logoClick() {
         this.$router.push("/")
+      },
+      mypage() {
+        this.$router.push("/user/profile")
       }
     }
 }

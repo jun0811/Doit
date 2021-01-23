@@ -1,9 +1,9 @@
 <template>
-  <div class="temporary-part mx-auto">
-      카테고리
-      <div class="temporary-box">
-      </div>
-  </div>
+  <v-row class="py-10">
+    <v-col class="mx-3 mx-sm-16 temp-box">
+      Category
+    </v-col>
+  </v-row>
 </template>
 
 <script>
