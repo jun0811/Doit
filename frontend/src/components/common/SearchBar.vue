@@ -1,13 +1,18 @@
 <template>
-    <div class="mx-auto search-bar mx-2">
-        <v-text-field
-            v-model="word"
-            solo
-            label="만들고 싶은 습관을 검색해보세요!"
-            clearable
-            color=""
-        ></v-text-field>
-    </div>
+  <v-row class="d-flex justify-center py-3">
+    <v-col
+      cols="11"
+      sm="6"
+    >
+      <v-text-field
+          v-model="word"
+          solo
+          label="만들고 싶은 습관을 검색해보세요!"
+          clearable
+          color=""
+      ></v-text-field>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

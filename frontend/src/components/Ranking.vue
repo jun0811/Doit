@@ -1,9 +1,9 @@
 <template>
-  <div class="temporary-part mx-auto">
+  <v-row class="py-10">
+    <v-col class="mx-3 mx-sm-16 temp-box">
       Ranking👑
-      <div class="temporary-box">
-      </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

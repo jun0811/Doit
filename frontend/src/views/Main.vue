@@ -2,11 +2,12 @@
     <v-app>
         <div>
             <Header></Header>
-            <SearchBar></SearchBar>
-            <WordCloud></WordCloud>
-            <Ranking></Ranking>
-            <Category></Category>
-            <Aside></Aside>
+            <v-container class="pa-3 pa-sm-16">
+                <SearchBar></SearchBar>
+                <WordCloud></WordCloud>
+                <Ranking></Ranking>
+                <Category></Category>
+            </v-container>
             <Footer></Footer>
         </div>
     </v-app>
@@ -16,7 +17,6 @@
 import "../assets/css/main.css";
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
-import Aside from "@/components/common/Aside.vue";
 import SearchBar from "@/components/common/SearchBar.vue";
 import WordCloud from "@/components/WordCloud.vue";
 import Category from "@/components/Category.vue";
@@ -27,7 +27,6 @@ export default {
     components: {
         Header,
         Footer,
-        Aside,
         WordCloud,
         SearchBar,
         Category,

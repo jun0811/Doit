@@ -1,9 +1,9 @@
 <template>
-  <div class="word-cloud d-flex justify-center">
-    <div class="word-cloud-box">
+  <v-row class="py-10">
+    <v-col class="mx-3 mx-sm-16 temp-box">
       Word Cloud
-    </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
