@@ -1,6 +1,5 @@
 package com.ssafy.doit.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -20,16 +19,18 @@ public class Group {
     @Column(name = "group_pk")
     private Long groupPk;
 
+    @Column(nullable = false)
     private String name;    // 그룹 명
-    private String content; // 그룹 소개글
-    private int max;    // 최대 인원
-    private int leader; // 팀장
 
     @ColumnDefault("0")
     private int score;  // 그룹 점수
 
     @ColumnDefault("1")
     private int total;  // 총 인원
+
+    private String content; // 그룹 소개글
+    private int max;    // 최대 인원
+    private int leader; // 팀장
 
     @Builder
     public Group(String name, String content, int max, int leader ){
