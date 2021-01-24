@@ -4,54 +4,49 @@
       <v-expansion-panel-header>
         <template v-slot>
           <v-row no-gutters>
-            <v-col cols="4">
+            <v-col cols="2">
               <div class="group-image">
                 <img src="" alt="">
               </div>
             </v-col>
+
             <v-col
               cols="8"
-              class="text--secondary"
+              class="text--secondary ml-sm-0 ml-11"
             >
-              <span></span>
-              <v-fade-transition leave-absolute>
-
-              </v-fade-transition>
+              <p class="my-6">Group1</p>
+              <span class="mr-2">#홈트</span>
+              <span class="mr-2">#운동</span>
+              <span class="mr-2">#의지박약</span>
             </v-col>
           </v-row>
         </template>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
         <v-row no-gutters>
-          <v-spacer></v-spacer>
-          <v-col cols="5">
-          </v-col>
+          <v-col class= "mx-auto" cols="10">
+            <p class="my-5"> 그룹 목표 및 소개</p>
+            <div class="group-intro">
 
-          <v-divider
-            vertical
-            class="mx-4"
-          ></v-divider>
-
-          <v-col cols="3">
-            Select your destination of choice
-            <br>
-            <a href="#">Learn more</a>
+            </div>
           </v-col>
+        
+
+          
         </v-row>
-
-        <v-card-actions>
+        <v-card-actions class= "pr-16">
           <v-spacer></v-spacer>
           <v-btn
             text
             color="secondary"
           >
-            Cancel
+            그룹으로 이동
           </v-btn>
           <v-btn
             text
             color="primary"
           >
-            Save
+            가입신청
           </v-btn>
         </v-card-actions>
       </v-expansion-panel-content>
@@ -75,12 +70,15 @@ export default {
 
 <style scoped>
     .group-image {
-        width: 100px;
-        height: 100px;
+        width: 90px;
+        height: 90px;
         border-radius: 70%;
         overflow: hidden;
         background-color: #ffffbb
     }
-    .panel {
+    .group-intro {
+      width : 100%;
+      height : 250px;
+      border: 1px solid orange;
     }
 </style>

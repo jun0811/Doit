@@ -1,12 +1,12 @@
 <template>
   <div>
     <Header></Header>
-  <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15" width=50%>
+  <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width=70%>
     <h3 class="my-5">회원가입</h3>
     <form class="">
-      <v-container class="px-0 ">
-        <v-row no-gutters class="d-flex flex-nowrap">
-          <v-col md="12" sm="12">
+      <v-container class="px-1 ">
+        <v-row no-gutters class="d-flex flex-nowrap m" >
+          <v-col md="12" sm="12" >
             <v-text-field
               v-model="name"
               :error-messages="nameErrors"
@@ -18,7 +18,7 @@
               @blur="$v.name.$touch()"
             ></v-text-field>
           </v-col>
-          <v-btn text class="uncheck mt-4 mx-0"> 
+          <v-btn text class="uncheck mt-4 mx-0 "> 
             <font-awesome-icon icon="check-circle"/> 
           </v-btn>
         </v-row>
@@ -72,6 +72,7 @@
       <div class="mt-3 d-flex justify-end">
         <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
       </div>
+      <br>
     </form>
   </v-card>
   </div>

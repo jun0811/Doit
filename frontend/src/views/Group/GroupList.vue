@@ -5,6 +5,8 @@
       <br>
       <!-- <div class="d-flex align-center flex-column mx-auto"> -->
       <GroupCard></GroupCard>
+      <GroupCard></GroupCard>
+      <GroupCard></GroupCard>
       <!-- </div> -->
       <Footer></Footer>
   </div>
