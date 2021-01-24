@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -32,11 +33,23 @@ public class Group {
     private int max;    // 최대 인원
     private int leader; // 팀장
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
+    public List<GroupHashTag> tagList; // 태그리스트
+
     @Builder
     public Group(String name, String content, int max, int leader ){
         this.name = name;
         this.content = content;
         this.max = max;
         this.leader = leader;
+    }
+
+    public boolean hasTag(String tag) {
+        for (GroupHashTag ght : tagList) {
+            if (ght.getHashTag().getName().equals(tag)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

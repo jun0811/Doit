@@ -13,13 +13,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Tag {
+public class HashTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tagPk;
 
     @Column(nullable = false)
-    private String keyword;
+    private String name;
 
     @ColumnDefault("0")
     private Integer cnt;
