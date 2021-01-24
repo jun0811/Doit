@@ -204,4 +204,31 @@ public class UserController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    // 회원정보 수정
+    @ApiOperation(value = "회원정보 수정")
+    @PutMapping("/updateInfo/{email}")
+    public Object updateInfo(@RequestBody(required = true) Map<String, String> map) {
+        BasicResponse result = new BasicResponse();
+        String email = map.get("email");
+        String name = map.get("name");
+//        System.out.println(name);
+        Optional<User> userInfo = userRepository.findUserByEmail(email);
+
+        if (userInfo.isPresent() ) {
+            userInfo.ifPresent(selectUser->{
+                selectUser.setNickname(name);
+                userRepository.save(selectUser);
+            });
+            result.status = true;
+            result.data = "success";
+        }
+        else{
+            result.status = false;
+            result.data = "실패";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
 }
