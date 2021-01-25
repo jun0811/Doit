@@ -31,20 +31,43 @@
         <v-col class="grass mx-3 mx-sm-16"> 
           잔디🌱🌱🌱
         </v-col>
-      </v-row>
+      </v-row >
+      <!-- <v-row class="pt-10">
+        <v-col 
+          cols="defined"
+          sm="7"          
+          class="ml-3 ml-sm-16 pl-1"
+        >
+          내가 작성한 피드
+        </v-col>
+        <v-col
+          class="mr-3 mr-sm-16 ml-3 ml-sm-13 pl-1"
+          cols="defined"
+          sm="3"
+
+        >
+          내가 가입한 그룹
+        </v-col>
+      </v-row> -->
       <v-row class="py-16">
         <v-col 
           cols="defined"
           sm="7"
           class="ml-3 ml-sm-16 mr-3 mr-sm-0 pa-0"
         > 
-        <FeedCard></FeedCard>
+        <div class="mb-2">
+          내가 작성한 피드
+        </div>
+        <FeedList></FeedList>
         </v-col>
         <v-col 
           cols="defined"
           sm="3"
           class="mr-3 mr-sm-16 ml-3 ml-sm-13 mt-8 mt-sm-0 pa-0"
         > 
+        <div class="mb-2">
+          가입한 그룹 리스트
+        </div>
         <JoinedGroupList></JoinedGroupList>
         </v-col>
       </v-row>
@@ -57,7 +80,7 @@
 import "@/assets/css/profile.css";
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
-import FeedCard from "@/components/group/FeedCard.vue";
+import FeedList from "@/components/group/FeedList.vue";
 import JoinedGroupList from "@/components/group/JoinedGroupList.vue";
 
 export default {
@@ -65,7 +88,7 @@ export default {
   components: {
     Header,
     Footer,
-    FeedCard,
+    FeedList,
     JoinedGroupList,
   },
 };

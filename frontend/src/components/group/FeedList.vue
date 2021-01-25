@@ -7,39 +7,26 @@
         :bench="benched"
         :items="items"
         height="600"
-        item-height="64"
+        item-height="400"
       >
         <template v-slot:default="{ item }">
-          <v-list-item :key="item">
-            <v-list-item-action>
-              <v-btn
-                fab
-                small
-                depressed
-                class="joined-group-btn"
-              >
-              {{ item }}
-              </v-btn>
-            </v-list-item-action>
-
-            <v-list-item-content>
-              <v-list-item-title>
-                Group {{ item }}
-              </v-list-item-title>
-            </v-list-item-content>
-
-
+          <v-list-item :key="item" class="pa-0">
+            <FeedCard></FeedCard>
           </v-list-item>
-
-          <v-divider></v-divider>
         </template>
+        
       </v-virtual-scroll>
     </v-card>
   </div>
 </template>
 
 <script>
+import FeedCard from '@/components/group/FeedCard.vue'
+
   export default {
+    components: {
+      FeedCard,
+    },
     data: () => ({
       benched: 0,
     }),
@@ -48,7 +35,7 @@
         return Array.from({ length: this.length }, (k, v) => v + 1)
       },
       length () {
-        return 20
+        return 5
       },
     },
   }

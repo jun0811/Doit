@@ -1,61 +1,38 @@
 <template>
-  <div>
-    <v-card
-      elevation="16"
-      class="mx-auto"
-    >
-      <v-virtual-scroll
-        :bench="benched"
-        :items="items"
-        height="400"
-        item-height="64"
-      >
-        <template v-slot:default="{ item }">
-          <v-list-item :key="item">
-            <v-list-item-action>
-              <v-btn
-                fab
-                small
-                depressed
-                color="primary"
-              >
-                {{ item }}
-              </v-btn>
-            </v-list-item-action>
+  <v-card
+    :loading="loading"
+    class="mx-auto my-12"
+    width="550"
+  >
+    <template slot="progress">
+      <v-progress-linear
+        color="deep-purple"
+        height="10"
+        indeterminate
+      ></v-progress-linear>
+    </template>
 
-            <v-list-item-content>
-              <v-list-item-title>
-                User Database Record <strong>ID {{ item }}</strong>
-              </v-list-item-title>
-            </v-list-item-content>
+    <v-img
+      height="250"
+      src="https://lh3.googleusercontent.com/proxy/YvWALrhNm-SwJDQW2OueRmvhIPYbVGSrUsfHP1qifM8pUPOqVcjX_eeg560eVA0gF2yVoZQ0pdkZafAmu944aGvs4tPSe4CO1mTjk6WFEsIsz2jRHSrGSrSa-Z2awAJQBYdAqn2CgiIK869H4chgsfgqdnCWmYfspBIAlwToiKvCDHzpUtAhzWLWFaqVJSGLC6Nfh6tQpotWbjIxs_R-xeqzJ-yffgB4aAN49tx-uTg5xBUayvss9h58drBY8T7BL9yzpdJAY8wFqRx00PYM9ud0VxM_zjwo4bi2AoBb6y3gsA"
+    ></v-img>
 
-            <v-list-item-action>
-              <v-icon small>
-                mdi-open-in-new
-              </v-icon>
-            </v-list-item-action>
-          </v-list-item>
+    <v-card-title>뜨개질 인증 1일차✌</v-card-title>
 
-          <v-divider></v-divider>
-        </template>
-      </v-virtual-scroll>
-    </v-card>
-  </div>
+    <v-card-text>
+      <div>열심히 했따~~</div>
+    </v-card-text>
+
+    <v-divider class="mx-4"></v-divider>
+  </v-card>
 </template>
 
 <script>
   export default {
     data: () => ({
-      benched: 0,
+      loading: false,
+      selection: 1,
     }),
-    computed: {
-      items () {
-        return Array.from({ length: this.length }, (k, v) => v + 1)
-      },
-      length () {
-        return 7000
-      },
-    },
   }
 </script>
 
