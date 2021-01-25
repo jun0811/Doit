@@ -1,25 +1,43 @@
 <template>
   <div>
     <Header></Header>
-    <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width=70%>
-      <h3 class="my-5">회원가입</h3>
-      <form class="">
-        <v-container class="px-1 ">
-          <v-row no-gutters class="d-flex flex-nowrap m" >
-            <v-col md="12" sm="12" >
-              <v-text-field
-                v-model="name"
-                :error-messages="nameErrors"
-                :counter="8"
-                label="닉네임"
-                required
-                clearable
-                @input="$v.name.$touch()"
-                @blur="$v.name.$touch()"
-              ></v-text-field>
-            </v-col>
-            <v-btn text class="uncheck mt-4 mx-0 "> 
-              <font-awesome-icon icon="check-circle"/> 
+  <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width=70%>
+    <h3 class="my-5">회원가입</h3>
+    <form class="">
+      <v-container class="px-1 ">
+        <v-row no-gutters class="d-flex flex-nowrap" >
+          <v-col md="12" sm="12" >
+            <v-text-field
+              v-model="name"
+              :error-messages="nameErrors"
+              :counter="8"
+              label="닉네임"
+              required
+              clearable
+              @input="$v.name.$touch()"
+              @blur="$v.name.$touch()"
+            ></v-text-field>
+          </v-col>
+          <v-btn text class="uncheck mt-4 mx-0 "> 
+            <font-awesome-icon icon="check-circle"/> 
+          </v-btn>
+        </v-row>
+      </v-container>
+      <v-container class="px-0">
+        <v-row no-gutters class="d-flex flex-nowrap">
+          <v-col md="12" sm="12">
+            <v-text-field
+              v-model="email"
+              :error-messages="emailErrors"
+              label="E-mail"
+              required
+              clearable
+              @input="$v.email.$touch()"
+              @blur="$v.email.$touch()"
+            ></v-text-field>
+          </v-col>
+            <v-btn text class="uncheck mt-4"> 
+                <font-awesome-icon icon="check-circle"/> 
             </v-btn>
           </v-row>
         </v-container>
