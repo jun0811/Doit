@@ -1,7 +1,7 @@
 <template>
   <div>
       <Header></Header>
-      <div  class="d-flex align-center flex-column my-15 mx-auto px-5" width=70%>
+      <v-container class="pa-8 pa-sm-16 d-flex align-center flex-column mx-auto">
           <v-img
             src="@/assets/logo/mail.png"
             alt="mail"
@@ -41,7 +41,7 @@
                 >인증 메일 재발송</v-btn>
             </div>
           </div>
-      </div>
+      </v-container>
       <Footer></Footer>
   </div>
 </template>
@@ -73,6 +73,6 @@ export default {
     .sub-box{
         background:#f7f7f7;
         height: auto;
-        width: 600px;
+        max-width: 600px;
     }
 </style>
