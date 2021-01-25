@@ -1,42 +1,54 @@
 package com.ssafy.doit.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class Group {
+@Table(name= "`group`")
+public class Group{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_pk")
     private Long groupPk;
 
-    @Column(nullable = false)
-    private String name;    // 그룹 명
+    private String name;
+    private int maxNum;
+    private String content;
+    private Long leader;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private int score;
+    private int totalNum;
 
-    @ColumnDefault("0")
-    private int score;  // 그룹 점수
-
-    @ColumnDefault("1")
-    private int total;  // 총 인원
-
-    private String content; // 그룹 소개글
-    private int max;    // 최대 인원
-    private int leader; // 팀장
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<GroupHashTag> tagList; // 태그리스트
 
     @Builder
-    public Group(String name, String content, int max, int leader ){
+    public Group(String name, String content, int maxNum,
+                 LocalDate startDate, LocalDate endDate, Long leader){
         this.name = name;
         this.content = content;
-        this.max = max;
+        this.totalNum = 1;
+        this.maxNum = maxNum;
+        this.score = 0;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.leader = leader;
     }
+
+//    public boolean hasTag(String tag) {
+//        for (GroupHashTag ght : tagList) {
+//            if (ght.getHashTag().getName().equals(tag)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }

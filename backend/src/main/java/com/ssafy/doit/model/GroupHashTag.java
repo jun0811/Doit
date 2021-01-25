@@ -1,9 +1,6 @@
 package com.ssafy.doit.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,7 +8,10 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GroupHasTag {
+@AllArgsConstructor
+@Builder
+@Table(name = "`group_has_tag`")
+public class GroupHashTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,14 +20,14 @@ public class GroupHasTag {
     @ManyToOne
     @JoinColumn(name = "tag_pk")
     @NonNull
-    private Tag tag;
+    private HashTag hashTag;
 
     @ManyToOne
     @JoinColumn(name = "group_pk")
     @NonNull
     private Group group;
 
-    public boolean match(String word) {
-        return this.tag.getKeyword().equals(word);
-    }
+//    public boolean match(String name) {
+//        return this.hashTag.getName().equals(name);
+//    }
 }

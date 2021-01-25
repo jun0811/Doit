@@ -39,43 +39,62 @@
             <v-btn text class="uncheck mt-4"> 
                 <font-awesome-icon icon="check-circle"/> 
             </v-btn>
-        </v-row>
-      </v-container>
-      <v-text-field
-        v-model="password"
-        :error-messages="passwordErrors"
-        label="비밀번호"
-        clearable
-        required
-        @input="$v.password.$touch()"
-        @blur="$v.password.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="passwordConfirm"
-        :error-messages="passwordConfirmErrors"
-        label="비밀번호 확인"
-        clearable
-        required
-        @input="$v.passwordConfirm.$touch()"
-        @blur="$v.passwordConfirm.$touch()"
-      ></v-text-field>
-      <v-checkbox
-        v-model="checkbox"
-        :error-messages="checkboxErrors"
-        label="Do you agree?"
-        required
-        @change="$v.checkbox.$touch()"
-        @blur="$v.checkbox.$touch()"
-      ></v-checkbox>
+          </v-row>
+        </v-container>
+        <v-container class="px-0">
+          <v-row no-gutters class="d-flex flex-nowrap">
+            <v-col md="12" sm="12">
+              <v-text-field
+                v-model="email"
+                :error-messages="emailErrors"
+                label="E-mail"
+                required
+                clearable
+                @input="$v.email.$touch()"
+                @blur="$v.email.$touch()"
+              ></v-text-field>
+            </v-col>
+              <v-btn text class="uncheck mt-4"> 
+                  <font-awesome-icon icon="check-circle"/> 
+              </v-btn>
+          </v-row>
+        </v-container>
+        <v-text-field
+          v-model="password"
+          :error-messages="passwordErrors"
+          label="비밀번호"
+          clearable
+          required
+          @input="$v.password.$touch()"
+          @blur="$v.password.$touch()"
+        ></v-text-field>
+        <v-text-field
+          v-model="passwordConfirm"
+          :error-messages="passwordConfirmErrors"
+          label="비밀번호 확인"
+          clearable
+          required
+          @input="$v.passwordConfirm.$touch()"
+          @blur="$v.passwordConfirm.$touch()"
+        ></v-text-field>
+        <v-checkbox
+          v-model="checkbox"
+          :error-messages="checkboxErrors"
+          label="Do you agree?"
+          required
+          @change="$v.checkbox.$touch()"
+          @blur="$v.checkbox.$touch()"
+        ></v-checkbox>
 
-      <button class="join input">가입하기</button>
-      <div class="mt-3 d-flex justify-end">
-        <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
-      </div>
-      <br>
-    </form>
-  </v-card>
-  </div>
+        <button class="join input">가입하기</button>
+        <div class="mt-3 d-flex justify-end">
+          <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
+        </div>
+        <br>
+      </form>
+    </v-card>
+    </div>
+
 </template>
 
 <script>
