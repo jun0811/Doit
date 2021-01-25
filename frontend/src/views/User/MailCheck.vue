@@ -1,7 +1,7 @@
 <template>
   <div>
       <Header></Header>
-      <div  class="d-flex align-center flex-column my-15 mx-auto px-5" width=70%>
+      <v-container class="pa-8 pa-sm-16 d-flex align-center flex-column mx-auto">
           <v-img
             src="@/assets/logo/mail.png"
             alt="mail"
@@ -10,7 +10,7 @@
             max-width="60"
           />
           
-          <h1 class="my-3">인증 메일이 발송되었습니다</h1>
+          <h1 class="my-3 text-center">인증 메일이 발송되었습니다</h1>
           <div class="my-3">
             <div class="text-center">
               <subtitle-1>메일함에서(<a href='#'>{{link}}</a>) 인증 메일을 확인 바랍니다.</subtitle-1>
@@ -33,15 +33,16 @@
                     2. 메일이 도착하지 않았다면 스팸함을 확인해 주시기 바랍니다.
                 </subtitle-1>
             </div>
-            <div @click="resend" class="pt-3 text-center">
+            <div class="pt-3 text-center">
                 <v-btn 
+                    @click="resend"
                     color=#F9802D
                     outlined
                     rounded
                 >인증 메일 재발송</v-btn>
             </div>
           </div>
-      </div>
+      </v-container>
       <Footer></Footer>
   </div>
 </template>
@@ -73,6 +74,6 @@ export default {
     .sub-box{
         background:#f7f7f7;
         height: auto;
-        width: 600px;
+        max-width: 600px;
     }
 </style>
