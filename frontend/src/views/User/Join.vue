@@ -1,8 +1,6 @@
 <template>
   <div>
     <Header></Header>
-    <!-- <v-container class="pa-3 pa-sm-16"> -->
-
     <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width=70%>
       <h3 class="my-5">회원가입</h3>
       <form class="">
@@ -77,8 +75,8 @@
         <br>
       </form>
     </v-card>
-    <!-- </v-container> -->
-  </div>
+    </div>
+
 </template>
 
 <script>

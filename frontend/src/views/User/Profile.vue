@@ -36,14 +36,16 @@
         <v-col 
           cols="defined"
           sm="7"
-          class="box ml-3 ml-sm-16 mr-3 mr-sm-0"
+          class="ml-3 ml-sm-16 mr-3 mr-sm-0 pa-0"
         > 
+        <FeedCard></FeedCard>
         </v-col>
         <v-col 
           cols="defined"
           sm="3"
-          class="box mr-3 mr-sm-16 ml-3 ml-sm-13 mt-8 mt-sm-0"
+          class="mr-3 mr-sm-16 ml-3 ml-sm-13 mt-8 mt-sm-0 pa-0"
         > 
+        <JoinedGroupList></JoinedGroupList>
         </v-col>
       </v-row>
     </v-container>
@@ -55,12 +57,16 @@
 import "@/assets/css/profile.css";
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
+import FeedCard from "@/components/group/FeedCard.vue";
+import JoinedGroupList from "@/components/group/JoinedGroupList.vue";
 
 export default {
   name: "Profile",
   components: {
     Header,
     Footer,
+    FeedCard,
+    JoinedGroupList,
   },
 };
 </script>
