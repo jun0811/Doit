@@ -33,6 +33,8 @@ public class User {
     @ColumnDefault("0")
     private int mileage;
 
+    private String image;
+
     @Enumerated(EnumType.STRING)
     private UserRole user_role;
 
