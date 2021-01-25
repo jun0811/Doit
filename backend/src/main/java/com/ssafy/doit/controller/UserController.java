@@ -229,6 +229,35 @@ public class UserController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    // 회원 탈퇴 ... 미완성
+    @ApiOperation(value = "회원 탈퇴")
+    @PutMapping("/deleteUser")
+    public Object deleteUser(HttpServletRequest req) {
+        BasicResponse result = new BasicResponse();
 
+        try {
+            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
+            System.out.println(userMap);
+            User user = userRepository.findByEmail((String) userMap.get("email")).get();
+
+            Optional<User> userInfo = userRepository.findUserByEmail(user.getEmail());
+            System.out.println(userInfo);
+
+            userInfo.ifPresent(selectUser->{
+                selectUser.setUser_role(UserRole.GUEST);
+                userRepository.save(selectUser);
+            });
+            
+            result.status = true;
+            result.data = "탈퇴 success";
+            result.object = user;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result.status = false;
+            result.data = "error";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 }
