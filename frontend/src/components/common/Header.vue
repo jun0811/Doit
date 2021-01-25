@@ -18,6 +18,7 @@
           <v-btn
           text
           v-on="on"
+          class= "px-0"
           >
           로그인
           </v-btn>
@@ -83,12 +84,14 @@
       <v-btn
         text
         @click="signup"
+        class= "px-0"
       >
         회원가입
       </v-btn>
       <v-btn
         text
         @click="mypage"
+        class= "px-0"
       >
         마이페이지
       </v-btn>
@@ -155,6 +158,10 @@ export default {
     border-radius: 8px;
     color: #F9802D;
   }
+  .btn-header {
+    padding : 0
+  }
+  
 </style>
 
 

@@ -22,7 +22,7 @@ export default {
     components: { Header, Footer, SearchBar, GroupCard },
     data() {
         return {
-
+            
         }
     }
 }

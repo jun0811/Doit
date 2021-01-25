@@ -5,7 +5,7 @@
     <h3 class="my-5">회원가입</h3>
     <form class="">
       <v-container class="px-1 ">
-        <v-row no-gutters class="d-flex flex-nowrap m" >
+        <v-row no-gutters class="d-flex flex-nowrap" >
           <v-col md="12" sm="12" >
             <v-text-field
               v-model="name"
