@@ -7,16 +7,20 @@ import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.EmailSendService;
+import com.ssafy.doit.service.ImageService;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.Model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,6 +35,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private EmailSendService emailSendService;
+    @Autowired
+    private ImageService imageService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -229,6 +235,42 @@ public class UserController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "프로필사진 변경")
+    @PutMapping("/insertImg")
+    public Object insertImg(HttpServletRequest req, @RequestParam("image") MultipartFile mFile, Model model) {
+        BasicResponse result = new BasicResponse();
+        String upload_path = "C:/Users/multicampus/IdeaProjects/s04p12c108/backend/src/main/resources/static/images/profile/"; // 프로필 사진들 모아두는 폴더
+
+        try {
+            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
+            System.out.println(userMap);
+            User user = userRepository.findByEmail((String) userMap.get("email")).get();
+
+            Optional<User> userInfo = userRepository.findUserByEmail(user.getEmail());
+            System.out.println(userInfo);
+
+            String redirect_url = "redirect:/main/user/insertImg/" + user.getEmail(); // 사진업로드 이후 redirect될 url
+
+            if (user.getImage() != null) { // 이미 프로필 사진이 있을경우
+                File file = new File(upload_path + user.getImage()); // 경로 + 유저 프로필사진 이름을 가져와서
+                file.delete(); // 원래파일 삭제
+            }
+            mFile.transferTo(new File(upload_path + mFile.getOriginalFilename()));  // 경로에 업로드
+
+            imageService.imgUpdate(user.getEmail(),mFile.getOriginalFilename());
+            result.status = true;
+            result.data = "profile upload success";
+            result.object = user;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result.status = false;
+            result.data = "error";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     // 회원 탈퇴 ... 미완성
     @ApiOperation(value = "회원 탈퇴")
     @PutMapping("/deleteUser")
@@ -259,5 +301,6 @@ public class UserController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
 
 }
