@@ -1,18 +1,18 @@
 package com.ssafy.doit.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name= "`hashtag`")
 public class HashTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,5 @@ public class HashTag {
 
     @Column(nullable = false)
     private String name;
-
-    @ColumnDefault("0")
-    private Integer cnt;
+    private int cnt;
 }
