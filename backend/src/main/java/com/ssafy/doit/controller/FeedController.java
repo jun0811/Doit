@@ -27,6 +27,7 @@ public class FeedController {
     @Autowired
     private FeedRepository feedRepository;
 
+    //그룹 내 활동 피드
     @GetMapping("/groupFeed")
     public Object groupFeedList(@RequestParam Long groupPk){
         List<Feed> list = feedRepository.findAll(groupPk);
