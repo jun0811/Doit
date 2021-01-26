@@ -1,11 +1,11 @@
-package com.ssafy.doit.model;
+package com.ssafy.doit.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class BasicResponse {
+public class ResponseBasic {
     public boolean status;
     public String data;
     public Object object;

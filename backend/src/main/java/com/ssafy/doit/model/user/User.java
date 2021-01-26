@@ -34,9 +34,11 @@ public class User {
     private int mileage;
 
     private String image;
+    private String gdsTumbImg;
 
     @Enumerated(EnumType.STRING)
-    private UserRole user_role;
+    private UserRole userRole;
+
 
 
     @Builder
@@ -44,12 +46,12 @@ public class User {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.user_role = userRole;
+        this.userRole = userRole;
         this.authKey = authKey;
     }
 
     public String getRoleKey() {
-        return this.user_role.getKey();
+        return this.userRole.getKey();
     }
 
 }
