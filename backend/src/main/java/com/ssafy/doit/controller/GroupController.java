@@ -56,9 +56,9 @@ public class GroupController {
 
     // 그룹 가입하기
     @ApiOperation(value = "그룹 가입하기")
-    @PostMapping("/joinedGroup")
-    //public Object joinedGroup(Authentication authentication, Group groupReq)
-    public Object joinedGroup(@RequestParam Long groupPk){
+    @PostMapping("/joinGroup")
+    //public Object joinGroup(Authentication authentication, Group groupReq)
+    public Object joinGroup(@RequestParam Long groupPk){
         BasicResponse result = new BasicResponse();
         groupUserService.join(groupPk);
         result.status = true;
@@ -67,4 +67,21 @@ public class GroupController {
     }
 
     // 가입한 그룹 리스트
+    @ApiOperation(value = "가입한 그룹 리스트")
+    @GetMapping("/joinedGroup")
+    public Object joinedGroup(@RequestParam Long id){
+        //public Object joinedGroup(Authentication authentication, Group groupReq)
+        //userPk로 가입된 groupPK -> 그룹 명 가져오기
+        List<Group> list = groupUserService.findById(id);
+        BasicResponse result = new BasicResponse();
+        if(list.size() == 0){
+            result.status =false;
+            result.data= "가입된 그룹이 없습니다.";
+        }else{
+            result.status = true;
+            result.data = "success";
+            result.object = list;
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
