@@ -1,6 +1,7 @@
 package com.ssafy.doit.service;
 
 import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.GroupUser;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.GroupRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,13 +30,18 @@ public class GroupUserService {
 
     @Transactional
     // public void join(Authentication authentication, Group request)
-    public void join(Long groupPk) {
+    public int join(Long groupPk) {
         //User user = (User) authentication.getPrincipal();
         User user = userRepository.findByEmail("buhee1029@gmail.com").get(); // 테스트용
         Group group = groupRepository.findById(groupPk).get();
-
-        groupUserRepository.save(GroupUser.builder()
-                .group(group).user(user).build());
+        Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
+        if(!opt.isPresent()){
+            if(group.getTotalNum() == group.getMaxNum()) return 2;
+            groupUserRepository.save(GroupUser.builder()
+                    .group(group).user(user).build());
+            group.setTotalNum(group.getTotalNum() + 1);
+        }else return 1;
+        return 0;
     }
 
     // 가입한 그룹 가져오기

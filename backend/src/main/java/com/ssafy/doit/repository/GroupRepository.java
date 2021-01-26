@@ -1,6 +1,7 @@
 package com.ssafy.doit.repository;
 
 import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.response.ResponseGroup;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
