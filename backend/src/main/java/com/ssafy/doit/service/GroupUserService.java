@@ -44,7 +44,7 @@ public class GroupUserService {
     // public void join(Authentication authentication, Group request)
     public List<Group> findById(Long userPk){
         //User user = (User) authentication.getPrincipal();
-        Long id = userRepository.findByEmail("buhee1029@gmail.com").get().getId(); // 테스트용
+        Long id = userRepository.findByEmail("gksgpals96@naver.com").get().getId(); // 테스트용
         return groupRepository.findAllByUserPk(userPk);
     }
 }
