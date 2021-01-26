@@ -13,10 +13,18 @@
 <script>
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
+import http from '../../http-common'
 
 export default {
   components: {Header, Footer},
-  
+
+  created() {
+    // console.log(this.$route.query.authKey)
+    http.get(`/user/confirmSignup?authKey=${this.$route.query.authKey}&email=${this.$route.query.email}`) 
+    .then((res)=>{
+      console.log(res)
+    })
+  }
 }
 </script>
 
