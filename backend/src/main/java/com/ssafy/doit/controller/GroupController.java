@@ -2,6 +2,7 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
 import io.swagger.annotations.ApiOperation;
@@ -30,10 +31,12 @@ public class GroupController {
     //public Object createGroup(HttpServletRequest userReq, Group groupReq, List<String> hashtagList) {
     public Object createGroup(@RequestBody Group groupReq,
                               @RequestParam("hashtags") List<String> hashtags) {
+        Long groupPk = groupHashTagService.save(groupReq, hashtags);
+        groupUserService.join(groupPk);
+
         ResponseBasic result = new ResponseBasic();
-        groupHashTagService.save(groupReq, hashtags);
         result.status = true;
-        result.data = "success";
+        result.data = "그룹이 생성되었습니다.";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -41,8 +44,7 @@ public class GroupController {
     @ApiOperation(value = "그룹 리스트")
     @GetMapping("/searchGroup")
     public Object searchGroup(@RequestParam String tag){ // 페이징 처리하기
-        List<Group> list = groupHashTagService.findAllByHashTag(tag);
-        //System.out.println(list.get(0).tagList.get(0).getHashTag().getName());
+        List<ResponseGroup> list = groupHashTagService.findAllByHashTag(tag);
         ResponseBasic result = new ResponseBasic();
         if(list.size() == 0){
             result.status =false;
@@ -61,9 +63,17 @@ public class GroupController {
     //public Object joinGroup(Authentication authentication, Group groupReq)
     public Object joinGroup(@RequestParam Long groupPk){
         ResponseBasic result = new ResponseBasic();
-        groupUserService.join(groupPk);
-        result.status = true;
-        result.data = "success";
+        int opt = groupUserService.join(groupPk);
+        if(opt == 0){
+            result.status = true;
+            result.data = "success";
+        }else if(opt == 1){
+            result.status = false;
+            result.data = "이미 가입되어있는 그룹입니다.";
+        }else if(opt == 2){
+            result.status = false;
+            result.data = "인원이 다 찼습니다.";
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

@@ -3,6 +3,7 @@ package com.ssafy.doit.service;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
+import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.repository.*;
 import com.ssafy.doit.service.jwt.JwtUtil;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +36,7 @@ public class GroupHashTagService {
     // 그룹 생성
     @Transactional
     //public void save(HttpServletRequest userReq, Group groupReq,  List<String> hashtags){
-    public void save(Group groupReq, List<String> hashtags) {
+    public Long save(Group groupReq, List<String> hashtags) {
 //      Map<String,Object> userMap = (Map<String, Object>) jwtUtil.getUser(userReq.getHeader("accessToken"));
 //      System.out.println(userMap);
 //      User user = userRepository.findByEmail((String) userMap.get("email")).get();
@@ -48,6 +50,8 @@ public class GroupHashTagService {
                 .endDate(groupReq.getEndDate())
                 .leader(1L)
                 .build());
+
+        Long groupPk = group.getGroupPk();
 
         // 입력한 해시태그들이
         for(String name : hashtags){
@@ -66,12 +70,19 @@ public class GroupHashTagService {
             groupHashTagRepository.save(GroupHashTag.builder()
                     .group(group).hashTag(tag).build());
         }
+
+        return groupPk;
     }
 
     // 특정 해시태그 포함한 그룹 찾기
     @Transactional
-    public List<Group> findAllByHashTag(String hashtag){
-        return groupRepository.findAllByHashTag(hashtag);
+    public List<ResponseGroup> findAllByHashTag(String hashtag){
+        List<Group> groupList = groupRepository.findAllByHashTag(hashtag);
+        List<ResponseGroup> resList = new ArrayList<>();
+        for(Group group : groupList){
+            resList.add(new ResponseGroup(group));
+        }
+        return resList;
     }
 }
 
