@@ -72,12 +72,12 @@ public class UserController {
     public Object checkNickname(@RequestBody String nickname){
         BasicResponse result = new BasicResponse();
         if(userRepository.findByNickname(nickname).isPresent()){
-            result.status = true;
-            result.data = "success";
-        }else{
             System.out.println("닉네임 중복");
             result.status = false;
             result.data = "중복된 닉네임 입니다.";
+        }else{
+            result.status = true;
+            result.data = "success";
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -88,12 +88,12 @@ public class UserController {
     public Object checkEmail(@RequestBody String email) {
         BasicResponse result = new BasicResponse();
         if (userRepository.findByEmail(email).isPresent()) {
-            result.status = true;
-            result.data = "success";
-        } else {
             System.out.println("이메일 중복");
             result.status = false;
             result.data = "중복된 이메일 입니다.";
+        } else {
+            result.status = true;
+            result.data = "success";
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

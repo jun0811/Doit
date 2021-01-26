@@ -17,6 +17,9 @@ http.interceptors.response.use(function (response) {
             api.onUnauthorized();
         else if (error.response.status == response.FOBBIDEN)
             api.onFobbiden();
+        else {
+            alert("error!");
+        }
 });
 
 http.interceptors.request.use(function (config) {

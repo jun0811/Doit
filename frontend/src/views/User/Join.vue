@@ -18,7 +18,7 @@
               @blur="$v.name.$touch()"
             ></v-text-field>
           </v-col>
-          <v-btn text class="uncheck mt-4 mx-0 "> 
+          <v-btn text @click="checkNick" uncheck mt-4 mx-0> 
             <font-awesome-icon icon="check-circle"/> 
           </v-btn>
         </v-row>
@@ -36,27 +36,9 @@
               @blur="$v.email.$touch()"
             ></v-text-field>
           </v-col>
-            <v-btn text class="uncheck mt-4"> 
+            <v-btn text @click="checkEmail" class="uncheck mt-4"> 
                 <font-awesome-icon icon="check-circle"/> 
             </v-btn>
-          </v-row>
-        </v-container>
-        <v-container class="px-0">
-          <v-row no-gutters class="d-flex flex-nowrap">
-            <v-col md="12" sm="12">
-              <v-text-field
-                v-model="email"
-                :error-messages="emailErrors"
-                label="E-mail"
-                required
-                clearable
-                @input="$v.email.$touch()"
-                @blur="$v.email.$touch()"
-              ></v-text-field>
-            </v-col>
-              <v-btn text class="uncheck mt-4"> 
-                  <font-awesome-icon icon="check-circle"/> 
-              </v-btn>
           </v-row>
         </v-container>
         <v-text-field
@@ -86,7 +68,7 @@
           @blur="$v.checkbox.$touch()"
         ></v-checkbox>
 
-        <button class="join input">가입하기</button>
+        <button @click="signup" class="join input">가입하기</button>
         <div class="mt-3 d-flex justify-end">
           <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
         </div>
@@ -101,6 +83,7 @@
 import Header from '@/components/common/Header.vue'
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, sameAs, minLength, email } from 'vuelidate/lib/validators'
+import http from '../../http-common'
 
 export default {
   name: 'Join',
@@ -171,8 +154,15 @@ export default {
     },
 
     methods: {
-      submit () {
-        this.$v.$touch()
+      signup () {
+        http.post('/user/signup', {
+          "email": this.email,
+          "password": this.password,
+          "nickname": this.name
+        }).then((response)=>{
+          console.log(response);
+          this.$router.push('/');
+        })
       },
       clear () {
         this.$v.$reset()
@@ -181,6 +171,18 @@ export default {
         this.select = null
         this.checkbox = false
       },
+      checkEmail(){
+        http.post("/user/checkEmail", this.email)
+        .then((response)=>{
+          console.log(response);
+        })
+      },
+      checkNick(){
+        http.post("/user/checkNick", this.name)
+        .then((response)=>{
+          console.log(response);
+        })
+      }
     },
   }
 </script>

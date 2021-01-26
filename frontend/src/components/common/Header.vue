@@ -102,6 +102,7 @@
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, minLength, email } from 'vuelidate/lib/validators'
+import { mapActions } from 'vuex'
 
 export default {
     name: "Header",
@@ -138,6 +139,8 @@ export default {
     },
 
     methods: {
+      ...mapActions(['LOGIN']),
+
       signup() {
         this.$router.push("/user/join")
       },
@@ -146,6 +149,17 @@ export default {
       },
       mypage() {
         this.$router.push("/user/profile")
+      },
+      login(){
+        this.LOGIN({
+          "email": this.email,
+          "password": this.password
+        })
+        .then((response)=>{
+          console.log(response);
+          if(response.data.status)
+            this.dialog = false;
+        })
       }
     }
 }
