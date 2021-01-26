@@ -1,4 +1,4 @@
-package com.ssafy.doit.model.request;
+package com.ssafy.doit.model.response;
 
 import com.ssafy.doit.model.Feed;
 import lombok.Getter;
