@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -214,6 +217,24 @@ public class UserController {
         return ResponseEntity.ok()
                 .headers(httpHeaders)
                 .body(result);
+    }
+
+    @ApiOperation(value = "로그아웃")
+    @GetMapping("/logout")
+    public Object login(HttpServletRequest request, HttpServletResponse response){
+        BasicResponse result = new BasicResponse();
+
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if(auth != null)
+                new SecurityContextLogoutHandler().logout(request, response, auth);
+
+            result = new BasicResponse(true, "success", null);
+        }catch (Exception e){
+            result = new BasicResponse(false, "로그인 실패", null);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 회원정보 수정
