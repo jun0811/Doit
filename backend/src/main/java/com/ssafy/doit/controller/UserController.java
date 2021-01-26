@@ -297,17 +297,17 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // 회원 탈퇴 ... 미완성
+    // 회원 탈퇴
     @ApiOperation(value = "회원 탈퇴")
     @PutMapping("/deleteUser")
     public Object deleteUser(HttpServletRequest req) {
         BasicResponse result = new BasicResponse();
 
         try {
-            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
-            System.out.println(userMap);
-            User user = userRepository.findByEmail((String) userMap.get("email")).get();
-
+//            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
+//            System.out.println(userMap);
+//            User user = userRepository.findByEmail((String) userMap.get("email")).get();
+            User user = userRepository.findByEmail("gksgpals96@naver.com").get(); //Test
             Optional<User> userInfo = userRepository.findUserByEmail(user.getEmail());
             System.out.println(userInfo);
 
@@ -315,7 +315,7 @@ public class UserController {
                 selectUser.setUser_role(UserRole.GUEST);
                 userRepository.save(selectUser);
             });
-            
+
             result.status = true;
             result.data = "탈퇴 success";
             result.object = user;
@@ -327,6 +327,5 @@ public class UserController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 
 }
