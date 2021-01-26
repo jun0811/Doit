@@ -1,10 +1,12 @@
 package com.ssafy.doit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,8 +29,13 @@ public class Group{
     private int score;
     private int totalNum;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
     public List<GroupHashTag> tagList; // 태그리스트
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
+    public List<GroupUser> userList; // 유저리스트
 
     @Builder
     public Group(String name, String content, int maxNum,
@@ -42,13 +49,4 @@ public class Group{
         this.endDate = endDate;
         this.leader = leader;
     }
-
-//    public boolean hasTag(String tag) {
-//        for (GroupHashTag ght : tagList) {
-//            if (ght.getHashTag().getName().equals(tag)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 }

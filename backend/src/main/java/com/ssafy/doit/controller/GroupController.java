@@ -2,8 +2,8 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.BasicResponse;
 import com.ssafy.doit.model.Group;
-import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.service.GroupHashTagService;
+import com.ssafy.doit.service.GroupUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,7 +22,7 @@ public class GroupController {
     private GroupHashTagService groupHashTagService;
 
     @Autowired
-    private final GroupRepository groupRepository;
+    private GroupUserService groupUserService;
 
     // 그룹 생성
     @ApiOperation(value = "그룹 생성")
@@ -38,11 +36,35 @@ public class GroupController {
         result.data = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    // 그룹 리스트
 
-    // 그룹 상세 정보
+    // 그룹 리스트
+    @ApiOperation(value = "그룹 리스트")
+    @GetMapping("/searchGroup")
+    public Object searchGroup(@RequestParam String tag){ // 페이징 처리하기
+        List<Group> list = groupHashTagService.findAllByHashTag(tag);
+        BasicResponse result = new BasicResponse();
+        if(list.size() == 0){
+            result.status =false;
+            result.data= "입력한 해시태그를 가진 그룹이 없습니다.";
+        }else{
+            result.status = true;
+            result.data = "success";
+            result.object = list;
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     // 그룹 가입하기
+    @ApiOperation(value = "그룹 가입하기")
+    @PostMapping("/joinedGroup")
+    //public Object joinedGroup(Authentication authentication, Group groupReq)
+    public Object joinedGroup(@RequestParam Long groupPk){
+        BasicResponse result = new BasicResponse();
+        groupUserService.join(groupPk);
+        result.status = true;
+        result.data = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     // 가입한 그룹 리스트
 }
