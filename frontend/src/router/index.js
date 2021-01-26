@@ -10,6 +10,7 @@ import Join from "../views/User/Join.vue"
 import MailCheck from "../views/User/MailCheck.vue"
 import PasswordChange from "../views/User/PasswordChange.vue"
 import Profile from "../views/User/Profile.vue"
+import Complete from "../views/User/Complete.vue"
 import Update from "../views/User/Update.vue"
 import MileageShop from "../views/MileageShop.vue"
 import PasswordFind from "../views/User/PasswordFind.vue"
@@ -31,6 +32,11 @@ const routes = [
     path: "/user/mailcheck",
     name: "MailCheck",
     component: MailCheck
+  },
+  {
+    path: "/user/complete",
+    name: "Complete",
+    component: Complete
   },
   {
     path: "/user/pwchange",

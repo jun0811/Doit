@@ -278,14 +278,14 @@ public class UserController {
 
 
         try {
-            if(file != null) {
-                fileName = UploadFileUtils.fileUpload(imgUploadPath, file.getOriginalFilename(), file.getBytes(), ymdPath);
-            } else {
-                fileName = uploadPath + File.separator + "images" + File.separator + "none.png";
-            }
-
-            user.setImage(File.separator + "imgUpload" + ymdPath + File.separator + fileName);
-            user.setGdsTumbImg(File.separator + "imgUpload" + ymdPath + File.separator + "s" + File.separator + "s_" + fileName);
+//            if(file != null) {
+//                fileName = UploadFileUtils.fileUpload(imgUploadPath, file.getOriginalFilename(), file.getBytes(), ymdPath);
+//            } else {
+//                fileName = uploadPath + File.separator + "images" + File.separator + "none.png";
+//            }
+//
+//            user.setImage(File.separator + "imgUpload" + ymdPath + File.separator + fileName);
+//            user.setGdsTumbImg(File.separator + "imgUpload" + ymdPath + File.separator + "s" + File.separator + "s_" + fileName);
 
 //            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
 //            System.out.println(userMap);
