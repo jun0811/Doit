@@ -70,8 +70,8 @@ public class GroupHashTagService {
 
     // 특정 해시태그 포함한 그룹 찾기
     @Transactional
-    public List<Group> findAllByHashTag(String tag){
-        return groupRepository.fingByHashTag(tag);
+    public List<Group> findAllByHashTag(String hashtag){
+        return groupRepository.fingAllByHashTag(hashtag);
     }
 }
 
