@@ -14,7 +14,7 @@
 
     <v-img
       height="250"
-      src="https://lh3.googleusercontent.com/proxy/YvWALrhNm-SwJDQW2OueRmvhIPYbVGSrUsfHP1qifM8pUPOqVcjX_eeg560eVA0gF2yVoZQ0pdkZafAmu944aGvs4tPSe4CO1mTjk6WFEsIsz2jRHSrGSrSa-Z2awAJQBYdAqn2CgiIK869H4chgsfgqdnCWmYfspBIAlwToiKvCDHzpUtAhzWLWFaqVJSGLC6Nfh6tQpotWbjIxs_R-xeqzJ-yffgB4aAN49tx-uTg5xBUayvss9h58drBY8T7BL9yzpdJAY8wFqRx00PYM9ud0VxM_zjwo4bi2AoBb6y3gsA"
+      src="https://wonderfulmind.co.kr/wp-content/uploads/2018/05/knitting.jpg"
     ></v-img>
 
     <v-card-title>뜨개질 인증 1일차✌</v-card-title>
