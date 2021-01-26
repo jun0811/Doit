@@ -95,6 +95,53 @@
       >
         마이페이지
       </v-btn>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <!-- navigation drawer 시작-->
+      <v-navigation-drawer
+        v-model="drawer"
+        absolute
+        temporary
+        right
+      >
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-img src="@/assets/logo/profile_temp.png"></v-img>
+          </v-list-item-avatar>
+
+          <v-list-item-content>
+            <v-list-item-title>John Leider</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider></v-divider>
+
+        <v-list>
+          <v-list-group
+            v-for="item in items"
+            :key="item.title"
+            v-model="item.active"
+            :prepend-icon="item.action"
+            no-action
+          >
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
+              </v-list-item-content>
+            </template>
+    
+            <v-list-item
+              v-for="subItem in item.items"
+              :key="subItem.title"
+              @click="group"
+            >
+              <v-list-item-content>
+                <v-list-item-title v-text="subItem.title"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+        </v-list>      </v-navigation-drawer>
+      <!-- navigation drawer 끝-->  
     </div>
   </header>
 </template>
@@ -120,6 +167,20 @@ export default {
         {id: 1, name: "LSJ",email:"nate1994@naver.com", password:"12345678"},
         {id: 2, name: "KSJ",email:"itoggi0328@naver.com", password:"12345678"}
       ],
+      drawer: null,
+      items: [
+        {
+          action: '',
+          title: '가입된 그룹',
+          active: true,
+          items: [
+            { title: 'Group 1' },
+            { title: 'Group 2' },
+            { title: 'Group 3' },
+          ],
+        },
+      ],
+      miniVariant: true,     
     }),
     computed: {
       emailErrors () {
@@ -150,7 +211,7 @@ export default {
       mypage() {
         this.$router.push("/user/profile")
       },
-      login(){
+      login() {
         this.LOGIN({
           "email": this.email,
           "password": this.password
@@ -160,6 +221,9 @@ export default {
           if(response.data.status)
             this.dialog = false;
         })
+      },
+      group() {
+        
       }
     }
 }
