@@ -18,7 +18,7 @@ http.interceptors.response.use(function (response) {
         else if (error.response.status == response.FOBBIDEN)
             api.onFobbiden();
         else {
-            alert("error!");
+            console.log(error)
         }
 });
 
