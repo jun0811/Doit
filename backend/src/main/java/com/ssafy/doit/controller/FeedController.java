@@ -1,8 +1,7 @@
 package com.ssafy.doit.controller;
 
-import com.ssafy.doit.model.BasicResponse;
+import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Feed;
-import com.ssafy.doit.model.request.ResponseFeed;
 import com.ssafy.doit.repository.FeedRepository;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -14,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
-        @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-        @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-        @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
+@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = ResponseBasic.class),
+        @ApiResponse(code = 403, message = "Forbidden", response = ResponseBasic.class),
+        @ApiResponse(code = 404, message = "Not Found", response = ResponseBasic.class),
+        @ApiResponse(code = 500, message = "Failure", response = ResponseBasic.class) })
 
 @RequiredArgsConstructor
 @RestController
@@ -32,7 +31,7 @@ public class FeedController {
     public Object groupFeedList(@RequestParam Long groupPk){
         List<Feed> list = feedRepository.findAll(groupPk);
 
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
 
         if(list.size() == 0){
             result.data = "해당 그룹의 피드가 존재하지 않습니다.";

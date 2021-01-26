@@ -2,7 +2,7 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.user.UserRole;
-import com.ssafy.doit.model.BasicResponse;
+import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.UserRepository;
@@ -47,7 +47,7 @@ public class UserController {
 
     @GetMapping("/info")
     public Object info(HttpServletRequest req){
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
 
         try {
             Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
@@ -70,7 +70,7 @@ public class UserController {
     @ApiOperation(value = "닉네임 중복 확인")
     @PostMapping("/checkNick")
     public Object checkNickname(@RequestBody String nickname){
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
         if(userRepository.findByNickname(nickname).isPresent()){
             System.out.println("닉네임 중복");
             result.status = false;
@@ -86,7 +86,7 @@ public class UserController {
     @ApiOperation(value = "이메일 중복 확인")
     @PostMapping("/checkEmail")
     public Object checkEmail(@RequestBody String email) {
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
         if (userRepository.findByEmail(email).isPresent()) {
             System.out.println("이메일 중복");
             result.status = false;
@@ -102,7 +102,7 @@ public class UserController {
     @ApiOperation(value = "회원가입")
     @PostMapping("/signup")
     public Object signup(@RequestBody User request) {
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
         try {
             String authKey = emailSendService.sendSignupMail(request.getEmail());
             userRepository.save(User.builder()
@@ -146,7 +146,7 @@ public class UserController {
             selectUser.setUser_role(UserRole.USER);
             userRepository.save(selectUser);
         });
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
         result.status = true;
         result.data = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -156,7 +156,7 @@ public class UserController {
     @ApiOperation(value = "비밀번호 변경 이메일 인증 전송")
     @PostMapping("/sendChangePwEmail")
     public Object sendChangePwEmail(@RequestBody User request){
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
 
         String authKey = emailSendService.sendChangePwMail(request.getEmail());
         Optional<User> user = userRepository.findByEmail(request.getEmail());
@@ -186,7 +186,7 @@ public class UserController {
             selectUser.setPassword(passwordEncoder.encode(request.getPassword()));
             userRepository.save(selectUser);
         });
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
         result.status = true;
         result.data = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -199,7 +199,7 @@ public class UserController {
         Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
         result.status = false;
 
         if(!userOpt.isPresent()){
@@ -222,16 +222,16 @@ public class UserController {
     @ApiOperation(value = "로그아웃")
     @GetMapping("/logout")
     public Object login(HttpServletRequest request, HttpServletResponse response){
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
 
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if(auth != null)
                 new SecurityContextLogoutHandler().logout(request, response, auth);
 
-            result = new BasicResponse(true, "success", null);
+            result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
-            result = new BasicResponse(false, "로그인 실패", null);
+            result = new ResponseBasic(false, "로그인 실패", null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -241,7 +241,7 @@ public class UserController {
     @ApiOperation(value = "회원정보 수정")
     @PutMapping("/updateInfo/{email}")
     public Object updateInfo(@RequestBody(required = true) Map<String, String> map) {
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
         String email = map.get("email");
         String name = map.get("name");
 //        System.out.println(name);
@@ -265,7 +265,7 @@ public class UserController {
     @ApiOperation(value = "프로필사진 변경")
     @PutMapping("/insertImg")
     public Object insertImg(HttpServletRequest req, @RequestParam("image") MultipartFile mFile, Model model) {
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
         String upload_path = "C:/Users/multicampus/IdeaProjects/s04p12c108/backend/src/main/resources/static/images/profile/"; // 프로필 사진들 모아두는 폴더
 
         try {
@@ -301,7 +301,7 @@ public class UserController {
     @ApiOperation(value = "회원 탈퇴")
     @PutMapping("/deleteUser")
     public Object deleteUser(HttpServletRequest req) {
-        BasicResponse result = new BasicResponse();
+        ResponseBasic result = new ResponseBasic();
 
         try {
 //            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
