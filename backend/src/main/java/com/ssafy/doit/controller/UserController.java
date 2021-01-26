@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.models.Model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.Map;
 import java.util.Optional;
@@ -192,6 +194,7 @@ public class UserController {
     @PostMapping("/login")
     public Object login(@RequestBody RequestLoginUser user) {
         Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
+        HttpHeaders httpHeaders = new HttpHeaders();
 
         BasicResponse result = new BasicResponse();
         result.status = false;
@@ -206,9 +209,11 @@ public class UserController {
             result.data = "잘못된 비밀번호입니다.";
         else{
             result.status = true;
-            result.object = jwtUtil.generateToken(member);
+            httpHeaders.set("accessToken", jwtUtil.generateToken(member));
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .headers(httpHeaders)
+                .body(result);
     }
 
     // 회원정보 수정
