@@ -34,7 +34,6 @@ public class User {
     private int mileage;
 
     private String image;
-    private String gdsTumbImg;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
