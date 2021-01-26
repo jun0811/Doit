@@ -42,14 +42,9 @@ public class GroupUserService {
     // 가입한 그룹 가져오기
     @Transactional
     // public void join(Authentication authentication, Group request)
-    public List<Group> findById(Long id){
+    public List<Group> findById(Long userPk){
         //User user = (User) authentication.getPrincipal();
-        User user = userRepository.findByEmail("gksgpals96@naver.com").get(); // 테스트용
-        System.out.println("여기오니?");
-        System.out.println(user.getId());
-        System.out.println();
-        List<Group> group = groupRepository.findAll(user.getId());
-
-        return group;
+        Long id = userRepository.findByEmail("buhee1029@gmail.com").get().getId(); // 테스트용
+        return groupRepository.findAllByUserPk(userPk);
     }
 }
