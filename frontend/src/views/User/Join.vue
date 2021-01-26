@@ -1,9 +1,9 @@
 <template>
   <div>
     <Header></Header>
-  <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width=70%>
+  <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width="420px">
     <h3 class="my-5">회원가입</h3>
-    <form class="">
+    <div>
       <v-container class="px-1 ">
         <v-row no-gutters class="d-flex flex-nowrap" >
           <v-col md="12" sm="12" >
@@ -11,6 +11,7 @@
               v-model="name"
               :error-messages="nameErrors"
               :counter="8"
+              maxlength="8"
               label="닉네임"
               required
               clearable
@@ -18,7 +19,7 @@
               @blur="$v.name.$touch()"
             ></v-text-field>
           </v-col>
-          <v-btn text @click="checkNick" uncheck mt-4 mx-0> 
+          <v-btn text @click="checkNick" v-bind:class="{check : c_Nick}" class="mt-4 mx-0"> 
             <font-awesome-icon icon="check-circle"/> 
           </v-btn>
         </v-row>
@@ -36,7 +37,7 @@
               @blur="$v.email.$touch()"
             ></v-text-field>
           </v-col>
-            <v-btn text @click="checkEmail" class="uncheck mt-4"> 
+            <v-btn text @click="checkEmail"  v-bind:class="{check : c_Email }" class="mt-4"> 
                 <font-awesome-icon icon="check-circle"/> 
             </v-btn>
           </v-row>
@@ -67,21 +68,26 @@
           @change="$v.checkbox.$touch()"
           @blur="$v.checkbox.$touch()"
         ></v-checkbox>
+        <v-card-actions class="d-flex align-center"> 
+        <v-row>
+          <v-col>
+            <v-btn type="submit" @click="signup()" class="join input col-12">가입하기</v-btn>
+            <div class="col-12">
+              <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
+            </div>
+          <br>
 
-        <button @click="signup" class="join input">가입하기</button>
-        <div class="mt-3 d-flex justify-end">
-          <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
-        </div>
-        <br>
-      </form>
+          </v-col>
+        </v-row>
+        </v-card-actions>
+      </div>
     </v-card>
-    </div>
-
+  </div>
 </template>
 
 <script>
-import Header from '@/components/common/Header.vue'
-import { validationMixin } from 'vuelidate'
+import Header from '@/components/common/Header.vue';
+import { validationMixin } from 'vuelidate';
 import { required, maxLength, sameAs, minLength, email } from 'vuelidate/lib/validators'
 import http from '../../http-common'
 
@@ -89,11 +95,15 @@ export default {
   name: 'Join',
   components: { Header},
   mixins: [validationMixin],
-    validations: {
+  validations: {
       name: { required, maxLength: maxLength(8) },
       email: { required, email },
       password:{ required, minLength: minLength(8)},
       passwordConfirm:{ sameAsPassword: sameAs("password")},
+      error:{
+        email: false,
+        nickname: false
+      },
       checkbox: {
         checked (val) {
           return val
@@ -107,21 +117,27 @@ export default {
       password: '',
       passwordConfirm: '',
       checkbox: false,
-      checkid: false,
-      checkemail: false
-    }),
-
+      c_Nick: false,
+      c_Email: false,
+      error: {
+        email: false,
+        passowrd: false
+      }
+      }
+    ),
+    watch: {
+      name(){
+        this.check1();
+      },
+      email(){
+        this.check2()
+      }
+    },
     computed: {
       checkboxErrors () {
         const errors = []
         if (!this.$v.checkbox.$dirty) return errors
         !this.$v.checkbox.checked && errors.push('You must agree to continue!')
-        return errors
-      },
-      selectErrors () {
-        const errors = []
-        if (!this.$v.select.$dirty) return errors
-        !this.$v.select.required && errors.push('Item is required')
         return errors
       },
       nameErrors () {
@@ -154,33 +170,52 @@ export default {
     },
 
     methods: {
-      signup () {
-        http.post('/user/signup', {
-          "email": this.email,
-          "password": this.password,
-          "nickname": this.name
-        }).then((response)=>{
-          console.log(response);
-          this.$router.push('/');
-        })
+      check1() {
+        // 수정시에 다시 체크
+        this.c_Nick = false
       },
-      clear () {
-        this.$v.$reset()
-        this.name = ''
-        this.email = ''
-        this.select = null
-        this.checkbox = false
+      check2() {
+        // 수정시에 다시 체크
+        this.c_Email = false
+      },
+
+
+      signup () {
+        if(this.$v.$invalid || this.c_Nick===false || this.c_Email===false){
+          alert("가입 정보를 정확히 기입해주세요! 🙏")
+        }
+        else{
+          console.log(this.$v.$invalid )
+          http.post('/user/signup', {
+            "email": this.email,
+            "password": this.password,
+            "nickname": this.name
+          })
+            .then((response)=>{
+              console.log(response);
+              this.$router.push('/user/mailcheck');
+            })
+            .catch((error)=>{
+              console.log(error)
+            })}
       },
       checkEmail(){
         http.post("/user/checkEmail", this.email)
-        .then((response)=>{
-          console.log(response);
+        .then((res)=>{
+          console.log(res);
+          if(res.data.status) this.c_Email = true
+          else{
+            alert("중복메일입니다.")}
         })
       },
       checkNick(){
         http.post("/user/checkNick", this.name)
-        .then((response)=>{
-          console.log(response);
+        .then((res)=>{
+          console.log(res);
+          if(res.data.status) this.c_Nick = true
+          else{
+            alert("중복 닉네임입니다")
+           }
         })
       }
     },
