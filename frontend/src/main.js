@@ -3,20 +3,22 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
-import "../fontAwesomeIcon.js" // 
 
-Vue.config.productionTip = false
+
+Vue.config.productionTip = false;
 
 new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App),
-  created() {
-    const accessToken = localStorage.getItem("accessToken");
-    console.log(accessToken);
-    if (accessToken) {
-        this.$store.commit("SET_ACCESSTOKEN", accessToken);
+    router,
+    store,
+    vuetify,
+    render: h => h(App),
+    created() {
+        const accessToken = sessionStorage.getItem("accessToken");
+        console.log(accessToken);
+        if (accessToken) {
+            this.$store.commit("SET_ACCESSTOKEN", accessToken);
+        }
     }
-  }
-}).$mount('#app')
+}).$mount('#app');
+
+

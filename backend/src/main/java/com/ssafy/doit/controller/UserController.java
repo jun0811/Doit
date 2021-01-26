@@ -13,13 +13,18 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.models.Model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.Map;
 import java.util.Optional;
@@ -67,12 +72,12 @@ public class UserController {
     public Object checkNickname(@RequestBody String nickname){
         BasicResponse result = new BasicResponse();
         if(userRepository.findByNickname(nickname).isPresent()){
-            result.status = true;
-            result.data = "success";
-        }else{
             System.out.println("닉네임 중복");
             result.status = false;
             result.data = "중복된 닉네임 입니다.";
+        }else{
+            result.status = true;
+            result.data = "success";
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -83,12 +88,12 @@ public class UserController {
     public Object checkEmail(@RequestBody String email) {
         BasicResponse result = new BasicResponse();
         if (userRepository.findByEmail(email).isPresent()) {
-            result.status = true;
-            result.data = "success";
-        } else {
             System.out.println("이메일 중복");
             result.status = false;
             result.data = "중복된 이메일 입니다.";
+        } else {
+            result.status = true;
+            result.data = "success";
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -192,6 +197,7 @@ public class UserController {
     @PostMapping("/login")
     public Object login(@RequestBody RequestLoginUser user) {
         Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
+        HttpHeaders httpHeaders = new HttpHeaders();
 
         BasicResponse result = new BasicResponse();
         result.status = false;
@@ -206,8 +212,28 @@ public class UserController {
             result.data = "잘못된 비밀번호입니다.";
         else{
             result.status = true;
-            result.object = jwtUtil.generateToken(member);
+            httpHeaders.set("accessToken", jwtUtil.generateToken(member));
         }
+        return ResponseEntity.ok()
+                .headers(httpHeaders)
+                .body(result);
+    }
+
+    @ApiOperation(value = "로그아웃")
+    @GetMapping("/logout")
+    public Object login(HttpServletRequest request, HttpServletResponse response){
+        BasicResponse result = new BasicResponse();
+
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if(auth != null)
+                new SecurityContextLogoutHandler().logout(request, response, auth);
+
+            result = new BasicResponse(true, "success", null);
+        }catch (Exception e){
+            result = new BasicResponse(false, "로그인 실패", null);
+        }
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

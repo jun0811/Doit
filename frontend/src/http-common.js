@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { request } from './api/index'
+import { api, response } from './api/index'
 import account from './store/modules/account'
 
 const http = axios.create({
@@ -9,11 +9,17 @@ const http = axios.create({
     },
 })
 
+
 http.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
-    if (error.response.status == 403)
-        request.onUnauthorized();
+        if (error.response.status == response.UNAUTHORIZED)
+            api.onUnauthorized();
+        else if (error.response.status == response.FOBBIDEN)
+            api.onFobbiden();
+        else {
+            alert("error!");
+        }
 });
 
 http.interceptors.request.use(function (config) {
