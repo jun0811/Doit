@@ -42,6 +42,7 @@ public class GroupController {
     @GetMapping("/searchGroup")
     public Object searchGroup(@RequestParam String tag){ // 페이징 처리하기
         List<Group> list = groupHashTagService.findAllByHashTag(tag);
+        //System.out.println(list.get(0).tagList.get(0).getHashTag().getName());
         BasicResponse result = new BasicResponse();
         if(list.size() == 0){
             result.status =false;
@@ -69,10 +70,10 @@ public class GroupController {
     // 가입한 그룹 리스트
     @ApiOperation(value = "가입한 그룹 리스트")
     @GetMapping("/joinedGroup")
-    public Object joinedGroup(@RequestParam Long id){
+    public Object joinedGroup(@RequestParam Long groupPk){
         //public Object joinedGroup(Authentication authentication, Group groupReq)
         //userPk로 가입된 groupPK -> 그룹 명 가져오기
-        List<Group> list = groupUserService.findById(id);
+        List<Group> list = groupUserService.findAllByUserPk(groupPk);
         BasicResponse result = new BasicResponse();
         if(list.size() == 0){
             result.status =false;

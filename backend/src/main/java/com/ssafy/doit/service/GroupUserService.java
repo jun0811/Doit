@@ -34,15 +34,13 @@ public class GroupUserService {
         Group group = groupRepository.findById(groupPk).get();
 
         groupUserRepository.save(GroupUser.builder()
-                .group(group)
-                .user(user)
-                .build());
+                .group(group).user(user).build());
     }
 
     // 가입한 그룹 가져오기
     @Transactional
     // public void join(Authentication authentication, Group request)
-    public List<Group> findById(Long userPk){
+    public List<Group> findAllByUserPk(Long userPk){
         //User user = (User) authentication.getPrincipal();
         Long id = userRepository.findByEmail("buhee1029@gmail.com").get().getId(); // 테스트용
         return groupRepository.findAllByUserPk(userPk);
