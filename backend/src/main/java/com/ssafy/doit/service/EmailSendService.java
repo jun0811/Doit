@@ -68,7 +68,7 @@ public class EmailSendService {
             sendMail.setSubject("비밀번호 변경 링크");
             sendMail.setText(new StringBuffer().append("<h1>[비밀번호 변경을 위한 이메일 인증]</h1>")
                     .append("<p>아래 링크를 클릭하시면 비밀번호 변경페이지로 이동됩니다.</p>")
-                    .append("<a href='http://localhost:8080/") // 비밀번호 변경 페이지로 이동
+                    .append("<a href='http://localhost:3000/user/pwchange?email=") // 비밀번호 변경 페이지로 이동
                     .append(email)
                     .append("&authKey=")
                     .append(authKey)

@@ -90,7 +90,7 @@ export default {
 
         },
         changePW(){
-
+            this.$router.push('/user/pwchange');
         }
     }
 }
