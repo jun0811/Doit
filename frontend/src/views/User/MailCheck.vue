@@ -65,15 +65,13 @@ export default {
             text: "",
         }
     },
-    created: {
-      init() {
-        this.email = this.$route.query.email;
-        this.option = this.$route.query.option
-        
-        if(this.option == 's') 
-          this.text = "회원가입";
-        else this.text = "비밀번호 변경";
-      }
+    created() {
+      this.email = this.$route.query.email;
+      this.option = this.$route.query.option
+
+      if(this.option == 's') 
+        this.text = "회원가입";
+      else this.text = "비밀번호 변경";
     },
     methods: {
       resend () {

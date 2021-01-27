@@ -3,8 +3,8 @@
     <Header></Header>
      <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15" width=50%>
     <h3 class="my-5">비밀번호 찾기</h3>
-    <!-- <form class=""> -->
-
+    <h5 class="mb-5">비밀번호를 찾고자 하는 이메일을 입력해주세요</h5>
+    <div>
       <v-container class="px-0">
         <v-row no-gutters class="d-flex flex-nowrap">
           <v-col md="12">
@@ -12,50 +12,31 @@
               v-model="email"
               :error-messages="emailErrors"
               label="E-mail"
-              placeholder="비밀번호를 찾을 이메일을 입력해주세요"
               required
               clearable
               @input="$v.email.$touch()"
               @blur="$v.email.$touch()"
             ></v-text-field>
           </v-col>
-            <v-btn text class="uncheck mt-4"> 
+            <v-btn @click="checkEmail" text class="uncheck mt-4"> 
                 <font-awesome-icon icon="check-circle"/> 
             </v-btn>
         </v-row>
       </v-container>
-      <!-- <v-text-field
-        v-model="password"
-        :error-messages="passwordErrors"
-        label="비밀번호"
-        clearable
-        required
-        @input="$v.password.$touch()"
-        @blur="$v.password.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="passwordConfirm"
-        :error-messages="passwordConfirmErrors"
-        label="비밀번호 확인"
-        clearable
-        required
-        @input="$v.passwordConfirm.$touch()"
-        @blur="$v.passwordConfirm.$touch()"
-      ></v-text-field>
-      <v-checkbox
-        v-model="checkbox"
-        :error-messages="checkboxErrors"
-        label="Do you agree?"
-        required
-        @change="$v.checkbox.$touch()"
-        @blur="$v.checkbox.$touch()"
-      ></v-checkbox> -->
+     
+      <v-card-actions class="d-flex align-center"> 
+        <v-row>
+          <v-col>
+            <button @click="sendEmail" class="join input col-12">다음</button>
+            <div class="col-12 text-center">
+              <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
+            </div>
+          <br>
 
-      <button @click="sendEmail" class="join input">다음</button>
-      <div class="mt-3 d-flex justify-end ml-auto mr-5">
-        <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
-      </div>
-    <!-- </form> -->
+          </v-col>
+        </v-row>
+        </v-card-actions>
+    </div>
   </v-card>
 
     <Footer></Footer>
@@ -81,6 +62,10 @@ export default {
   data() {
     return {
       email: "",
+      c_Email: false,
+      error: {
+        email: false,
+      }
     }
   },
   created: {
@@ -93,15 +78,30 @@ export default {
       },
   },
   methods: {
+    check() {
+        // 수정시에 다시 체크
+        this.c_Email = false
+    },
+
     sendEmail(){
       http.post('/user/sendChangePwEmail', {
         "email": this.email
       })
       .then((res)=> {
         if(res.data.status)
-          this.$router.push(`/user/mailcheck?email=${this.email}&option=s`)
+          this.$router.push(`/user/mailcheck?email=${this.email}&option=p`)
       })
-    }
+    },
+
+    checkEmail(){
+        http.post("/user/checkEmail", this.email)
+        .then((res)=>{
+          console.log(res);
+          if(!res.data.status) this.c_Email = true
+          else
+            alert("가입하지 않은 이메일입니다.")
+        })
+      }
   }
 }
 </script>
