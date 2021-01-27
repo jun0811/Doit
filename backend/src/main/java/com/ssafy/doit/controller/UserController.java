@@ -1,18 +1,19 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.Profile;
 import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.repository.ProfileRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.EmailSendService;
-import com.ssafy.doit.service.ImageService;
-import com.ssafy.doit.service.UploadFileUtils;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.Model;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,6 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -42,8 +42,9 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private EmailSendService emailSendService;
+
     @Autowired
-    private ImageService imageService;
+    ProfileRepository profileRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -243,12 +244,10 @@ public class UserController {
 
     // 회원정보 수정
     @ApiOperation(value = "회원정보 수정")
-    @PutMapping("/updateInfo/{email}")
-    public Object updateInfo(@RequestBody(required = true) Map<String, String> map) {
+    @PutMapping("/updateInfo")
+    public Object updateInfo(@RequestParam String email,@RequestParam String name) {
         ResponseBasic result = new ResponseBasic();
-        String email = map.get("email");
-        String name = map.get("name");
-//        System.out.println(name);
+
         Optional<User> userInfo = userRepository.findUserByEmail(email);
 
         if (userInfo.isPresent() ) {
@@ -267,45 +266,36 @@ public class UserController {
     }
 
     @ApiOperation(value = "프로필사진 변경")
-    @PutMapping("/insertImg")
-    public Object insertImg(HttpServletRequest req, @RequestParam("image") MultipartFile file, User user) {
+    @PostMapping("/insertImg")
+    public Object insertImg(HttpServletRequest req, @RequestParam("image") MultipartFile files,@RequestParam Long userPk) {
         ResponseBasic result = new ResponseBasic();
-//        String upload_path = "C:/Users/multicampus/IdeaProjects/s04p12c108/backend/src/main/resources"; // 프로필 사진들 모아두는 폴더
+        Profile profile = new Profile();
 
-        String imgUploadPath ="C:/Users/multicampus/IdeaProjects/s04p12c108/backend/src/main/resources" + File.separator + "imgUpload";
-        String ymdPath = UploadFileUtils.calcPath(imgUploadPath);
-        String fileName = null;
+        String sourceFileName = files.getOriginalFilename();
+        String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
 
+        File destinationFile;
+        String destinationFileName;
 
+        String fileUrl = "C:/Users/multicampus/IdeaProjects/s04p12c108/backend/src/main/resources/static/images/";
         try {
-//            if(file != null) {
-//                fileName = UploadFileUtils.fileUpload(imgUploadPath, file.getOriginalFilename(), file.getBytes(), ymdPath);
-//            } else {
-//                fileName = uploadPath + File.separator + "images" + File.separator + "none.png";
-//            }
-//
-//            user.setImage(File.separator + "imgUpload" + ymdPath + File.separator + fileName);
-//            user.setGdsTumbImg(File.separator + "imgUpload" + ymdPath + File.separator + "s" + File.separator + "s_" + fileName);
+            do {
+                destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
+                destinationFile = new File(fileUrl + destinationFileName);
+            } while (destinationFile.exists());
 
-//            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
-//            System.out.println(userMap);
-//            User user = userRepository.findByEmail((String) userMap.get("email")).get();
-//
-//            Optional<User> userInfo = userRepository.findUserByEmail(user.getEmail());
-//            System.out.println(userInfo);
-//
-//            String redirect_url = "redirect:/main/user/insertImg/" + user.getEmail(); // 사진업로드 이후 redirect될 url
-//
-//            if (user.getImage() != null) { // 이미 프로필 사진이 있을경우
-//                File file = new File(imgUploadPath + user.getImage()); // 경로 + 유저 프로필사진 이름을 가져와서
-//                file.delete(); // 원래파일 삭제
-//            }
-//            file.transferTo(new File(imgUploadPath + file.getOriginalFilename()));  // 경로에 업로드
+            destinationFile.getParentFile().mkdirs();
+            files.transferTo(destinationFile);
 
-            imageService.imgUpdate(user.getEmail(),file.getOriginalFilename());
+            profile.setFileName(destinationFileName);
+            profile.setFileOriname(sourceFileName);
+            profile.setFileUrl(fileUrl);
+            profile.setUserPk(userPk);
+            profileRepository.save(profile);
+
             result.status = true;
             result.data = "profile upload success";
-            result.object = user;
+//            result.object = user;
         }
         catch (Exception e){
             e.printStackTrace();
