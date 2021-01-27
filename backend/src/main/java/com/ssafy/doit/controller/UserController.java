@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
@@ -192,6 +193,30 @@ public class UserController {
         ResponseBasic result = new ResponseBasic();
         result.status = true;
         result.data = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    //마이페이지에서 비밀번호 변경
+    @ApiOperation(value = "로그인된 유저 비밀번호 변경")
+    @PostMapping("/changePw")
+    public Object changePw(@RequestBody RequestChangePw request){
+        ResponseBasic result = null;
+
+        try{
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails) principal;
+
+            User currentUser = userRepository.findByEmail(userDetails.getUsername()).get();
+            currentUser.setPassword(passwordEncoder.encode(request.getPassword()));
+            userRepository.save(currentUser);
+
+            result = new ResponseBasic(true, "success", null);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, "비밀번호 변경 실패", null);
+        }
+        
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

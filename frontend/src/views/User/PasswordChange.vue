@@ -80,7 +80,7 @@ export default {
     methods: {
         changePW(){
             // 마이페이지에서 변경
-            http.post('url', {
+            http.post('/user/changePw', {
                 "password": this.password
             })
             .then((res)=>{
