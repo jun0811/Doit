@@ -4,16 +4,20 @@ import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.response.ResponseGroup;
+import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
 import com.ssafy.doit.service.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -35,12 +39,10 @@ public class GroupHashTagService {
 
     // 그룹 생성
     @Transactional
-    //public void save(HttpServletRequest userReq, Group groupReq,  List<String> hashtags){
-    public Long save(Group groupReq, List<String> hashtags) {
-//      Map<String,Object> userMap = (Map<String, Object>) jwtUtil.getUser(userReq.getHeader("accessToken"));
-//      System.out.println(userMap);
-//      User user = userRepository.findByEmail((String) userMap.get("email")).get();
-
+    //public Long save(Group groupReq, List<String> hashtags) {
+    public Long save(HttpServletRequest userReq, Group groupReq, List<String> hashtags){
+        Map<String,Object> userMap = (Map<String, Object>) jwtUtil.getUser(userReq.getHeader("accessToken"));
+        Long userPk = ((Number) userMap.get("id")).longValue();
         // 그룹에 대한 정보 저장
         Group group = groupRepository.save(Group.builder()
                 .name(groupReq.getName())
@@ -48,7 +50,7 @@ public class GroupHashTagService {
                 .maxNum(groupReq.getMaxNum())
                 .startDate(LocalDate.now())
                 .endDate(groupReq.getEndDate())
-                .leader(1L)
+                .leader(userPk)
                 .build());
 
         Long groupPk = group.getGroupPk();
@@ -85,4 +87,3 @@ public class GroupHashTagService {
         return resList;
     }
 }
-

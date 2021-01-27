@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,12 +30,10 @@ public class GroupController {
     // 그룹 생성
     @ApiOperation(value = "그룹 생성")
     @PostMapping("/createGroup")
-    //public Object createGroup(HttpServletRequest userReq, Group groupReq, List<String> hashtagList) {
-    public Object createGroup(@RequestBody Group groupReq,
+    //public Object createGroup(Group groupReq, @RequestParam("hashtags") List<String> hashtags) {
+    public Object createGroup(HttpServletRequest userReq, @RequestBody Group groupReq,
                               @RequestParam("hashtags") List<String> hashtags) {
-        Long groupPk = groupHashTagService.save(groupReq, hashtags);
-        groupUserService.join(groupPk);
-
+        Long groupPk = groupHashTagService.save(userReq, groupReq, hashtags);
         ResponseBasic result = new ResponseBasic();
         result.status = true;
         result.data = "그룹이 생성되었습니다.";
@@ -59,11 +59,10 @@ public class GroupController {
 
     // 그룹 가입하기
     @ApiOperation(value = "그룹 가입하기")
-    @PostMapping("/joinGroup")
-    //public Object joinGroup(Authentication authentication, Group groupReq)
-    public Object joinGroup(@RequestParam Long groupPk){
+    @GetMapping("/joinGroup")
+    public Object joinGroup(HttpServletRequest userReq, @RequestParam Long groupPk){
         ResponseBasic result = new ResponseBasic();
-        int opt = groupUserService.join(groupPk);
+        int opt = groupUserService.join(userReq, groupPk);
         if(opt == 0){
             result.status = true;
             result.data = "success";
@@ -80,10 +79,9 @@ public class GroupController {
     // 가입한 그룹 리스트
     @ApiOperation(value = "가입한 그룹 리스트")
     @GetMapping("/joinedGroup")
-    public Object joinedGroup(@RequestParam Long groupPk){
-        //public Object joinedGroup(Authentication authentication, Group groupReq)
+    public Object joinedGroup(HttpServletRequest userReq){
         //userPk로 가입된 groupPK -> 그룹 명 가져오기
-        List<Group> list = groupUserService.findAllByUserPk(groupPk);
+        List<Group> list = groupUserService.findAllByUserPk(userReq);
         ResponseBasic result = new ResponseBasic();
         if(list.size() == 0){
             result.status =false;

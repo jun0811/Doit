@@ -7,21 +7,27 @@ import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.repository.GroupUserRepository;
 import com.ssafy.doit.repository.UserRepository;
+import com.ssafy.doit.service.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class GroupUserService {
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private GroupUserRepository groupUserRepository;
-    
+
     @Autowired
     private UserRepository userRepository;
 
@@ -29,10 +35,10 @@ public class GroupUserService {
     private GroupRepository groupRepository;
 
     @Transactional
-    // public void join(Authentication authentication, Group request)
-    public int join(Long groupPk) {
-        //User user = (User) authentication.getPrincipal();
-        User user = userRepository.findByEmail("buhee1029@gmail.com").get(); // 테스트용
+    public int join(HttpServletRequest userReq, Long groupPk) {
+        Map<String,Object> userMap = (Map<String, Object>) jwtUtil.getUser(userReq.getHeader("accessToken"));
+        User user = userRepository.findByEmail((String) userMap.get("email")).get();
+        //User user = userRepository.findByEmail("buhee1029@gmail.com").get(); // 테스트용
         Group group = groupRepository.findById(groupPk).get();
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
         if(!opt.isPresent()){
@@ -46,10 +52,9 @@ public class GroupUserService {
 
     // 가입한 그룹 가져오기
     @Transactional
-    // public void join(Authentication authentication, Group request)
-    public List<Group> findAllByUserPk(Long userPk){
-        //User user = (User) authentication.getPrincipal();
-        Long id = userRepository.findByEmail("gksgpals96@naver.com").get().getId(); // 테스트용
+    public List<Group> findAllByUserPk(HttpServletRequest userReq){
+        Map<String,Object> userMap = (Map<String, Object>) jwtUtil.getUser(userReq.getHeader("accessToken"));
+        Long userPk = ((Number) userMap.get("id")).longValue();
         return groupRepository.findAllByUserPk(userPk);
     }
 }
