@@ -13,10 +13,10 @@
           <h1 class="my-3 text-center">인증 메일이 발송되었습니다</h1>
           <div class="my-3">
             <div class="text-center">
-              <subtitle-1>메일함에서(<a href='#'>{{link}}</a>) 인증 메일을 확인 바랍니다.</subtitle-1>
+              <subtitle-1>메일함에서(<a href='#'>{{ email }}</a>) 인증 메일을 확인 바랍니다.</subtitle-1>
             </div>
             <div class="text-center">
-              <subtitle-1>이메일의 인증 버튼을 선택하면 회원 가입이 완료됩니다.</subtitle-1>
+              <subtitle-1>이메일의 인증 링크를 선택하면 {{ text }}이 완료됩니다.</subtitle-1>
             </div>
           </div>
 
@@ -50,6 +50,7 @@
 <script>
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
+import http from '../../http-common'
 
 export default {
     name: "MailCheck",
@@ -59,12 +60,33 @@ export default {
     },
     data() {
         return {
-            link: "test@gmail.com"
+            email: "",
+            option : "",
+            text: "",
         }
+    },
+    created: {
+      init() {
+        this.email = this.$route.query.email;
+        this.option = this.$route.query.option
+        
+        if(this.option == 's') 
+          this.text = "회원가입";
+        else this.text = "비밀번호 변경";
+      }
     },
     methods: {
       resend () {
+          let url = "/user/";
+          if(this.option == 'p') url += "sendChengePwEmail";
+          else url += "sendSignupEmail";
           
+          http.post(url, {
+            "email": this.email
+          })
+          .then(()=>{
+            alert("메일을 재전송 했습니다.");
+          })
       },
     },
 }

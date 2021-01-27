@@ -193,7 +193,7 @@ export default {
           })
             .then((response)=>{
               console.log(response);
-              this.$router.push('/user/mailcheck');
+              this.$router.push(`/user/mailcheck?email=${this.email}&option=s`);
             })
             .catch((error)=>{
               console.log(error)
