@@ -233,7 +233,8 @@ export default {
         this.$router.push("/user/profile")
       },
       login() {
-        this.LOGIN({
+        if(this.$v.$invalid) alert("계정정보가 틀렸습니다.💥")
+        else{this.LOGIN({
           "email": this.email,
           "password": this.password
 
@@ -244,7 +245,7 @@ export default {
             this.dialog = false;
 
           }
-        })
+        })}
       },
       group() {
       },
@@ -257,7 +258,10 @@ export default {
       },
       close(){
         this.dialog=false
-        this.$router.go()
+        // this.$router.go()
+      },
+      passwordFind(){
+        this.$router.push( "/user/pwdfind")
       }
     }
 }
