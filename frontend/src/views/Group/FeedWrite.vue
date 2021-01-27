@@ -24,7 +24,7 @@
         <!-- 그룹 소개 끝 -->
 
         <v-container class="pa-3 pa-sm-16">
-            <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width=70%>
+            <v-card  class="d-flex align-center flex-column my-15 mx-sm-auto px-5 col-sm-10" width=100%>
                 <h3 class="mt-5 mb-3">피드 작성</h3>
                 <v-divider style="width:100%;"></v-divider>
                  <v-col cols="12" lg="8" xl="6" class="my-5">
