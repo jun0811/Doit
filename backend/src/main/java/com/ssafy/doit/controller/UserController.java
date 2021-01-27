@@ -148,7 +148,7 @@ public class UserController {
         user.ifPresent(selectUser ->{
             selectUser.setUserRole(UserRole.USER);
             userRepository.save(selectUser);
-        });
+        });dj
         ResponseBasic result = new ResponseBasic();
         result.status = true;
         result.data = "success";
