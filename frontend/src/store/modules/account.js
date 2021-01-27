@@ -25,6 +25,8 @@ const mutations = {
   },
   LOGOUT(state) {
     state.accessToken = null;
+    sessionStorage.removeItem("accessToken");
+
     localStorage.removeItem("accessToken");
   },
 };
@@ -36,7 +38,9 @@ const actions = {
     return response;
   },
   async LOGOUT({ commit }) {
+    const response = await api.logout();
     commit('LOGOUT');
+    return response;
   },
 };
 

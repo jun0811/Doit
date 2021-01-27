@@ -11,9 +11,10 @@ const api = {
     return http.post('/user/login', payload);
   },
 
-  onUnauthorized() {
-    store.dispatch("LOGOUT");
-    alert("로그아웃 됐음");
+  logout() {
+    // store.dispatch("LOGOUT");
+    alert("로그아웃 되었습니다😒");
+    return http.get('/user/logout')
   },
 
   onFobbiden() {

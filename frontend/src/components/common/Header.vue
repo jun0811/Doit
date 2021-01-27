@@ -7,12 +7,14 @@
       class="logo"
       @click="logoClick"
     >
-
     <div>  
+
+      <!-- 로그인창 시작 -->
       <v-dialog
         v-model="dialog"
         persistent
         max-width="600px"
+        v-if="!this.$store.state.account.accessToken"
       >
         <template v-slot:activator="{on}">
           <v-btn
@@ -23,10 +25,12 @@
           로그인
           </v-btn>
         </template>
+
+        
         <v-card class="d-flex align-center flex-column mx-auto">
           <v-btn
           text
-          @click="dialog=false"
+          @click="close"
           >
             <font-awesome-icon icon="times-circle"/>
           </v-btn>
@@ -85,24 +89,37 @@
         text
         @click="signup"
         class= "px-0"
+        v-if="!this.$store.state.account.accessToken"
       >
         회원가입
       </v-btn>
+
       <v-btn
         text
         @click="mypage"
         class= "px-0"
+        v-if="this.$store.state.account.accessToken"
       >
         마이페이지
       </v-btn>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-btn
+        text
+        @click="logout"
+        class="px-0"
+        v-if="this.$store.state.account.accessToken"
+      >
+        로그아웃
+      </v-btn>
 
       <!-- navigation drawer 시작-->
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-navigation-drawer
         v-model="drawer"
         absolute
         temporary
         right
+        disable-route-watcher
       >
         <v-list-item>
           <v-list-item-avatar>
@@ -198,9 +215,13 @@ export default {
         return errors
       },
     },
+    created(){
+      console.log(this.$store.state.account.accessToken)
+    }
+    ,
 
     methods: {
-      ...mapActions(['LOGIN']),
+      ...mapActions(['LOGIN', 'LOGOUT']),
 
       signup() {
         this.$router.push("/user/join")
@@ -215,15 +236,28 @@ export default {
         this.LOGIN({
           "email": this.email,
           "password": this.password
+
         })
         .then((response)=>{
           console.log(response);
-          if(response.data.status)
+          if(response.data.status) {
             this.dialog = false;
+
+          }
         })
       },
       group() {
-        
+      },
+      logout() {
+        this.LOGOUT()
+        .then((response) => {
+          console.log(response)
+          this.$router.go()
+        })
+      },
+      close(){
+        this.dialog=false
+        this.$router.go()
       }
     }
 }
