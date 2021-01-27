@@ -58,6 +58,7 @@
                             <v-textarea
                             v-model="content"
                             placeholder="인증 결과물을 올려주세요"
+                            auto-grow
                             ></v-textarea>
                         </v-container>
                     </v-row>
