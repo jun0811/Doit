@@ -68,7 +68,6 @@ public class GroupHashTagService {
             }
 
             // 그룹과 해시태그 연결 테이블에도 PK 값으로 저장
-            //groupHashTagRepository.save(new GroupHashTag(group, tag));
             groupHashTagRepository.save(GroupHashTag.builder()
                     .group(group).hashTag(tag).build());
         }

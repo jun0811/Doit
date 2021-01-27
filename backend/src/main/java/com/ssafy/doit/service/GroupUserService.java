@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,7 +39,6 @@ public class GroupUserService {
     public int join(HttpServletRequest userReq, Long groupPk) {
         Map<String,Object> userMap = (Map<String, Object>) jwtUtil.getUser(userReq.getHeader("accessToken"));
         User user = userRepository.findByEmail((String) userMap.get("email")).get();
-        //User user = userRepository.findByEmail("buhee1029@gmail.com").get(); // 테스트용
         Group group = groupRepository.findById(groupPk).get();
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
         if(!opt.isPresent()){
@@ -54,7 +54,11 @@ public class GroupUserService {
     @Transactional
     public List<Group> findAllByUserPk(HttpServletRequest userReq){
         Map<String,Object> userMap = (Map<String, Object>) jwtUtil.getUser(userReq.getHeader("accessToken"));
-        Long userPk = ((Number) userMap.get("id")).longValue();
-        return groupRepository.findAllByUserPk(userPk);
+        User user = userRepository.findByEmail((String) userMap.get("email")).get();
+        List<Group> list = new ArrayList<>();
+        for(GroupUser group : user.groupList){
+            list.add(group.getGroup());
+        }
+        return list;
     }
 }

@@ -15,8 +15,8 @@ public class ResponseGroup {
     private String name;
     private String content;
     private Long leader;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String startDate;
+    private String endDate;
     private int score;
     private int totalNum;
     private int maxNum;
@@ -28,8 +28,8 @@ public class ResponseGroup {
         this.groupPk = group.getGroupPk();
         this.name = group.getName();
         this.content = group.getContent();
-        this.startDate = group.getStartDate();
-        this.endDate = group.getEndDate();
+        this.startDate = group.getStartDate().toString();
+        this.endDate = group.getEndDate().toString();
         this.leader = group.getLeader();
         this.score = group.getScore();
         this.totalNum = group.getTotalNum();
