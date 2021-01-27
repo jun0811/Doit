@@ -57,6 +57,23 @@ public class GroupController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // 선택한 그룹 정보 제공
+    @ApiOperation(value = "선택한 그룹 정보 제공")
+    @GetMapping("/detailGroup")
+    public Object detailGroup(@RequestParam Long groupPk){
+        ResponseGroup group = groupHashTagService.findByGroupPk(groupPk);
+        ResponseBasic result = new ResponseBasic();
+        if (group == null) {
+            result.status = false;
+            result.data = "fail";
+        }else{
+            result.status = true;
+            result.data = "success";
+            result.object = group;
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     // 그룹 가입하기
     @ApiOperation(value = "그룹 가입하기")
     @GetMapping("/joinGroup")
