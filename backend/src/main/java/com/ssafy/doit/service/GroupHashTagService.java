@@ -85,4 +85,11 @@ public class GroupHashTagService {
         }
         return resList;
     }
+
+    // 선택한 그룹 정보 제공
+    @Transactional
+    public ResponseGroup findByGroupPk(Long groupPk) {
+        Group group = groupRepository.findById(groupPk).get();
+        return (new ResponseGroup(group));
+    }
 }
