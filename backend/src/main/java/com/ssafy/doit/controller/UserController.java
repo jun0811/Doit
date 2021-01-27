@@ -271,7 +271,7 @@ public class UserController {
     public Object updateInfo(@RequestParam String email,@RequestParam String name) {
         ResponseBasic result = new ResponseBasic();
 
-        Optional<User> userInfo = userRepository.findUserByEmail(email);
+        Optional<User> userInfo = userRepository.findByEmail(email);
 
             if (userInfo.isPresent()) {
                 userInfo.ifPresent(selectUser -> {
@@ -370,7 +370,7 @@ public class UserController {
 //            System.out.println(userMap);
 //            User user = userRepository.findByEmail((String) userMap.get("email")).get();
             User user = userRepository.findByEmail("gksgpals96@naver.com").get(); //Test
-            Optional<User> userInfo = userRepository.findUserByEmail(user.getEmail());
+            Optional<User> userInfo = userRepository.findByEmail(user.getEmail());
             System.out.println(userInfo);
 
             userInfo.ifPresent(selectUser->{
