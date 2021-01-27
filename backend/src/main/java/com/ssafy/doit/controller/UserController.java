@@ -44,11 +44,9 @@ public class UserController {
     private EmailSendService emailSendService;
 
     @Autowired
-    ProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
 
     private final PasswordEncoder passwordEncoder;
-
-    private String uploadPath;
 
     @GetMapping("/info")
     public Object info(HttpServletRequest req){
@@ -250,21 +248,44 @@ public class UserController {
 
         Optional<User> userInfo = userRepository.findUserByEmail(email);
 
-        if (userInfo.isPresent() ) {
-            userInfo.ifPresent(selectUser->{
-                selectUser.setNickname(name);
-                userRepository.save(selectUser);
-            });
-            result.status = true;
-            result.data = "success";
-        }
-        else{
-            result.status = false;
-            result.data = "실패";
-        }
+            if (userInfo.isPresent()) {
+                userInfo.ifPresent(selectUser -> {
+                    selectUser.setNickname(name);
+                    userRepository.save(selectUser);
+                });
+                result.status = true;
+                result.data = "success";
+            } else {
+                result.status = false;
+                result.data = "회원정보 수정 실패";
+            }
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "프로필사진 수정을 위한 삭제")
+    @DeleteMapping("/deleteImg")
+    public Object deleteImg(@RequestParam Long userPk) {
+        ResponseBasic result = new ResponseBasic();
+        try {
+            Optional<Profile> exImage = profileRepository.findByUserPk(userPk);
+
+            if (exImage.isPresent()) {
+                exImage.ifPresent(selectUser -> {
+                    profileRepository.delete(selectUser);
+                });
+            }
+            result.status = true;
+            result.data = "profile delete success";
+//            result.object = user;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result.status = false;
+            result.data = "error";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
     @ApiOperation(value = "프로필사진 변경")
     @PostMapping("/insertImg")
     public Object insertImg(HttpServletRequest req, @RequestParam("image") MultipartFile files,@RequestParam Long userPk) {
@@ -277,8 +298,16 @@ public class UserController {
         File destinationFile;
         String destinationFileName;
 
-        String fileUrl = "C:/Users/multicampus/IdeaProjects/s04p12c108/backend/src/main/resources/static/images/";
+        String fileUrl = "C:/Users/HOME/IdeaProjects/images/";
+
         try {
+            Optional<Profile> exImage = profileRepository.findByUserPk(userPk);
+
+            if (exImage.isPresent()) {
+                exImage.ifPresent(selectUser -> {
+                    profileRepository.delete(selectUser);
+                });
+            }
             do {
                 destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
                 destinationFile = new File(fileUrl + destinationFileName);

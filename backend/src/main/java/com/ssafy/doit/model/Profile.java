@@ -15,7 +15,7 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profilePk;
 
-    private Long UserPk;
+    private Long userPk;
 
     private String fileName;
 
