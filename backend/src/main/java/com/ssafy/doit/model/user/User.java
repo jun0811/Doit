@@ -1,6 +1,8 @@
 package com.ssafy.doit.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ssafy.doit.model.GroupUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -38,7 +41,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    public List<GroupUser> groupList; // 그룹리스트
 
     @Builder
     public User(String email, String password, String nickname, UserRole userRole, String authKey) {
