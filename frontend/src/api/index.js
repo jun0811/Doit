@@ -12,9 +12,11 @@ const api = {
   },
 
   logout() {
-    // store.dispatch("LOGOUT");
-    alert("로그아웃 되었습니다😒");
     return http.get('/user/logout')
+  },
+
+  onUnauthorized() {
+    alert("로그인 만료");
   },
 
   onFobbiden() {
