@@ -2,6 +2,7 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.Profile;
 import com.ssafy.doit.model.request.RequestChangePw;
+import com.ssafy.doit.model.response.ResponseUser;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.request.RequestLoginUser;
@@ -49,176 +50,6 @@ public class UserController {
 
     private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("/info")
-    public Object info(HttpServletRequest req){
-        ResponseBasic result = new ResponseBasic();
-
-        try {
-            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
-            System.out.println(userMap);
-            User user = userRepository.findByEmail((String) userMap.get("email")).get();
-
-            result.status = true;
-            result.data = "success";
-            result.object = user;
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            result.status = false;
-            result.data = "error";
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    // 닉네임 중복 확인
-    @ApiOperation(value = "닉네임 중복 확인")
-    @PostMapping("/checkNick")
-    public Object checkNickname(@RequestBody String nickname){
-        ResponseBasic result = new ResponseBasic();
-        if(userRepository.findByNickname(nickname).isPresent()){
-            System.out.println("닉네임 중복");
-            result.status = false;
-            result.data = "중복된 닉네임 입니다.";
-        }else{
-            result.status = true;
-            result.data = "success";
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    // 이메일 중복 확인
-    @ApiOperation(value = "이메일 중복 확인")
-    @PostMapping("/checkEmail")
-    public Object checkEmail(@RequestBody String email) {
-        ResponseBasic result = new ResponseBasic();
-        if (userRepository.findByEmail(email).isPresent()) {
-            System.out.println("이메일 중복");
-            result.status = false;
-            result.data = "중복된 이메일 입니다.";
-        } else {
-            result.status = true;
-            result.data = "success";
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    // 회원가입
-    @ApiOperation(value = "회원가입")
-    @PostMapping("/signup")
-    public Object signup(@RequestBody User request) {
-        ResponseBasic result = new ResponseBasic();
-        try {
-            String authKey = emailSendService.sendSignupMail(request.getEmail());
-            userRepository.save(User.builder()
-                    .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .nickname(request.getNickname())
-                    .userRole(UserRole.GUEST) // 최초 가입시 인증 받기 전에는 GUEST
-                    .authKey(authKey)
-                    .build()).getId();
-
-            result.status = true;
-            result.data = "success";
-        }
-        catch (Exception e){
-            result.status = false;
-            result.data = "실패";
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    // 회원가입 이메일 인증 전송
-    @ApiOperation(value = "회원가입 이메일 인증 전송")
-    @PostMapping("/sendSignupEmail")
-    public void sendSignupEmail(@RequestBody User request){
-        String authKey = emailSendService.sendSignupMail(request.getEmail());
-        Optional<User> user = userRepository.findByEmail(request.getEmail());
-
-        user.ifPresent(selectUser ->{
-            selectUser.setAuthKey(authKey);
-            userRepository.save(selectUser);
-        });
-    }
-
-    // 회원가입 이메일 인증 확인
-    @ApiOperation(value = "회원가입 이메일 인증 확인")
-    @GetMapping("/confirmSignup")
-    public Object confirmSignup(@RequestParam String email, @RequestParam String authKey){
-        Optional<User> user = userRepository.findByEmailAndAuthKey(email, authKey);
-
-        user.ifPresent(selectUser ->{
-            selectUser.setUserRole(UserRole.USER);
-            userRepository.save(selectUser);
-        });
-        ResponseBasic result = new ResponseBasic();
-        result.status = true;
-        result.data = "success";
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    // 비밀번호 변경 이메일 인증 전송
-    @ApiOperation(value = "비밀번호 변경 이메일 인증 전송")
-    @PostMapping("/sendChangePwEmail")
-    public Object sendChangePwEmail(@RequestBody User request){
-        ResponseBasic result = new ResponseBasic();
-
-        String authKey = emailSendService.sendChangePwMail(request.getEmail());
-        Optional<User> user = userRepository.findByEmail(request.getEmail());
-
-        if(!user.isPresent()) {
-            result.status = false;
-            result.data = "해당 이메일이 존재하지 않습니다.";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        user.ifPresent(selectUser -> {
-                selectUser.setAuthKey(authKey);
-                userRepository.save(selectUser);
-        });
-        result.status = true;
-        result.data = "success";
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    // 비밀번호 변경 이메일 인증 확인
-    @ApiOperation(value = "비밀번호 변경 이메일 인증 확인")
-    @PostMapping("/confirmPw")
-    public Object confirmPw(@RequestBody RequestChangePw request){
-        Optional<User> user = userRepository.findByEmailAndAuthKey(request.getEmail(), request.getAuthKey());
-
-        user.ifPresent(selectUser ->{
-            selectUser.setPassword(passwordEncoder.encode(request.getPassword()));
-            userRepository.save(selectUser);
-        });
-        ResponseBasic result = new ResponseBasic();
-        result.status = true;
-        result.data = "success";
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    //마이페이지에서 비밀번호 변경
-    @ApiOperation(value = "로그인된 유저 비밀번호 변경")
-    @PostMapping("/changePw")
-    public Object changePw(@RequestBody RequestChangePw request){
-        ResponseBasic result = null;
-
-        try{
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails) principal;
-
-            User currentUser = userRepository.findByEmail(userDetails.getUsername()).get();
-            currentUser.setPassword(passwordEncoder.encode(request.getPassword()));
-            userRepository.save(currentUser);
-
-            result = new ResponseBasic(true, "success", null);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            result = new ResponseBasic(false, "비밀번호 변경 실패", null);
-        }
-        
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
 
     // 로그인
     @ApiOperation(value = "로그인")
@@ -265,6 +96,29 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // 로그인한 사용자 정보
+    @ApiOperation(value = "로그인한 사용자 정보")
+    @GetMapping("/detailUser")
+    public Object detailUser(HttpServletRequest req){
+        ResponseBasic result = new ResponseBasic();
+
+        try {
+            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
+            User getUser = userRepository.findByEmail((String) userMap.get("email")).get();
+            ResponseUser user = new ResponseUser(getUser);
+
+            result.status = true;
+            result.data = "success";
+            result.object = user;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result.status = false;
+            result.data = "fail";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     // 회원정보 수정
     @ApiOperation(value = "회원정보 수정")
     @PutMapping("/updateInfo")
@@ -288,7 +142,31 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "프로필사진 수정을 위한 삭제")
+    // 마이페이지에서 비밀번호 변경
+    @ApiOperation(value = "로그인한 사용자 비밀번호 변경")
+    @PostMapping("/changePw")
+    public Object changePw(@RequestBody RequestChangePw request){
+        ResponseBasic result = null;
+
+        try{
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails) principal;
+
+            User currentUser = userRepository.findByEmail(userDetails.getUsername()).get();
+            currentUser.setPassword(passwordEncoder.encode(request.getPassword()));
+            userRepository.save(currentUser);
+
+            result = new ResponseBasic(true, "success", null);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, "비밀번호 변경 실패", null);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "프로필사진 변경 위한 삭제")
     @DeleteMapping("/deleteImg")
     public Object deleteImg(@RequestParam Long userPk) {
         ResponseBasic result = new ResponseBasic();
@@ -302,7 +180,6 @@ public class UserController {
             }
             result.status = true;
             result.data = "profile delete success";
-//            result.object = user;
         }
         catch (Exception e){
             e.printStackTrace();
@@ -311,6 +188,7 @@ public class UserController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
     @ApiOperation(value = "프로필사진 변경")
     @PostMapping("/insertImg")
     public Object insertImg(HttpServletRequest req, @RequestParam("image") MultipartFile files,@RequestParam Long userPk) {
@@ -349,7 +227,6 @@ public class UserController {
 
             result.status = true;
             result.data = "profile upload success";
-//            result.object = user;
         }
         catch (Exception e){
             e.printStackTrace();
@@ -366,10 +243,9 @@ public class UserController {
         ResponseBasic result = new ResponseBasic();
 
         try {
-//            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
-//            System.out.println(userMap);
-//            User user = userRepository.findByEmail((String) userMap.get("email")).get();
-            User user = userRepository.findByEmail("gksgpals96@naver.com").get(); //Test
+            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
+            System.out.println(userMap);
+            User user = userRepository.findByEmail((String) userMap.get("email")).get();
             Optional<User> userInfo = userRepository.findByEmail(user.getEmail());
             System.out.println(userInfo);
 
@@ -389,5 +265,4 @@ public class UserController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 }
