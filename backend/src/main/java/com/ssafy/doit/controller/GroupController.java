@@ -4,6 +4,7 @@ import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.response.ResponseGroup;
+import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -98,8 +102,24 @@ public class GroupController {
     @ApiOperation(value = "가입한 그룹 리스트")
     @GetMapping("/joinedGroup")
     public Object joinedGroup(@RequestParam Long userPk){
-        //userPk로 가입된 groupPK -> 그룹 명 가져오기
+        //userPk로 가입된 groupPK -> 그룹 명 가져오기'
         List<ResGroupList> list = groupUserService.findAllByUserPk(userPk);
+        ResponseBasic result = new ResponseBasic();
+        if(list.size() == 0){
+            result.status =false;
+            result.data= "가입된 그룹이 없습니다.";
+        }else{
+            result.status = true;
+            result.data = "success";
+            result.object = list;
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "로그인한 유저가 가입한 그룹 리스트")
+    @GetMapping("/currentUserGroup")
+    public Object currentUserGroup(){
+        List<ResGroupList> list = groupUserService.findCurrentUser();
         ResponseBasic result = new ResponseBasic();
         if(list.size() == 0){
             result.status =false;

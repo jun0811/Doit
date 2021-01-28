@@ -65,4 +65,16 @@ public class GroupUserService {
         }
         return list;
     }
+
+    @Transactional
+    public List<ResGroupList> findCurrentUser(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
+        User user = userRepository.findByEmail(userDetails.getUsername()).get();
+        List<ResGroupList> list = new ArrayList<>();
+        for(GroupUser group : user.groupList){
+            list.add(new ResGroupList(group.getGroup()));
+        }
+        return list;
+    }
 }
