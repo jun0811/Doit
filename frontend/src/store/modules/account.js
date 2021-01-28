@@ -16,7 +16,8 @@ const getters = {
 const mutations = {
   SET_ACCESSTOKEN(state, token) {
     state.accessToken = token;
-  },
+  },  
+  
   LOGIN(state, { accesstoken }) {
     console.log(accesstoken);
     if (!accesstoken) return;

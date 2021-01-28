@@ -10,18 +10,24 @@
           label="만들고 싶은 습관을 검색해보세요!"
           clearable
           color=""
+          @keyup.enter="submit"
       ></v-text-field>
     </v-col>
   </v-row>
 </template>
 
 <script>
-  export default {
+export default {
     data () {
       return {
         word: ""
       }
     },
+    methods:{
+      submit(){
+        console.log(this.word)
+        this.$router.push("/group/grouplist")
+      }}
   }
 </script>
 

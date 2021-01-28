@@ -66,7 +66,8 @@ const routes = [
   {
     path: "/group/grouplist",
     name: "GroupList",
-    component: GroupList
+    component: GroupList,
+    props:true
   },
   {
     path: "/group/groupcreate",
