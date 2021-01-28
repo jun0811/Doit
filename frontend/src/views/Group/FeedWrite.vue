@@ -29,50 +29,58 @@
                 <v-divider style="width:100%;"></v-divider>
                  <v-col cols="12" lg="8" xl="6" class="my-5">
                     <v-row class="text-left">
-                        <v-col cols="5" sm="3" md="2">
+                        <v-col cols="3" sm="2">
                             <v-img
                             id="profile"
                             src="@/assets/logo/profile_temp.png"
                             alt="profile-img"
                             class="profile-img my-auto mx-auto"
-                            max-height="60"
-                            max-width="60"
+                            max-height="50"
+                            max-width="50"
                             />
                         </v-col>
-                        <v-col cols="7" sm="5" md="6" class="pa-0 my-auto">
+                        <v-col cols="9" sm="10" class="pa-0 my-auto">
                             <div>
                                 {{name}}
                             </div>
                         </v-col>
-                        <v-col cols="12" sm="4" class="my-auto">
-                            <v-select
-                            :items="items"
-                            v-model="selected"
-                            dense
-                            outlined
-                            ></v-select>
-                        </v-col>
                     </v-row>
                     <v-row>
-                        <v-container fluid class="py-0">
+                        <v-container fluid class="py-5">
                             <v-textarea
-                            v-model="content"
-                            placeholder="인증 결과물을 올려주세요"
-                            auto-grow
-                            ></v-textarea>
+                                label="인증 내용 입력"
+                                v-model="content"
+                                auto-grow
+                                outlined
+                                rows="3"
+                                row-height="23"
+                            ></v-textarea>                            
                         </v-container>
                     </v-row>
-                    <v-row>
-                        <v-file-input
-                        class="py-0"
-                        truncate-length="50"
-                        ></v-file-input>
-                    </v-row>
-                    <v-row justify="center" class="mt-5">
-                        <v-btn
-                        @click="write"
-                        outlined
-                        >게 시</v-btn>
+                    <v-row class="d-flex mt-5">
+                        <v-col cols="12" sm="4" class="my-auto">
+                        <v-select
+                            :items="items"
+                            label="피드 종류 선택"
+                            dense
+                            outlined
+                            v-model="selected"
+                        ></v-select>                            
+                        </v-col>                        
+                        <v-col cols="12" sm="5">
+                            <v-file-input
+                                class="py-0"
+                                truncate-length="50"
+                                label="첨부파일 선택"
+                            ></v-file-input>
+                        </v-col>
+                        <v-col cols="12" sm="2" class="ml-auto">
+                            <v-btn
+                            @click="write"
+                            outlined
+                            class="complete-btn text-size"
+                            >작성 완료</v-btn>
+                        </v-col>
                     </v-row>
                 </v-col>
             </v-card>
@@ -94,7 +102,7 @@ export default {
     data() {
         return {
             name: 'Nickname',
-            selected : '인증',
+            selected : '',
             content :'',
             items : [
                 '인증',
@@ -110,6 +118,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.complete-btn {
+    width: 100%;
+    border: 1px solid #F9802D;
+    color: #F9802D;
+}
 
+.text-size {
+    font-size: 80%;
+}
 </style>
