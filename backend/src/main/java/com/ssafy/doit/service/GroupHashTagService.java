@@ -10,6 +10,8 @@ import com.ssafy.doit.service.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +40,11 @@ public class GroupHashTagService {
 
     // 그룹 생성
     @Transactional
-    //public Long save(Group groupReq, List<String> hashtags) {
-    public Long save(HttpServletRequest userReq, Group groupReq, List<String> hashtags){
-        Map<String,Object> userMap = (Map<String, Object>) jwtUtil.getUser(userReq.getHeader("accessToken"));
-        Long userPk = ((Number) userMap.get("id")).longValue();
+    public Long save(Group groupReq, List<String> hashtags){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
+        Long userPk = userRepository.findByEmail(userDetails.getUsername()).get().getId();
+
         // 그룹에 대한 정보 저장
         Group group = groupRepository.save(Group.builder()
                 .name(groupReq.getName())
@@ -71,7 +73,6 @@ public class GroupHashTagService {
             groupHashTagRepository.save(GroupHashTag.builder()
                     .group(group).hashTag(tag).build());
         }
-
         return groupPk;
     }
 
