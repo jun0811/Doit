@@ -24,6 +24,11 @@ export default {
     .then((res)=>{
       console.log(res)
     })
+  },
+  methods:{
+    main(){
+      this.$router.push('/')
+    }
   }
 }
 </script>

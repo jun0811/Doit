@@ -1,13 +1,13 @@
 <template>
   <div>
     <Header></Header>
-     <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15" width=50%>
+     <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15 px-3" width="400px">
     <h3 class="my-5">비밀번호 찾기</h3>
     <h5 class="mb-5">비밀번호를 찾고자 하는 이메일을 입력해주세요</h5>
     <div>
       <v-container class="px-0">
         <v-row no-gutters class="d-flex flex-nowrap">
-          <v-col md="12">
+          <v-col sm="11">
             <v-text-field
               v-model="email"
               :error-messages="emailErrors"
@@ -18,7 +18,7 @@
               @blur="$v.email.$touch()"
             ></v-text-field>
           </v-col>
-            <v-btn @click="checkEmail" text class="uncheck mt-4"> 
+            <v-btn text @click="checkEmail"  v-bind:class="{check : c_Email }" class="mt-4"> 
                 <font-awesome-icon icon="check-circle"/> 
             </v-btn>
         </v-row>
@@ -68,6 +68,11 @@ export default {
       }
     }
   },
+  watch: {
+    email(){
+      this.check()
+    }
+  },
   created: {
     emailErrors () {
         const errors = []
@@ -84,6 +89,7 @@ export default {
     },
 
     sendEmail(){
+      if(this.c_Email){
       http.post('/user/sendChangePwEmail', {
         "email": this.email
       })
@@ -91,7 +97,11 @@ export default {
         if(res.data.status)
           this.$router.push(`/user/mailcheck?email=${this.email}&option=p`)
       })
-    },
+    }
+    else{
+      console.log("가입한 이메일을 입력해주세요👀") 
+    }}
+    ,
 
     checkEmail(){
         http.post("/user/checkEmail", this.email)
@@ -106,6 +116,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .check {
+    color: #F9802D;
+  }
 </style>

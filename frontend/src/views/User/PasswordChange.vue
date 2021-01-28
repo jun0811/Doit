@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header></Header>
-     <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15" width=50%>
+     <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width="360px">
     <h3 class="my-5">비밀번호 변경</h3>
     <div>
       <v-text-field
@@ -89,6 +89,10 @@ export default {
             })
         },
         FindPW(){ // 비밀번호 찾기로 변경
+         if(this.$v.$invalid){
+           alert("비밀번호를 정확히 입력해주세요")
+         }
+          else{
             http.post('/user/confirmPw', {
                 "authKey": this.$route.query.authKey,
                 "email": this.$route.query.email,
@@ -98,6 +102,7 @@ export default {
                 alert(res.data.status);
                 this.$router.push('/');
             })
+        }
         },
         execute() {
             if(this.$store.getters.getAccessToken) this.changePW();
