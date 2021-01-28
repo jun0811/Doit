@@ -43,7 +43,7 @@ public class Group{
                  LocalDate startDate, LocalDate endDate, Long leader){
         this.name = name;
         this.content = content;
-        this.totalNum = 1;
+        this.totalNum = 0;
         this.maxNum = maxNum;
         this.score = 0;
         this.startDate = startDate;

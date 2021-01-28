@@ -1,0 +1,17 @@
+package com.ssafy.doit.model.response;
+
+import com.ssafy.doit.model.Group;
+import lombok.Getter;
+
+@Getter
+public class ResGroupList {
+    private Long groupPk;
+    private String name;
+    private int score;
+
+    public ResGroupList(Group group){
+        this.groupPk = group.getGroupPk();
+        this.name = group.getName();
+        this.score = group.getScore();
+    }
+}
