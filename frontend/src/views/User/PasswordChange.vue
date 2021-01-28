@@ -8,6 +8,7 @@
         v-model="password"
         :error-messages="passwordErrors"
         label="변경할 비밀번호"
+        type="password"
         clearable
         required
         @input="$v.password.$touch()"
@@ -18,6 +19,7 @@
         :error-messages="passwordConfirmErrors"
         label="비밀번호 확인"
         clearable
+        type="password"
         required
         @input="$v.passwordConfirm.$touch()"
         @blur="$v.passwordConfirm.$touch()"
@@ -80,6 +82,10 @@ export default {
     methods: {
         changePW(){
             // 마이페이지에서 변경
+        if(this.$v.$invalid){
+           alert("비밀번호를 정확히 입력해주세요")
+         }
+         else{
             http.post('/user/changePw', {
                 "password": this.password
             })
@@ -87,7 +93,7 @@ export default {
                 alert(res.data.status);
                 this.$router.push('/');
             })
-        },
+        }},
         FindPW(){ // 비밀번호 찾기로 변경
          if(this.$v.$invalid){
            alert("비밀번호를 정확히 입력해주세요")
