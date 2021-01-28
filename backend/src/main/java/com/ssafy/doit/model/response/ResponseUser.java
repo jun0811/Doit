@@ -16,6 +16,5 @@ public class ResponseUser {
         this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.mileage = user.getMileage();
-        this.image = user.getImage();
     }
 }

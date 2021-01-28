@@ -3,6 +3,7 @@ package com.ssafy.doit.service;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.GroupUser;
+import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.repository.GroupUserRepository;
@@ -56,14 +57,11 @@ public class GroupUserService {
 
     // 가입한 그룹 가져오기
     @Transactional
-    public List<Group> findAllByUserPk(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails) principal;
-        User user = userRepository.findByEmail(userDetails.getUsername()).get();
-
-        List<Group> list = new ArrayList<>();
+    public List<ResGroupList> findAllByUserPk(Long userPk){
+        User user = userRepository.findById(userPk).get();
+        List<ResGroupList> list = new ArrayList<>();
         for(GroupUser group : user.groupList){
-            list.add(group.getGroup());
+            list.add(new ResGroupList(group.getGroup()));
         }
         return list;
     }

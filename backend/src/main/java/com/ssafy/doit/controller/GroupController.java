@@ -1,5 +1,6 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.response.ResponseGroup;
@@ -33,6 +34,7 @@ public class GroupController {
     public Object createGroup(@RequestBody Group groupReq,
                               @RequestParam("hashtags") List<String> hashtags) {
         Long groupPk = groupHashTagService.save(groupReq, hashtags);
+        groupUserService.join(groupPk);
         ResponseBasic result = new ResponseBasic();
         result.status = true;
         result.data = "그룹이 생성되었습니다.";
@@ -95,9 +97,9 @@ public class GroupController {
     // 가입한 그룹 리스트
     @ApiOperation(value = "가입한 그룹 리스트")
     @GetMapping("/joinedGroup")
-    public Object joinedGroup(){
+    public Object joinedGroup(@RequestParam Long userPk){
         //userPk로 가입된 groupPK -> 그룹 명 가져오기
-        List<Group> list = groupUserService.findAllByUserPk();
+        List<ResGroupList> list = groupUserService.findAllByUserPk(userPk);
         ResponseBasic result = new ResponseBasic();
         if(list.size() == 0){
             result.status =false;
