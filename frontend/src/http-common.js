@@ -27,7 +27,7 @@ http.interceptors.request.use(function (config) {
         config.headers.accessToken = account.state.accessToken;
     return config;
 }, function (error) {
-        return Promise.reject(error);
+    return Promise.reject(error);
 });
 
 

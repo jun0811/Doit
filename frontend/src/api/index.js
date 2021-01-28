@@ -24,7 +24,7 @@ const api = {
     if (store.getters.getAccessToken)
       alert("권한이 없음");
     else alert("로그인 필요");
-  }
+  }, 
 };
 
 export { api, response }

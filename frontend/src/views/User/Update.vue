@@ -29,7 +29,7 @@
                             <v-col cols="4" sm="3" class="">
                                 <v-subheader>닉네임</v-subheader>
                             </v-col>
-                            <v-col cols="8" sm="6" class="">
+                            <v-col cols="8" sm="7" class="">
                                 <v-text-field
                                     v-model="name"
                                     required
@@ -40,14 +40,18 @@
                                     @blur="$v.name.$touch()"
                                     class="mt-0 pt-1"
                                 ></v-text-field>
-
+                            </v-col>
+                            <v-col cols="2">
+                                <v-btn text @click="checkNick" v-bind:class="{check : c_Nick}" class="mt-4 mx-0"> 
+                                    <font-awesome-icon icon="check-circle"/> 
+                                </v-btn>
                             </v-col>
                         </v-row>
                         <v-row no-gutters class="d-flex flex-nowrap" >
                             <v-col cols="4" sm="3">
                                 <v-subheader>이메일</v-subheader>
                             </v-col>
-                            <v-col cols="8" sm="6">
+                            <v-col cols="8" sm="7">
                                 <v-text-field
                                     v-model="email"
                                     required
@@ -78,7 +82,12 @@
                 </v-row>
                 <v-row justify="center">
                     <v-col cols="12" md="9" lg="6" class="text-center mt-10">
-                        <v-btn outlined>변경사항 저장</v-btn>
+                        <v-btn
+                            outlined
+                            @click="save"
+                        >
+                            변경사항 저장
+                        </v-btn>
                     </v-col>
                 </v-row>
             </v-col>
@@ -89,6 +98,7 @@
 </template>
 
 <script>
+import http from '../../http-common'
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
 export default {
@@ -99,21 +109,55 @@ export default {
     },
     data() {
         return {
-            name : "test",
-            email : "test@test.com"
+            name : "",
+            email : "nate199458@gmail.com",
+            c_Nick: false,
         }
     },
+    watch:{
+        name(){
+            this.check()
+        }
+    }
+    ,
     methods: {
-        changhPhoto(){
+        changhPhoto() {
 
         },
-        changePW(){
+        changePW() {
             this.$router.push('/user/pwchange');
+        },
+        save() {
+            if (this.c_Nick){
+            http.put(`/user/updateInfo?email=${this.email}&name=${this.name}`)
+            .then((res) => {
+                console.log(res)
+            })
+            }
+            else{
+                alert('중복체크를 하지 않았습니다.🤦‍♂️')
+            }
+        },
+        checkNick(){
+            http.post("/user/checkNick", this.name)
+            .then((res)=>{
+            console.log(res);
+            if(res.data.status) this.c_Nick = true
+            else{
+                alert("중복 닉네임입니다")
+            }
+            })
+        },
+        check(){
+            this.c_Nick = false
         }
     }
 }
 </script>
 
-<style>
+<style scoped>
+  .check {
+    color: #F9802D;
+  }
 
 </style>
