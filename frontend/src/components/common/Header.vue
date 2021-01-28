@@ -72,6 +72,7 @@
             <v-container class="d-flex justify-space-between mb-6">
               <v-btn
                 color="#F9802D"
+                
                 text
               >회원 가입</v-btn>
               <v-btn
