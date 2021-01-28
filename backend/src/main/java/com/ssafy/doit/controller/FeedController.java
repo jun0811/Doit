@@ -3,6 +3,7 @@ package com.ssafy.doit.controller;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.repository.FeedRepository;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class FeedController {
     private FeedRepository feedRepository;
 
     //그룹 내 활동 피드
+    @ApiOperation(value = "그룹 내 활동 피드")
     @GetMapping("/groupFeed")
     public Object groupFeedList(@RequestParam Long groupPk){
         List<Feed> list = feedRepository.findAll(groupPk);
