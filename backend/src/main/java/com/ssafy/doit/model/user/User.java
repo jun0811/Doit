@@ -51,9 +51,7 @@ public class User {
         this.userRole = userRole;
         this.authKey = authKey;
     }
-
     public String getRoleKey() {
         return this.userRole.getKey();
     }
-
 }
