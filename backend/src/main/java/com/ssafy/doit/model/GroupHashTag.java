@@ -17,12 +17,12 @@ public class GroupHashTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "tag_pk")
     @NonNull
     private HashTag hashTag;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "group_pk")
     @NonNull
     private Group group;

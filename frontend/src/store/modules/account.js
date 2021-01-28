@@ -19,7 +19,6 @@ const mutations = {
   },  
   
   LOGIN(state, { accesstoken }) {
-    console.log(accesstoken);
     if (!accesstoken) return;
     state.accessToken = accesstoken;
     sessionStorage.accessToken = accesstoken;
@@ -27,8 +26,6 @@ const mutations = {
   LOGOUT(state) {
     state.accessToken = null;
     sessionStorage.removeItem("accessToken");
-
-    localStorage.removeItem("accessToken");
   },
 };
 

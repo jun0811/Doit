@@ -31,11 +31,11 @@ public class Group{
     private int totalNum;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "group")
     public List<GroupHashTag> tagList; // 태그리스트
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "group")
     public List<GroupUser> userList; // 유저리스트
 
     @Builder

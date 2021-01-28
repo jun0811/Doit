@@ -16,6 +16,7 @@ const api = {
   },
 
   onUnauthorized() {
+    store.dispatch("LOGOUT");
     alert("로그인 만료");
   },
 

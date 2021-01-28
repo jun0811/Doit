@@ -17,8 +17,9 @@
           sm="9" 
           class="pa-8 text-h4"
         >
-          <div>Nickname</div>
-          <v-btn 
+          <div>{{user.nickname}}</div>
+          <v-btn
+            @click="moveUpdate"
             color="white" 
             depressed 
             class="pa-0"
@@ -82,6 +83,7 @@ import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
 import FeedList from "@/components/group/FeedList.vue";
 import JoinedGroupList from "@/components/group/JoinedGroupList.vue";
+import http from "../../http-common";
 
 export default {
   name: "Profile",
@@ -90,7 +92,23 @@ export default {
     Footer,
     FeedList,
     JoinedGroupList,
+  },data() {
+    return {
+      user: "",
+      feed: "",
+    }
   },
+  created() {
+      http.get('/user/detailUser')
+      .then((res)=>{
+          this.user = res.data.object;
+      })
+  },
+  methods: {
+    moveUpdate(){
+      this.$router.push('/user/update');
+    }
+  }
 };
 </script>
 
