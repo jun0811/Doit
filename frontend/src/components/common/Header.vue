@@ -149,11 +149,11 @@
     
             <v-list-item
               v-for="subItem in item.items"
-              :key="subItem.title"
+              :key="subItem.groupPk"
               @click="group"
             >
               <v-list-item-content>
-                <v-list-item-title v-text="subItem.title"></v-list-item-title>
+                <v-list-item-title v-text="subItem.name"></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-group>
@@ -164,6 +164,7 @@
 </template>
 
 <script>
+import http from '../../http-common'
 import { validationMixin } from 'vuelidate'
 import { required, minLength, email } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
@@ -180,23 +181,23 @@ export default {
       dialog: false,
       email: "",
       password: "",
-      users: [
-        {id: 1, name: "LSJ",email:"nate1994@naver.com", password:"12345678"},
-        {id: 2, name: "KSJ",email:"itoggi0328@naver.com", password:"12345678"}
-      ],
-      drawer: null,
       items: [
         {
           action: '',
           title: '가입된 그룹',
           active: true,
           items: [
-            { title: 'Group 1' },
-            { title: 'Group 2' },
-            { title: 'Group 3' },
+            { name: 'Group 1' , groupPk : 1},
+            { name: 'Group 2',  groupPk : 2},
+            { name: 'Group 3' , groupPk : 3},
           ],
         },
       ],
+      users: [
+        {id: 1, name: "LSJ",email:"nate1994@naver.com", password:"12345678"},
+        {id: 2, name: "KSJ",email:"itoggi0328@naver.com", password:"12345678"}
+      ],
+      drawer: null,
       miniVariant: true,     
     }),
     computed: {
@@ -217,6 +218,15 @@ export default {
     },
     created(){
       console.log(this.$store.state.account.accessToken)
+      
+      // 현재 로그인 한사람의 가입 그룹 리스트
+      if(this.$store.getters.getAccessToken){
+          http.get('/group/joinedGroup')
+            .then((res)=>{
+            this.items.items = res.data.object;
+            console.log(res.data.object)
+        })
+      }
     }
     ,
 
@@ -237,14 +247,12 @@ export default {
         else{this.LOGIN({
           "email": this.email,
           "password": this.password
-
         })
         .then((response)=>{
           console.log(response);
-          if(response.data.status) {
-            this.dialog = false;
-
-          }
+          if(response.data.status) 
+            this.dialog = false;  
+          else alert("가입하지 않은 아이디거나 잘못된 비밀번호 입니다.");
         })}
       },
       group() {

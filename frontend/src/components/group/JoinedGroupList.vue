@@ -39,18 +39,28 @@
 </template>
 
 <script>
+  //import http from '../../http-common';
+
   export default {
+    //props: ['id'], --> 나중에 타유저 정보 얻을때 사용예정
     data: () => ({
       benched: 0,
+      groups: '',
     }),
     computed: {
       items () {
-        return Array.from({ length: this.length }, (k, v) => v + 1)
+        return Array.from({ length: this.groups.length }, (k, v) => v + 1)
       },
       length () {
         return 20
       },
     },
+    created() {
+      // http.get('/group/joinedGroup')
+      // .then((res)=>{
+      //     this.group = res.data.object;
+      // })
+    }
   }
 </script>
 
