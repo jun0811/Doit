@@ -160,32 +160,9 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "프로필사진 변경 위한 삭제")
-    @DeleteMapping("/deleteImg")
-    public Object deleteImg(@RequestParam Long userPk) {
-        ResponseBasic result = new ResponseBasic();
-        try {
-            Optional<Profile> exImage = profileRepository.findByUserPk(userPk);
-
-            if (exImage.isPresent()) {
-                exImage.ifPresent(selectUser -> {
-                    profileRepository.delete(selectUser);
-                });
-            }
-            result.status = true;
-            result.data = "profile delete success";
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            result.status = false;
-            result.data = "error";
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     @ApiOperation(value = "프로필사진 변경")
     @PostMapping("/insertImg")
-    public Object insertImg(HttpServletRequest req, @RequestParam("image") MultipartFile files,@RequestParam Long userPk) {
+    public Object insertImg(HttpServletRequest req, @RequestParam("image") MultipartFile files) {
         ResponseBasic result = new ResponseBasic();
         Profile profile = new Profile();
 
@@ -198,10 +175,14 @@ public class UserController {
         String fileUrl = "C:/Users/HOME/IdeaProjects/images/";
 
         try {
-            Optional<Profile> exImage = profileRepository.findByUserPk(userPk);
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails) principal;
+            User user = userRepository.findByEmail(userDetails.getUsername()).get();
+            System.out.println(user.getId());
+            Optional<Profile> userProfile = profileRepository.findByUserPk(user.getId());
 
-            if (exImage.isPresent()) {
-                exImage.ifPresent(selectUser -> {
+            if (userProfile.isPresent()) {
+                userProfile.ifPresent(selectUser -> {
                     profileRepository.delete(selectUser);
                 });
             }
@@ -216,7 +197,7 @@ public class UserController {
             profile.setFileName(destinationFileName);
             profile.setFileOriname(sourceFileName);
             profile.setFileUrl(fileUrl);
-            profile.setUserPk(userPk);
+            profile.setUserPk(user.getId());
             profileRepository.save(profile);
 
             result.status = true;

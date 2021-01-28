@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.util.Optional;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-//       @Query("select p from Profile p where p.userPk = :userPk")
+
        Optional<Profile> findByUserPk(Long userPk);
 
 }
