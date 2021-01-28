@@ -30,10 +30,9 @@ public class GroupController {
     // 그룹 생성
     @ApiOperation(value = "그룹 생성")
     @PostMapping("/createGroup")
-    //public Object createGroup(Group groupReq, @RequestParam("hashtags") List<String> hashtags) {
-    public Object createGroup(HttpServletRequest userReq, @RequestBody Group groupReq,
+    public Object createGroup(@RequestBody Group groupReq,
                               @RequestParam("hashtags") List<String> hashtags) {
-        Long groupPk = groupHashTagService.save(userReq, groupReq, hashtags);
+        Long groupPk = groupHashTagService.save(groupReq, hashtags);
         ResponseBasic result = new ResponseBasic();
         result.status = true;
         result.data = "그룹이 생성되었습니다.";
@@ -77,9 +76,9 @@ public class GroupController {
     // 그룹 가입하기
     @ApiOperation(value = "그룹 가입하기")
     @GetMapping("/joinGroup")
-    public Object joinGroup(HttpServletRequest userReq, @RequestParam Long groupPk){
+    public Object joinGroup(@RequestParam Long groupPk){
         ResponseBasic result = new ResponseBasic();
-        int opt = groupUserService.join(userReq, groupPk);
+        int opt = groupUserService.join(groupPk);
         if(opt == 0){
             result.status = true;
             result.data = "success";
@@ -96,9 +95,9 @@ public class GroupController {
     // 가입한 그룹 리스트
     @ApiOperation(value = "가입한 그룹 리스트")
     @GetMapping("/joinedGroup")
-    public Object joinedGroup(HttpServletRequest userReq){
+    public Object joinedGroup(){
         //userPk로 가입된 groupPK -> 그룹 명 가져오기
-        List<Group> list = groupUserService.findAllByUserPk(userReq);
+        List<Group> list = groupUserService.findAllByUserPk();
         ResponseBasic result = new ResponseBasic();
         if(list.size() == 0){
             result.status =false;

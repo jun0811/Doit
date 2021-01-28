@@ -11,6 +11,8 @@ import com.ssafy.doit.service.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,10 +38,12 @@ public class GroupUserService {
     private GroupRepository groupRepository;
 
     @Transactional
-    public int join(HttpServletRequest userReq, Long groupPk) {
-        Map<String,Object> userMap = (Map<String, Object>) jwtUtil.getUser(userReq.getHeader("accessToken"));
-        User user = userRepository.findByEmail((String) userMap.get("email")).get();
+    public int join(Long groupPk) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
+        User user = userRepository.findByEmail(userDetails.getUsername()).get();
         Group group = groupRepository.findById(groupPk).get();
+
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
         if(!opt.isPresent()){
             if(group.getTotalNum() == group.getMaxNum()) return 2;
@@ -52,9 +56,11 @@ public class GroupUserService {
 
     // 가입한 그룹 가져오기
     @Transactional
-    public List<Group> findAllByUserPk(HttpServletRequest userReq){
-        Map<String,Object> userMap = (Map<String, Object>) jwtUtil.getUser(userReq.getHeader("accessToken"));
-        User user = userRepository.findByEmail((String) userMap.get("email")).get();
+    public List<Group> findAllByUserPk(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
+        User user = userRepository.findByEmail(userDetails.getUsername()).get();
+
         List<Group> list = new ArrayList<>();
         for(GroupUser group : user.groupList){
             list.add(group.getGroup());

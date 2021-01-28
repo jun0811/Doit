@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -42,9 +41,6 @@ public class UserController {
     private JwtUtil jwtUtil;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private EmailSendService emailSendService;
-
     @Autowired
     private ProfileRepository profileRepository;
 
@@ -87,7 +83,6 @@ public class UserController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if(auth != null)
                 new SecurityContextLogoutHandler().logout(request, response, auth);
-
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             result = new ResponseBasic(false, "로그인 실패", null);
@@ -99,12 +94,13 @@ public class UserController {
     // 로그인한 사용자 정보
     @ApiOperation(value = "로그인한 사용자 정보")
     @GetMapping("/detailUser")
-    public Object detailUser(HttpServletRequest req){
+    public Object detailUser(){
         ResponseBasic result = new ResponseBasic();
 
         try {
-            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
-            User getUser = userRepository.findByEmail((String) userMap.get("email")).get();
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails) principal;
+            User getUser = userRepository.findByEmail(userDetails.getUsername()).get();
             ResponseUser user = new ResponseUser(getUser);
 
             result.status = true;
@@ -127,33 +123,31 @@ public class UserController {
 
         Optional<User> userInfo = userRepository.findByEmail(email);
 
-            if (userInfo.isPresent()) {
-                userInfo.ifPresent(selectUser -> {
-                    selectUser.setNickname(name);
-                    userRepository.save(selectUser);
+        if (userInfo.isPresent()) {
+            userInfo.ifPresent(selectUser -> {
+                selectUser.setNickname(name);
+                userRepository.save(selectUser);
                 });
-                result.status = true;
-                result.data = "success";
-            } else {
-                result.status = false;
-                result.data = "회원정보 수정 실패";
-            }
-
+            result.status = true;
+            result.data = "success";
+        } else {
+            result.status = false;
+            result.data = "회원정보 수정 실패";
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 마이페이지에서 비밀번호 변경
     @ApiOperation(value = "로그인한 사용자 비밀번호 변경")
     @PostMapping("/changePw")
-    public Object changePw(@RequestBody RequestChangePw request){
+    public Object changePw(@RequestBody String requestPw){
         ResponseBasic result = null;
 
         try{
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             UserDetails userDetails = (UserDetails) principal;
-
             User currentUser = userRepository.findByEmail(userDetails.getUsername()).get();
-            currentUser.setPassword(passwordEncoder.encode(request.getPassword()));
+            currentUser.setPassword(passwordEncoder.encode(requestPw));
             userRepository.save(currentUser);
 
             result = new ResponseBasic(true, "success", null);
@@ -243,20 +237,15 @@ public class UserController {
         ResponseBasic result = new ResponseBasic();
 
         try {
-            Map<String, Object> userMap = (Map<String, Object>) jwtUtil.getUser(req.getHeader("accessToken"));
-            System.out.println(userMap);
-            User user = userRepository.findByEmail((String) userMap.get("email")).get();
-            Optional<User> userInfo = userRepository.findByEmail(user.getEmail());
-            System.out.println(userInfo);
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails) principal;
+            User user = userRepository.findByEmail(userDetails.getUsername()).get();
 
-            userInfo.ifPresent(selectUser->{
-                selectUser.setUserRole(UserRole.GUEST);
-                userRepository.save(selectUser);
-            });
+            user.setUserRole(UserRole.GUEST);
+            userRepository.save(user);
 
             result.status = true;
             result.data = "탈퇴 success";
-            result.object = user;
         }
         catch (Exception e){
             e.printStackTrace();
