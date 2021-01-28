@@ -48,6 +48,7 @@
           label="비밀번호"
           clearable
           required
+          type="password"
           @input="$v.password.$touch()"
           @blur="$v.password.$touch()"
         ></v-text-field>
@@ -57,6 +58,7 @@
           label="비밀번호 확인"
           clearable
           required
+          type="password"
           @input="$v.passwordConfirm.$touch()"
           @blur="$v.passwordConfirm.$touch()"
         ></v-text-field>
@@ -69,16 +71,15 @@
           @blur="$v.checkbox.$touch()"
         ></v-checkbox>
         <v-card-actions class="d-flex align-center"> 
-        <v-row>
-          <v-col>
-            <v-btn type="submit" @click="signup()" class="join input col-12">가입하기</v-btn>
-            <div class="col-12">
-              <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
-            </div>
-          <br>
-
-          </v-col>
-        </v-row>
+          <v-row>
+            <v-col>
+              <v-btn type="submit" @click="signup()" class="join input col-12">가입하기</v-btn>
+              <div class="col-12">
+                <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
+              </div>
+              <br>
+            </v-col>
+          </v-row>
         </v-card-actions>
       </div>
     </v-card>
@@ -180,7 +181,7 @@ export default {
       },
 
 
-      signup () {
+      signup (){
         if(this.$v.$invalid || this.c_Nick===false || this.c_Email===false){
           alert("가입 정보를 정확히 기입해주세요! 🙏")
         }

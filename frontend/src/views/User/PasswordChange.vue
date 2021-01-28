@@ -1,13 +1,14 @@
 <template>
   <div>
     <Header></Header>
-     <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15" width=50%>
+     <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width="360px">
     <h3 class="my-5">비밀번호 변경</h3>
     <div>
       <v-text-field
         v-model="password"
         :error-messages="passwordErrors"
         label="변경할 비밀번호"
+        type="password"
         clearable
         required
         @input="$v.password.$touch()"
@@ -18,6 +19,7 @@
         :error-messages="passwordConfirmErrors"
         label="비밀번호 확인"
         clearable
+        type="password"
         required
         @input="$v.passwordConfirm.$touch()"
         @blur="$v.passwordConfirm.$touch()"
@@ -80,6 +82,10 @@ export default {
     methods: {
         changePW(){
             // 마이페이지에서 변경
+        if(this.$v.$invalid){
+           alert("비밀번호를 정확히 입력해주세요")
+         }
+         else{
             http.post('/user/changePw', {
                 "password": this.password
             })
@@ -87,8 +93,12 @@ export default {
                 alert(res.data.status);
                 this.$router.push('/');
             })
-        },
+        }},
         FindPW(){ // 비밀번호 찾기로 변경
+         if(this.$v.$invalid){
+           alert("비밀번호를 정확히 입력해주세요")
+         }
+          else{
             http.post('/user/confirmPw', {
                 "authKey": this.$route.query.authKey,
                 "email": this.$route.query.email,
@@ -98,6 +108,7 @@ export default {
                 alert(res.data.status);
                 this.$router.push('/');
             })
+        }
         },
         execute() {
             if(this.$store.getters.getAccessToken) this.changePW();

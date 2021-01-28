@@ -4,6 +4,7 @@
       <v-container class="pa-3 pa-sm-16">
         <SearchBar></SearchBar>
         <br>
+        <span class="mx-auto">{{ word }}</span>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
         <GroupCard></GroupCard>
         <GroupCard></GroupCard>
@@ -22,6 +23,9 @@ import GroupCard from "@/components/group/GroupCard.vue";
 
 export default {
     name: 'GroupList',
+    props:{
+      word:{ type: String, default: ""}
+    },
     components: { 
         Header, 
         Footer, 

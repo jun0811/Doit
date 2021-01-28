@@ -25,9 +25,9 @@ export default {
       console.log(res)
     })
   },
-  methods: {
+  methods:{
     main(){
-      this.$router.push('/');
+      this.$router.push('/')
     }
   }
 }
