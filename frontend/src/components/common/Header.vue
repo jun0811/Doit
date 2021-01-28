@@ -150,10 +150,10 @@
             <v-list-item
               v-for="subItem in item.items"
               :key="subItem.groupPk"
-              @click="group"
+              @click="group(subItem.groupPk)"
             >
               <v-list-item-content>
-                <v-list-item-title v-text="subItem.name"></v-list-item-title>
+                <v-list-item-title> {{ subItem.name }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-group>
@@ -216,20 +216,18 @@ export default {
         return errors
       },
     },
-    created(){
+    mounted(){
       console.log(this.$store.state.account.accessToken)
       
       // 현재 로그인 한사람의 가입 그룹 리스트
       if(this.$store.getters.getAccessToken){
-          http.get('/group/joinedGroup')
+          http.get('/group/currentUserGroup')
             .then((res)=>{
-            this.items.items = res.data.object;
-            console.log(res.data.object)
+            this.items[0].items = res.data.object;
+            console.log(this.items.items)
         })
       }
-    }
-    ,
-
+    },
     methods: {
       ...mapActions(['LOGIN', 'LOGOUT']),
 
@@ -255,7 +253,8 @@ export default {
           else alert("가입하지 않은 아이디거나 잘못된 비밀번호 입니다.");
         })}
       },
-      group() {
+      group(no) {
+        this.$router.push(`/group/community?no=${no}`);
       },
       logout() {
         this.LOGOUT()
