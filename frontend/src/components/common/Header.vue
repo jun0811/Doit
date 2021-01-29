@@ -130,7 +130,7 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>John Leider</v-list-item-title>
+            <v-list-item-title>{{ nickname }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -184,6 +184,7 @@ export default {
       dialog: false,
       email: "",
       password: "",
+      nickname: "",
       items: [
         {
           action: '',
@@ -213,9 +214,10 @@ export default {
         return errors
       },
     },
-    mounted(){
+    created(){
       console.log(this.$store.state.account.accessToken)
-      
+      this.nickname = this.$store.getters.getName;
+
       // 현재 로그인 한사람의 가입 그룹 리스트
       if(this.$store.getters.getAccessToken){
           http.get('/group/currentUserGroup')
@@ -245,8 +247,10 @@ export default {
         })
         .then((response)=>{
           console.log(response);
-          if(response.data.status) 
+          if(response.data.status){
             this.dialog = false;  
+            this.$router.go()
+          }
           else alert("가입하지 않은 아이디거나 잘못된 비밀번호 입니다.");
         })}
       },
@@ -258,7 +262,7 @@ export default {
         .then((response) => {
           alert("로그아웃 되었습니다😒");
           console.log(response)
-          this.$router.go()
+          this.$router.push('/')
         })
       },
       close(){

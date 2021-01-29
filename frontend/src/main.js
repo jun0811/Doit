@@ -14,9 +14,12 @@ new Vue({
     render: h => h(App),
     created() {
         const accessToken = sessionStorage.getItem("accessToken");
+        const email = sessionStorage.getItem("email");
+        const name = sessionStorage.getItem("name");
+
         console.log(accessToken);
         if (accessToken) {
-            this.$store.commit("SET_ACCESSTOKEN", accessToken);
+            this.$store.commit("SET_ACCESSTOKEN", { accessToken, email, name });
         }
     }
 }).$mount('#app');

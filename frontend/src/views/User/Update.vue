@@ -42,7 +42,7 @@
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="2">
-                                <v-btn text @click="checkNick" v-bind:class="{check : c_Nick}" class="mt-4 mx-0"> 
+                                <v-btn text @click="checkNick" v-bind:class="{check : c_Nick}" class="mt-1 mx-0"> 
                                     <font-awesome-icon icon="check-circle"/> 
                                 </v-btn>
                             </v-col>
@@ -109,8 +109,8 @@ export default {
     },
     data() {
         return {
-            name : "",
-            email : "nate199458@gmail.com",
+            name : this.$store.getters.getName,
+            email : this.$store.getters.getEmail,
             c_Nick: false,
         }
     },

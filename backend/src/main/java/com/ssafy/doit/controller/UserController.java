@@ -66,6 +66,7 @@ public class UserController {
             result.data = "잘못된 비밀번호입니다.";
         else{
             result.status = true;
+            result.object = member;
             httpHeaders.set("accessToken", jwtUtil.generateToken(member));
         }
         return ResponseEntity.ok()
