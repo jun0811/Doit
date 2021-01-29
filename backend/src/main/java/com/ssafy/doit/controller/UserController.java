@@ -9,7 +9,6 @@ import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.ProfileRepository;
 import com.ssafy.doit.repository.UserRepository;
-import com.ssafy.doit.service.EmailSendService;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -140,14 +139,14 @@ public class UserController {
     // 마이페이지에서 비밀번호 변경
     @ApiOperation(value = "로그인한 사용자 비밀번호 변경")
     @PostMapping("/changePw")
-    public Object changePw(@RequestBody String requestPw){
+    public Object changePw(@RequestBody RequestChangePw requestPw){
         ResponseBasic result = null;
 
         try{
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             UserDetails userDetails = (UserDetails) principal;
             User currentUser = userRepository.findByEmail(userDetails.getUsername()).get();
-            currentUser.setPassword(passwordEncoder.encode(requestPw));
+            currentUser.setPassword(passwordEncoder.encode(requestPw.getPassword()));
             userRepository.save(currentUser);
 
             result = new ResponseBasic(true, "success", null);
