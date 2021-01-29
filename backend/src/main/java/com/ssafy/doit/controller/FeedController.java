@@ -27,7 +27,7 @@ public class FeedController {
     @Autowired
     private FeedRepository feedRepository;
 
-    //그룹 내 활동 피드
+    //해당 그룹 내 활동 피드
     @ApiOperation(value = "그룹 내 활동 피드")
     @GetMapping("/groupFeed")
     public Object groupFeedList(@RequestParam Long groupPk){
