@@ -28,7 +28,7 @@
 
         
         <v-card class="d-flex align-center flex-column mx-auto">
-          <v-btn
+          <v-btn class="ml-auto"
           text
           @click="close"
           >
@@ -38,6 +38,7 @@
             <h3 class="my-7">로그인</h3>
           </v-card-title>
           <v-card-text>
+            <v-form ref="form">
            <v-container>
             <v-row class="d-flex align-center flex-column">
               <v-col cols="8">
@@ -65,6 +66,7 @@
             </v-col>
           </v-row>
           </v-container>
+            </v-form>
         </v-card-text>
     
         <button class="login input" @click="login()">로그인</button>
@@ -188,15 +190,9 @@ export default {
           title: '가입된 그룹',
           active: true,
           items: [
-            { name: 'Group 1' , groupPk : 1},
-            { name: 'Group 2',  groupPk : 2},
-            { name: 'Group 3' , groupPk : 3},
+            
           ],
         },
-      ],
-      users: [
-        {id: 1, name: "LSJ",email:"nate1994@naver.com", password:"12345678"},
-        {id: 2, name: "KSJ",email:"itoggi0328@naver.com", password:"12345678"}
       ],
       drawer: null,
       miniVariant: true,     
@@ -267,7 +263,9 @@ export default {
       },
       close(){
         this.dialog=false
-        // this.$router.go()
+        this.email=""
+        this.password=""
+        this.$v.$reset();
       },
       passwordFind(){
         this.$router.push( "/user/pwdfind")
