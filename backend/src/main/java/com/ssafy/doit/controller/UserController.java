@@ -172,7 +172,7 @@ public class UserController {
         File destinationFile;
         String destinationFileName;
 
-        String fileUrl = "C:/Users/HOME/IdeaProjects/images/";
+        String fileUrl = "C:/";
 
         try {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
