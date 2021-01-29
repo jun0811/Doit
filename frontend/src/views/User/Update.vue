@@ -109,8 +109,8 @@ export default {
     },
     data() {
         return {
-            name : this.$store.getters.getName,
-            email : this.$store.getters.getEmail,
+            name : '',
+            email : '',
             c_Nick: false,
         }
     },
@@ -120,6 +120,15 @@ export default {
         }
     }
     ,
+    created(){
+        // this.name = this.$store.getters.getName;
+        // this.email = this.$store.getters.getEmail;
+        http.get('/user/detailUser')
+        .then((res)=> {
+            this.name = res.data.object.nickname;
+            this.email = res.data.object.email;
+        })
+    },
     methods: {
         changhPhoto() {
 
@@ -131,7 +140,10 @@ export default {
             if (this.c_Nick){
             http.put(`/user/updateInfo?email=${this.email}&name=${this.name}`)
             .then((res) => {
-                console.log(res)
+                if(res.data.status){
+                    alert("회원정보가 변경되었습니다");
+                    //this.$store.commit("SET_NAME", );
+                }
             })
             }
             else{

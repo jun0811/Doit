@@ -27,7 +27,10 @@ const mutations = {
     state.email = email;
     state.name = name;
   },
-  
+  SET_NAME(state, { name }){
+    console.log(name);
+    state.name = name;
+  },  
   LOGIN(state, { headers, data }) {
     if (!headers.accesstoken) return;
     state.accessToken = headers.accesstoken;
