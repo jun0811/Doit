@@ -130,13 +130,14 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>{{ nickname }}</v-list-item-title>
+            <v-list-item-title v-if="nickname">{{ nickname }}</v-list-item-title>
+            <v-list-item-title v-else>로그인 해주세요</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
         <v-divider></v-divider>
 
-        <v-list>
+        <v-list v-if="nickname">
           <v-list-group
             v-for="item in items"
             :key="item.title"
@@ -160,7 +161,15 @@
               </v-list-item-content>
             </v-list-item>
           </v-list-group>
-        </v-list>      </v-navigation-drawer>
+        </v-list>
+        <div v-else class="my-auto">
+          <v-btn
+            class="login input"
+            outlined
+            @click="dialog=!dialog"
+          >로그인</v-btn>
+        </div>      
+        </v-navigation-drawer>
       <!-- navigation drawer 끝-->  
     </div>
   </header>
@@ -263,6 +272,7 @@ export default {
           alert("로그아웃 되었습니다😒");
           console.log(response)
           this.$router.push('/')
+          this.$router.go()
         })
       },
       close(){

@@ -28,27 +28,27 @@ const mutations = {
     state.name = name;
   },
   SET_NAME(state, { name }){
-    console.log(name);
     state.name = name;
+    sessionStorage.name = name;
   },  
   LOGIN(state, { headers, data }) {
     if (!headers.accesstoken) return;
     state.accessToken = headers.accesstoken;
+    state.name = data.object.nickname;
+    state.email = data.object.email;
+
     sessionStorage.accessToken = headers.accesstoken;
     sessionStorage.name = data.object.nickname;
     sessionStorage.email = data.object.email;
-
-    state.name = data.object.nickname;
-    state.email = data.object.email;
   },
   LOGOUT(state) {
     state.accessToken = null;
+    state.name = null;
+    state.email = null;
+
     sessionStorage.removeItem("accessToken");
     sessionStorage.removeItem("name");
     sessionStorage.removeItem("email");
-
-    state.name = null;
-    state.email = null;
   },
 };
 
