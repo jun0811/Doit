@@ -53,7 +53,7 @@ public class GroupController {
         ResponseBasic result = new ResponseBasic();
         if(list.size() == 0){
             result.status =false;
-            result.data= "입력한 해시태그를 가진 그룹이 없습니다.";
+            result.data= "fail";
         }else{
             result.status = true;
             result.data = "success";
@@ -104,10 +104,21 @@ public class GroupController {
     public Object joinedGroup(@RequestParam Long userPk){
         //userPk로 가입된 groupPK -> 그룹 명 가져오기'
         List<ResGroupList> list = groupUserService.findAllByUserPk(userPk);
+        return getObject(list);
+    }
+
+    @ApiOperation(value = "로그인한 유저가 가입한 그룹 리스트")
+    @GetMapping("/currentUserGroup")
+    public Object currentUserGroup(){
+        List<ResGroupList> list = groupUserService.findCurrentUser();
+        return getObject(list);
+    }
+
+    private Object getObject(List<ResGroupList> list) {
         ResponseBasic result = new ResponseBasic();
         if(list.size() == 0){
             result.status =false;
-            result.data= "가입된 그룹이 없습니다.";
+            result.data= "fail";
         }else{
             result.status = true;
             result.data = "success";
@@ -116,19 +127,4 @@ public class GroupController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "로그인한 유저가 가입한 그룹 리스트")
-    @GetMapping("/currentUserGroup")
-    public Object currentUserGroup(){
-        List<ResGroupList> list = groupUserService.findCurrentUser();
-        ResponseBasic result = new ResponseBasic();
-        if(list.size() == 0){
-            result.status =false;
-            result.data= "가입된 그룹이 없습니다.";
-        }else{
-            result.status = true;
-            result.data = "success";
-            result.object = list;
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
 }
