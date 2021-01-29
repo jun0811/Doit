@@ -162,7 +162,10 @@
             </v-list-item>
           </v-list-group>
         </v-list>
-        <div v-else class="my-auto">
+        <div v-else class="my-auto navi-style d-flex flex-column justify-center align-center">
+          <div class="mb-3">
+            로그인이 필요한 기능입니다.
+          </div>
           <v-btn
             class="login input"
             outlined
@@ -299,6 +302,9 @@ export default {
     padding : 0
   }
   
+  .navi-style {
+    height: 50%;
+  }
 </style>
 
 
