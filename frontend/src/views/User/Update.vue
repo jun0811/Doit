@@ -121,13 +121,13 @@ export default {
     }
     ,
     created(){
-        // this.name = this.$store.getters.getName;
-        // this.email = this.$store.getters.getEmail;
-        http.get('/user/detailUser')
-        .then((res)=> {
-            this.name = res.data.object.nickname;
-            this.email = res.data.object.email;
-        })
+        this.name = this.$store.getters.getName;
+        this.email = this.$store.getters.getEmail;
+        // http.get('/user/detailUser')
+        // .then((res)=> {
+        //     this.name = res.data.object.nickname;
+        //     this.email = res.data.object.email;
+        // })
     },
     methods: {
         changhPhoto() {
@@ -142,7 +142,8 @@ export default {
             .then((res) => {
                 if(res.data.status){
                     alert("회원정보가 변경되었습니다");
-                    //this.$store.commit("SET_NAME", );
+                    const name = this.name;
+                    this.$store.commit("SET_NAME", { name });
                 }
             })
             }
