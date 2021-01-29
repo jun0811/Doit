@@ -115,7 +115,7 @@ public class GroupController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
+    
     @ApiOperation(value = "로그인한 유저가 가입한 그룹 리스트")
     @GetMapping("/currentUserGroup")
     public Object currentUserGroup(){
