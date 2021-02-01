@@ -26,8 +26,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class GroupUserService {
-    @Autowired
-    private JwtUtil jwtUtil;
 
     @Autowired
     private GroupUserRepository groupUserRepository;
@@ -38,11 +36,10 @@ public class GroupUserService {
     @Autowired
     private GroupRepository groupRepository;
 
+    // 그룹 가입하기
     @Transactional
-    public int join(Long groupPk) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails) principal;
-        User user = userRepository.findByEmail(userDetails.getUsername()).get();
+    public int join(Long userPk, Long groupPk) {
+        User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(groupPk).get();
 
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
@@ -57,20 +54,8 @@ public class GroupUserService {
 
     // 가입한 그룹 가져오기
     @Transactional
-    public List<ResGroupList> findAllByUserPk(Long userPk){
+    public List<ResGroupList> findGroupByUserPk(Long userPk){
         User user = userRepository.findById(userPk).get();
-        List<ResGroupList> list = new ArrayList<>();
-        for(GroupUser group : user.groupList){
-            list.add(new ResGroupList(group.getGroup()));
-        }
-        return list;
-    }
-
-    @Transactional
-    public List<ResGroupList> findCurrentUser(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails) principal;
-        User user = userRepository.findByEmail(userDetails.getUsername()).get();
         List<ResGroupList> list = new ArrayList<>();
         for(GroupUser group : user.groupList){
             list.add(new ResGroupList(group.getGroup()));

@@ -7,6 +7,7 @@ import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
+import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,9 @@ import java.util.List;
 public class GroupController {
 
     @Autowired
+    private final UserService userService;
+    @Autowired
     private GroupHashTagService groupHashTagService;
-
     @Autowired
     private GroupUserService groupUserService;
 
@@ -37,11 +39,34 @@ public class GroupController {
     @PostMapping("/createGroup")
     public Object createGroup(@RequestBody Group groupReq,
                               @RequestParam("hashtags") List<String> hashtags) {
-        Long groupPk = groupHashTagService.save(groupReq, hashtags);
-        groupUserService.join(groupPk);
+        Long userPk = userService.currentUser();
+        Long groupPk = groupHashTagService.create(userPk, groupReq, hashtags);
+        groupUserService.join(userPk, groupPk);
         ResponseBasic result = new ResponseBasic();
         result.status = true;
         result.data = "그룹이 생성되었습니다.";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 그룹 정보 수정
+    @ApiOperation(value = "그룹 수정")
+    @PutMapping("/updateGroup")
+    public Object updateGroup(Long groupPk, @RequestBody Group groupReq) {
+        groupHashTagService.updateGroup(groupPk, groupReq);
+        ResponseBasic result = new ResponseBasic();
+        result.status = true;
+        result.data = "그룹의 정보가 수정되었습니다.";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 그룹 해시태그 수정(추가)
+    @ApiOperation(value = "그룹 해시태그 수정(추가)")
+    @PutMapping("/updateHashTag")
+    public Object updateHashTag(Long groupPk, @RequestParam("hashtags") List<String> hashtags) {
+        groupHashTagService.updateHashTag(groupPk, hashtags);
+        ResponseBasic result = new ResponseBasic();
+        result.status = true;
+        result.data = "해시태그가 추가되었습니다.";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -51,6 +76,7 @@ public class GroupController {
     public Object searchGroup(@RequestParam String tag){ // 페이징 처리하기
         List<ResponseGroup> list = groupHashTagService.findAllByHashTag(tag);
         ResponseBasic result = new ResponseBasic();
+
         if(list.size() == 0){
             result.status =false;
             result.data= "fail";
@@ -83,11 +109,12 @@ public class GroupController {
     @ApiOperation(value = "그룹 가입하기")
     @GetMapping("/joinGroup")
     public Object joinGroup(@RequestParam Long groupPk){
+        Long userPk = userService.currentUser();
         ResponseBasic result = new ResponseBasic();
-        int opt = groupUserService.join(groupPk);
+        int opt = groupUserService.join(userPk,groupPk);
         if(opt == 0){
             result.status = true;
-            result.data = "success";
+            result.data = "가입 완료되었습니다.";
         }else if(opt == 1){
             result.status = false;
             result.data = "이미 가입되어있는 그룹입니다.";
@@ -98,19 +125,20 @@ public class GroupController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // 가입한 그룹 리스트
-    @ApiOperation(value = "가입한 그룹 리스트")
+    // 가입 그룹 리스트
+    @ApiOperation(value = "가입 그룹 리스트")
     @GetMapping("/joinedGroup")
     public Object joinedGroup(@RequestParam Long userPk){
-        //userPk로 가입된 groupPK -> 그룹 명 가져오기'
-        List<ResGroupList> list = groupUserService.findAllByUserPk(userPk);
+        List<ResGroupList> list = groupUserService.findGroupByUserPk(userPk);
         return getObject(list);
     }
-    
-    @ApiOperation(value = "로그인한 유저가 가입한 그룹 리스트")
+
+    // 현재 로그인한 유저의 가입 그룹 리스트
+    @ApiOperation(value = "현재 로그인한 유저의 가입 그룹 리스트")
     @GetMapping("/currentUserGroup")
     public Object currentUserGroup(){
-        List<ResGroupList> list = groupUserService.findCurrentUser();
+        Long userPk = userService.currentUser();
+        List<ResGroupList> list = groupUserService.findGroupByUserPk(userPk);
         return getObject(list);
     }
 

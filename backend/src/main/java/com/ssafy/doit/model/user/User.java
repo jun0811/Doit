@@ -24,18 +24,13 @@ public class User {
     @Column(name = "user_pk")
     private Long id;
 
-    private String password;
-    private String authKey;
-
-    @Column(unique = true)
     private String email;
-
-    @Column(unique = true)
+    private String password;
     private String nickname;
-
-    @ColumnDefault("0")
+    private String authKey;
     private int mileage;
-    
+    private String status;
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -50,6 +45,8 @@ public class User {
         this.nickname = nickname;
         this.userRole = userRole;
         this.authKey = authKey;
+        this.mileage = 0;
+        this.status = "true";
     }
     public String getRoleKey() {
         return this.userRole.getKey();
