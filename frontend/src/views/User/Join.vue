@@ -145,7 +145,7 @@ export default {
       c_Email: false,
       error: {
         email: false,
-        passowrd: false
+        passowrd: false,
       }
       }
     ),
@@ -190,7 +190,8 @@ export default {
         if(!this.$v.passwordConfirm.$dirty) return errors
         !this.$v.passwordConfirm.sameAsPassword && errors.push('비밀번호와 같지않습니다.')
         return errors
-      }
+      },
+
     },
 
     methods: {
@@ -202,11 +203,18 @@ export default {
         // 수정시에 다시 체크
         this.c_Email = false
       },
-
-
       signup (){
-        if(this.$v.$invalid || this.c_Nick===false || this.c_Email===false){
-          alert("가입 정보를 정확히 기입해주세요! 🙏")
+        if (this.c_Nick===false) {
+          alert("닉네임 중복확인을 해주세요!")
+        }
+        else if (this.c_Email===false) {
+          alert("이메일 중복확인을 해주세요!")
+        }
+        else if (this.checkbox===false) {
+          alert("약관에 동의해주세요!")
+        }
+        else if(this.$v.$invalid){
+          alert("비밀번호가 유효한지 확인해주세요!")
         }
         else{
           console.log(this.$v.$invalid )
@@ -227,7 +235,10 @@ export default {
         http.post("/user/checkEmail", this.email)
         .then((res)=>{
           console.log(res);
-          if(res.data.status) this.c_Email = true
+          if(res.data.status) {
+            this.c_Email = true
+            this.error.email_overlap = true
+          }
           else{
             alert("중복메일입니다.")}
         })
@@ -236,7 +247,10 @@ export default {
         http.post("/user/checkNick", this.name)
         .then((res)=>{
           console.log(res);
-          if(res.data.status) this.c_Nick = true
+          if(res.data.status) {
+            this.c_Nick = true
+            this.error.nick_overlap = true
+          }
           else{
             alert("중복 닉네임입니다")
            }
