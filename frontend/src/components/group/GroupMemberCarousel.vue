@@ -1,6 +1,6 @@
 <template>
   <v-row
-    class="my-6 mx-6 d-flex align-center flex-wrap justify-space-between"
+    class="my-6 mx-12 d-flex align-center flex-wrap justify-space-between"
   >
     <v-col cols="5" class="profile-card d-flex align-center" v-for="(item, idx) in paginatedData" :key="idx">
       <img class="profile-image" :src="item.userimage">

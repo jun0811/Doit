@@ -29,8 +29,8 @@
             <span class="text-h6"> | 01 | </span>
           </div>
           <div >
-            <v-btn text v-bind:class="{selected : feed}" class="text-h5" :model="feed" @click="FeedList"> <font-awesome-icon icon="rss-square"/>  aa  </v-btn>
-            <v-btn text class="text-h5" v-bind:class="{selected: users}" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>aa</v-btn>
+            <v-btn text v-bind:class="{selected : feed}" class="text-h5" :model="feed" @click="FeedList"> <font-awesome-icon icon="rss-square"/>FEED</v-btn>
+            <v-btn text class="text-h5" v-bind:class="{selected: users}" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn>
           </div>
           <div>
             <v-btn text class="text-h6"> 글작성 </v-btn>

@@ -2,14 +2,14 @@
   <div>
 
     <v-card
-      class="mx-auto my-12 d-flex flex-column align-center"
-      width="700"
+      class="mx-auto my-12 d-flex flex-column align-center member-card"
+      width="600"
     >
         <div class="mx-6 my-4 align-self-end">
           팀 스코어 : 500   그룹원 수 : 5
         </div>
         <v-card
-        width="75%"
+        width="80%"
         height="200"
         >
           소개글
@@ -78,6 +78,11 @@ import GroupMemberCarousel from '@/components/group/GroupMemberCarousel.vue'
   }
 </script>
 
-<style>
+<style scoped>
+
+
+.member-card {
+  border-radius: 20px;
+}
 
 </style>
