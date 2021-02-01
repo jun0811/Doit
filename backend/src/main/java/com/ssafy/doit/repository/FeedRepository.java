@@ -12,4 +12,5 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     @Query("select f from Feed as f where f.groupPk = ?1")
     List<Feed> findAll(Long groupPk);
 
+    Optional<Feed> findByFeedPk(Long feedPk);
 }

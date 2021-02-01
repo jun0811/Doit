@@ -2,6 +2,7 @@ package com.ssafy.doit.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Feed {
 
@@ -31,4 +33,6 @@ public class Feed {
     private String authCheck;
 
     private String feedType;
+    private String status;
+
 }
