@@ -40,5 +40,27 @@ public class AdminController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
+    //회원 삭제
+    @ApiOperation(value = "관리자 - 회원 탈퇴")
+    @PutMapping("/beDeletedUser")
+    public Object deleteUser(@RequestParam Long id) {
+        ResponseBasic result = new ResponseBasic();
+        try {
+            Optional<User> userInfo = userRepository.findById(id);
+            if (userInfo.isPresent()) {
+                userInfo.ifPresent(selectUser -> {
+                    selectUser.setUserRole(UserRole.GUEST);
+                    userRepository.save(selectUser);
+                });
+            }
+            result.status = true;
+            result.data = "탈퇴 success";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result.status = false;
+            result.data = "error";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
