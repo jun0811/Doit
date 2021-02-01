@@ -53,10 +53,10 @@
           </div>
         </v-col>
         <v-col v-if="users" cols="9" class="d-flex justify-center mx-sm-16 ">
-
-          <div class="temp">
+          <GroupMember></GroupMember>
+          <!-- <div class="temp">
             asdasdasd
-          </div>
+          </div> -->
         </v-col>
       </v-row>
     </v-container>
@@ -67,9 +67,10 @@
 <script>
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import GroupMember from "@/components/group/GroupMember";
 
 export default {
-  components: { Header, Footer },
+  components: { Header, Footer, GroupMember },
   data() {
     return {
       feed: true,
