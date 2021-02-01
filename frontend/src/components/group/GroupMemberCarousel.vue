@@ -1,11 +1,11 @@
 <template>
   <v-row
-    class="mx-auto my-12 d-flex align-center flex-wrap justify-center"
+    class="my-6 mx-6 d-flex align-center flex-wrap justify-space-between"
   >
-    <v-col cols="5" class="profile-card" v-for="(item, idx) in paginatedData" :key="idx">
-      <span>{{item.userimage}}</span>
-      <span>{{item.username}}</span>
-      <button>강퇴</button>
+    <v-col cols="5" class="profile-card d-flex align-center" v-for="(item, idx) in paginatedData" :key="idx">
+      <img class="profile-image" :src="item.userimage">
+      <span class="mx-2">{{item.username}}</span>
+      <v-btn normal x-small class="px-0">강퇴</v-btn>
     </v-col>
   </v-row>
 </template>
@@ -18,23 +18,23 @@
       member:[
         {
           username:'user1',
-          userimage:'',
+          userimage:'https://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/512/User-orange-icon.png',
         },
         {
           username:'user2',
-          userimage:'',
+          userimage:'https://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/512/User-orange-icon.png',
         },
         {
           username:'user3',
-          userimage:'',
+          userimage:'https://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/512/User-orange-icon.png',
         },
         {
           username:'user4',
-          userimage:'',
+          userimage:'https://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/512/User-orange-icon.png',
         },
         {
           username:'user5',
-          userimage:'',
+          userimage:'https://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/512/User-orange-icon.png',
         },
       ],
     }),
@@ -56,8 +56,17 @@
 <style scoped>
 
 .profile-card {
-  width: 300px;
+  /* width: px; */
   height: 50px;
+  margin: 10px 20px;
+  padding: 0px 20px;
+}
+
+.profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid orange;
 }
 
 </style>

@@ -1,31 +1,36 @@
 <template>
-  <v-card
-    class="mx-auto my-12 d-flex flex-column align-center"
-    width="700"
-  >
-      <div class="mx-6 my-4 align-self-end">
-        팀 스코어 : 500   그룹원 수 : 5
-      </div>
-      <v-card
-      width="75%"
-      height="200"
-      >
-        소개글
-      </v-card>
-      <v-carousel :show-arrows="false"
-      hide-delimiter-background
-      light
-      height="250">
-        <v-carousel-item
-          v-for="(page,i) in pageCount"
-          
-          :key="i"
-          
+  <div>
+
+    <v-card
+      class="mx-auto my-12 d-flex flex-column align-center"
+      width="700"
+    >
+        <div class="mx-6 my-4 align-self-end">
+          팀 스코어 : 500   그룹원 수 : 5
+        </div>
+        <v-card
+        width="75%"
+        height="200"
         >
-          <GroupMemberCarousel :page="page"></GroupMemberCarousel>
-        </v-carousel-item>
-      </v-carousel>
-  </v-card>
+          소개글
+        </v-card>
+        <v-carousel :show-arrows="false"
+        hide-delimiter-background
+        light
+        height="250">
+          <v-carousel-item
+            v-for="(page,i) in pageCount"
+            :key="i"
+          >
+            <GroupMemberCarousel :page="page"></GroupMemberCarousel>
+          </v-carousel-item>
+        </v-carousel>
+    </v-card>
+    <div class="col-12 d-flex align-center justify-center">
+      <span class="mx-12"><router-link to="/">가입하기</router-link></span>
+      <span class="mx-12"><router-link to="/">탈퇴하기</router-link></span>
+    </div>
+  </div>
 </template>
 
 <script>
