@@ -42,7 +42,9 @@ public class GroupHashTagService {
                 .build());
 
         Long groupPk = group.getGroupPk();
-        findOrCreateHashTag(group, hashtags);
+        for(String hashtag : hashtags){
+            findOrCreateHashTag(group, hashtag);
+        }
         return groupPk;
     }
 
@@ -60,32 +62,38 @@ public class GroupHashTagService {
         });
     }
 
-    // 그룹 해시태그 수정(추가)
+    // 그룹 해시태그 추가
     @Transactional
-    public void updateHashTag(Long groupPk, List<String> hashtags){
+    public void updateHashTag(Long groupPk, String hashtag){
         Group group = groupRepository.findById(groupPk).get();
-        findOrCreateHashTag(group, hashtags);
+        findOrCreateHashTag(group, hashtag);
     }
 
-    // 해시태그 추가
+    // 그룹 해시태그 삭제
     @Transactional
-    public void findOrCreateHashTag(Group group, List<String> hashtags){
-        // 입력한 해시태그들이
-        for(String name : hashtags){
-            Optional<HashTag> hashtag = hashTagRepository.findByName(name);
-            HashTag tag;
-            if(hashtag.isPresent()){ // 기존에 있으면 cnt +1
-                tag = hashtag.get();
-                tag.setCnt(tag.getCnt() + 1);
-            }else{                   // 기존에 없으면 새로 생성
-                tag = hashTagRepository.save(HashTag.builder()
-                        .name(name).cnt(1).build());
-            }
+    public void deleteHashTag(Long groupPk, String hashtag){
+        Group group = groupRepository.findById(groupPk).get();
+        HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
+        GroupHashTag gh = groupHashTagRepository.findByGroupAndHashTag(group,hashTag).get();
+        groupHashTagRepository.delete(gh);
+    }
 
-            // 그룹과 해시태그 연결 테이블에도 PK 값으로 저장
-            groupHashTagRepository.save(GroupHashTag.builder()
-                    .group(group).hashTag(tag).build());
+    // 해시태그 있으면 추가, 없으면 cnt +1
+    @Transactional
+    public void findOrCreateHashTag(Group group, String hashtag){
+        // 입력한 해시태그들이
+        Optional<HashTag> opt = hashTagRepository.findByName(hashtag);
+        HashTag tag;
+        if(opt.isPresent()){ // 기존에 있으면 cnt +1
+            tag = opt.get();
+            tag.setCnt(tag.getCnt() + 1);
+        }else {                   // 기존에 없으면 새로 생성
+            tag = hashTagRepository.save(HashTag.builder()
+                    .name(hashtag).cnt(1).build());
         }
+        // 그룹과 해시태그 연결 테이블에도 PK 값으로 저장
+        groupHashTagRepository.save(GroupHashTag.builder()
+                .group(group).hashTag(tag).build());
     }
 
     // 특정 해시태그 포함한 그룹 찾기

@@ -59,14 +59,25 @@ public class GroupController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // 그룹 해시태그 수정(추가)
-    @ApiOperation(value = "그룹 해시태그 수정(추가)")
+    // 그룹 해시태그 추가
+    @ApiOperation(value = "그룹 해시태그 추가")
     @PutMapping("/updateHashTag")
-    public Object updateHashTag(Long groupPk, @RequestParam("hashtags") List<String> hashtags) {
-        groupHashTagService.updateHashTag(groupPk, hashtags);
+    public Object updateHashTag(Long groupPk, @RequestParam("hashtag") String hashtag) {
+        groupHashTagService.updateHashTag(groupPk, hashtag);
         ResponseBasic result = new ResponseBasic();
         result.status = true;
         result.data = "해시태그가 추가되었습니다.";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 그룹 해시태그 삭제
+    @ApiOperation(value = "그룹 해시태그 삭제")
+    @DeleteMapping("/deleteHashTag")
+    public Object deleteHashTag(Long groupPk, @RequestParam("hashtag") String hashtag) {
+        groupHashTagService.deleteHashTag(groupPk, hashtag);
+        ResponseBasic result = new ResponseBasic();
+        result.status = true;
+        result.data = "해시태그가 삭제되었습니다.";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
