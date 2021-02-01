@@ -1,11 +1,13 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.repository.AdminRepository;
+import com.ssafy.doit.repository.FeedRepository;
 import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.repository.UserRepository;
 import io.swagger.annotations.ApiOperation;
@@ -26,7 +28,8 @@ public class AdminController {
     private UserRepository userRepository;
     @Autowired
     private GroupRepository groupRepository;
-
+    @Autowired
+    private FeedRepository feedRepository;
     //관리자 - 회원 리스트
     @ApiOperation(value = "관리자 - 회원 리스트")
     @GetMapping("/searchAllUser")
@@ -99,7 +102,7 @@ public class AdminController {
                 });
             }
             result.status = true;
-            result.data = "탈퇴 success";
+            result.data = "success";
         }
         catch (Exception e){
             e.printStackTrace();
@@ -109,5 +112,27 @@ public class AdminController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    //피드 삭제
+    //관리자 - 피드 삭제
+    @ApiOperation(value = "관리자 - 피드 삭제")
+    @PutMapping("/beDeletedFeed")
+    public Object beDeletedFeed(@RequestParam Long feedPk) {
+        ResponseBasic result = new ResponseBasic();
+        try {
+            Optional<Feed> feedInfo = feedRepository.findByFeedPk(feedPk);
+            if (feedInfo.isPresent()) {
+                feedInfo.ifPresent(selectUser -> {
+                    selectUser.setStatus("false");
+                    feedRepository.save(selectUser);
+                });
+            }
+            result.status = true;
+            result.data = "success";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result.status = false;
+            result.data = "error";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
