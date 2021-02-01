@@ -68,7 +68,6 @@ public class AdminController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-
     //관리자 - 그룹 리스트
     @ApiOperation(value = "관리자 -그룹 리스트")
     @GetMapping("/searchAllGroup")
@@ -87,7 +86,28 @@ public class AdminController {
     }
 
     //그룹 삭제
-//    froup has  어짜고 테이블@@@ 삭제 잘 보고 0--
+    @ApiOperation(value = "관리자 - 그룹 삭제")
+    @PutMapping("/beDeletedGroup")
+    public Object beDeletedGroup(@RequestParam Long groupPk) {
+        ResponseBasic result = new ResponseBasic();
+        try {
+            Optional<Group> groupInfo = groupRepository.findByGroupPk(groupPk);
+            if (groupInfo.isPresent()) {
+                groupInfo.ifPresent(selectUser -> {
+                    selectUser.setStatus("false");
+                    groupRepository.save(selectUser);
+                });
+            }
+            result.status = true;
+            result.data = "탈퇴 success";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result.status = false;
+            result.data = "error";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     //피드 삭제
 }
