@@ -1,12 +1,12 @@
 <template>
   <div>
     <Header></Header>
-  <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width="420px">
+  <v-container class="pa-3 pa-sm-16">
+  <v-card  class="d-flex align-center flex-column mx-3 mx-sm-16 py-16">
     <h3 class="my-5">회원가입</h3>
-    <div>
-      <v-container class="px-1 ">
+      <v-container class="input-width">
         <v-row no-gutters class="d-flex flex-nowrap" >
-          <v-col md="12" sm="12" >
+          <v-col cols="9" sm="11">
             <v-text-field
               v-model="name"
               :error-messages="nameErrors"
@@ -19,14 +19,19 @@
               @blur="$v.name.$touch()"
             ></v-text-field>
           </v-col>
-          <v-btn text @click="checkNick" v-bind:class="{check : c_Nick}" class="mt-4 mx-0"> 
-            <font-awesome-icon icon="check-circle"/> 
-          </v-btn>
+          <v-col cols="3" sm="1">
+            <v-btn 
+              text 
+              @click="checkNick" 
+              v-bind:class="{check : c_Nick}"
+              class="mt-4 mx-0"
+            >
+              <font-awesome-icon icon="check-circle"/>
+            </v-btn>
+          </v-col>
         </v-row>
-      </v-container>
-      <v-container class="px-0">
         <v-row no-gutters class="d-flex flex-nowrap">
-          <v-col md="12" sm="12">
+          <v-col cols="9" sm="11">
             <v-text-field
               v-model="email"
               :error-messages="emailErrors"
@@ -37,11 +42,13 @@
               @blur="$v.email.$touch()"
             ></v-text-field>
           </v-col>
+          <v-col cols="3" sm="1">
             <v-btn text @click="checkEmail"  v-bind:class="{check : c_Email }" class="mt-4"> 
                 <font-awesome-icon icon="check-circle"/> 
             </v-btn>
-          </v-row>
-        </v-container>
+          </v-col>
+        </v-row>
+        <v-row no-gutters class="d-flex flex-nowrap">
         <v-text-field
           v-model="password"
           :error-messages="passwordErrors"
@@ -52,6 +59,8 @@
           @input="$v.password.$touch()"
           @blur="$v.password.$touch()"
         ></v-text-field>
+        </v-row>
+        <v-row no-gutters class="d-flex flex-nowrap">
         <v-text-field
           v-model="passwordConfirm"
           :error-messages="passwordConfirmErrors"
@@ -62,39 +71,53 @@
           @input="$v.passwordConfirm.$touch()"
           @blur="$v.passwordConfirm.$touch()"
         ></v-text-field>
+        </v-row>
+        <v-row no-gutters class="d-flex flex-nowrap">
         <v-checkbox
           v-model="checkbox"
           :error-messages="checkboxErrors"
-          label="Do you agree?"
+          label="약관에 동의합니다."
           required
           @change="$v.checkbox.$touch()"
           @blur="$v.checkbox.$touch()"
+          class="mt-0"
         ></v-checkbox>
-        <v-card-actions class="d-flex align-center"> 
-          <v-row>
-            <v-col>
-              <v-btn type="submit" @click="signup()" class="join input col-12">가입하기</v-btn>
-              <div class="col-12">
-                <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
-              </div>
-              <br>
-            </v-col>
-          </v-row>
-        </v-card-actions>
-      </div>
+        </v-row>
+        <v-row no-gutters class="d-flex flex-nowrap">
+          <v-col cols="12">
+            <v-btn 
+              type="submit" 
+              @click="signup()" 
+              class="join input mt-2"
+              outlined
+            >
+            가입하기
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row no-gutters class="d-flex justify-end flex-nowrap mt-3 font-sytle">
+          <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
+        </v-row>
+      </v-container>
     </v-card>
+    </v-container>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import Header from '@/components/common/Header.vue';
+import Footer from '@/components/common/Footer.vue';
 import { validationMixin } from 'vuelidate';
 import { required, maxLength, sameAs, minLength, email } from 'vuelidate/lib/validators'
 import http from '../../http-common'
 
 export default {
   name: 'Join',
-  components: { Header},
+  components: { 
+    Header,
+    Footer,  
+  },
   mixins: [validationMixin],
   validations: {
       name: { required, maxLength: maxLength(8) },
@@ -138,7 +161,7 @@ export default {
       checkboxErrors () {
         const errors = []
         if (!this.$v.checkbox.$dirty) return errors
-        !this.$v.checkbox.checked && errors.push('You must agree to continue!')
+        !this.$v.checkbox.checked && errors.push('약관에 동의하셔야 회원가입이 가능합니다.')
         return errors
       },
       nameErrors () {
@@ -234,5 +257,19 @@ export default {
     border:2px solid #F9802D;
     border-radius: 8px;
     color: #F9802D;
+  }
+
+  .input-width {
+    width: 60%;
+  }
+  
+  @media only screen and (min-width: 300px) and (max-width: 599px) {
+      .input-width {
+        width: 80%;
+      }
+  }
+
+  .font-sytle {
+    font-size: 80%;
   }
 </style>
