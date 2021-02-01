@@ -12,10 +12,15 @@
       >
         소개글
       </v-card>
-      <v-carousel :show-arrows="false">
+      <v-carousel :show-arrows="false"
+      hide-delimiter-background
+      light
+      height="250">
         <v-carousel-item
           v-for="(page,i) in pageCount"
+          
           :key="i"
+          
         >
           <GroupMemberCarousel :page="page"></GroupMemberCarousel>
         </v-carousel-item>

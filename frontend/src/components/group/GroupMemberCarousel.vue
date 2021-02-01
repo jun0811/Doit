@@ -1,13 +1,13 @@
 <template>
-  <v-card
-    class="mx-auto my-12 d-flex flex-column align-center"
-    width="700"
+  <v-row
+    class="mx-auto my-12 d-flex align-center flex-wrap justify-center"
   >
-    <div v-for="(item, idx) in paginatedData" :key="idx">
-      <div>{{item.username}}</div>
-      <div>{{item.userimage}}</div>
-    </div>
-  </v-card>
+    <v-col cols="5" class="profile-card" v-for="(item, idx) in paginatedData" :key="idx">
+      <span>{{item.userimage}}</span>
+      <span>{{item.username}}</span>
+      <button>강퇴</button>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -53,6 +53,11 @@
   }
 </script>
 
-<style>
+<style scoped>
+
+.profile-card {
+  width: 300px;
+  height: 50px;
+}
 
 </style>
