@@ -4,12 +4,12 @@ import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.model.user.UserRole;
-import com.ssafy.doit.repository.ProfileRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.EmailSendService;
-import com.ssafy.doit.service.jwt.JwtUtil;
+
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +24,9 @@ import java.util.Optional;
 public class SignupController {
 
     @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private EmailSendService emailSendService;
-
-    @Autowired
-    private ProfileRepository profileRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     // 닉네임 중복 확인

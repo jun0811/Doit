@@ -4,32 +4,22 @@ import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.response.ResponseGroup;
-import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
-import com.ssafy.doit.service.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class GroupHashTagService {
 
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private final UserRepository userRepository;
     @Autowired
     private final GroupRepository groupRepository;
     @Autowired
@@ -40,11 +30,7 @@ public class GroupHashTagService {
 
     // 그룹 생성
     @Transactional
-    public Long save(Group groupReq, List<String> hashtags){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails) principal;
-        Long userPk = userRepository.findByEmail(userDetails.getUsername()).get().getId();
-
+    public Long create(Long userPk, Group groupReq, List<String> hashtags){
         // 그룹에 대한 정보 저장
         Group group = groupRepository.save(Group.builder()
                 .name(groupReq.getName())
@@ -56,7 +42,34 @@ public class GroupHashTagService {
                 .build());
 
         Long groupPk = group.getGroupPk();
+        findOrCreateHashTag(group, hashtags);
+        return groupPk;
+    }
 
+    // 그룹 정보 수정
+    @Transactional
+    public void updateGroup(Long groupPk, Group groupReq){
+        Optional<Group> group = groupRepository.findById(groupPk);
+
+        group.ifPresent(selectGroup ->{
+            selectGroup.setName(groupReq.getName());
+            selectGroup.setContent(groupReq.getContent());
+            selectGroup.setMaxNum(groupReq.getMaxNum());
+            selectGroup.setEndDate(groupReq.getEndDate());
+            groupRepository.save(selectGroup);
+        });
+    }
+
+    // 그룹 해시태그 수정(추가)
+    @Transactional
+    public void updateHashTag(Long groupPk, List<String> hashtags){
+        Group group = groupRepository.findById(groupPk).get();
+        findOrCreateHashTag(group, hashtags);
+    }
+
+    // 해시태그 추가
+    @Transactional
+    public void findOrCreateHashTag(Group group, List<String> hashtags){
         // 입력한 해시태그들이
         for(String name : hashtags){
             Optional<HashTag> hashtag = hashTagRepository.findByName(name);
@@ -73,7 +86,6 @@ public class GroupHashTagService {
             groupHashTagRepository.save(GroupHashTag.builder()
                     .group(group).hashTag(tag).build());
         }
-        return groupPk;
     }
 
     // 특정 해시태그 포함한 그룹 찾기

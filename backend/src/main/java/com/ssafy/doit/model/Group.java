@@ -22,13 +22,15 @@ public class Group{
     private Long groupPk;
 
     private String name;
-    private int maxNum;
     private String content;
+    private String image;
+    private int score;
+    private int totalNum;
+    private int maxNum;
     private Long leader;
     private LocalDate startDate;
     private LocalDate endDate;
-    private int score;
-    private int totalNum;
+    private String status;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "group")
@@ -39,15 +41,17 @@ public class Group{
     public List<GroupUser> userList; // 유저리스트
 
     @Builder
-    public Group(String name, String content, int maxNum,
-                 LocalDate startDate, LocalDate endDate, Long leader){
+    public Group(String name, String content, String image, int maxNum,
+                 Long leader, LocalDate startDate, LocalDate endDate){
         this.name = name;
         this.content = content;
+        this.image = image;
         this.totalNum = 0;
         this.maxNum = maxNum;
         this.score = 0;
         this.startDate = startDate;
         this.endDate = endDate;
         this.leader = leader;
+        this.status = "true";
     }
 }
