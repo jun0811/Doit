@@ -235,4 +235,33 @@ public class UserController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    //    피드 리스트 공개 (feed_open)
+    //    그룹 리스트 공개(group_open)
+    //    그룹 공개 - 가입된 그룹에 해당되는 사용자 필요
+    //    비공개 - 나만보기
+    @ApiOperation(value = "회원 피드,그룹 리스트 공개/비공개")
+    @PutMapping("/setOnAndOff")
+    public Object setOnAndOff(@RequestParam String feedOpen,@RequestParam String groupOpen) {
+        ResponseBasic result = new ResponseBasic();
+        try {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails) principal;
+            User user = userRepository.findByEmail(userDetails.getUsername()).get();
+
+            user.setFeedOpen(feedOpen);
+            user.setGroupOpen(groupOpen);
+
+            userRepository.save(user);
+
+            result.status = true;
+            result.data = "공개/비공개 설정정 success";
+        }
+       catch (Exception e){
+            e.printStackTrace();
+            result.status = false;
+            result.data = "error";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
