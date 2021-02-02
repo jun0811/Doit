@@ -13,7 +13,7 @@
       <v-dialog
         v-model="dialog"
         persistent
-        max-width="600px"
+        width="600"
         v-if="!this.$store.state.account.accessToken"
       >
         <template v-slot:activator="{on}">
@@ -26,22 +26,31 @@
           </v-btn>
         </template>
 
-        
-        <v-card class="d-flex align-center flex-column mx-auto">
-          <v-btn class="ml-auto"
-          text
-          @click="close"
-          >
-            <font-awesome-icon icon="times-circle"/>
-          </v-btn>
-          <v-card-title>
-            <h3 class="my-7">로그인</h3>
-          </v-card-title>
-          <v-card-text>
-            <v-form ref="form">
-           <v-container>
-            <v-row class="d-flex align-center flex-column">
-              <v-col cols="8">
+        <v-card class="mx-auto">
+          <v-cont>
+            <v-row>
+              <v-col class="d-flex justify-end">
+                <v-btn 
+                  class="ml-auto mt-2"
+                  text
+                  @click="close"
+                >
+                  <font-awesome-icon icon="times-circle"/>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-cont>
+
+          <v-container class="px-5 px-sm-16 pb-8 pb-sm-16">
+            <v-row>
+              <v-col cols="12" class="d-flex justify-center">
+                <v-card-title>
+                  <h3 class="my-7">로그인</h3>
+                </v-card-title>
+              </v-col>
+            </v-row>
+            <v-row class="d-flex justify-center">
+              <v-col cols="11" sm="8" class="pb-0">
                 <v-text-field
                 v-model="email"
                 :error-messages="emailErrors"
@@ -52,38 +61,57 @@
                 @blur="$v.email.$touch()"
                 ></v-text-field>
               </v-col>
-            <v-col cols="8">
-              <v-text-field
-                v-model="password"
-                :error-messages="passwordErrors"
-                label="비밀번호"
-                clearable
-                type="password"
-                required
-                @input="$v.password.$touch()"
-                @blur="$v.password.$touch()"
-              ></v-text-field>
+              <v-col cols="11" sm="8" class="pt-0">
+                <v-text-field
+                  v-model="password"
+                  :error-messages="passwordErrors"
+                  label="비밀번호"
+                  clearable
+                  type="password"
+                  required
+                  @input="$v.password.$touch()"
+                  @blur="$v.password.$touch()"
+                ></v-text-field>
+              </v-col>
+          </v-row>
+          <v-row class="d-flex justify-center mt-10">
+            <v-col cols="11" sm="8">
+              <v-btn
+                color="#F9802D"
+                class="login input" 
+                text
+                @click="login()"
+              >로그인
+              </v-btn>
             </v-col>
           </v-row>
-          </v-container>
-            </v-form>
-        </v-card-text>
-    
-        <button class="login input" @click="login()">로그인</button>
-          <v-card-actions > 
-            <v-container class="d-flex justify-space-between mb-6">
+          <v-row class="d-flex justify-center mt-5">
+            <v-col cols="8" sm="5" class="font-small-style">
+              아직 회원이 아니신가요?
+            </v-col>
+            <v-col cols="3" sm="3" class="d-flex justify-end">
               <v-btn
                 color="#F9802D"
                 @click="signup" 
                 text
+                small
               >회원 가입</v-btn>
+            </v-col>
+          </v-row>
+          <v-row class="d-flex justify-center">
+            <v-col cols="8" sm="4" class="font-small-style">
+              비밀번호를 잊으셨나요?
+            </v-col>
+            <v-col cols="3" sm="4" class="d-flex justify-end">
               <v-btn
                 color="#F9802D"
                 text
+                small
                 @click="passwordFind"
-              >비밀번호 찾기</v-btn>
-            </v-container>
-          </v-card-actions>
+              >비밀번호 재설정</v-btn>
+            </v-col>
+          </v-row>
+          </v-container>
         </v-card>
       </v-dialog>
       <!-- 로그인창 끝 -->
@@ -121,8 +149,6 @@
         v-model="drawer"
         absolute
         temporary
-        right
-        disable-route-watcher
       >
         <v-list-item>
           <v-list-item-avatar>
@@ -293,8 +319,9 @@ export default {
 
 <style scoped>
   .login.input{
-    width:50%;
-    border:2px solid #F9802D;
+    width: 100%;
+    height: 120%;
+    border: 2px solid #F9802D;
     border-radius: 8px;
     color: #F9802D;
   }
@@ -304,6 +331,22 @@ export default {
   
   .navi-style {
     height: 50%;
+  }
+
+  .diaglog-width {
+    width: 600px;
+  }
+
+  @media only screen and (min-width: 300px) and (max-width: 599px) {
+    .diaglog-width {
+      width: 200px;
+    }
+  }
+
+  .font-small-style {
+    font-size: 80%;
+    height: 52px;
+    line-height: 28px;
   }
 </style>
 

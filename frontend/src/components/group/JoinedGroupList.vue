@@ -1,69 +1,75 @@
 <template>
-  <div>
-    <v-card
-      class="mx-auto"
+  <v-card
+    class="mx-auto"
+    tile
+  >
+    <v-list
+      nav
+      dense
     >
       <v-virtual-scroll
         :bench="benched"
         :items="items"
-        height="600"
         item-height="64"
+        class="joined-size"
       >
-        <template v-slot:default="{ item }">
-          <v-list-item :key="item">
-            <v-list-item-action>
-              <v-btn
-                fab
-                small
-                depressed
-                class="joined-group-btn"
-              >
-              {{ item }}
-              </v-btn>
-            </v-list-item-action>
+        <v-list-item
+          v-for="subItem in items"
+          :key="subItem.groupPk"
+          @click="group(subItem.groupPk)"
+        >
+          <!-- 추후 그룹 사진 넣을 예정-->
+          <!-- <v-list-item-icon>
+            <v-icon v-text="item.icon"></v-icon>
+          </v-list-item-icon> -->
 
-            <v-list-item-content>
-              <v-list-item-title>
-                Group {{ item }}
-              </v-list-item-title>
-            </v-list-item-content>
-
-
-          </v-list-item>
-
-          <v-divider></v-divider>
-        </template>
+          <v-list-item-content>
+            <v-list-item-title v-text="subItem.name"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-virtual-scroll>
-    </v-card>
-  </div>
+    </v-list>
+  </v-card>
+
 </template>
 
 <script>
-  //import http from '../../http-common';
+import http from '../../http-common'
 
-  export default {
-    //props: ['id'], --> 나중에 타유저 정보 얻을때 사용예정
-    data: () => ({
-      benched: 0,
-      groups: '',
-    }),
-    computed: {
-      items () {
-        return Array.from({ length: this.groups.length }, (k, v) => v + 1)
-      },
-      length () {
-        return 20
-      },
+export default {
+  name: "JoinedGroupList",
+  data: () => ({
+    benched: 0,
+    items: [],
+  }),
+  created() {
+    // 현재 로그인 한사람의 가입 그룹 리스트
+    if(this.$store.getters.getAccessToken){
+        http.get('/group/currentUserGroup')
+          .then((res)=>{
+          this.items = res.data.object;
+          console.log(res)
+      })
+    }    
+  },
+  methods: {
+    group(no) {
+      this.$router.push(`/group/community?no=${no}`);
     },
-    created() {
-      // http.get('/group/joinedGroup')
-      // .then((res)=>{
-      //     this.group = res.data.object;
-      // })
-    }
   }
+}
 </script>
 
 <style>
+.joined-size {
+  width: 100%;
+  height: 584px;
+}
 
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .joined-size {
+    width: 120%;
+    height: 200px;
+  }
+}
 </style>
