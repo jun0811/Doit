@@ -29,7 +29,7 @@ public class Group{
     private int maxNum;
     private Long leader;
     private LocalDate startDate;
-    private LocalDate endDate;
+    private String endDate;
     private String status;
 
     @JsonIgnore
@@ -42,7 +42,7 @@ public class Group{
 
     @Builder
     public Group(String name, String content, String image, int maxNum,
-                 Long leader, LocalDate startDate, LocalDate endDate){
+                 Long leader, LocalDate startDate, String endDate){
         this.name = name;
         this.content = content;
         this.image = image;

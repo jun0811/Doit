@@ -2,7 +2,10 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Feed;
+import com.ssafy.doit.model.response.ResponseFeed;
 import com.ssafy.doit.repository.FeedRepository;
+import com.ssafy.doit.service.FeedService;
+import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -25,25 +28,37 @@ import java.util.List;
 public class FeedController {
 
     @Autowired
-    private FeedRepository feedRepository;
+    private final UserService userService;
+    @Autowired
+    private final FeedService feedService;
 
     //해당 그룹 내 활동 피드
     @ApiOperation(value = "그룹 내 활동 피드")
     @GetMapping("/groupFeed")
     public Object groupFeedList(@RequestParam Long groupPk){
-        List<Feed> list = feedRepository.findAll(groupPk);
-
-        ResponseBasic result = new ResponseBasic();
-
+        ResponseBasic result = null;
+        List<ResponseFeed> list = feedService.getFeedList(groupPk);
         if(list.size() == 0){
-            result.data = "해당 그룹의 피드가 존재하지 않습니다.";
-            result.status = false;
+            result = new ResponseBasic(false, "해당 그룹의 피드가 존재하지 않습니다.", null);
         }else{
-            result.data = "success";
-            result.status = true;
-            result.object = list;
+            result = new ResponseBasic(true, "success", list);
         }
         //******인증 개수 70%이상인지 계산해서 auth_check 판별 해서 넘겨주기!!!
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 그룹 내 피드 생성
+    @ApiOperation(value = "그룹 내 피드 생성")
+    @PostMapping("/createFeed")
+    public Object createFeed(@RequestBody Feed feedReq){
+        ResponseBasic result = null;
+        try{
+            Long userPk = userService.currentUser();
+            feedService.create(userPk,feedReq);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e){
+            result = new ResponseBasic(false, "피드 생성 실패", null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
