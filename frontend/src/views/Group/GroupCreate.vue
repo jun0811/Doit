@@ -101,7 +101,8 @@
 <script>
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import { createGroup } from "@/api/group/index.js"
+// import { createGroup } from "@/api/group/index.js"
+import http from "../../http-common"
 export default {
     name :"GroupCreate",
     components: {
@@ -148,25 +149,18 @@ export default {
       },
       
       create(){
-        createGroup(
+        http.post('/group/createGroup',
           {
             "name": this.name,
             "maxNum": this.maxNum,
             "endDate": this.date,
             "content":this.content,
             "hashtags": this.hashtag
-          },
-          (res) =>{
-            if (res.status){
-              alert("그룹이 생성되었습니다.")
-              this.$router.push('/')
-            }
-          },
-          (err) =>{
-            console.log(err)
-            alert("생성 실패")
-          }
-        )
+          })
+          .then((res) =>{
+            console.log(res)
+            alert('가입완료')
+          })
       }
   }
     
