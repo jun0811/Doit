@@ -1,8 +1,10 @@
 package com.ssafy.doit.service;
 
+import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
+import com.ssafy.doit.repository.FeedRepository;
 import com.ssafy.doit.repository.GroupHashTagRepository;
 import com.ssafy.doit.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ public class AdminService {
     private GroupRepository groupRepository;
     @Autowired
     private GroupHashTagRepository groupHashTagRepository;
+    @Autowired
+    private FeedRepository feedRepository;
 
     public void deleteAllByGroup(Long groupPk) {
         Group group = groupRepository.findById(groupPk).get();
@@ -26,6 +30,10 @@ public class AdminService {
         for (GroupHashTag o: list) {
             groupHashTagRepository.delete(o);
         }
+
+    }
+
+    public void deleteAllByFeed(Long feedPk) {
 
     }
 }

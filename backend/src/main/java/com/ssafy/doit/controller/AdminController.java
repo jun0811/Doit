@@ -125,6 +125,7 @@ public class AdminController {
         ResponseBasic result = new ResponseBasic();
         try {
             Optional<Feed> feedInfo = feedRepository.findByFeedPk(feedPk);
+            adminService.deleteAllByFeed(feedPk);
             if (feedInfo.isPresent()) {
                 feedInfo.ifPresent(selectUser -> {
                     selectUser.setStatus("false");
