@@ -44,8 +44,8 @@ public class GroupController {
     // 그룹 정보 수정
     @ApiOperation(value = "그룹 수정")
     @PutMapping("/updateGroup")
-    public Object updateGroup(Long groupPk, @RequestBody Group groupReq) {
-        groupHashTagService.updateGroup(groupPk, groupReq);
+    public Object updateGroup(@RequestBody Group groupReq) {
+        groupHashTagService.updateGroup(groupReq);
         ResponseBasic result = null;
         result = new ResponseBasic(true,"success",null);
         return new ResponseEntity<>(result, HttpStatus.OK);

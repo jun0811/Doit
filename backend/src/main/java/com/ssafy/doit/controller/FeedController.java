@@ -3,7 +3,6 @@ package com.ssafy.doit.controller;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.response.ResponseFeed;
-import com.ssafy.doit.repository.FeedRepository;
 import com.ssafy.doit.service.FeedService;
 import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +38,7 @@ public class FeedController {
         ResponseBasic result = null;
         try{
             Long userPk = userService.currentUser();
-            feedService.create(userPk,feedReq);
+            feedService.createFeed(userPk,feedReq);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             result = new ResponseBasic(false,"fail",null);
@@ -72,6 +71,34 @@ public class FeedController {
             result = new ResponseBasic(false,"fail",null);
         }else{
             result = new ResponseBasic(true, "success", list);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 개인 피드 수정
+    @ApiOperation(value = "개인 피드 수정")
+    @PutMapping("/updateFeed")
+    public Object updateFeed(@RequestBody Feed feedReq){
+        ResponseBasic result = null;
+        try{
+            feedService.updateFeed(feedReq);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e){
+            result = new ResponseBasic(false,"fail",null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 개인 피드 삭제
+    @ApiOperation(value = "개인 피드 삭제")
+    @DeleteMapping("/deleteFeed")
+    public Object deleteFeed(Long feedPk){
+        ResponseBasic result = null;
+        try{
+            feedService.deleteFeed(feedPk);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e){
+            result = new ResponseBasic(false,"fail",null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

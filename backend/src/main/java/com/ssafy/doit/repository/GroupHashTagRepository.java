@@ -10,6 +10,5 @@ import java.util.Optional;
 
 public interface GroupHashTagRepository extends JpaRepository<GroupHashTag, Long> {
     Optional<GroupHashTag> findByGroupAndHashTag(Group group, HashTag HashTag);
-
     List<GroupHashTag> findAllByGroup(Group group);
 }

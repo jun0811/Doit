@@ -52,8 +52,8 @@ public class GroupHashTagService {
 
     // 그룹 정보 수정
     @Transactional
-    public void updateGroup(Long groupPk, Group groupReq){
-        Optional<Group> group = groupRepository.findById(groupPk);
+    public void updateGroup(Group groupReq){
+        Optional<Group> group = groupRepository.findById(groupReq.getGroupPk());
 
         group.ifPresent(selectGroup ->{
             selectGroup.setName(groupReq.getName());
