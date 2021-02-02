@@ -29,6 +29,8 @@ public class User {
     private String nickname;
     private String authKey;
     private int mileage;
+    private String feedOpen;
+    private String groupOpen;
     private String status;
 
     @Enumerated(EnumType.STRING)
@@ -46,6 +48,8 @@ public class User {
         this.userRole = userRole;
         this.authKey = authKey;
         this.mileage = 0;
+        this.feedOpen = "true";
+        this.groupOpen = "true";
         this.status = "true";
     }
     public String getRoleKey() {
