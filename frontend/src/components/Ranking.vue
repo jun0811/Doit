@@ -78,6 +78,8 @@ export default {
 }
 
 /* --- */
+/* $randomNumber : random(5); */
+
 .box {
   position: relative;
   width: 100px;
@@ -97,7 +99,10 @@ export default {
   -moz-animation-duration: 2s;
   -moz-animation-timing-function: linear;
   -moz-animation-iteration-count: infinite;
+  /* animation-delay: $randomNumber + s; */
 }
+
+
 
 @keyframes flash_border {
   0% {
@@ -125,7 +130,6 @@ export default {
     border-color:#5ff2f0;
   }
 }
-
 
 
 
