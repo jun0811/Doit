@@ -144,6 +144,7 @@ export default {
                     alert("회원정보가 변경되었습니다");
                     const name = this.name;
                     this.$store.commit("SET_NAME", { name });
+                    this.$router.push('/user/profile')
                 }
             })
             }
