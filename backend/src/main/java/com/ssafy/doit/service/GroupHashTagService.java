@@ -52,8 +52,8 @@ public class GroupHashTagService {
 
     // 그룹 정보 수정
     @Transactional
-    public void updateGroup(Long groupPk, Group groupReq){
-        Optional<Group> group = groupRepository.findById(groupPk);
+    public void updateGroup(Group groupReq){
+        Optional<Group> group = groupRepository.findById(groupReq.getGroupPk());
 
         group.ifPresent(selectGroup ->{
             selectGroup.setName(groupReq.getName());
@@ -66,9 +66,14 @@ public class GroupHashTagService {
 
     // 그룹 해시태그 추가
     @Transactional
-    public void updateHashTag(Long groupPk, String hashtag){
-        Group group = groupRepository.findById(groupPk).get();
-        findOrCreateHashTag(group, hashtag);
+    public int updateHashTag(Long groupPk, String hashtag){
+        Optional<HashTag> opt = hashTagRepository.findByName(hashtag);
+        if(opt.isPresent()) return 1;
+        else {
+            Group group = groupRepository.findById(groupPk).get();
+            findOrCreateHashTag(group, hashtag);
+        }
+        return 0;
     }
 
     // 그룹 해시태그 삭제
@@ -101,7 +106,7 @@ public class GroupHashTagService {
     // 특정 해시태그 포함한 그룹 찾기
     @Transactional
     public List<ResponseGroup> findAllByHashTag(String hashtag){
-        List<Group> groupList = groupRepository.findAllByHashTag(hashtag);
+        List<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true");
         List<ResponseGroup> resList = new ArrayList<>();
         for(Group group : groupList){
             resList.add(new ResponseGroup(group));

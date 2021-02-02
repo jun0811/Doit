@@ -1,26 +1,19 @@
 package com.ssafy.doit.service;
 
 import com.ssafy.doit.model.Group;
-import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.GroupUser;
 import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.repository.GroupUserRepository;
 import com.ssafy.doit.repository.UserRepository;
-import com.ssafy.doit.service.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

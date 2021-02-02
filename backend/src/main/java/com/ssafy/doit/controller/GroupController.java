@@ -5,7 +5,6 @@ import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.response.ResponseGroup;
-import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
 import com.ssafy.doit.service.UserService;
@@ -14,13 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,20 +35,19 @@ public class GroupController {
         Long userPk = userService.currentUser();
         Long groupPk = groupHashTagService.create(userPk, groupReq);
         groupUserService.join(userPk, groupPk);
-        ResponseBasic result = new ResponseBasic();
-        result.status = true;
-        result.data = "그룹이 생성되었습니다.";
+
+        ResponseBasic result = null;
+        result = new ResponseBasic(true,"success",null);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 그룹 정보 수정
     @ApiOperation(value = "그룹 수정")
     @PutMapping("/updateGroup")
-    public Object updateGroup(Long groupPk, @RequestBody Group groupReq) {
-        groupHashTagService.updateGroup(groupPk, groupReq);
-        ResponseBasic result = new ResponseBasic();
-        result.status = true;
-        result.data = "그룹의 정보가 수정되었습니다.";
+    public Object updateGroup(@RequestBody Group groupReq) {
+        groupHashTagService.updateGroup(groupReq);
+        ResponseBasic result = null;
+        result = new ResponseBasic(true,"success",null);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -63,10 +55,12 @@ public class GroupController {
     @ApiOperation(value = "그룹 해시태그 추가")
     @PutMapping("/updateHashTag")
     public Object updateHashTag(Long groupPk, @RequestParam("hashtag") String hashtag) {
-        groupHashTagService.updateHashTag(groupPk, hashtag);
+        int opt = groupHashTagService.updateHashTag(groupPk, hashtag);
         ResponseBasic result = new ResponseBasic();
-        result.status = true;
-        result.data = "해시태그가 추가되었습니다.";
+        if(opt == 1)
+            result = new ResponseBasic(false,"fail",null);
+        else if(opt == 0)
+            result = new ResponseBasic(true,"success",null);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -75,9 +69,8 @@ public class GroupController {
     @DeleteMapping("/deleteHashTag")
     public Object deleteHashTag(Long groupPk, @RequestParam("hashtag") String hashtag) {
         groupHashTagService.deleteHashTag(groupPk, hashtag);
-        ResponseBasic result = new ResponseBasic();
-        result.status = true;
-        result.data = "해시태그가 삭제되었습니다.";
+        ResponseBasic result = null;
+        result = new ResponseBasic(true, "success", null);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -86,15 +79,11 @@ public class GroupController {
     @GetMapping("/searchGroup")
     public Object searchGroup(@RequestParam String tag){ // 페이징 처리하기
         List<ResponseGroup> list = groupHashTagService.findAllByHashTag(tag);
-        ResponseBasic result = new ResponseBasic();
-
-        if(list.size() == 0){
-            result.status =false;
-            result.data= "fail";
-        }else{
-            result.status = true;
-            result.data = "success";
-            result.object = list;
+        ResponseBasic result = null;
+        if(list.size() == 0) {
+            result = new ResponseBasic(false, "fail", null);
+        }else {
+            result = new ResponseBasic(true, "success", list);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -104,14 +93,11 @@ public class GroupController {
     @GetMapping("/detailGroup")
     public Object detailGroup(@RequestParam Long groupPk){
         ResponseGroup group = groupHashTagService.findByGroupPk(groupPk);
-        ResponseBasic result = new ResponseBasic();
+        ResponseBasic result = null;
         if (group == null) {
-            result.status = false;
-            result.data = "fail";
+            result = new ResponseBasic(false,"fail",null);
         }else{
-            result.status = true;
-            result.data = "success";
-            result.object = group;
+            result = new ResponseBasic(true,"success",group);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -121,17 +107,14 @@ public class GroupController {
     @GetMapping("/joinGroup")
     public Object joinGroup(@RequestParam Long groupPk){
         Long userPk = userService.currentUser();
-        ResponseBasic result = new ResponseBasic();
+        ResponseBasic result = null;
         int opt = groupUserService.join(userPk,groupPk);
         if(opt == 0){
-            result.status = true;
-            result.data = "가입 완료되었습니다.";
+            result = new ResponseBasic(true,"가입 완료되었습니다.",null);
         }else if(opt == 1){
-            result.status = false;
-            result.data = "이미 가입되어있는 그룹입니다.";
+            result = new ResponseBasic(false,"이미 가입된 그륩입니다.",null);
         }else if(opt == 2){
-            result.status = false;
-            result.data = "인원이 다 찼습니다.";
+            result = new ResponseBasic(false,"인원이 가득 찼습니다.",null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -154,14 +137,11 @@ public class GroupController {
     }
 
     private Object getObject(List<ResGroupList> list) {
-        ResponseBasic result = new ResponseBasic();
+        ResponseBasic result = null;
         if(list.size() == 0){
-            result.status =false;
-            result.data= "fail";
+            result = new ResponseBasic(false,"fail",null);
         }else{
-            result.status = true;
-            result.data = "success";
-            result.object = list;
+            result = new ResponseBasic(true,"success",list);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
