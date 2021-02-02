@@ -2,7 +2,6 @@ package com.ssafy.doit.service;
 
 import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.response.ResponseFeed;
-import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.repository.FeedRepository;
 import com.ssafy.doit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,18 +22,6 @@ public class FeedService {
     @Autowired
     private final UserRepository userRepository;
 
-    // 그룹 내 피드 리스트
-    @Transactional
-    public List<ResponseFeed> getFeedList(Long groupPk){
-        List<Feed> list = feedRepository.findAllByGroupPkAndStatus(groupPk, "true");
-        List<ResponseFeed> resList = new ArrayList<>();
-        for(Feed feed : list){
-            String nickname = userRepository.findById(feed.getUserPk()).get().getNickname();
-            resList.add(new ResponseFeed(feed, nickname));
-        }
-        return resList;
-    }
-
     // 그룹 내 피드 생성
     @Transactional
     public void create(Long userPk, Feed feedReq){
@@ -45,5 +32,28 @@ public class FeedService {
                 .groupPk(feedReq.getGroupPk())
                 .userPk(userPk)
                 .build());
+    }
+
+    // 그룹 내 피드 리스트
+    @Transactional
+    public List<ResponseFeed> groupFeedList(Long groupPk){
+        List<Feed> list = feedRepository.findAllByGroupPkAndStatus(groupPk, "true");
+        return getResponseFeed(list);
+    }
+
+    // 개인 피드 리스트
+    @Transactional
+    public List<ResponseFeed> userFeedList(Long userPk){
+        List<Feed> list = feedRepository.findAllByUserPkAndStatus(userPk, "true");
+        return getResponseFeed(list);
+    }
+
+    private List<ResponseFeed> getResponseFeed(List<Feed> list) {
+        List<ResponseFeed> resList = new ArrayList<>();
+        for(Feed feed : list){
+            String nickname = userRepository.findById(feed.getUserPk()).get().getNickname();
+            resList.add(new ResponseFeed(feed, nickname));
+        }
+        return resList;
     }
 }

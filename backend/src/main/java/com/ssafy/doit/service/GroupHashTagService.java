@@ -66,9 +66,14 @@ public class GroupHashTagService {
 
     // 그룹 해시태그 추가
     @Transactional
-    public void updateHashTag(Long groupPk, String hashtag){
-        Group group = groupRepository.findById(groupPk).get();
-        findOrCreateHashTag(group, hashtag);
+    public int updateHashTag(Long groupPk, String hashtag){
+        Optional<HashTag> opt = hashTagRepository.findByName(hashtag);
+        if(opt.isPresent()) return 1;
+        else {
+            Group group = groupRepository.findById(groupPk).get();
+            findOrCreateHashTag(group, hashtag);
+        }
+        return 0;
     }
 
     // 그룹 해시태그 삭제
