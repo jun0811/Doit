@@ -23,7 +23,7 @@ public class MainController {
     @Autowired
     private HashTagRepository hashTagRepository;
 
-    @ApiOperation(value = "WordCloud 데이터")
+    @ApiOperation(value = "WordCloud 데이터 cnt 내림차순")
     @GetMapping("/wordCloud")
     public Object wordCloud(){ // 페이징 처리하기
         ResponseBasic result = new ResponseBasic();
