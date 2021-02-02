@@ -26,7 +26,7 @@ public class FeedService {
     // 그룹 내 피드 리스트
     @Transactional
     public List<ResponseFeed> getFeedList(Long groupPk){
-        List<Feed> list = feedRepository.findAllByGroupPk(groupPk);
+        List<Feed> list = feedRepository.findAllByGroupPkAndStatus(groupPk, "true");
         List<ResponseFeed> resList = new ArrayList<>();
         for(Feed feed : list){
             String nickname = userRepository.findById(feed.getUserPk()).get().getNickname();

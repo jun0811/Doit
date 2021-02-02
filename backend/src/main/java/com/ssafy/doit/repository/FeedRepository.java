@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FeedRepository extends JpaRepository<Feed, Long> {
-    List<Feed> findAllByGroupPk(Long groupPk);
+    List<Feed> findAllByGroupPkAndStatus(Long groupPk, String status);
     Optional<Feed> findByFeedPk(Long feedPk);
 }
