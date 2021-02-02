@@ -3,6 +3,7 @@ package com.ssafy.doit.service;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
+import com.ssafy.doit.model.request.RequestGroup;
 import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.repository.*;
 
@@ -30,7 +31,7 @@ public class GroupHashTagService {
 
     // 그룹 생성
     @Transactional
-    public Long create(Long userPk, Group groupReq, List<String> hashtags){
+    public Long create(Long userPk, RequestGroup groupReq){
         // 그룹에 대한 정보 저장
         Group group = groupRepository.save(Group.builder()
                 .name(groupReq.getName())
@@ -41,6 +42,7 @@ public class GroupHashTagService {
                 .leader(userPk)
                 .build());
 
+        List<String> hashtags = groupReq.getHashtags();
         Long groupPk = group.getGroupPk();
         for(String hashtag : hashtags){
             findOrCreateHashTag(group, hashtag);

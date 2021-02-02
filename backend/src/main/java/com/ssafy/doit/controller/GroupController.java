@@ -1,5 +1,6 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.request.RequestGroup;
 import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
@@ -37,10 +38,9 @@ public class GroupController {
     // 그룹 생성
     @ApiOperation(value = "그룹 생성")
     @PostMapping("/createGroup")
-    public Object createGroup(@RequestBody Group groupReq,
-                              @RequestParam("hashtags") List<String> hashtags) {
+    public Object createGroup(@RequestBody RequestGroup groupReq) {
         Long userPk = userService.currentUser();
-        Long groupPk = groupHashTagService.create(userPk, groupReq, hashtags);
+        Long groupPk = groupHashTagService.create(userPk, groupReq);
         groupUserService.join(userPk, groupPk);
         ResponseBasic result = new ResponseBasic();
         result.status = true;
