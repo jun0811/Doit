@@ -106,7 +106,7 @@ public class GroupHashTagService {
     // 특정 해시태그 포함한 그룹 찾기
     @Transactional
     public List<ResponseGroup> findAllByHashTag(String hashtag){
-        List<Group> groupList = groupRepository.findAllByHashTag(hashtag);
+        List<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true");
         List<ResponseGroup> resList = new ArrayList<>();
         for(Group group : groupList){
             resList.add(new ResponseGroup(group));
