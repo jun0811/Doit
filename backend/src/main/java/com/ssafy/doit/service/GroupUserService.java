@@ -41,8 +41,8 @@ public class GroupUserService {
             groupUserRepository.save(GroupUser.builder()
                     .group(group).user(user).build());
             group.setTotalNum(group.getTotalNum() + 1);
-        }else return 1;
-        return 0;
+        }else return 0;
+        return 1;
     }
 
     // 가입한 그룹 가져오기
