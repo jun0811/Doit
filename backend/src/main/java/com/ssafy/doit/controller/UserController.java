@@ -242,16 +242,17 @@ public class UserController {
     //    비공개 - 나만보기
     @ApiOperation(value = "회원 피드,그룹 리스트 공개/비공개")
     @PutMapping("/setOnAndOff")
-    public Object setOnAndOff(@RequestParam String feedOpen,@RequestParam String groupOpen) {
+    public Object setOnAndOff(@RequestParam String open ,@RequestParam String opt) {
         ResponseBasic result = new ResponseBasic();
         try {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             UserDetails userDetails = (UserDetails) principal;
             User user = userRepository.findByEmail(userDetails.getUsername()).get();
-
-            user.setFeedOpen(feedOpen);
-            user.setGroupOpen(groupOpen);
-
+            if(opt.equals("feed")) {
+                user.setFeedOpen(open);
+            }else if(opt.equals("group")) {
+                user.setGroupOpen(open);
+            }
             userRepository.save(user);
 
             result.status = true;
