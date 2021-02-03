@@ -27,7 +27,7 @@ public class ResponseFeed {
     public ResponseFeed(Feed feed, String nickname){
         this.feedPk = feed.getFeedPk();
         this.writer = nickname;
-        this.userPk = feed.getUserPk();
+        this.userPk = feed.getWriter();
         this.content = feed.getContent();
         this.feedType = feed.getFeedType();
         this.authCheck = feed.getAuthCheck();

@@ -1,9 +1,11 @@
 package com.ssafy.doit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -11,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name= "`feed`")
-public class Feed {
+public class Feed{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,16 +32,21 @@ public class Feed {
 
     private String status;
     private Long groupPk;
-    private Long userPk; // writer
+    @Column(name = "`user_pk`")
+    private Long writer; // writer
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "feed")
+    public List<FeedUser> userList; // 인증확인한 유저리스트
 
     @Builder
     public Feed(String content, String feedType, LocalDateTime createDate,
-                Long groupPk, Long userPk){
+                Long groupPk, Long writer){
         //this.media = media;
         this.content = content;
         this.feedType = feedType;
         this.groupPk = groupPk;
-        this.userPk = userPk;
+        this.writer = writer;
         this.createDate = createDate;
 
         this.updateDate = "0-0-0 0:0:0";
