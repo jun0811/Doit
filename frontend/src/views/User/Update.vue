@@ -178,7 +178,7 @@ export default {
       this.c_Nick = false;
     },
     deleteUser() {
-      alert("정말 Doit을 탈퇴하시겠습니까?")
+      this.$router.push("/user/delete")
     }
   },
 };
