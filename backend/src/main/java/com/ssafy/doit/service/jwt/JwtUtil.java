@@ -45,12 +45,12 @@ public class JwtUtil {
                 .getBody();
     }
 
-    public Map<String, Object> getUser(String token) {
-        return (Map<String, Object>) extractAllClaims(token).get("User");
+    public Object getUser(String token) {
+        return extractAllClaims(token).get("User");
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername((String) getUser(token).get("email"));
+        UserDetails userDetails = userDetailsService.loadUserByUsername((String) getUser(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -66,7 +66,7 @@ public class JwtUtil {
     public String doGenerateToken(User user, long expireTime) {
 
         Claims claims = Jwts.claims();
-        claims.put("User", user);
+        claims.put("User", user.getEmail());
 
         String jwt = Jwts.builder()
                 .setClaims(claims)
