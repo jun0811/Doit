@@ -102,7 +102,7 @@ export default {
     },
     data() {
         return {
-            name: 'Nickname',
+            name:'Nickname',
             selected : '',
             content :'',
             items : [
@@ -152,7 +152,7 @@ export default {
                     if (res.status){
                     alert("피드가 생성되었습니다.")
                     console.log(res)
-                    this.$router.push('/')
+                    this.$router.push('/') // 어디로 보낼지 정하고 변경!
                     }
                 },
                 (err) =>{
