@@ -33,7 +33,7 @@ public class GroupController {
     @PostMapping("/createGroup")
     public Object createGroup(@RequestBody RequestGroup groupReq) {
         Long userPk = userService.currentUser();
-        Long groupPk = groupHashTagService.create(userPk, groupReq);
+        Long groupPk = groupHashTagService.create( userPk, groupReq);
         groupUserService.join(userPk, groupPk);
 
         ResponseBasic result = null;

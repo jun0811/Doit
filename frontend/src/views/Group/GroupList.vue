@@ -4,9 +4,8 @@
       <v-container class="pa-3 pa-sm-16">
         <SearchBar></SearchBar>
         <br>
-        <span class="mx-auto">{{ word }}</span>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
-        <GroupCard></GroupCard>
+        <GroupCard v-for="(result,idx) in results" :key="idx" :group="result"></GroupCard>
         <GroupCard></GroupCard>
         <GroupCard></GroupCard>
         <!-- </div> -->
@@ -20,11 +19,24 @@ import Header from "@/components/common/Header";
 import SearchBar from "@/components/common/SearchBar";
 import Footer from "@/components/common/Footer";
 import GroupCard from "@/components/group/GroupCard.vue";
+import http from "../../http-common"
+
+
 
 export default {
     name: 'GroupList',
     props:{
       word:{ type: String, default: ""}
+    },
+    created() {
+      console.log(this.word)
+      http.get(`/group/searchGroup?tag=${this.word}`)
+      .then((res)=>{
+        this.results = res.data.object
+        console.log(this.results)
+        
+      })
+      
     },
     components: { 
         Header, 
@@ -34,7 +46,7 @@ export default {
     },
     data() {
         return {
-            
+          results: {}
         }
     }
 }
