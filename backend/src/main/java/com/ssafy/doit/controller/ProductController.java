@@ -23,6 +23,9 @@ public class ProductController {
     private UserService userService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ProductRepository productRepository;
 
     @ApiOperation(value = "물품 등록")
@@ -30,8 +33,13 @@ public class ProductController {
     public Object createProduct(@RequestBody Product product){
         ResponseBasic result = null;
         try{
-            long currentUser = userService.currentUser();
-            product.setUserPk(currentUser);
+            long userPk = userService.currentUser();
+            User currentUser = userRepository.findById(userPk).get();
+            int groupCount = currentUser.getGroupList().size();
+
+            if(groupCount < 2) throw new Exception("그룹 수 부족");
+
+            product.setUserPk(userPk);
             productRepository.save(product);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
@@ -79,6 +87,7 @@ public class ProductController {
             productRepository.delete(origin);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
+            e.printStackTrace();
             result = new ResponseBasic(false, "fail", null);
         }
 
@@ -92,11 +101,11 @@ public class ProductController {
 
         try{
             ResponseProduct product = productRepository.getById(id);
-            result = new ResponseBasic(true, "", product);
+            result = new ResponseBasic(true, "success", product);
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "", null);
+            result = new ResponseBasic(false, "fail", null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -108,11 +117,11 @@ public class ProductController {
         ResponseBasic result = null;
         try{
             List<ResponseProduct> products = productRepository.findAllBy();
-            result = new ResponseBasic(true, "", products);
+            result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "", null);
+            result = new ResponseBasic(false, "fail", null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -124,11 +133,11 @@ public class ProductController {
         ResponseBasic result = null;
         try{
             List<ResponseProduct> products = productRepository.findByTitleContaining(title);
-            result = new ResponseBasic(true, "", products);
+            result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "", null);
+            result = new ResponseBasic(false, "fail", null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -140,11 +149,11 @@ public class ProductController {
         ResponseBasic result = null;
         try{
             List<ResponseProduct> products = productRepository.findAllByUserNicknameContaining(nickname);
-            result = new ResponseBasic(true, "", products);
+            result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "", null);
+            result = new ResponseBasic(false, "fail", null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -156,11 +165,11 @@ public class ProductController {
         ResponseBasic result = null;
         try{
             List<ResponseProduct> products = productRepository.findAllByCategory(category);
-            result = new ResponseBasic(true, "", products);
+            result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "", null);
+            result = new ResponseBasic(false, "fail", null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
