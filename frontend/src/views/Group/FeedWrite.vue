@@ -115,11 +115,20 @@ export default {
             createDate: new Date(),
             feedPk:'',
             feedType: true,
-            groupPk: 5,
+            groupPk: '5', // 변경필요!
             media: "",
             status: true,
             updateDate: new Date(),
-            userPk: 8,
+            userPk: '',
+        }
+    },
+    watch: {
+        selected: function() {
+            if (this.selected == "인증") {
+                this.feedType = true
+            } else {
+                this.feedType = false
+            }
         }
     },
     methods: {
@@ -137,7 +146,7 @@ export default {
                     "media": this.media,
                     "status": this.status,
                     "updateDate": this.updateDate,
-                    "userPk": this.userPk
+                    "userPk": this.$store.state.userpk,
                 },
                 (res) =>{
                     if (res.status){
