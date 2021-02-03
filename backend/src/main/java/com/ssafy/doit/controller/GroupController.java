@@ -5,6 +5,7 @@ import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.response.ResponseGroup;
+import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
 import com.ssafy.doit.service.UserService;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,6 +29,8 @@ public class GroupController {
     private GroupHashTagService groupHashTagService;
     @Autowired
     private GroupUserService groupUserService;
+    @Autowired
+    private GroupRepository groupRepository;
 
     // 그룹 생성
     @ApiOperation(value = "그룹 생성")
@@ -156,5 +160,17 @@ public class GroupController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @ApiOperation(value = "그룹 내 그룹원 강퇴시키기")
+    @DeleteMapping("/beDeletedGroupUser")
+    public Object beDeletedGroup(@RequestParam Long groupPk,@RequestParam Long userPk){
+        ResponseBasic result = null;
+        Long leader = userService.currentUser(); //로그인된 회원 - 그룹 리더
 
+        int res = groupUserService.beDeletedGroupUser(userPk, groupPk, leader);
+        if(res == 1)
+            result = new ResponseBasic(true,"success",null);
+        else if(res == 0)
+            result = new ResponseBasic(false,"fail",null);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
