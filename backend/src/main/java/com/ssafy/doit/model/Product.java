@@ -1,5 +1,7 @@
 package com.ssafy.doit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.doit.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +26,9 @@ public class Product {
     private String title;
     private String content;
     private String image;
+
+    @ManyToOne
+    @JoinColumn(name = "userPk", insertable = false, updatable = false)
+    @JsonIgnore
+    private User user;
 }

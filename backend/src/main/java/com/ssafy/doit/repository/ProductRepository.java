@@ -1,13 +1,16 @@
 package com.ssafy.doit.repository;
 
 import com.ssafy.doit.model.Product;
-import org.apache.ibatis.annotations.Param;
+import com.ssafy.doit.model.response.ResponseProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByTitleLike(String title);
+    List<ResponseProduct> findByTitleContaining(String title);
+    List<ResponseProduct> findAllBy();
+    List<ResponseProduct> findAllByUserNicknameContaining(String nickname);
+    List<ResponseProduct> findAllByCategory(String Category);
+    ResponseProduct getById(Long id);
 }
