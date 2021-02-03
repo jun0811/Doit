@@ -111,9 +111,9 @@ public class FeedController {
         ResponseBasic result = null;
         Long userPk = userService.currentUser();
         int res = feedService.authCheckFeed(userPk,feedPk);
-        if(res == 0)
+        if(res == 1)
             result = new ResponseBasic(true, "success", null);
-        else if(res == 1)
+        else if(res == 0)
             result = new ResponseBasic(false,"fail",null);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

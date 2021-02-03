@@ -107,7 +107,7 @@ public class FeedService {
         Feed feed = feedRepository.findById(feedPk).get();
         User user = userRepository.findById(userPk).get();
 
-        if(userPk == feed.getWriter()) return 1;    // 자신이 올린 인증피드에는 인증확인 못함
+        if(userPk == feed.getWriter()) return 0;    // 자신이 올린 인증피드에는 인증확인 못함
 
         feed.setAuthCnt(feed.getAuthCnt() + 1);     // 인증피드 확인한 그룹원 수 +1
         feedUserRepository.save(FeedUser.builder()  // FeedUser 테이블에도
@@ -122,6 +122,6 @@ public class FeedService {
             feed.setAuthDate(LocalDateTime.now().toString());
             // commit 테이블에 추가
         }
-        return 0;
+        return 1;
     }
 }
