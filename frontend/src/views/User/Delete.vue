@@ -48,7 +48,7 @@
         <v-col class="d-flex justify-center">
           <v-checkbox 
             v-model="checkbox" 
-            label="탈퇴 안내를 확인하고 동의해 주세요."
+            label="안내 사항을 모두 확인하였으며, 이에 동의합니다."
             ></v-checkbox>     
         </v-col>
       </v-row>
@@ -57,6 +57,7 @@
           <v-btn
             outlined
             class="check-btn"
+            @click="deleteUser"
           >
             확인
           </v-btn>
@@ -70,6 +71,7 @@
 <script>
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
+import http from '../../http-common'
 
 export default {
   name: "Delete",
@@ -87,6 +89,20 @@ export default {
   },
   created () {
     this.email = this.$store.getters.getEmail
+  },
+  methods: {
+    deleteUser () {
+      if(!this.checkbox) {
+        alert("탈퇴 안내를 확인하고 동의해 주세요.")
+      }
+      else {
+        http.put('/user/deleteUser')
+        .then((res) => {
+          console.log(res)
+          this.$router.push("/user/delete/complete")
+        })
+      }
+    }
   }
 }
 </script>
