@@ -9,9 +9,7 @@ public interface ResponseProduct {
     String getContent();
     String getImage();
 
-    default String getUserpk(){
-        return getUserId();
-    }
+    default String getUserpk(){ return getUserId(); }
 
     default String getNickname(){
         return getUserNickname();
