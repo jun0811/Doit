@@ -102,4 +102,19 @@ public class FeedController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    // 인증피드 인증확인
+    @ApiOperation(value = "인증피드 인증확인")
+    @GetMapping("/authCheckFeed")
+    public Object authCheckFeed(Long feedPk){
+        ResponseBasic result = null;
+        Long userPk = userService.currentUser();
+        int res = feedService.authCheckFeed(userPk,feedPk);
+        if(res == 0)
+            result = new ResponseBasic(true, "success", null);
+        else if(res == 1)
+            result = new ResponseBasic(false,"fail",null);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

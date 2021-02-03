@@ -124,7 +124,7 @@ public class AdminController {
     public Object beDeletedFeed(@RequestParam Long feedPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Optional<Feed> feedInfo = feedRepository.findByFeedPk(feedPk);
+            Optional<Feed> feedInfo = feedRepository.findById(feedPk);
             adminService.deleteAllByFeed(feedPk);
             if (feedInfo.isPresent()) {
                 feedInfo.ifPresent(selectUser -> {
