@@ -45,9 +45,13 @@ public class GroupController {
     @ApiOperation(value = "그룹 수정")
     @PutMapping("/updateGroup")
     public Object updateGroup(@RequestBody Group groupReq) {
-        groupHashTagService.updateGroup(groupReq);
         ResponseBasic result = null;
-        result = new ResponseBasic(true,"success",null);
+        Long userPk = userService.currentUser();
+        int res = groupHashTagService.updateGroup(userPk, groupReq);
+        if(res == 1)
+            result = new ResponseBasic(true,"success",null);
+        else if(res == 0)
+            result = new ResponseBasic(false,"fail",null);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -55,12 +59,15 @@ public class GroupController {
     @ApiOperation(value = "그룹 해시태그 추가")
     @PutMapping("/updateHashTag")
     public Object updateHashTag(Long groupPk, @RequestParam("hashtag") String hashtag) {
-        int opt = groupHashTagService.updateHashTag(groupPk, hashtag);
         ResponseBasic result = new ResponseBasic();
-        if(opt == 1)
-            result = new ResponseBasic(false,"fail",null);
-        else if(opt == 0)
+        Long userPk = userService.currentUser();
+        int res = groupHashTagService.updateHashTag(userPk, groupPk, hashtag);
+        if(res == 1)
             result = new ResponseBasic(true,"success",null);
+        else if(res == 0)
+            result = new ResponseBasic(false,"fail",null);
+        else if(res == 2)
+            result = new ResponseBasic(false,"해시태그가 이미 존재합니다.",null);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -68,9 +75,13 @@ public class GroupController {
     @ApiOperation(value = "그룹 해시태그 삭제")
     @DeleteMapping("/deleteHashTag")
     public Object deleteHashTag(Long groupPk, @RequestParam("hashtag") String hashtag) {
-        groupHashTagService.deleteHashTag(groupPk, hashtag);
-        ResponseBasic result = null;
-        result = new ResponseBasic(true, "success", null);
+        ResponseBasic result = new ResponseBasic();
+        Long userPk = userService.currentUser();
+        int res = groupHashTagService.deleteHashTag(userPk, groupPk, hashtag);
+        if(res == 1)
+            result = new ResponseBasic(true,"success",null);
+        else if(res == 0)
+            result = new ResponseBasic(false,"fail",null);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -109,9 +120,9 @@ public class GroupController {
         Long userPk = userService.currentUser();
         ResponseBasic result = null;
         int opt = groupUserService.join(userPk,groupPk);
-        if(opt == 0){
+        if(opt == 1){
             result = new ResponseBasic(true,"가입 완료되었습니다.",null);
-        }else if(opt == 1){
+        }else if(opt == 0){
             result = new ResponseBasic(false,"이미 가입된 그륩입니다.",null);
         }else if(opt == 2){
             result = new ResponseBasic(false,"인원이 가득 찼습니다.",null);
