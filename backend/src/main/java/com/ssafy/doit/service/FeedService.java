@@ -2,6 +2,7 @@ package com.ssafy.doit.service;
 
 import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.FeedUser;
+import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseFeed;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.FeedRepository;
@@ -35,30 +36,19 @@ public class FeedService {
     @Transactional
     public void createFeed(Long userPk, Feed feedReq){
         feedRepository.save(Feed.builder()
-            //.media(feedReq.getMedia())
-            .content(feedReq.getContent())
-            .feedType(feedReq.getFeedType())
-            .createDate(LocalDateTime.now())
-            .groupPk(feedReq.getGroupPk())
-            .writer(userPk)
-            .build());
+                //.media(feedReq.getMedia())
+                .content(feedReq.getContent())
+                .feedType(feedReq.getFeedType())
+                .createDate(LocalDateTime.now())
+                .groupPk(feedReq.getGroupPk())
+                .writer(userPk)
+                .build());
     }
 
     // 그룹 내 피드 리스트
     @Transactional
     public List<ResponseFeed> groupFeedList(Long groupPk){
         List<Feed> list = feedRepository.findAllByGroupPkAndStatus(groupPk, "true");
-        return getResponseFeed(list);
-    }
-
-    // 개인 피드 리스트
-    @Transactional
-    public List<ResponseFeed> userFeedList(Long userPk){
-        List<Feed> list = feedRepository.findAllByWriterAndStatus(userPk, "true");
-        return getResponseFeed(list);
-    }
-
-    private List<ResponseFeed> getResponseFeed(List<Feed> list) {
         List<ResponseFeed> resList = new ArrayList<>();
         for(Feed feed : list){
             String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
@@ -67,28 +57,48 @@ public class FeedService {
         return resList;
     }
 
+    // 개인 피드 리스트
+    @Transactional
+    public List<ResMyFeed> userFeedList(Long userPk){
+        List<Feed> list = feedRepository.findAllByWriterAndStatus(userPk, "true");
+        List<ResMyFeed> resList = new ArrayList<>();
+        for(Feed feed : list){
+            String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
+            resList.add(new ResMyFeed(feed, nickname));
+        }
+        return resList;
+    }
+
     // 개인 피드 수정
     @Transactional
-    public void updateFeed(Feed feedReq) {
+    public int updateFeed(Long userPk, Feed feedReq) {
         Optional<Feed> feed = feedRepository.findById(feedReq.getFeedPk());
-        feed.ifPresent(selectFeed ->{
-            selectFeed.setContent(feedReq.getContent());
-            selectFeed.setFeedType(feedReq.getFeedType());
-            //selectFeed.setMedia(feedReq.getMedia());
-            selectFeed.setUpdateDate(LocalDateTime.now().toString());
-            feedRepository.save(selectFeed);
-        });
+        if(userPk == feed.get().getWriter()) {
+            feed.ifPresent(selectFeed -> {
+                selectFeed.setContent(feedReq.getContent());
+                selectFeed.setFeedType(feedReq.getFeedType());
+                //selectFeed.setMedia(feedReq.getMedia());
+                selectFeed.setUpdateDate(LocalDateTime.now().toString());
+                feedRepository.save(selectFeed);
+            });
+        }else
+            return 0;
+        return 1;
     }
 
     // 개인 피드 삭제
     @Transactional
-    public void deleteFeed(Long feedPk) {
+    public int deleteFeed(Long userPk, Long feedPk) {
         Optional<Feed> feed = feedRepository.findById(feedPk);
-        feed.ifPresent(selectFeed ->{
-            selectFeed.setStatus("false");
-            feedRepository.save(selectFeed);
-            //feedRepository.delete(selectFeed);
-        });
+        if(userPk == feed.get().getWriter()) {
+            feed.ifPresent(selectFeed -> {
+                selectFeed.setStatus("false");
+                feedRepository.save(selectFeed);
+                //feedRepository.delete(selectFeed);
+            });
+        }else
+            return 0;
+        return 1;
     }
 
     // 인증피드 인증확인
