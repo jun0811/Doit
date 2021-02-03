@@ -14,10 +14,8 @@
               cols="8"
               class="text--secondary ml-sm-0 ml-11"
             >
-              <p class="my-6">Group1</p>
-              <span class="mr-2">#홈트</span>
-              <span class="mr-2">#운동</span>
-              <span class="mr-2">#의지박약</span>
+              <p class="my-6">{{group.name}}</p>
+              <span v-for="(tag,idx) in group.tags" :key="idx" class="mr-2">#{{tag}}</span>
             </v-col>
           </v-row>
         </template>
@@ -27,7 +25,7 @@
           <v-col class= "mx-auto" cols="10">
             <p class="my-5"> 그룹 목표 및 소개</p>
             <div class="group-intro">
-
+              {{group.content}}
             </div>
           </v-col>
         
@@ -39,6 +37,7 @@
           <v-btn
             text
             color="secondary"
+            @click="moveCommunity"
           >
             그룹으로 이동
           </v-btn>
@@ -56,6 +55,12 @@
 
 <script>
 export default {
+    props:{
+      group: Object
+    },
+    created(){
+      console.log(this.group)  
+    },
     data: () => ({
       date: null,
       trip: {
@@ -65,6 +70,11 @@ export default {
         end: null,
       },
     }),
+    methods: {
+      moveCommunity(){
+        this.$router.push("/group/community")
+      }  
+    }
 }
 </script>
 

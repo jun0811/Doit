@@ -159,7 +159,7 @@ export default {
           })
           .then((res) =>{
             console.log(res)
-            alert('가입완료')
+            alert('생성완료')
           })
       }
   }
