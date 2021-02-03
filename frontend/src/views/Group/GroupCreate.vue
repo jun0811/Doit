@@ -78,8 +78,14 @@
                       @click="add"
                     >추가</v-btn>
                   </v-col>
-                  <v-col class="d-flex flex-wrap">
-                    <ul v-for="(tag,idx) in hashtag" :key="idx" class="col-4"># {{ tag }}</ul>
+                  <v-col cols="8" class="d-flex flex-wrap">
+                    <ul>
+                      <li v-for="(tag,idx) in hashtag" :key="idx" ># {{ tag }}
+                        <button @click="remove(idx)" class>                     
+                          x
+                        </button>  
+                      </li> 
+                    </ul>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -113,6 +119,7 @@ export default {
       return{
       menu: false,
       date: new Date().toISOString().substr(0,10),
+      minLength : false,
       name: "",
       maxNum : 0,
       endDate: vm.formatDate(new Date().toISOString().substr(0,10)),
@@ -125,6 +132,11 @@ export default {
       date(){
         this.endDate = this.formatDate(this.date)
       },
+      content(){
+        if (this.content.length>=20){
+          this.minLength = true;
+        }else this.minLength = false;
+      }
     },
     methods: {
       formatDate (date){
@@ -147,9 +159,13 @@ export default {
           alert('단어를 입력!')
         }
       },
+      remove(idx){
+        this.hashtag.splice(idx,1)
+      },
       
       create(){
-        http.post('/group/createGroup',
+        if (this.minLength && this.name){
+          http.post('/group/createGroup',
           {
             "name": this.name,
             "maxNum": this.maxNum,
@@ -161,6 +177,11 @@ export default {
             console.log(res)
             alert('생성완료')
           })
+        }else{
+          if(this.name.length<1) alert('그룹명을 입력해주세요')
+          else {alert(`그룹 소개글을 20자 이상 작성해주세요 ` )}
+          
+        }
       }
   }
     
@@ -183,5 +204,13 @@ export default {
 .numberBox {
   width:"50%";
   border: 1px solid
+}
+ul{
+   list-style:none;
+   padding-left:0px;
+}
+ul li {
+  float: left;
+  margin-right: 15px;
 }
 </style>

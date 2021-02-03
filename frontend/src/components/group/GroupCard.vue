@@ -15,7 +15,7 @@
               class="text--secondary ml-sm-0 ml-11"
             >
               <p class="my-6">{{group.name}}</p>
-              <span v-for="(tag,idx) in group.tags" :key="idx" class="mr-2">#{{tag}}</span>
+              <span v-for="(tag,idx) in group.tags" :key="idx" class="mr-2"># {{tag}}</span>
             </v-col>
           </v-row>
         </template>
