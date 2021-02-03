@@ -1,5 +1,6 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.response.ResponseFeed;
@@ -61,12 +62,12 @@ public class FeedController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // 개인 피드 리스트
-    @ApiOperation(value = "개인 피드 리스트")
+    // 개인 피드 리스트 (+ 다른유저 피드리스트)
+    @ApiOperation(value = "개인 피드 리스트 (+ 다른유저 피드리스트)")
     @PostMapping("/userFeed")
     public Object userFeed(Long userPk){
         ResponseBasic result = null;
-        List<ResponseFeed> list = feedService.userFeedList(userPk);
+        List<ResMyFeed> list = feedService.userFeedList(userPk);
         if(list.size() == 0){
             result = new ResponseBasic(false,"fail",null);
         }else{
@@ -80,12 +81,12 @@ public class FeedController {
     @PutMapping("/updateFeed")
     public Object updateFeed(@RequestBody Feed feedReq){
         ResponseBasic result = null;
-        try{
-            feedService.updateFeed(feedReq);
+        Long userPk = userService.currentUser();
+        int res = feedService.updateFeed(userPk, feedReq);
+        if(res == 1)
             result = new ResponseBasic(true, "success", null);
-        }catch (Exception e){
+        else if(res == 0)
             result = new ResponseBasic(false,"fail",null);
-        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -94,12 +95,12 @@ public class FeedController {
     @DeleteMapping("/deleteFeed")
     public Object deleteFeed(Long feedPk){
         ResponseBasic result = null;
-        try{
-            feedService.deleteFeed(feedPk);
+        Long userPk = userService.currentUser();
+        int res = feedService.deleteFeed(userPk, feedPk);
+        if(res == 1)
             result = new ResponseBasic(true, "success", null);
-        }catch (Exception e){
+        else if(res == 0)
             result = new ResponseBasic(false,"fail",null);
-        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
