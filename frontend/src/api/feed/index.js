@@ -7,4 +7,4 @@ function createFeed(params, success, fail) {
   .catch(fail);
 } 
 
-export {createFeed }
+export { createFeed }
