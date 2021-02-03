@@ -92,6 +92,7 @@
 <script>
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import { createFeed } from "@/api/feed/index.js"
 
 export default {
     name :"FeedWrite",
@@ -107,12 +108,50 @@ export default {
             items : [
                 '인증',
                 '정보 공유'
-            ]
+            ], 
+            authCheck: false,
+            authCnt: 0,
+            authDate: '',
+            createDate: new Date(),
+            feedPk:1,
+            feedType: true,
+            groupPk: 2,
+            media: "",
+            status: true,
+            updateDate: new Date(),
+            userPk: 8,
         }
     },
     methods: {
         write() {
-
+            createFeed(
+                {
+                    "authCheck": this.authCheck,
+                    "authCnt": this.authCnt,
+                    "authDate": this.authDate,
+                    "content": this.content,
+                    "createDate": this.createDate,
+                    "feedPk": this.feedPk,
+                    "feedType": this.feedType,
+                    "groupPk": this.groupPk,
+                    "media": this.media,
+                    "status": this.status,
+                    "updateDate": this.updateDate,
+                    "userPk": this.userPk
+                },
+                (res) =>{
+                    if (res.status){
+                    alert("피드가 생성되었습니다.")
+                    console.log(res)
+                    this.$router.push('/')
+                    }
+                },
+                (err) =>{
+                    console.log(err)
+                    console.log(this.createDate)
+                    alert("생성 실패")
+                }
+            )
         },
     }
 }
