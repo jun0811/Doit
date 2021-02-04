@@ -60,7 +60,7 @@ public class GroupUserService {
         }
         return list;
     }
-
+//  그룹 내 그룹원 강퇴시키기
     public int beDeletedGroupUser(Long userPk, Long groupPk, Long leader) {
         Group group = groupRepository.findById(groupPk).get();
         if(leader == group.getLeader()){
@@ -79,4 +79,5 @@ public class GroupUserService {
         }
         return 1;
     }
+
 }

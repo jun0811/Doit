@@ -63,6 +63,7 @@ public class GroupHashTagService {
                 selectGroup.setContent(groupReq.getContent());
                 selectGroup.setMaxNum(groupReq.getMaxNum());
                 selectGroup.setEndDate(groupReq.getEndDate());
+                selectGroup.setLeader(groupReq.getLeader());
                 groupRepository.save(selectGroup);
             });
         }else
