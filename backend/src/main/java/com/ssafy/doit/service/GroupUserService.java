@@ -27,27 +27,25 @@ public class GroupUserService {
 
     @Autowired
     private GroupUserRepository groupUserRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private GroupRepository groupRepository;
 
     // 그룹 가입하기
     @Transactional
-    public int join(Long userPk, Long groupPk) {
+    public void join(Long userPk, Long groupPk) throws Exception {
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(groupPk).get();
 
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
         if(!opt.isPresent()){
-            if(group.getTotalNum() == group.getMaxNum()) return 2;
+            if(group.getTotalNum() == group.getMaxNum()) throw new Exception("인원이 가득 찼습니다.");
             groupUserRepository.save(GroupUser.builder()
                     .group(group).user(user).build());
             group.setTotalNum(group.getTotalNum() + 1);
-        }else return 0;
-        return 1;
+            groupRepository.save(group);
+        }else throw new Exception("이미 가입된 그륩입니다.");
     }
 
     // 가입한 그룹 가져오기
@@ -60,24 +58,18 @@ public class GroupUserService {
         }
         return list;
     }
-//  그룹 내 그룹원 강퇴시키기
-    public int beDeletedGroupUser(Long userPk, Long groupPk, Long leader) {
+
+    // 그룹 내 그룹원 강퇴시키기
+    public void deleteGroupUser(Long userPk, Long groupPk, Long leader) throws Exception {
         Group group = groupRepository.findById(groupPk).get();
         if(leader == group.getLeader()){
-            User user = userRepository.findById(userPk).get();
-
+            User user = userRepository.findById(userPk).get(); // 강퇴시킬 그룹원
             Optional<GroupUser> groupUser = groupUserRepository.findByGroupAndUser(group,user);
-           groupUser.ifPresent(selectUser ->{
+            groupUser.ifPresent(selectUser ->{
                groupUserRepository.delete(selectUser);
-           });
-           //회원 수 감소
-            int cnt = group.getTotalNum() - 1;
-            group.setTotalNum(cnt);
+            });
+            group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
             groupRepository.save(group);
-        }else{
-            return 0;
-        }
-        return 1;
+        }else throw new Exception("그룹장이 아닙니다.");
     }
-
 }

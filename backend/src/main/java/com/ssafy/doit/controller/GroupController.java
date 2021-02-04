@@ -36,12 +36,16 @@ public class GroupController {
     @ApiOperation(value = "그룹 생성")
     @PostMapping("/createGroup")
     public Object createGroup(@RequestBody RequestGroup groupReq) {
-        Long userPk = userService.currentUser();
-        Long groupPk = groupHashTagService.create( userPk, groupReq);
-        groupUserService.join(userPk, groupPk);
-
         ResponseBasic result = null;
-        result = new ResponseBasic(true,"success",null);
+        try{
+            Long userPk = userService.currentUser();
+            Long groupPk = groupHashTagService.create( userPk, groupReq);
+            groupUserService.join(userPk, groupPk);
+            result = new ResponseBasic(true,"success",null);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, "fail", null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -50,12 +54,14 @@ public class GroupController {
     @PutMapping("/updateGroup")
     public Object updateGroup(@RequestBody Group groupReq) {
         ResponseBasic result = null;
-        Long userPk = userService.currentUser();
-        int res = groupHashTagService.updateGroup(userPk, groupReq);
-        if(res == 1)
-            result = new ResponseBasic(true,"success",null);
-        else if(res == 0)
-            result = new ResponseBasic(false,"fail",null);
+        try {
+            Long userPk = userService.currentUser();
+            groupHashTagService.updateGroup(userPk, groupReq);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -63,15 +69,15 @@ public class GroupController {
     @ApiOperation(value = "그룹 해시태그 추가")
     @PutMapping("/updateHashTag")
     public Object updateHashTag(Long groupPk, @RequestParam("hashtag") String hashtag) {
-        ResponseBasic result = new ResponseBasic();
-        Long userPk = userService.currentUser();
-        int res = groupHashTagService.updateHashTag(userPk, groupPk, hashtag);
-        if(res == 1)
-            result = new ResponseBasic(true,"success",null);
-        else if(res == 0)
-            result = new ResponseBasic(false,"fail",null);
-        else if(res == 2)
-            result = new ResponseBasic(false,"해시태그가 이미 존재합니다.",null);
+        ResponseBasic result = null;
+        try {
+            Long userPk = userService.currentUser();
+            groupHashTagService.updateHashTag(userPk, groupPk, hashtag);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -79,26 +85,30 @@ public class GroupController {
     @ApiOperation(value = "그룹 해시태그 삭제")
     @DeleteMapping("/deleteHashTag")
     public Object deleteHashTag(Long groupPk, @RequestParam("hashtag") String hashtag) {
-        ResponseBasic result = new ResponseBasic();
-        Long userPk = userService.currentUser();
-        int res = groupHashTagService.deleteHashTag(userPk, groupPk, hashtag);
-        if(res == 1)
-            result = new ResponseBasic(true,"success",null);
-        else if(res == 0)
-            result = new ResponseBasic(false,"fail",null);
+        ResponseBasic result = null;
+        try {
+            Long userPk = userService.currentUser();
+            groupHashTagService.deleteHashTag(userPk, groupPk, hashtag);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 그룹 리스트
     @ApiOperation(value = "그룹 리스트")
     @GetMapping("/searchGroup")
-    public Object searchGroup(@RequestParam String tag){ // 페이징 처리하기
-        List<ResponseGroup> list = groupHashTagService.findAllByHashTag(tag);
+    public Object searchGroup(@RequestParam String tag) { // 페이징 처리하기
         ResponseBasic result = null;
-        if(list.size() == 0) {
-            result = new ResponseBasic(false, "fail", null);
-        }else {
+        try {
+            List<ResponseGroup> list = groupHashTagService.findAllByHashTag(tag);
+            if(list.size() == 0) throw new Exception("해당 해시태그를 포함한 그룹이 없습니다.");
             result = new ResponseBasic(true, "success", list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -107,12 +117,14 @@ public class GroupController {
     @ApiOperation(value = "선택한 그룹 정보 제공")
     @GetMapping("/detailGroup")
     public Object detailGroup(@RequestParam Long groupPk){
-        ResponseGroup group = groupHashTagService.findByGroupPk(groupPk);
         ResponseBasic result = null;
-        if (group == null) {
-            result = new ResponseBasic(false,"fail",null);
-        }else{
+        try {
+            ResponseGroup group = groupHashTagService.findByGroupPk(groupPk);
+            if(group == null) throw new Exception("그룹을 찾을 수 없습니다.");
             result = new ResponseBasic(true,"success",group);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -121,15 +133,14 @@ public class GroupController {
     @ApiOperation(value = "그룹 가입하기")
     @GetMapping("/joinGroup")
     public Object joinGroup(@RequestParam Long groupPk){
-        Long userPk = userService.currentUser();
         ResponseBasic result = null;
-        int opt = groupUserService.join(userPk,groupPk);
-        if(opt == 1){
-            result = new ResponseBasic(true,"가입 완료되었습니다.",null);
-        }else if(opt == 0){
-            result = new ResponseBasic(false,"이미 가입된 그륩입니다.",null);
-        }else if(opt == 2){
-            result = new ResponseBasic(false,"인원이 가득 찼습니다.",null);
+        try {
+            Long userPk = userService.currentUser();
+            groupUserService.join(userPk, groupPk);
+            result = new ResponseBasic(true, "가입 완료되었습니다.", null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -138,39 +149,47 @@ public class GroupController {
     @ApiOperation(value = "가입 그룹 리스트")
     @GetMapping("/joinedGroup")
     public Object joinedGroup(@RequestParam Long userPk){
-        List<ResGroupList> list = groupUserService.findGroupByUserPk(userPk);
-        return getObject(list);
+        ResponseBasic result = null;
+        try {
+            List<ResGroupList> list = groupUserService.findGroupByUserPk(userPk);
+            if(list.size() == 0) throw new Exception("가입한 그룹이 없습니다.");
+            result = new ResponseBasic(true,"success",list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 현재 로그인한 유저의 가입 그룹 리스트
     @ApiOperation(value = "현재 로그인한 유저의 가입 그룹 리스트")
     @GetMapping("/currentUserGroup")
     public Object currentUserGroup(){
-        Long userPk = userService.currentUser();
-        List<ResGroupList> list = groupUserService.findGroupByUserPk(userPk);
-        return getObject(list);
-    }
-
-    private Object getObject(List<ResGroupList> list) {
         ResponseBasic result = null;
-        if(list.size() == 0){
-            result = new ResponseBasic(false,"fail",null);
-        }else{
+        try {
+            Long userPk = userService.currentUser();
+            List<ResGroupList> list = groupUserService.findGroupByUserPk(userPk);
+            if(list.size() == 0) throw new Exception("가입한 그룹이 없습니다.");
             result = new ResponseBasic(true,"success",list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @ApiOperation(value = "그룹 내 그룹원 강퇴시키기")
-    @DeleteMapping("/beDeletedGroupUser")
-    public Object beDeletedGroup(@RequestParam Long groupPk,@RequestParam Long userPk){
-        ResponseBasic result = null;
-        Long leader = userService.currentUser(); //로그인된 회원 - 그룹 리더
 
-        int res = groupUserService.beDeletedGroupUser(userPk, groupPk, leader);
-        if(res == 1)
+    @ApiOperation(value = "그룹 내 그룹원 강퇴시키기")
+    @DeleteMapping("/deleteGroupUser")
+    public Object deleteGroupUser(@RequestParam Long groupPk, @RequestParam Long userPk){
+        ResponseBasic result = null;
+        try {
+            Long leader = userService.currentUser(); //로그인된 회원 - 그룹 리더
+            groupUserService.deleteGroupUser(userPk, groupPk, leader);
             result = new ResponseBasic(true,"success",null);
-        else if(res == 0)
-            result = new ResponseBasic(false,"fail",null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
   
