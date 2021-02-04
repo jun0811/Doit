@@ -15,6 +15,7 @@ import Update from "../views/User/Update.vue";
 import Delete from "../views/User/Delete.vue";
 import DeleteComplete from "../views/User/DeleteComplete.vue";
 import MileageShop from "../views/Mileage/MileageShop.vue";
+import ProductDetail from "../views/Mileage/ProductDetail.vue";
 import PasswordFind from "../views/User/PasswordFind.vue";
 
 Vue.use(VueRouter);
@@ -99,6 +100,12 @@ const routes = [
     path: "/group/feedupdate",
     name: "FeedUpdate",
     component: FeedUpdate,
+  },
+  {
+    path: "/mileageshop/:product_id",
+    name: "ProductDetail",
+    component: ProductDetail,
+    props:true,
   },
 ];
 
