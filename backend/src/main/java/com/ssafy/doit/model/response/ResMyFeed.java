@@ -2,17 +2,15 @@ package com.ssafy.doit.model.response;
 
 import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.FeedUser;
+import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.GroupUser;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Column;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
-public class ResponseFeed {
+public class ResMyFeed {
     private Long feedPk;
 
     //private String media;
@@ -27,9 +25,7 @@ public class ResponseFeed {
     private String createDate;
     private String updateDate;
 
-    private List<ResponseUser> authUsers;
-
-    public ResponseFeed(Feed feed, String nickname){
+    public ResMyFeed(Feed feed, String nickname){
         this.feedPk = feed.getFeedPk();
         this.writer = nickname;
         this.userPk = feed.getWriter();
@@ -39,13 +35,5 @@ public class ResponseFeed {
         this.authDate = feed.getAuthDate();
         this.createDate = feed.getCreateDate().toString();
         this.updateDate = feed.getUpdateDate();
-        this.authUsers = this.getAuthUsers(feed);
-    }
-    public List<ResponseUser> getAuthUsers(Feed feed){
-        List<ResponseUser> user = new ArrayList<>();
-        for(FeedUser fu : feed.userList){
-            user.add(new ResponseUser(fu.getUser()));
-        }
-        return user;
     }
 }

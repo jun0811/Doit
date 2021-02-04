@@ -1,5 +1,7 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.GroupUser;
 import com.ssafy.doit.model.Profile;
 import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.response.ResponseUser;
@@ -7,8 +9,12 @@ import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.repository.GroupRepository;
+import com.ssafy.doit.repository.GroupUserRepository;
 import com.ssafy.doit.repository.ProfileRepository;
 import com.ssafy.doit.repository.UserRepository;
+import com.ssafy.doit.service.GroupUserService;
+import com.ssafy.doit.service.UserService;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -42,7 +49,10 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private ProfileRepository profileRepository;
-
+    @Autowired
+    private final UserService userService;
+    @Autowired
+    private GroupUserService groupUserService;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -214,17 +224,11 @@ public class UserController {
     // 회원 탈퇴
     @ApiOperation(value = "회원 탈퇴")
     @PutMapping("/deleteUser")
-    public Object deleteUser(HttpServletRequest req) {
+    public Object deleteUser() {
         ResponseBasic result = new ResponseBasic();
-
         try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails) principal;
-            User user = userRepository.findByEmail(userDetails.getUsername()).get();
-
-            user.setUserRole(UserRole.GUEST);
-            userRepository.save(user);
-
+            Long userPk = userService.currentUser();
+            groupUserService.deleteGroupByUser(userPk);
             result.status = true;
             result.data = "탈퇴 success";
         }

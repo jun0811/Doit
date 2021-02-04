@@ -71,6 +71,9 @@ import GroupMember from "@/components/group/GroupMember";
 
 export default {
   components: { Header, Footer, GroupMember },
+  props: {
+    groupPk: {type:Number}
+  },
   data() {
     return {
       feed: true,
@@ -86,6 +89,9 @@ export default {
       this.feed = false
       this.users = true
     }
+  },
+  created(){
+    console.log(this.groupPk)
   }
 }
 </script>

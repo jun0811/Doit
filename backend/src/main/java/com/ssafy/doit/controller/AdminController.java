@@ -3,6 +3,7 @@ package com.ssafy.doit.controller;
 import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
+import com.ssafy.doit.model.GroupUser;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.model.user.User;
@@ -11,6 +12,7 @@ import com.ssafy.doit.repository.*;
 import com.ssafy.doit.service.AdminService;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
+import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ public class AdminController {
     private GroupRepository groupRepository;
     @Autowired
     private FeedRepository feedRepository;
+    @Autowired
+    private GroupUserService groupUserService;
 
     //관리자 - 회원 리스트
     @ApiOperation(value = "관리자 - 회원 리스트")
@@ -55,15 +59,12 @@ public class AdminController {
     //관리자 - 회원 삭제
     @ApiOperation(value = "관리자 - 회원 탈퇴")
     @PutMapping("/beDeletedUser")
-    public Object beDeletedUser(@RequestParam Long id) {
+    public Object beDeletedUser(@RequestParam Long userPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Optional<User> userInfo = userRepository.findById(id);
+            Optional<User> userInfo = userRepository.findById(userPk);
             if (userInfo.isPresent()) {
-                userInfo.ifPresent(selectUser -> {
-                    selectUser.setUserRole(UserRole.GUEST);
-                    userRepository.save(selectUser);
-                });
+                groupUserService.deleteGroupByUser(userPk);
             }
             result.status = true;
             result.data = "탈퇴 success";
