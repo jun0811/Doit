@@ -12,6 +12,7 @@ import com.ssafy.doit.repository.*;
 import com.ssafy.doit.service.AdminService;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
+import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,8 @@ public class AdminController {
     @Autowired
     private FeedRepository feedRepository;
     @Autowired
-    private GroupUserRepository groupUserRepository;
+    private GroupUserService groupUserService;
+
     //관리자 - 회원 리스트
     @ApiOperation(value = "관리자 - 회원 리스트")
     @GetMapping("/searchAllUser")
@@ -57,24 +59,12 @@ public class AdminController {
     //관리자 - 회원 삭제
     @ApiOperation(value = "관리자 - 회원 탈퇴")
     @PutMapping("/beDeletedUser")
-    public Object beDeletedUser(@RequestParam Long id) {
+    public Object beDeletedUser(@RequestParam Long userPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Optional<User> userInfo = userRepository.findById(id);
+            Optional<User> userInfo = userRepository.findById(userPk);
             if (userInfo.isPresent()) {
-                userInfo.ifPresent(selectUser -> {
-                    User user = userRepository.findById(id).get();
-                    List<GroupUser> list = groupUserRepository.findByUser(user);
-
-                    for(GroupUser gu : list){
-                        Group group = groupRepository.findByGroupPk(gu.getGroup().getGroupPk()).get();
-                        groupUserRepository.delete(gu);
-                        group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
-                        groupRepository.save(group);
-                    }
-                    selectUser.setUserRole(UserRole.WITHDRAW);
-                    userRepository.save(selectUser);
-                });
+                groupUserService.deleteGroupByUser(userPk);
             }
             result.status = true;
             result.data = "탈퇴 success";

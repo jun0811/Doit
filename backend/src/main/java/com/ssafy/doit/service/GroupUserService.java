@@ -7,6 +7,7 @@ import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.repository.GroupUserRepository;
 import com.ssafy.doit.repository.UserRepository;
@@ -20,7 +21,9 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+/***
+ * @author : 김부희
+ */
 @Service
 @RequiredArgsConstructor
 public class GroupUserService {
@@ -86,4 +89,19 @@ public class GroupUserService {
             groupRepository.save(group);
         }else throw new Exception("그룹장이 아닙니다.");
     }
+
+    public void deleteGroupByUser(Long userPk){
+        User user = userRepository.findById(userPk).get();
+        List<GroupUser> list = groupUserRepository.findByUser(user);
+
+        for(GroupUser gu : list){
+            Group group = groupRepository.findByGroupPk(gu.getGroup().getGroupPk()).get();
+            groupUserRepository.delete(gu);
+            group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
+            groupRepository.save(group);
+        }
+        user.setUserRole(UserRole.WITHDRAW);
+        userRepository.save(user);
+    }
+
 }
