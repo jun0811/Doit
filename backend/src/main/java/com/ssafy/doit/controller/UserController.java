@@ -222,7 +222,7 @@ public class UserController {
             UserDetails userDetails = (UserDetails) principal;
             User user = userRepository.findByEmail(userDetails.getUsername()).get();
 
-            user.setUserRole(UserRole.GUEST);
+            user.setUserRole(UserRole.WITHDRAW);
             userRepository.save(user);
 
             result.status = true;

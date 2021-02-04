@@ -61,7 +61,7 @@ public class AdminController {
             Optional<User> userInfo = userRepository.findById(id);
             if (userInfo.isPresent()) {
                 userInfo.ifPresent(selectUser -> {
-                    selectUser.setUserRole(UserRole.GUEST);
+                    selectUser.setUserRole(UserRole.WITHDRAW);
                     userRepository.save(selectUser);
                 });
             }
