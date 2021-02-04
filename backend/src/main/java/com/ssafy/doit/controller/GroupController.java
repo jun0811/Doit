@@ -17,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
-
+/***
+ * @author : 김부희
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/group")
@@ -29,8 +31,6 @@ public class GroupController {
     private GroupHashTagService groupHashTagService;
     @Autowired
     private GroupUserService groupUserService;
-    @Autowired
-    private GroupRepository groupRepository;
 
     // 그룹 리스트
     @ApiOperation(value = "그룹 리스트")

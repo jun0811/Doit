@@ -14,6 +14,7 @@ import com.ssafy.doit.repository.GroupUserRepository;
 import com.ssafy.doit.repository.ProfileRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.GroupUserService;
+import com.ssafy.doit.service.UserService;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +50,9 @@ public class UserController {
     @Autowired
     private ProfileRepository profileRepository;
     @Autowired
-    private GroupUserRepository groupUserRepository;
+    private final UserService userService;
     @Autowired
-    private GroupRepository groupRepository;
-
+    private GroupUserService groupUserService;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -226,23 +226,9 @@ public class UserController {
     @PutMapping("/deleteUser")
     public Object deleteUser() {
         ResponseBasic result = new ResponseBasic();
-
         try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails) principal;
-
-            User user = userRepository.findByEmail(userDetails.getUsername()).get();
-            List<GroupUser> list = groupUserRepository.findByUser(user);
-
-            for(GroupUser gu : list){
-                Group group = groupRepository.findByGroupPk(gu.getGroup().getGroupPk()).get();
-                groupUserRepository.delete(gu);
-                group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
-                groupRepository.save(group);
-            }
-            user.setUserRole(UserRole.WITHDRAW);
-            userRepository.save(user);
-
+            Long userPk = userService.currentUser();
+            groupUserService.deleteGroupByUser(userPk);
             result.status = true;
             result.data = "탈퇴 success";
         }
