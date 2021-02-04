@@ -1,14 +1,19 @@
 package com.ssafy.doit.service;
 
 import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.GroupUser;
+import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.response.ResGroupList;
+import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.repository.GroupUserRepository;
 import com.ssafy.doit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -55,4 +60,24 @@ public class GroupUserService {
         }
         return list;
     }
+//  그룹 내 그룹원 강퇴시키기
+    public int beDeletedGroupUser(Long userPk, Long groupPk, Long leader) {
+        Group group = groupRepository.findById(groupPk).get();
+        if(leader == group.getLeader()){
+            User user = userRepository.findById(userPk).get();
+
+            Optional<GroupUser> groupUser = groupUserRepository.findByGroupAndUser(group,user);
+           groupUser.ifPresent(selectUser ->{
+               groupUserRepository.delete(selectUser);
+           });
+           //회원 수 감소
+            int cnt = group.getTotalNum() - 1;
+            group.setTotalNum(cnt);
+            groupRepository.save(group);
+        }else{
+            return 0;
+        }
+        return 1;
+    }
+
 }
