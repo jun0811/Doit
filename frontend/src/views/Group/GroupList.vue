@@ -6,7 +6,23 @@
         <br>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
         <GroupCard v-for="(result,idx) in results" :key="idx" :group="result"></GroupCard>
+        <div v-if="!results" class="d-flex align-center flex-column">
+          <h3>'검색키워드'와(과) 일치하는 검색결과가 없습니다.</h3>
+          <br>
+          <br>
+          <h4>'검색키워드' 관련 그룹을 만들고 싶으시다면?</h4>
+          <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
+            그룹 만들기
+          </v-btn>
+        </div>
         <!-- </div> -->
+        <div v-else class="d-flex align-center flex-column">
+          <h4 class="mt-6">'검색키워드' 관련 그룹을 만들고 싶으시다면?</h4>
+          <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
+            그룹 만들기
+          </v-btn>
+        </div>
+
       </v-container>
       <Footer></Footer>
   </div>
@@ -30,9 +46,7 @@ export default {
       http.get(`/group/searchGroup?tag=${this.word}`)
       .then((res)=>{
         this.results = res.data.object
-        
       })
-      
     },
     components: { 
         Header, 
@@ -44,10 +58,15 @@ export default {
         return {
           results: {}
         }
+    },
+    methods: {
+      createGroup(){
+        this.$router.push('/group/groupcreate')
+      }
     }
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
