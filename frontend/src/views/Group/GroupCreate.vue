@@ -26,7 +26,7 @@
                             <template v-slot:activator="{ on, attrs }">
                               <v-text-field
                                 v-model="endDate"
-                                label="Date"
+                                label="만료 날짜"
                                 prepend-icon="mdi-calendar"
                                 v-bind="attrs"
                                 autocomplete="off"
@@ -54,6 +54,13 @@
                         thumb-label
                       ></v-slider>
                     </v-col>
+                    <v-col class="pt-1">
+                      <v-select
+                        :items="items"
+                        label="카테고리"
+                        v-model="tmp"
+                      ></v-select>
+                    </v-col>
                   </v-row>
                   <v-row>
                     <v-col cols="12">
@@ -68,7 +75,7 @@
                   </v-col>
                 </v-row>
                 <v-row >
-                  <v-col cols="4">
+                  <v-col cols="4" class="d-flex justify-start">
                     <v-text-field 
                       v-model="word"
                       label="해쉬태그"></v-text-field>
@@ -76,13 +83,14 @@
                       outlined
                       small
                       @click="add"
+                      class ="mt-4 ml-3"
                     >추가</v-btn>
                   </v-col>
-                  <v-col cols="8" class="d-flex flex-wrap">
+                  <v-col cols="12" class="d-flex flex-wrap">
                     <ul>
                       <li v-for="(tag,idx) in hashtag" :key="idx" ># {{ tag }}
                         <button @click="remove(idx)" class>                     
-                          x
+                          |x|
                         </button>  
                       </li> 
                     </ul>
@@ -125,7 +133,19 @@ export default {
       endDate: vm.formatDate(new Date().toISOString().substr(0,10)),
       content :"",
       word:"",
-      hashtag : []
+      hashtag : [],
+      tmp: "",
+      category : "",
+      items: ['운동', '공부', '다이어트', '취미', '독서', '라이프', '그 외'],
+      change :{
+        "운동" : "exercise",
+        "공부" : "study",
+        "다이어트" : "diet",
+        "취미" : "hobby",
+        "독서" : "book",
+        "라이프" : "life",
+        "그 외" : "etc"
+      }
       }
     },
     watch: {
@@ -136,6 +156,9 @@ export default {
         if (this.content.length>=20){
           this.minLength = true;
         }else this.minLength = false;
+      },
+      tmp(){
+        this.category = this.change[this.tmp]
       }
     },
     methods: {
@@ -171,7 +194,8 @@ export default {
             "maxNum": this.maxNum,
             "endDate": this.date,
             "content":this.content,
-            "hashtags": this.hashtag
+            "hashtags": this.hashtag,
+            "category": this.category
           })
           .then((res) =>{
             console.log(res)
@@ -180,7 +204,6 @@ export default {
         }else{
           if(this.name.length<1) alert('그룹명을 입력해주세요')
           else {alert(`그룹 소개글을 20자 이상 작성해주세요 ` )}
-          
         }
       }
   }
