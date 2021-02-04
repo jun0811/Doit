@@ -92,6 +92,7 @@
 <script>
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import { createFeed } from "@/api/feed/index.js"
 
 export default {
     name :"FeedWrite",
@@ -101,18 +102,65 @@ export default {
     },
     data() {
         return {
-            name: 'Nickname',
+            name:'Nickname',
             selected : '',
             content :'',
             items : [
                 '인증',
                 '정보 공유'
-            ]
+            ], 
+            authCheck: false,
+            authCnt: 0,
+            authDate: '',
+            createDate: new Date(),
+            feedPk:'',
+            feedType: true,
+            groupPk: '5', // 변경필요!
+            media: "",
+            status: true,
+            updateDate: new Date(),
+            userPk: '',
+        }
+    },
+    watch: {
+        selected: function() {
+            if (this.selected == "인증") {
+                this.feedType = true
+            } else {
+                this.feedType = false
+            }
         }
     },
     methods: {
         write() {
-
+            createFeed(
+                {
+                    "authCheck": this.authCheck,
+                    "authCnt": this.authCnt,
+                    "authDate": this.authDate,
+                    "content": this.content,
+                    "createDate": this.createDate,
+                    "feedPk": this.feedPk,
+                    "feedType": this.feedType,
+                    "groupPk": this.groupPk,
+                    "media": this.media,
+                    "status": this.status,
+                    "updateDate": this.updateDate,
+                    "userPk": this.$store.state.userpk,
+                },
+                (res) =>{
+                    if (res.status){
+                    alert("피드가 생성되었습니다.")
+                    console.log(res)
+                    this.$router.push('/') // 어디로 보낼지 정하고 변경!
+                    }
+                },
+                (err) =>{
+                    console.log(err)
+                    console.log(this.createDate)
+                    alert("생성 실패")
+                }
+            )
         },
     }
 }
