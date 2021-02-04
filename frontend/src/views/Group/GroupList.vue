@@ -6,8 +6,6 @@
         <br>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
         <GroupCard v-for="(result,idx) in results" :key="idx" :group="result"></GroupCard>
-        <GroupCard></GroupCard>
-        <GroupCard></GroupCard>
         <!-- </div> -->
       </v-container>
       <Footer></Footer>
@@ -29,11 +27,9 @@ export default {
       word:{ type: String, default: ""}
     },
     created() {
-      console.log(this.word)
       http.get(`/group/searchGroup?tag=${this.word}`)
       .then((res)=>{
         this.results = res.data.object
-        console.log(this.results)
         
       })
       
