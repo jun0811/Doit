@@ -4,8 +4,8 @@ import com.ssafy.doit.model.request.RequestGroup;
 import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.response.ResGroupInfo;
 import com.ssafy.doit.model.response.ResponseGroup;
-import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
 import com.ssafy.doit.service.UserService;
@@ -16,8 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
+/***
+ * @author : 김부희
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/group")
@@ -29,11 +31,9 @@ public class GroupController {
     private GroupHashTagService groupHashTagService;
     @Autowired
     private GroupUserService groupUserService;
-    @Autowired
-    private GroupRepository groupRepository;
 
-    // 그룹 리스트
-    @ApiOperation(value = "그룹 리스트")
+    //해시태그에 따른 그룹 리스트
+    @ApiOperation(value = "해시태그에 따른 그룹 리스트")
     @GetMapping("/searchGroup")
     public Object searchGroup(@RequestParam String tag) { // 페이징 처리하기
         ResponseBasic result = null;
@@ -48,13 +48,30 @@ public class GroupController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // 카테고리에 따른 그룹 리스트
+    @ApiOperation(value = "카테고리에 따른 그룹 리스트")
+    @GetMapping("/categoryGroup")
+    public Object categoryGroup(@RequestParam String category) { // 페이징 처리하기
+        ResponseBasic result = null;
+        try {
+            List<ResponseGroup> list = groupHashTagService.findAllByCategory(category);
+            if(list.size() == 0)
+                throw new Exception("해당 카테고리와 관련된 그룹이 아직 생성되지 않았습니다.");
+            result = new ResponseBasic(true, "success", list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     // 선택한 그룹 정보 제공
     @ApiOperation(value = "선택한 그룹 정보 제공")
     @GetMapping("/detailGroup")
     public Object detailGroup(@RequestParam Long groupPk){
         ResponseBasic result = null;
         try {
-            ResponseGroup group = groupHashTagService.findByGroupPk(groupPk);
+            ResGroupInfo group = groupHashTagService.findByGroupPk(groupPk);
             if(group == null) throw new Exception("그룹을 찾을 수 없습니다.");
             result = new ResponseBasic(true,"success",group);
         }catch (Exception e) {
