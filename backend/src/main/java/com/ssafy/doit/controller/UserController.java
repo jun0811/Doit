@@ -1,7 +1,5 @@
 package com.ssafy.doit.controller;
 
-import com.ssafy.doit.model.Group;
-import com.ssafy.doit.model.GroupUser;
 import com.ssafy.doit.model.Profile;
 import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.response.ResponseUser;
@@ -9,8 +7,6 @@ import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
-import com.ssafy.doit.repository.GroupRepository;
-import com.ssafy.doit.repository.GroupUserRepository;
 import com.ssafy.doit.repository.ProfileRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.GroupUserService;
@@ -35,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -59,36 +54,39 @@ public class UserController {
     // 로그인
     @ApiOperation(value = "로그인")
     @PostMapping("/login")
-    public Object login(@RequestBody RequestLoginUser user) {
-        Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
+    public Object login(@RequestBody RequestLoginUser userReq) {
         HttpHeaders httpHeaders = new HttpHeaders();
-
         ResponseBasic result = new ResponseBasic();
-        result.status = false;
 
+        Optional<User> userOpt = userRepository.findByEmail(userReq.getEmail());
         if(!userOpt.isPresent()){
-            result.data = "해당 이메일이 존재하지 않습니다.";
+            result = new ResponseBasic(false, "해당 이메일이 존재하지 않습니다.", null);
             return new ResponseEntity<>(result, HttpStatus.OK);
+        }else{
+            User user = userOpt.get();
+            if(user.getUserRole().equals(UserRole.GUEST)){
+                result = new ResponseBasic(false, "회원가입 이메일 인증 후 로그인 가능합니다.", null);
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }else if(user.getUserRole().equals(UserRole.WITHDRAW)) {
+                result = new ResponseBasic(false, "탈퇴한 회원으로 로그인 불가합니다.", null);
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }else{
+                if (!passwordEncoder.matches(userReq.getPassword(), user.getPassword())) {
+                    result = new ResponseBasic(false, "잘못된 비밀번호입니다.", null);
+                    return new ResponseEntity<>(result, HttpStatus.OK);
+                }else {
+                    result = new ResponseBasic(true, "success", user);
+                    httpHeaders.set("accessToken", jwtUtil.generateToken(user));
+                }
+            }
         }
-
-        User member = userOpt.get();
-        if (!passwordEncoder.matches(user.getPassword(), member.getPassword()))
-            result.data = "잘못된 비밀번호입니다.";
-        else{
-            result.status = true;
-            result.object = member;
-            httpHeaders.set("accessToken", jwtUtil.generateToken(member));
-        }
-        return ResponseEntity.ok()
-                .headers(httpHeaders)
-                .body(result);
+        return ResponseEntity.ok().headers(httpHeaders).body(result);
     }
 
     @ApiOperation(value = "로그아웃")
     @GetMapping("/logout")
     public Object login(HttpServletRequest request, HttpServletResponse response){
         ResponseBasic result = new ResponseBasic();
-
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if(auth != null)
@@ -97,52 +95,37 @@ public class UserController {
         }catch (Exception e){
             result = new ResponseBasic(false, "로그인 실패", null);
         }
-
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 로그인한 사용자 정보
-    @ApiOperation(value = "로그인한 사용자 정보")
+    @ApiOperation(value = "로그인한 회원 정보")
     @GetMapping("/detailUser")
     public Object detailUser(){
-        ResponseBasic result = new ResponseBasic();
-
+        ResponseBasic result = null;
         try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails) principal;
-            User getUser = userRepository.findByEmail(userDetails.getUsername()).get();
-            ResponseUser user = new ResponseUser(getUser);
-
-            result.status = true;
-            result.data = "success";
-            result.object = user;
-        }
-        catch (Exception e){
+            Long userPk = userService.currentUser();
+            ResponseUser user = userService.detailUser(userPk);
+            result = new ResponseBasic(true, "success", user);
+        } catch (Exception e){
             e.printStackTrace();
-            result.status = false;
-            result.data = "fail";
+            result = new ResponseBasic(false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 회원정보 수정
-    @ApiOperation(value = "회원정보 수정")
+    @ApiOperation(value = "회원정보(닉네임) 수정")
     @PutMapping("/updateInfo")
-    public Object updateInfo(@RequestParam String email,@RequestParam String name) {
-        ResponseBasic result = new ResponseBasic();
-
-        Optional<User> userInfo = userRepository.findByEmail(email);
-
-        if (userInfo.isPresent()) {
-            userInfo.ifPresent(selectUser -> {
-                selectUser.setNickname(name);
-                userRepository.save(selectUser);
-                });
-            result.status = true;
-            result.data = "success";
-        } else {
-            result.status = false;
-            result.data = "회원정보 수정 실패";
+    public Object updateInfo(@RequestBody User userReq) {
+        ResponseBasic result = null;
+        try {
+            Long userPk = userService.currentUser();
+            userService.updateUser(userPk, userReq);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -151,22 +134,18 @@ public class UserController {
     @ApiOperation(value = "로그인한 사용자 비밀번호 변경")
     @PostMapping("/changePw")
     public Object changePw(@RequestBody RequestChangePw requestPw){
-        ResponseBasic result = null;
-
-        try{
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails) principal;
-            User currentUser = userRepository.findByEmail(userDetails.getUsername()).get();
+        ResponseBasic result = new ResponseBasic();
+        try {
+            Long userPk = userService.currentUser();
+            User currentUser = userRepository.findById(userPk).get();
             currentUser.setPassword(passwordEncoder.encode(requestPw.getPassword()));
             userRepository.save(currentUser);
-
             result = new ResponseBasic(true, "success", null);
         }
         catch (Exception e){
             e.printStackTrace();
             result = new ResponseBasic(false, "비밀번호 변경 실패", null);
         }
-
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -241,7 +220,7 @@ public class UserController {
     }
 
     //    피드 리스트 공개 (feed_open)
-    //    그룹 리스트 공개(group_open)
+    //    그룹 리스트 공개 (group_open)
     //    그룹 공개 - 가입된 그룹에 해당되는 사용자 필요
     //    비공개 - 나만보기
     @ApiOperation(value = "회원 피드,그룹 리스트 공개/비공개")
