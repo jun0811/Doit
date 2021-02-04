@@ -31,6 +31,24 @@ public class GroupHashTagService {
     private final GroupHashTagRepository groupHashTagRepository;
 
 
+    // 특정 해시태그 포함한 그룹 찾기
+    @Transactional
+    public List<ResponseGroup> findAllByHashTag(String hashtag){
+        List<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true");
+        List<ResponseGroup> resList = new ArrayList<>();
+        for(Group group : groupList){
+            resList.add(new ResponseGroup(group));
+        }
+        return resList;
+    }
+
+    // 선택한 그룹 정보 제공
+    @Transactional
+    public ResponseGroup findByGroupPk(Long groupPk) {
+        Group group = groupRepository.findById(groupPk).get();
+        return (new ResponseGroup(group));
+    }
+
     // 그룹 생성
     @Transactional
     public Long create(Long userPk, RequestGroup groupReq){
@@ -54,7 +72,7 @@ public class GroupHashTagService {
 
     // 그룹 정보 수정
     @Transactional
-    public int updateGroup(Long userPk, Group groupReq){
+    public void updateGroup(Long userPk, Group groupReq) throws Exception {
         Optional<Group> group = groupRepository.findById(groupReq.getGroupPk());
 
         if(userPk == group.get().getLeader()){
@@ -66,40 +84,33 @@ public class GroupHashTagService {
                 selectGroup.setLeader(groupReq.getLeader());
                 groupRepository.save(selectGroup);
             });
-        }else
-            return 0; // 로그인한 유저가 그룹장이 아니면 수정불가
-        return 1;
+        }else throw new Exception("그룹장이 아닙니다."); // 로그인한 유저가 그룹장이 아니면 수정불가
     }
 
     // 그룹 해시태그 추가
     @Transactional
-    public int updateHashTag(Long userPk, Long groupPk, String hashtag){
+    public void updateHashTag(Long userPk, Long groupPk, String hashtag) throws Exception {
         Optional<Group> optGroup = groupRepository.findById(groupPk);
         if(userPk == optGroup.get().getLeader()) {
             HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
             Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag);
-            if(gh.isPresent()) return 2; // 이미 해시태그 존재
+            if(gh.isPresent()) throw new Exception("해시태그가 이미 존재합니다."); // 이미 해시태그 존재
             else {
                 Group group = groupRepository.findById(groupPk).get();
                 findOrCreateHashTag(group, hashtag);
             }
-        }
-        else
-            return 0; // 로그인한 유저가 그룹장이 아니면 수정불가
-        return 1;
+        } else throw new Exception("그룹장이 아닙니다."); // 로그인한 유저가 그룹장이 아니면 수정불가
     }
 
     // 그룹 해시태그 삭제
     @Transactional
-    public int deleteHashTag(Long userPk, Long groupPk, String hashtag){
+    public void deleteHashTag(Long userPk, Long groupPk, String hashtag) throws Exception {
         Optional<Group> optGroup = groupRepository.findById(groupPk);
         if(userPk == optGroup.get().getLeader()) {
             HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
             GroupHashTag gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag).get();
             groupHashTagRepository.delete(gh);
-        }else
-            return 0; // 로그인한 유저가 그룹장이 아니면 수정불가
-        return 1;
+        }else throw new Exception("그룹장이 아닙니다."); // 로그인한 유저가 그룹장이 아니면 수정불가
     }
 
     // 해시태그 있으면 추가, 없으면 cnt +1
@@ -118,23 +129,5 @@ public class GroupHashTagService {
         // 그룹과 해시태그 연결 테이블에도 PK 값으로 저장
         groupHashTagRepository.save(GroupHashTag.builder()
                 .group(group).hashTag(tag).build());
-    }
-
-    // 특정 해시태그 포함한 그룹 찾기
-    @Transactional
-    public List<ResponseGroup> findAllByHashTag(String hashtag){
-        List<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true");
-        List<ResponseGroup> resList = new ArrayList<>();
-        for(Group group : groupList){
-            resList.add(new ResponseGroup(group));
-        }
-        return resList;
-    }
-
-    // 선택한 그룹 정보 제공
-    @Transactional
-    public ResponseGroup findByGroupPk(Long groupPk) {
-        Group group = groupRepository.findById(groupPk).get();
-        return (new ResponseGroup(group));
     }
 }
