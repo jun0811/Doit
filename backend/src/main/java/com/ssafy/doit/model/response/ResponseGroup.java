@@ -15,6 +15,7 @@ public class ResponseGroup {
     private Long groupPk;
     private String name;
     private String content;
+    private String category;
     private Long leader;
     private String startDate;
     private String endDate;
@@ -29,6 +30,7 @@ public class ResponseGroup {
         this.groupPk = group.getGroupPk();
         this.name = group.getName();
         this.content = group.getContent();
+        this.category = group.getCategory();
         this.startDate = group.getStartDate().toString();
         this.endDate = group.getEndDate().toString();
         this.leader = group.getLeader();

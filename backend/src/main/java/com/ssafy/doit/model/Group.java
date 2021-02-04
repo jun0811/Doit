@@ -23,6 +23,7 @@ public class Group{
 
     private String name;
     private String content;
+    private String category;
     private String image;
     private int score;
     private int totalNum;
@@ -41,10 +42,11 @@ public class Group{
     public List<GroupUser> userList; // 유저리스트
 
     @Builder
-    public Group(String name, String content, String image, int maxNum,
+    public Group(String name, String content, String category, String image, int maxNum,
                  Long leader, LocalDate startDate, String endDate){
         this.name = name;
         this.content = content;
+        this.category = category;
         this.image = image;
         this.totalNum = 0;
         this.maxNum = maxNum;
