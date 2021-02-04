@@ -11,14 +11,14 @@
       >
           <v-card height="100%" width="100%" router-link :to="{name: 'ProductDetail', params: {product_id: item.id}}">
             <v-img
-              src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
+              src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
               class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               height="200px"
             >
               <!-- <v-card-title v-text="item.title"></v-card-title> -->
             </v-img>
-            <v-card-actions>
+            <v-card-actions  class="card-text">
               <v-spacer></v-spacer>
               <v-card-text>
                 {{item.title}}
@@ -26,6 +26,7 @@
             </v-card-actions>
 
           </v-card>
+
       </v-col>
     </v-row>
     <v-row>
@@ -70,6 +71,10 @@ import http from "../../http-common";
 </script>
 
 <style scoped>
+
+.card-text {
+  background: linear-gradient(to bottom left,#FFD8CB 40%, #F9D29D 100%  );
+}
 
 
 </style>

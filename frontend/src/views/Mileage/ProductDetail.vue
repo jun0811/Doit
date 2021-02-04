@@ -1,29 +1,22 @@
 <template>
   <div>
     <Header></Header>
-    <!-- <v-container class="pa-3 pa-sm-16 d-flex flex-column justify-center">
-      <v-row class="py-3">
-        <v-col class="mx-3 mx-sm-16"> 
-          <h1>Product Detail</h1>
-        </v-col>
-      </v-row>
-    </v-container> -->
     <v-card
       class="mx-auto my-12 d-flex flex-column align-center product-card"
       width="600"
     >
-      <v-row class="d-flex justify-space-between" width="100%">
-        <v-col cols="3" class="mx-6 my-4" style="text-align:center">
+      <v-row class="d-flex justify-space-around title-wrapper">
+        <v-col cols="9" class="pl-4 py-0 px-0">
           <b>{{product.title}}</b>
         </v-col>
-        <v-col cols="3" class="mx-6 my-4" style="text-align:center">
+        <v-col cols="3" class="py-0 px-0" style="text-align:center">
           {{user}}
         </v-col>
       </v-row>
       <div class="img-wrapper">
-        <img class="product-img" src="https://images.unsplash.com/photo-1466584241662-8cb021032c1a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="">
+        <img class="product-img" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80" alt="product image">
       </div>
-      <v-card class="content-card">
+      <v-card class="content-card" style="border-radius : 5px;">
         <v-card-text>
           {{product.content}}
         </v-card-text>
@@ -68,6 +61,13 @@ export default {
 </script>
 
 <style scoped>
+
+.title-wrapper {
+  width:100%;
+  margin : 10px;
+  padding : 10px 30px
+}
+
 
 .product-card {
   border-radius : 20px;
