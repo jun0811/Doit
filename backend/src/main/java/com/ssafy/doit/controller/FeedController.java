@@ -2,7 +2,9 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Feed;
-import com.ssafy.doit.repository.FeedRepository;
+import com.ssafy.doit.model.response.ResponseFeed;
+import com.ssafy.doit.service.FeedService;
+import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -25,25 +27,94 @@ import java.util.List;
 public class FeedController {
 
     @Autowired
-    private FeedRepository feedRepository;
+    private final UserService userService;
+    @Autowired
+    private final FeedService feedService;
 
-    //해당 그룹 내 활동 피드
-    @ApiOperation(value = "그룹 내 활동 피드")
-    @GetMapping("/groupFeed")
-    public Object groupFeedList(@RequestParam Long groupPk){
-        List<Feed> list = feedRepository.findAll(groupPk);
-
-        ResponseBasic result = new ResponseBasic();
-
-        if(list.size() == 0){
-            result.data = "해당 그룹의 피드가 존재하지 않습니다.";
-            result.status = false;
-        }else{
-            result.data = "success";
-            result.status = true;
-            result.object = list;
+    // 그룹 내 피드 생성
+    @ApiOperation(value = "그룹 내 피드 생성")
+    @PostMapping("/createFeed")
+    public Object createFeed(@RequestBody Feed feedReq){
+        ResponseBasic result = null;
+        try{
+            Long userPk = userService.currentUser();
+            feedService.createFeed(userPk,feedReq);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e){
+            result = new ResponseBasic(false,"fail",null);
         }
-        //******인증 개수 70%이상인지 계산해서 auth_check 판별 해서 넘겨주기!!!
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    // 그룹 내 피드 리스트
+    @ApiOperation(value = "그룹 내 피드 리스트")
+    @GetMapping("/groupFeed")
+    public Object groupFeedList(@RequestParam Long groupPk){
+        ResponseBasic result = null;
+        List<ResponseFeed> list = feedService.groupFeedList(groupPk);
+        if(list.size() == 0){
+            result = new ResponseBasic(false,"fail",null);
+        }else{
+            result = new ResponseBasic(true, "success", list);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 개인 피드 리스트
+    @ApiOperation(value = "개인 피드 리스트")
+    @PostMapping("/userFeed")
+    public Object userFeed(Long userPk){
+        ResponseBasic result = null;
+        List<ResponseFeed> list = feedService.userFeedList(userPk);
+        if(list.size() == 0){
+            result = new ResponseBasic(false,"fail",null);
+        }else{
+            result = new ResponseBasic(true, "success", list);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 개인 피드 수정
+    @ApiOperation(value = "개인 피드 수정")
+    @PutMapping("/updateFeed")
+    public Object updateFeed(@RequestBody Feed feedReq){
+        ResponseBasic result = null;
+        try{
+            feedService.updateFeed(feedReq);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e){
+            result = new ResponseBasic(false,"fail",null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 개인 피드 삭제
+    @ApiOperation(value = "개인 피드 삭제")
+    @DeleteMapping("/deleteFeed")
+    public Object deleteFeed(Long feedPk){
+        ResponseBasic result = null;
+        try{
+            feedService.deleteFeed(feedPk);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e){
+            result = new ResponseBasic(false,"fail",null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 인증피드 인증확인
+    @ApiOperation(value = "인증피드 인증확인")
+    @GetMapping("/authCheckFeed")
+    public Object authCheckFeed(Long feedPk){
+        ResponseBasic result = null;
+        Long userPk = userService.currentUser();
+        int res = feedService.authCheckFeed(userPk,feedPk);
+        if(res == 0)
+            result = new ResponseBasic(true, "success", null);
+        else if(res == 1)
+            result = new ResponseBasic(false,"fail",null);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

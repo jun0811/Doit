@@ -5,26 +5,34 @@ import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Column;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
 public class ResponseFeed {
     private Long feedPk;
-    private Long groupPk;
-    private String writer;
-    private String media;
+
+    //private String media;
     private String content;
-    private int authCnt;
-    private Date authDate;
-    private String check;
+    private Long userPk;
+    private String writer;
     private String feedType;
 
-//    public ResponseFeed(Feed entity){
-//        this.feedPk = entity.getFeedPk();
-//        this.groupPk = entity.getGroupPk();
-//        this.writer = entity.getUserPk();
-//        this.content = entity.getContent();
-//        this.authCnt = entity.getAuthCnt();
-//        this.authDate = entity.getAuthDate();
-//    }
+    private String authCheck;
+    private String authDate;
+
+    private String createDate;
+    private String updateDate;
+
+    public ResponseFeed(Feed feed, String nickname){
+        this.feedPk = feed.getFeedPk();
+        this.writer = nickname;
+        this.userPk = feed.getWriter();
+        this.content = feed.getContent();
+        this.feedType = feed.getFeedType();
+        this.authCheck = feed.getAuthCheck();
+        this.authDate = feed.getAuthDate();
+        this.createDate = feed.getCreateDate().toString();
+        this.updateDate = feed.getUpdateDate();
+    }
 }

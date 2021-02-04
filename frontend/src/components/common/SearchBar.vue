@@ -25,8 +25,9 @@ export default {
     },
     methods:{
       submit(){
-        console.log(this.word)
+        // console.log(this.word)
         this.$router.push({name: "GroupList",params: {word: this.word}})
+        this.$router.go()
       }}
   }
 </script>

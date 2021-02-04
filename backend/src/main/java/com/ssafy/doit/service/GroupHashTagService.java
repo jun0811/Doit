@@ -3,7 +3,9 @@ package com.ssafy.doit.service;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
+import com.ssafy.doit.model.request.RequestGroup;
 import com.ssafy.doit.model.response.ResponseGroup;
+import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class GroupHashTagService {
-
+    @Autowired
+    private final UserRepository userRepository;
     @Autowired
     private final GroupRepository groupRepository;
     @Autowired
@@ -30,7 +33,7 @@ public class GroupHashTagService {
 
     // 그룹 생성
     @Transactional
-    public Long create(Long userPk, Group groupReq, List<String> hashtags){
+    public Long create(Long userPk, RequestGroup groupReq){
         // 그룹에 대한 정보 저장
         Group group = groupRepository.save(Group.builder()
                 .name(groupReq.getName())
@@ -41,6 +44,7 @@ public class GroupHashTagService {
                 .leader(userPk)
                 .build());
 
+        List<String> hashtags = groupReq.getHashtags();
         Long groupPk = group.getGroupPk();
         for(String hashtag : hashtags){
             findOrCreateHashTag(group, hashtag);
@@ -50,32 +54,51 @@ public class GroupHashTagService {
 
     // 그룹 정보 수정
     @Transactional
-    public void updateGroup(Long groupPk, Group groupReq){
-        Optional<Group> group = groupRepository.findById(groupPk);
+    public int updateGroup(Long userPk, Group groupReq){
+        Optional<Group> group = groupRepository.findById(groupReq.getGroupPk());
 
-        group.ifPresent(selectGroup ->{
-            selectGroup.setName(groupReq.getName());
-            selectGroup.setContent(groupReq.getContent());
-            selectGroup.setMaxNum(groupReq.getMaxNum());
-            selectGroup.setEndDate(groupReq.getEndDate());
-            groupRepository.save(selectGroup);
-        });
+        if(userPk == group.get().getLeader()){
+            group.ifPresent(selectGroup ->{
+                selectGroup.setName(groupReq.getName());
+                selectGroup.setContent(groupReq.getContent());
+                selectGroup.setMaxNum(groupReq.getMaxNum());
+                selectGroup.setEndDate(groupReq.getEndDate());
+                groupRepository.save(selectGroup);
+            });
+        }else
+            return 0; // 로그인한 유저가 그룹장이 아니면 수정불가
+        return 1;
     }
 
     // 그룹 해시태그 추가
     @Transactional
-    public void updateHashTag(Long groupPk, String hashtag){
-        Group group = groupRepository.findById(groupPk).get();
-        findOrCreateHashTag(group, hashtag);
+    public int updateHashTag(Long userPk, Long groupPk, String hashtag){
+        Optional<Group> optGroup = groupRepository.findById(groupPk);
+        if(userPk == optGroup.get().getLeader()) {
+            HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
+            Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag);
+            if(gh.isPresent()) return 2; // 이미 해시태그 존재
+            else {
+                Group group = groupRepository.findById(groupPk).get();
+                findOrCreateHashTag(group, hashtag);
+            }
+        }
+        else
+            return 0; // 로그인한 유저가 그룹장이 아니면 수정불가
+        return 1;
     }
 
     // 그룹 해시태그 삭제
     @Transactional
-    public void deleteHashTag(Long groupPk, String hashtag){
-        Group group = groupRepository.findById(groupPk).get();
-        HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
-        GroupHashTag gh = groupHashTagRepository.findByGroupAndHashTag(group,hashTag).get();
-        groupHashTagRepository.delete(gh);
+    public int deleteHashTag(Long userPk, Long groupPk, String hashtag){
+        Optional<Group> optGroup = groupRepository.findById(groupPk);
+        if(userPk == optGroup.get().getLeader()) {
+            HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
+            GroupHashTag gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag).get();
+            groupHashTagRepository.delete(gh);
+        }else
+            return 0; // 로그인한 유저가 그룹장이 아니면 수정불가
+        return 1;
     }
 
     // 해시태그 있으면 추가, 없으면 cnt +1
@@ -84,10 +107,10 @@ public class GroupHashTagService {
         // 입력한 해시태그들이
         Optional<HashTag> opt = hashTagRepository.findByName(hashtag);
         HashTag tag;
-        if(opt.isPresent()){ // 기존에 있으면 cnt +1
+        if(opt.isPresent()){        // 기존에 있으면 cnt +1
             tag = opt.get();
             tag.setCnt(tag.getCnt() + 1);
-        }else {                   // 기존에 없으면 새로 생성
+        }else {                     // 기존에 없으면 새로 생성
             tag = hashTagRepository.save(HashTag.builder()
                     .name(hashtag).cnt(1).build());
         }
@@ -99,7 +122,7 @@ public class GroupHashTagService {
     // 특정 해시태그 포함한 그룹 찾기
     @Transactional
     public List<ResponseGroup> findAllByHashTag(String hashtag){
-        List<Group> groupList = groupRepository.findAllByHashTag(hashtag);
+        List<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true");
         List<ResponseGroup> resList = new ArrayList<>();
         for(Group group : groupList){
             resList.add(new ResponseGroup(group));

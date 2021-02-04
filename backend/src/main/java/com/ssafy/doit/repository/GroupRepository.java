@@ -12,8 +12,7 @@ import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query("select g from Group g where exists (select h from GroupHashTag h " +
-            "where h.group = g and h.hashTag.name = :hashtag)")
-    List<Group> findAllByHashTag(@Param("hashtag") String hashtag);
-
+            "where h.group = g and h.hashTag.name like %:hashtag% ) and g.status = :status")
+    List<Group> findAllByHashTagAndStatus(@Param("hashtag") String hashtag, String status);
     Optional<Group> findByGroupPk(Long groupPk);
 }

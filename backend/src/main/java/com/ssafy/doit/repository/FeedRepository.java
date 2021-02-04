@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FeedRepository extends JpaRepository<Feed, Long> {
-
-    @Query("select f from Feed as f where f.groupPk = ?1")
-    List<Feed> findAll(Long groupPk);
-
-    Optional<Feed> findByFeedPk(Long feedPk);
+    List<Feed> findAllByGroupPkAndStatus(Long groupPk, String status);
+    List<Feed> findAllByWriterAndStatus(Long userPk, String status);
 }

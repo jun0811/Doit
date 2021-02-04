@@ -1,13 +1,13 @@
 <template>
   <div>
     <Header></Header>
-     <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15 px-3" width="400px">
-    <h3 class="my-5">비밀번호 찾기</h3>
-    <h5 class="mb-5">비밀번호를 찾고자 하는 이메일을 입력해주세요</h5>
+     <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15 px-3 card-width">
+    <h3 class="my-5">비밀번호 재설정</h3>
+    <h5 class="mb-5">비밀번호를 재설정 하려는 이메일을 입력해주세요</h5>
     <div>
       <v-container class="px-0">
         <v-row no-gutters class="d-flex flex-nowrap">
-          <v-col sm="11">
+          <v-col cols="10" sm="11">
             <v-text-field
               v-model="email"
               :error-messages="emailErrors"
@@ -27,9 +27,16 @@
       <v-card-actions class="d-flex align-center"> 
         <v-row>
           <v-col>
-            <button @click="sendEmail" class="join input col-12">다음</button>
+            <v-btn 
+              @click="sendEmail" 
+              class="next col-12 mt-5"
+              text
+              x-large
+            >
+            다음
+            </v-btn>
             <div class="col-12 text-center">
-              <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
+              <span><router-link to="/" class="font-style">메인페이지로 돌아가기</router-link></span>
             </div>
           <br>
 
@@ -73,14 +80,14 @@ export default {
       this.check()
     }
   },
-  created: {
+  computed: {
     emailErrors () {
         const errors = []
         if (!this.$v.email.$dirty) return errors
         !this.$v.email.email && errors.push('이메일 양식을 입력해주세요.')
         !this.$v.email.required && errors.push('이메일을 입력해주세요.')
         return errors
-      },
+    },
   },
   methods: {
     check() {
@@ -89,7 +96,13 @@ export default {
     },
 
     sendEmail(){
-      if(this.c_Email){
+      if (this.email==="") {
+        alert("이메일을 입력해주세요!")
+      }
+      else if (this.c_Email===false) {
+        alert("이메일 확인 버튼을 눌러주세요!")
+      }
+      else {
       http.post('/user/sendChangePwEmail', {
         "email": this.email
       })
@@ -98,9 +111,7 @@ export default {
           this.$router.push(`/user/mailcheck?email=${this.email}&option=p`)
       })
     }
-    else{
-      console.log("가입한 이메일을 입력해주세요👀") 
-    }}
+    }
     ,
 
     checkEmail(){
@@ -119,5 +130,21 @@ export default {
 <style scoped>
   .check {
     color: #F9802D;
+  }
+  .font-style {
+    font-size: 80%;
+  }
+  .next {
+    border: 1.5px solid #F9802D;
+    color: #F9802D;
+  }
+  .card-width {
+    width: 35%;
+  }
+  
+  @media only screen and (min-width: 300px) and (max-width: 599px) {
+      .card-width {
+        width: 90%;
+      }
   }
 </style>

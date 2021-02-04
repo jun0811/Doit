@@ -2,7 +2,6 @@
 // npm i --save-dev @fortawesome/free-solid-svg-icons
 // npm i --save-dev @fortawesome/vue-fontawesome
 // 해주세요
-
 import Vue from "vue";
 // 설치했던 fontawesome-svg-core와 vue-fontawesome
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -16,4 +15,4 @@ library.add(faTrashAlt, );
 library.add( faTimesCircle, faCheckCircle, faRssSquare, faUsers, faGuitar, faBook, faLaptopCode, faRunning, faCarrot, faSpellCheck);
 // 쓸 때는  <font-awesome-icon icon="times-circle"/>  
 // fontawesome아이콘을 Vue탬플릿에 사용할 수 있게 등록해 줍니다.
-Vue.component("font-awesome-icon", FontAwesomeIcon);
+Vue.component("font-awesome-icon", FontAwesomeIcon );

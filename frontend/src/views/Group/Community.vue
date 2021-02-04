@@ -29,8 +29,8 @@
             <span class="text-h6"> | 01 | </span>
           </div>
           <div >
-            <v-btn text v-bind:class="{selected : feed}" class="text-h5" :model="feed" @click="FeedList"> <font-awesome-icon icon="rss-square"/>  aa  </v-btn>
-            <v-btn text class="text-h5" v-bind:class="{selected: users}" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>aa</v-btn>
+            <v-btn text v-bind:class="{selected : feed}" class="text-h5" :model="feed" @click="FeedList"> <font-awesome-icon icon="rss-square"/>FEED</v-btn>
+            <v-btn text class="text-h5" v-bind:class="{selected: users}" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn>
           </div>
           <div>
             <v-btn text class="text-h6"> 글작성 </v-btn>
@@ -53,10 +53,10 @@
           </div>
         </v-col>
         <v-col v-if="users" cols="9" class="d-flex justify-center mx-sm-16 ">
-
-          <div class="temp">
+          <GroupMember></GroupMember>
+          <!-- <div class="temp">
             asdasdasd
-          </div>
+          </div> -->
         </v-col>
       </v-row>
     </v-container>
@@ -67,9 +67,10 @@
 <script>
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import GroupMember from "@/components/group/GroupMember";
 
 export default {
-  components: { Header, Footer },
+  components: { Header, Footer, GroupMember },
   data() {
     return {
       feed: true,
