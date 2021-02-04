@@ -12,6 +12,8 @@ import PasswordChange from "../views/User/PasswordChange.vue";
 import Profile from "../views/User/Profile.vue";
 import Complete from "../views/User/Complete.vue";
 import Update from "../views/User/Update.vue";
+import Delete from "../views/User/Delete.vue";
+import DeleteComplete from "../views/User/DeleteComplete.vue";
 import MileageShop from "../views/MileageShop.vue";
 import PasswordFind from "../views/User/PasswordFind.vue";
 
@@ -56,6 +58,16 @@ const routes = [
     path: "/user/update",
     name: "Update",
     component: Update,
+  },
+  {
+    path: "/user/delete",
+    name: "Delete",
+    component: Delete,
+  },
+  {
+    path: "/user/delete/complete",
+    name: "DeleteComplete",
+    component: DeleteComplete,
   },
   {
     path: "/mileageshop",

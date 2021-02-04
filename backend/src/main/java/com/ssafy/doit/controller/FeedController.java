@@ -41,8 +41,9 @@ public class FeedController {
             Long userPk = userService.currentUser();
             feedService.createFeed(userPk,feedReq);
             result = new ResponseBasic(true, "success", null);
-        }catch (Exception e){
-            result = new ResponseBasic(false,"fail",null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -52,11 +53,13 @@ public class FeedController {
     @GetMapping("/groupFeed")
     public Object groupFeedList(@RequestParam Long groupPk){
         ResponseBasic result = null;
-        List<ResponseFeed> list = feedService.groupFeedList(groupPk);
-        if(list.size() == 0){
-            result = new ResponseBasic(false,"fail",null);
-        }else{
+        try {
+            List<ResponseFeed> list = feedService.groupFeedList(groupPk);
+            if(list.size() == 0) throw new Exception("그룹 피드가 없습니다.");
             result = new ResponseBasic(true, "success", list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -67,11 +70,13 @@ public class FeedController {
     @PostMapping("/userFeed")
     public Object userFeed(Long userPk){
         ResponseBasic result = null;
-        List<ResMyFeed> list = feedService.userFeedList(userPk);
-        if(list.size() == 0){
-            result = new ResponseBasic(false,"fail",null);
-        }else{
+        try {
+            List<ResMyFeed> list = feedService.userFeedList(userPk);
+            if(list.size() == 0) throw new Exception("개인 피드가 없습니다.");
             result = new ResponseBasic(true, "success", list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -81,12 +86,14 @@ public class FeedController {
     @PutMapping("/updateFeed")
     public Object updateFeed(@RequestBody Feed feedReq){
         ResponseBasic result = null;
-        Long userPk = userService.currentUser();
-        int res = feedService.updateFeed(userPk, feedReq);
-        if(res == 1)
+        try {
+            Long userPk = userService.currentUser();
+            feedService.updateFeed(userPk, feedReq);
             result = new ResponseBasic(true, "success", null);
-        else if(res == 0)
-            result = new ResponseBasic(false,"fail",null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -95,12 +102,14 @@ public class FeedController {
     @DeleteMapping("/deleteFeed")
     public Object deleteFeed(Long feedPk){
         ResponseBasic result = null;
-        Long userPk = userService.currentUser();
-        int res = feedService.deleteFeed(userPk, feedPk);
-        if(res == 1)
+        try {
+            Long userPk = userService.currentUser();
+            feedService.deleteFeed(userPk, feedPk);
             result = new ResponseBasic(true, "success", null);
-        else if(res == 0)
-            result = new ResponseBasic(false,"fail",null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -109,12 +118,14 @@ public class FeedController {
     @GetMapping("/authCheckFeed")
     public Object authCheckFeed(Long feedPk){
         ResponseBasic result = null;
-        Long userPk = userService.currentUser();
-        int res = feedService.authCheckFeed(userPk,feedPk);
-        if(res == 1)
+        try {
+            Long userPk = userService.currentUser();
+            feedService.authCheckFeed(userPk,feedPk);
             result = new ResponseBasic(true, "success", null);
-        else if(res == 0)
-            result = new ResponseBasic(false,"fail",null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
