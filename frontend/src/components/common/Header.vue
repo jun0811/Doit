@@ -27,7 +27,7 @@
         </template>
 
         <v-card class="mx-auto">
-          <v-cont>
+          <v-container>
             <v-row>
               <v-col class="d-flex justify-end">
                 <v-btn 
@@ -39,7 +39,7 @@
                 </v-btn>
               </v-col>
             </v-row>
-          </v-cont>
+          </v-container>
 
           <v-container class="px-5 px-sm-16 pb-8 pb-sm-16">
             <v-row>
@@ -320,7 +320,7 @@ export default {
 <style scoped>
   .login.input{
     width: 100%;
-    height: 120%;
+    height: 35px;
     border: 2px solid #F9802D;
     border-radius: 8px;
     color: #F9802D;
