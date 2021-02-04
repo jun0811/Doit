@@ -32,6 +32,17 @@ public class GroupUserService {
     @Autowired
     private GroupRepository groupRepository;
 
+    // 가입 그룹 리스트
+    @Transactional
+    public List<ResGroupList> findGroupByUserPk(Long userPk){
+        User user = userRepository.findById(userPk).get();
+        List<ResGroupList> list = new ArrayList<>();
+        for(GroupUser group : user.groupList){
+            list.add(new ResGroupList(group.getGroup()));
+        }
+        return list;
+    }
+
     // 그룹 가입하기
     @Transactional
     public void join(Long userPk, Long groupPk) throws Exception {
@@ -45,22 +56,25 @@ public class GroupUserService {
                     .group(group).user(user).build());
             group.setTotalNum(group.getTotalNum() + 1);
             groupRepository.save(group);
+            // 마일리지 증가 추가하기 예시 : user.setMileage(user.getMileage() + 30);
         }else throw new Exception("이미 가입된 그륩입니다.");
     }
 
-    // 가입한 그룹 가져오기
-    @Transactional
-    public List<ResGroupList> findGroupByUserPk(Long userPk){
+    // 그룹 탈퇴하기
+    public void withdrawGroupUser(Long userPk, Long groupPk) throws Exception {
         User user = userRepository.findById(userPk).get();
-        List<ResGroupList> list = new ArrayList<>();
-        for(GroupUser group : user.groupList){
-            list.add(new ResGroupList(group.getGroup()));
-        }
-        return list;
+        Group group = groupRepository.findById(groupPk).get();
+        Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
+        if(!opt.isPresent()) {
+            opt.ifPresent(selectGU -> groupUserRepository.delete(selectGU));
+            // 마일리지 감소 추가하기 예시 :  user.setMileage(user.getMileage() - 10);
+            group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
+            groupRepository.save(group);
+        }else throw new Exception("가입되어 있지 않은 그룹원입니다.");
     }
 
     // 그룹 내 그룹원 강퇴시키기
-    public void deleteGroupUser(Long userPk, Long groupPk, Long leader) throws Exception {
+    public void kickOutGroupUser(Long userPk, Long groupPk, Long leader) throws Exception {
         Group group = groupRepository.findById(groupPk).get();
         if(leader == group.getLeader()){
             User user = userRepository.findById(userPk).get(); // 강퇴시킬 그룹원
