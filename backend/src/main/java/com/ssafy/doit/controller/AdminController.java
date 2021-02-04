@@ -3,6 +3,7 @@ package com.ssafy.doit.controller;
 import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
+import com.ssafy.doit.model.GroupUser;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.model.user.User;
@@ -33,7 +34,8 @@ public class AdminController {
     private GroupRepository groupRepository;
     @Autowired
     private FeedRepository feedRepository;
-
+    @Autowired
+    private GroupUserRepository groupUserRepository;
     //관리자 - 회원 리스트
     @ApiOperation(value = "관리자 - 회원 리스트")
     @GetMapping("/searchAllUser")
@@ -61,6 +63,15 @@ public class AdminController {
             Optional<User> userInfo = userRepository.findById(id);
             if (userInfo.isPresent()) {
                 userInfo.ifPresent(selectUser -> {
+                    User user = userRepository.findById(id).get();
+                    List<GroupUser> list = groupUserRepository.findByUser(user);
+
+                    for(GroupUser gu : list){
+                        Group group = groupRepository.findByGroupPk(gu.getGroup().getGroupPk()).get();
+                        groupUserRepository.delete(gu);
+                        group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
+                        groupRepository.save(group);
+                    }
                     selectUser.setUserRole(UserRole.WITHDRAW);
                     userRepository.save(selectUser);
                 });
