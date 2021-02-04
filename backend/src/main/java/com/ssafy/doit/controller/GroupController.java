@@ -32,14 +32,31 @@ public class GroupController {
     @Autowired
     private GroupUserService groupUserService;
 
-    // 그룹 리스트
-    @ApiOperation(value = "그룹 리스트")
+    //해시태그에 따른 그룹 리스트
+    @ApiOperation(value = "해시태그에 따른 그룹 리스트")
     @GetMapping("/searchGroup")
     public Object searchGroup(@RequestParam String tag) { // 페이징 처리하기
         ResponseBasic result = null;
         try {
             List<ResponseGroup> list = groupHashTagService.findAllByHashTag(tag);
             if(list.size() == 0) throw new Exception("해당 해시태그를 포함한 그룹이 없습니다.");
+            result = new ResponseBasic(true, "success", list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 카테고리에 따른 그룹 리스트
+    @ApiOperation(value = "카테고리에 따른 그룹 리스트")
+    @GetMapping("/categoryGroup")
+    public Object categoryGroup(@RequestParam String category) { // 페이징 처리하기
+        ResponseBasic result = null;
+        try {
+            List<ResponseGroup> list = groupHashTagService.findAllByCategory(category);
+            if(list.size() == 0)
+                throw new Exception("해당 카테고리와 관련된 그룹이 아직 생성되지 않았습니다.");
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
