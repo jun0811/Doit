@@ -4,6 +4,7 @@ import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.request.RequestGroup;
+import com.ssafy.doit.model.response.ResGroupInfo;
 import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.repository.*;
 
@@ -52,9 +53,9 @@ public class GroupHashTagService {
 
     // 선택한 그룹 정보 제공
     @Transactional
-    public ResponseGroup findByGroupPk(Long groupPk) {
+    public ResGroupInfo findByGroupPk(Long groupPk) {
         Group group = groupRepository.findById(groupPk).get();
-        return (new ResponseGroup(group));
+        return (new ResGroupInfo(group));
     }
 
     // 그룹 생성
@@ -102,10 +103,11 @@ public class GroupHashTagService {
     public void updateHashTag(Long userPk, Long groupPk, String hashtag) throws Exception {
         Optional<Group> optGroup = groupRepository.findById(groupPk);
         if(userPk == optGroup.get().getLeader()) {
-            HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
-            Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag);
-            if(gh.isPresent()) throw new Exception("해시태그가 이미 존재합니다."); // 이미 해시태그 존재
-            else {
+            Optional<HashTag> hashTag =  hashTagRepository.findByName(hashtag);
+            if(hashTag.isPresent()){
+                Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag.get());
+                if(gh.isPresent()) throw new Exception("해시태그가 이미 존재합니다."); // 이미 해시태그 존재
+            }else {
                 Group group = groupRepository.findById(groupPk).get();
                 findOrCreateHashTag(group, hashtag);
             }
@@ -120,6 +122,8 @@ public class GroupHashTagService {
             HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
             GroupHashTag gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag).get();
             groupHashTagRepository.delete(gh);
+            hashTag.setCnt(hashTag.getCnt() - 1);
+            hashTagRepository.save(hashTag);
         }else throw new Exception("그룹장이 아닙니다."); // 로그인한 유저가 그룹장이 아니면 수정불가
     }
 

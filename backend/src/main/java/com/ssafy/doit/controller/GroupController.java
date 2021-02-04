@@ -4,8 +4,8 @@ import com.ssafy.doit.model.request.RequestGroup;
 import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.response.ResGroupInfo;
 import com.ssafy.doit.model.response.ResponseGroup;
-import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
 import com.ssafy.doit.service.UserService;
@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
+
 /***
  * @author : 김부희
  */
@@ -71,7 +71,7 @@ public class GroupController {
     public Object detailGroup(@RequestParam Long groupPk){
         ResponseBasic result = null;
         try {
-            ResponseGroup group = groupHashTagService.findByGroupPk(groupPk);
+            ResGroupInfo group = groupHashTagService.findByGroupPk(groupPk);
             if(group == null) throw new Exception("그룹을 찾을 수 없습니다.");
             result = new ResponseBasic(true,"success",group);
         }catch (Exception e) {
