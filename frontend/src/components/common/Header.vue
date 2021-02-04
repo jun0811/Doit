@@ -149,6 +149,7 @@
         v-model="drawer"
         absolute
         temporary
+        style="height: 100vh;"
       >
         <v-list-item>
           <v-list-item-avatar>
@@ -207,7 +208,6 @@
             class="login"
             outlined
             @click="dialog=!dialog"
-            style="height: 6%"
           >로그인</v-btn>
         </div>      
         </v-navigation-drawer>
@@ -340,7 +340,7 @@ export default {
 
   .login {
     width: 80%;
-    height: 20%;
+    height: 6%;
     border: 2px solid #F9802D;
     border-radius: 8px;
     color: #F9802D;
@@ -367,6 +367,10 @@ export default {
     font-size: 80%;
     height: 52px;
     line-height: 28px;
+  }
+
+  .drawer-height {
+    height: 100vh;
   }
 </style>
 
