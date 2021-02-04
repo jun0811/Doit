@@ -31,6 +31,24 @@ public class GroupHashTagService {
     private final GroupHashTagRepository groupHashTagRepository;
 
 
+    // 특정 해시태그 포함한 그룹 찾기
+    @Transactional
+    public List<ResponseGroup> findAllByHashTag(String hashtag){
+        List<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true");
+        List<ResponseGroup> resList = new ArrayList<>();
+        for(Group group : groupList){
+            resList.add(new ResponseGroup(group));
+        }
+        return resList;
+    }
+
+    // 선택한 그룹 정보 제공
+    @Transactional
+    public ResponseGroup findByGroupPk(Long groupPk) {
+        Group group = groupRepository.findById(groupPk).get();
+        return (new ResponseGroup(group));
+    }
+
     // 그룹 생성
     @Transactional
     public Long create(Long userPk, RequestGroup groupReq){
@@ -111,23 +129,5 @@ public class GroupHashTagService {
         // 그룹과 해시태그 연결 테이블에도 PK 값으로 저장
         groupHashTagRepository.save(GroupHashTag.builder()
                 .group(group).hashTag(tag).build());
-    }
-
-    // 특정 해시태그 포함한 그룹 찾기
-    @Transactional
-    public List<ResponseGroup> findAllByHashTag(String hashtag){
-        List<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true");
-        List<ResponseGroup> resList = new ArrayList<>();
-        for(Group group : groupList){
-            resList.add(new ResponseGroup(group));
-        }
-        return resList;
-    }
-
-    // 선택한 그룹 정보 제공
-    @Transactional
-    public ResponseGroup findByGroupPk(Long groupPk) {
-        Group group = groupRepository.findById(groupPk).get();
-        return (new ResponseGroup(group));
     }
 }
