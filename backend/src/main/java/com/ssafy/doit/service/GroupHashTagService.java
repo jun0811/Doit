@@ -5,7 +5,6 @@ import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.request.RequestGroup;
 import com.ssafy.doit.model.response.ResponseGroup;
-import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
 
 import lombok.RequiredArgsConstructor;
@@ -22,8 +21,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupHashTagService {
     @Autowired
-    private final UserRepository userRepository;
-    @Autowired
     private final GroupRepository groupRepository;
     @Autowired
     private final HashTagRepository hashTagRepository;
@@ -35,6 +32,17 @@ public class GroupHashTagService {
     @Transactional
     public List<ResponseGroup> findAllByHashTag(String hashtag){
         List<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true");
+        List<ResponseGroup> resList = new ArrayList<>();
+        for(Group group : groupList){
+            resList.add(new ResponseGroup(group));
+        }
+        return resList;
+    }
+
+    // 카테고리에 따른 그룹 분류 리스트
+    @Transactional
+    public List<ResponseGroup> findAllByCategory(String category){
+        List<Group> groupList = groupRepository.findAllByCategoryAndStatus(category, "true");
         List<ResponseGroup> resList = new ArrayList<>();
         for(Group group : groupList){
             resList.add(new ResponseGroup(group));
@@ -56,6 +64,7 @@ public class GroupHashTagService {
         Group group = groupRepository.save(Group.builder()
                 .name(groupReq.getName())
                 .content(groupReq.getContent())
+                .category(groupReq.getCategory())
                 .maxNum(groupReq.getMaxNum())
                 .startDate(LocalDate.now())
                 .endDate(groupReq.getEndDate())
@@ -79,6 +88,7 @@ public class GroupHashTagService {
             group.ifPresent(selectGroup ->{
                 selectGroup.setName(groupReq.getName());
                 selectGroup.setContent(groupReq.getContent());
+                selectGroup.setCategory(groupReq.getCategory());
                 selectGroup.setMaxNum(groupReq.getMaxNum());
                 selectGroup.setEndDate(groupReq.getEndDate());
                 selectGroup.setLeader(groupReq.getLeader());
