@@ -181,7 +181,18 @@
               v-for="subItem in item.items"
               :key="subItem.groupPk"
               @click="group(subItem.groupPk)"
+              class="px-4"
             >
+              <v-list-item-action>
+                <v-btn
+                  fab
+                  small
+                  depressed
+                  color="orange"
+                >
+                </v-btn>
+              </v-list-item-action>
+
               <v-list-item-content>
                 <v-list-item-title> {{ subItem.name }}</v-list-item-title>
               </v-list-item-content>
