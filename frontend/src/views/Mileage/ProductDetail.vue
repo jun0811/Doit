@@ -14,7 +14,7 @@
     >
       <v-row class="d-flex justify-space-between" width="100%">
         <v-col cols="3" class="mx-6 my-4" style="text-align:center">
-          {{product.title}}
+          <b>{{product.title}}</b>
         </v-col>
         <v-col cols="3" class="mx-6 my-4" style="text-align:center">
           {{user}}
