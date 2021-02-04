@@ -1,5 +1,7 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.GroupUser;
 import com.ssafy.doit.model.Profile;
 import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.response.ResponseUser;
@@ -7,8 +9,11 @@ import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.repository.GroupRepository;
+import com.ssafy.doit.repository.GroupUserRepository;
 import com.ssafy.doit.repository.ProfileRepository;
 import com.ssafy.doit.repository.UserRepository;
+import com.ssafy.doit.service.GroupUserService;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -42,6 +48,10 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private ProfileRepository profileRepository;
+    @Autowired
+    private GroupUserRepository groupUserRepository;
+    @Autowired
+    private GroupRepository groupRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -214,15 +224,23 @@ public class UserController {
     // 회원 탈퇴
     @ApiOperation(value = "회원 탈퇴")
     @PutMapping("/deleteUser")
-    public Object deleteUser(HttpServletRequest req) {
+    public Object deleteUser() {
         ResponseBasic result = new ResponseBasic();
 
         try {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             UserDetails userDetails = (UserDetails) principal;
-            User user = userRepository.findByEmail(userDetails.getUsername()).get();
 
-            user.setUserRole(UserRole.GUEST);
+            User user = userRepository.findByEmail(userDetails.getUsername()).get();
+            List<GroupUser> list = groupUserRepository.findByUser(user);
+
+            for(GroupUser gu : list){
+                Group group = groupRepository.findByGroupPk(gu.getGroup().getGroupPk()).get();
+                groupUserRepository.delete(gu);
+                group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
+                groupRepository.save(group);
+            }
+            user.setUserRole(UserRole.WITHDRAW);
             userRepository.save(user);
 
             result.status = true;
