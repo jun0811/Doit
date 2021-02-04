@@ -18,18 +18,9 @@
         </v-btn>
       </v-row>
 
-      <!-- <v-row class="py-3">
-        <v-col class=" mx-3 mx-sm-16"> 
-        </v-col>
-      </v-row > -->
       <v-row v-for="(page, idx) in pageCount" :key="idx">
-        <ProductPage :page="page">{{page}}</ProductPage>
+        <ProductPage :page="page" :pageCount="pageCount">{{page}}</ProductPage>
       </v-row>
-      <!-- <v-pagination
-        v-model="page"
-        :length="15"
-        :total-visible="7"
-      ></v-pagination> -->
 
 
     </v-container>
