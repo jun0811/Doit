@@ -193,9 +193,10 @@
             로그인이 필요한 기능입니다.
           </div>
           <v-btn
-            class="login input"
+            class="login"
             outlined
             @click="dialog=!dialog"
+            style="height: 6%"
           >로그인</v-btn>
         </div>      
         </v-navigation-drawer>
@@ -320,7 +321,15 @@ export default {
 <style scoped>
   .login.input{
     width: 100%;
-    height: 35px;
+    height: 150%;
+    border: 2px solid #F9802D;
+    border-radius: 8px;
+    color: #F9802D;
+  }
+
+  .login {
+    width: 80%;
+    height: 20%;
     border: 2px solid #F9802D;
     border-radius: 8px;
     color: #F9802D;
