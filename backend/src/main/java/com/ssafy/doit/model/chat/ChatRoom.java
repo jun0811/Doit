@@ -1,5 +1,6 @@
 package com.ssafy.doit.model.chat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.doit.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class ChatRoom {
     @JoinColumn(name = "product_pk")
     private Product product;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> messages = new ArrayList<>();
 }

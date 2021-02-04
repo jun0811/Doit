@@ -35,7 +35,6 @@ public class ChatService {
         return 0L;
     }
 
-
     public Long createRoom(Long uid, Long pid) throws Exception{
         Product product = productRepository.findById(pid).get();
 
@@ -59,5 +58,9 @@ public class ChatService {
         chatRoomJoin.setChatRoom(room);
 
         chatRoomJoinRepository.save(chatRoomJoin);
+    }
+
+    public List<ChatRoom> getList(Long uid){
+        return chatRoomRepository.findAllByUser(uid);
     }
 }
