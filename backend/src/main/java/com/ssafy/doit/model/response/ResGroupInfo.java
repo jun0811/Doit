@@ -2,13 +2,16 @@ package com.ssafy.doit.model.response;
 
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
+import com.ssafy.doit.model.GroupUser;
+import com.ssafy.doit.model.user.User;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class ResponseGroup {
+public class ResGroupInfo {
     private Long groupPk;
     private String name;
     private String content;
@@ -21,8 +24,9 @@ public class ResponseGroup {
     private int maxNum;
 
     private List<String> tags;
-    
-    public ResponseGroup(Group group){
+    private List<ResponseUser> users;
+
+    public ResGroupInfo(Group group){
         this.groupPk = group.getGroupPk();
         this.name = group.getName();
         this.content = group.getContent();
@@ -34,12 +38,22 @@ public class ResponseGroup {
         this.totalNum = group.getTotalNum();
         this.maxNum = group.getMaxNum();
         this.tags = this.getTags(group);
+        this.users = this.getUsers(group);
     }
+
     public List<String> getTags(Group group){
         List<String> tag = new ArrayList<>();
         for(GroupHashTag hashTag : group.tagList){
             tag.add(hashTag.getHashTag().getName());
         }
         return tag;
+    }
+
+    public List<ResponseUser> getUsers(Group group){
+        List<ResponseUser> user = new ArrayList<>();
+        for(GroupUser gu : group.userList){
+            user.add(new ResponseUser(gu.getUser()));
+        }
+        return user;
     }
 }
