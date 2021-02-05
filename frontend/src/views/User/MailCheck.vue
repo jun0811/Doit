@@ -3,7 +3,7 @@
       <Header></Header>
       <v-container class="pa-8 pa-sm-16 d-flex align-center flex-column mx-auto">
           <v-img
-            src="@/assets/logo/mail.png"
+            src="@/assets/img/mail.png"
             alt="mail"
             class="my-3"
             max-height="60"

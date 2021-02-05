@@ -36,20 +36,10 @@ a{
 .temp-box{
   border: 0.3px solid grey;
   height: 200px;
-  width: auto;
+  width: 100vw;
   text-align: center;
 }
 
 .search-bar {
   width: 400px;
-}
-
-.temporary-part {
-  width: 700px;
-  margin-top: 50px;
-}
-
-.temporary-box {
-  border: 0.05em solid;
-  height: 180px;
 }
