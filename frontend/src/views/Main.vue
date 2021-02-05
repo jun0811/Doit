@@ -2,12 +2,10 @@
     <v-app>
         <div>
             <Header></Header>
-            <v-container class="pa-3 pa-sm-16">
-                <SearchBar></SearchBar>
-                <WordCloud></WordCloud>
-                <Ranking></Ranking>
-                <Category></Category>
-            </v-container>
+            <SearchBar></SearchBar>
+            <WordCloud></WordCloud>
+            <Ranking></Ranking>
+            <Category></Category>
             <Footer></Footer>
         </div>
     </v-app>

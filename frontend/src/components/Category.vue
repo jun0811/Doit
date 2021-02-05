@@ -1,19 +1,31 @@
 <template>
-  <div>
-    <v-row class="mx-3 mx-sm-16">
-      Category
+  <v-container class="pa-3 pa-sm-16"> 
+    <v-row class="mx-3 mx-sm-16 mb-5">
+      <h4>카테고리</h4>
     </v-row>
-    <v-row class="py-10">
-      <v-col class="mx-3 mx-sm-16 temp-box d-flex align-center justify-space-around">
-        <li class="category-icon"><font-awesome-icon class="fa-5x" icon="guitar"/></li>
-        <li class="category-icon"><font-awesome-icon class="fa-5x" icon="book"/></li>
-        <li class="category-icon"><font-awesome-icon class="fa-5x" icon="laptop-code"/></li>
-        <li class="category-icon"><font-awesome-icon class="fa-5x" icon="running"/></li>
-        <li class="category-icon"><font-awesome-icon class="fa-5x" icon="carrot"/></li>
-        <li class="category-icon"><font-awesome-icon class="fa-5x" icon="spell-check"/></li>
-      </v-col>
-    </v-row>
-  </div>
+    <v-card class="mx-auto mx-3 mx-sm-16">
+      <v-row class="py-10 px-5">
+        <v-col cols="2">
+          <li class="category-icon"><font-awesome-icon class="category-icon" icon="guitar"/></li>
+        </v-col>
+        <v-col cols="2">
+          <li class="category-icon"><font-awesome-icon class="category-icon" icon="book"/></li>
+        </v-col>
+        <v-col cols="2">
+          <li class="category-icon"><font-awesome-icon class="category-icon" icon="laptop-code"/></li>
+        </v-col>
+        <v-col cols="2">
+          <li class="category-icon"><font-awesome-icon class="category-icon" icon="running"/></li>
+        </v-col>
+        <v-col cols="2" class="category-icon">
+          <li class="category-icon"><font-awesome-icon class="category-icon" icon="carrot"/></li>
+        </v-col>
+        <v-col cols="2">
+          <li class="category-icon"><font-awesome-icon class="category-icon" icon="spell-check"/></li>
+        </v-col>
+      </v-row>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -27,6 +39,17 @@ export default {
 .category-icon {
   list-style: none;
   display: inline-block;
+  width: 50px;
+  height: 50px;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .category-icon {
+    list-style: none;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+  }
 }
 
 </style>

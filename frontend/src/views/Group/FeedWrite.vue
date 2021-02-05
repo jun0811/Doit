@@ -32,7 +32,7 @@
                         <v-col cols="3" sm="2">
                             <v-img
                             id="profile"
-                            src="@/assets/logo/profile_temp.png"
+                            src="@/assets/img/profile_temp.png"
                             alt="profile-img"
                             class="profile-img my-auto mx-auto"
                             max-height="50"
