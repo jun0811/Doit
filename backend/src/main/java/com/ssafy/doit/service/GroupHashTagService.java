@@ -100,17 +100,15 @@ public class GroupHashTagService {
 
     // 그룹 해시태그 추가
     @Transactional
-    public void updateHashTag(Long userPk, Long groupPk, String hashtag) throws Exception {
+    public void updateHashTag(Long userPk, Long groupPk, String tag) throws Exception {
         Optional<Group> optGroup = groupRepository.findById(groupPk);
         if(userPk == optGroup.get().getLeader()) {
-            Optional<HashTag> hashTag =  hashTagRepository.findByName(hashtag);
+            Optional<HashTag> hashTag =  hashTagRepository.findByName(tag);
             if(hashTag.isPresent()){
                 Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag.get());
                 if(gh.isPresent()) throw new Exception("해시태그가 이미 존재합니다."); // 이미 해시태그 존재
-            }else {
-                Group group = groupRepository.findById(groupPk).get();
-                findOrCreateHashTag(group, hashtag);
             }
+            findOrCreateHashTag(optGroup.get(), tag);
         } else throw new Exception("그룹장이 아닙니다."); // 로그인한 유저가 그룹장이 아니면 수정불가
     }
 
