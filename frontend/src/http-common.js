@@ -3,7 +3,7 @@ import { api, response } from './api/index'
 import account from './store/modules/account'
 
 const http = axios.create({
-    baseURL: 'http://localhost:8080/',
+    baseURL: 'baseURL: 'http://i4c108.p.ssafy.io/api/',
     headers: {
         'Content-type': 'application/json',
     },
