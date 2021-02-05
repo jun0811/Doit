@@ -68,7 +68,9 @@ public class GroupUserService {
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(groupPk).get();
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
-        if(!opt.isPresent()) {
+        if(userPk == group.getLeader()) throw new Exception("그룹장은 탈퇴할 수 없습니다.");
+
+        if(opt.isPresent()) {
             opt.ifPresent(selectGU -> groupUserRepository.delete(selectGU));
             // 마일리지 감소 추가하기 예시 :  user.setMileage(user.getMileage() - 10);
             group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
@@ -90,6 +92,7 @@ public class GroupUserService {
         }else throw new Exception("그룹장이 아닙니다.");
     }
 
+    // 랄퇴한 회원 가입된 그룹에서 delete
     public void deleteGroupByUser(Long userPk){
         User user = userRepository.findById(userPk).get();
         List<GroupUser> list = groupUserRepository.findByUser(user);
@@ -103,5 +106,4 @@ public class GroupUserService {
         user.setUserRole(UserRole.WITHDRAW);
         userRepository.save(user);
     }
-
 }
