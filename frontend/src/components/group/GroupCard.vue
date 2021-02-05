@@ -72,7 +72,7 @@ export default {
     }),
     methods: {
       moveCommunity(){
-        this.$router.push("/group/community")
+        this.$router.push({name:"Community",params:{groupPk:this.group.groupPk}})
       }  
     }
 }

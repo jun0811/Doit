@@ -1,11 +1,17 @@
 package com.ssafy.doit.service;
 
+import com.ssafy.doit.model.request.RequestChangePw;
+import com.ssafy.doit.model.response.ResponseUser;
+import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,4 +26,24 @@ public class UserService {
 
         return  userPk;
     }
+
+    // 회원 상세 정보
+    @Transactional
+    public ResponseUser detailUser(Long userPk){
+        User getUser = userRepository.findById(userPk).get();
+        ResponseUser user = new ResponseUser(getUser);
+        return user;
+    }
+
+    // 회원정보 수정
+    @Transactional
+    public void updateUser(Long userPk, User userReq){
+        Optional<User> user = userRepository.findById(userPk);
+        user.ifPresent(selectUser->{
+            selectUser.setNickname(userReq.getNickname());
+            userRepository.save(selectUser);
+        });
+    }
+
+
 }

@@ -4,8 +4,8 @@ import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.request.RequestGroup;
+import com.ssafy.doit.model.response.ResGroupInfo;
 import com.ssafy.doit.model.response.ResponseGroup;
-import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
 
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class GroupHashTagService {
-    @Autowired
-    private final UserRepository userRepository;
     @Autowired
     private final GroupRepository groupRepository;
     @Autowired
@@ -42,11 +40,22 @@ public class GroupHashTagService {
         return resList;
     }
 
+    // 카테고리에 따른 그룹 분류 리스트
+    @Transactional
+    public List<ResponseGroup> findAllByCategory(String category){
+        List<Group> groupList = groupRepository.findAllByCategoryAndStatus(category, "true");
+        List<ResponseGroup> resList = new ArrayList<>();
+        for(Group group : groupList){
+            resList.add(new ResponseGroup(group));
+        }
+        return resList;
+    }
+
     // 선택한 그룹 정보 제공
     @Transactional
-    public ResponseGroup findByGroupPk(Long groupPk) {
+    public ResGroupInfo findByGroupPk(Long groupPk) {
         Group group = groupRepository.findById(groupPk).get();
-        return (new ResponseGroup(group));
+        return (new ResGroupInfo(group));
     }
 
     // 그룹 생성
@@ -56,6 +65,7 @@ public class GroupHashTagService {
         Group group = groupRepository.save(Group.builder()
                 .name(groupReq.getName())
                 .content(groupReq.getContent())
+                .category(groupReq.getCategory())
                 .maxNum(groupReq.getMaxNum())
                 .startDate(LocalDate.now())
                 .endDate(groupReq.getEndDate())
@@ -79,6 +89,7 @@ public class GroupHashTagService {
             group.ifPresent(selectGroup ->{
                 selectGroup.setName(groupReq.getName());
                 selectGroup.setContent(groupReq.getContent());
+                selectGroup.setCategory(groupReq.getCategory());
                 selectGroup.setMaxNum(groupReq.getMaxNum());
                 selectGroup.setEndDate(groupReq.getEndDate());
                 selectGroup.setLeader(groupReq.getLeader());
@@ -89,16 +100,15 @@ public class GroupHashTagService {
 
     // 그룹 해시태그 추가
     @Transactional
-    public void updateHashTag(Long userPk, Long groupPk, String hashtag) throws Exception {
+    public void updateHashTag(Long userPk, Long groupPk, String tag) throws Exception {
         Optional<Group> optGroup = groupRepository.findById(groupPk);
         if(userPk == optGroup.get().getLeader()) {
-            HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
-            Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag);
-            if(gh.isPresent()) throw new Exception("해시태그가 이미 존재합니다."); // 이미 해시태그 존재
-            else {
-                Group group = groupRepository.findById(groupPk).get();
-                findOrCreateHashTag(group, hashtag);
+            Optional<HashTag> hashTag =  hashTagRepository.findByName(tag);
+            if(hashTag.isPresent()){
+                Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag.get());
+                if(gh.isPresent()) throw new Exception("해시태그가 이미 존재합니다."); // 이미 해시태그 존재
             }
+            findOrCreateHashTag(optGroup.get(), tag);
         } else throw new Exception("그룹장이 아닙니다."); // 로그인한 유저가 그룹장이 아니면 수정불가
     }
 
@@ -110,6 +120,8 @@ public class GroupHashTagService {
             HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
             GroupHashTag gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag).get();
             groupHashTagRepository.delete(gh);
+            hashTag.setCnt(hashTag.getCnt() - 1);
+            hashTagRepository.save(hashTag);
         }else throw new Exception("그룹장이 아닙니다."); // 로그인한 유저가 그룹장이 아니면 수정불가
     }
 
