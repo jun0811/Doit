@@ -1,5 +1,6 @@
 package com.ssafy.doit.model.chat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.doit.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,10 +23,10 @@ public class ChatMessage {
     private Long id;
 
     private String message;
-    private LocalDateTime time;
 
     @ManyToOne
     @JoinColumn(name = "room_pk")
+    @JsonIgnore
     private ChatRoom chatRoom;
 
     @ManyToOne
