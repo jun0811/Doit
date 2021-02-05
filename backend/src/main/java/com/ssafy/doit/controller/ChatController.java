@@ -1,6 +1,7 @@
 package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.chat.ChatRoom;
+import com.ssafy.doit.model.chat.ChatRoomJoin;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.service.ChatService;
 import com.ssafy.doit.service.UserService;
@@ -11,7 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,8 +33,8 @@ public class ChatController {
         ResponseBasic result = null;
         try{
             Long uid = userService.currentUser();
-            Long roomPk = chatService.createRoom(uid, pid);
-            result = new ResponseBasic(true, "success", roomPk);
+            ChatRoom resRoom = chatService.createRoom(uid, pid);
+            result = new ResponseBasic(true, "success", resRoom);
         }catch (Exception e){
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
@@ -48,6 +52,29 @@ public class ChatController {
             List<ChatRoom> chatRooms = chatService.getList(uid);
             result = new ResponseBasic(true, "success", chatRooms);
         }catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "채팅방 입장")
+    @GetMapping("/room/{roomPk}")
+    public Object joinRoom(@PathVariable Long roomPk){
+        ResponseBasic result = null;
+        try{
+            Long uid = userService.currentUser();
+            Optional<ChatRoomJoin> opt = chatService.checkByRoom(uid, roomPk);
+
+            if(!opt.isPresent()) throw new Exception("유저 불일치");
+
+            ChatRoom chatRoom = chatService.getRoom(roomPk);
+            Map<String, Object> room = new HashMap<>();
+            room.put("room", chatRoom);
+            room.put("message", chatRoom.getMessages());
+            result = new ResponseBasic(true, "success", room);
+        } catch (Exception e){
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
         }
