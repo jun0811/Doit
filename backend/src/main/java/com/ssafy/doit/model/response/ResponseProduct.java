@@ -9,7 +9,7 @@ public interface ResponseProduct {
     String getContent();
     String getImage();
 
-    default String getUserpk(){ return getUserId(); }
+    default Long getUserpk(){ return getUserId(); }
 
     default String getNickname(){
         return getUserNickname();
@@ -20,7 +20,7 @@ public interface ResponseProduct {
     }
 
     @JsonIgnore
-    String getUserId();
+    Long getUserId();
 
     @JsonIgnore
     String getUserNickname();
