@@ -87,9 +87,10 @@ const routes = [
     component: GroupCreate,
   },
   {
-    path: "/group/community",
+    path: "/group/community/:groupPk",
     name: "Community",
     component: Community,
+    props: true,
   },
   {
     path: "/group/feedwrite",
