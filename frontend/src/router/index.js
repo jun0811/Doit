@@ -16,6 +16,7 @@ import Delete from "../views/User/Delete.vue";
 import DeleteComplete from "../views/User/DeleteComplete.vue";
 import MileageShop from "../views/Mileage/MileageShop.vue";
 import ProductDetail from "../views/Mileage/ProductDetail.vue";
+import ProductWrite from "../views/Mileage/ProductWrite.vue";
 import PasswordFind from "../views/User/PasswordFind.vue";
 
 Vue.use(VueRouter);
@@ -103,10 +104,15 @@ const routes = [
     component: FeedUpdate,
   },
   {
-    path: "/mileageshop/:product_id",
+    path: "/mileageshop/product/:product_id",
     name: "ProductDetail",
     component: ProductDetail,
     props:true,
+  },
+  {
+    path: "/mileageshop/productwrite",
+    name: "ProductWrite",
+    component: ProductWrite,
   },
 ];
 
