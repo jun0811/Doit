@@ -3,6 +3,7 @@ package com.ssafy.doit.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ public class Group{
     private int totalNum;
     private int maxNum;
     private Long leader;
-    private LocalDate startDate;
+    private LocalDate createDate;
     private String endDate;
     private String status;
 
@@ -43,7 +44,7 @@ public class Group{
 
     @Builder
     public Group(String name, String content, String category, String image, int maxNum,
-                 Long leader, LocalDate startDate, String endDate){
+                 Long leader, LocalDate createDate, String endDate){
         this.name = name;
         this.content = content;
         this.category = category;
@@ -51,7 +52,7 @@ public class Group{
         this.totalNum = 0;
         this.maxNum = maxNum;
         this.score = 0;
-        this.startDate = startDate;
+        this.createDate = createDate;
         this.endDate = endDate;
         this.leader = leader;
         this.status = "true";

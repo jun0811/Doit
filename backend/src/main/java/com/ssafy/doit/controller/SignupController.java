@@ -34,13 +34,13 @@ public class SignupController {
     @PostMapping("/checkNick")
     public Object checkNickname(@RequestBody String nickname){
         ResponseBasic result = new ResponseBasic();
-        if(userRepository.findByNickname(nickname).isPresent()){
-            System.out.println("닉네임 중복");
-            result.status = false;
-            result.data = "중복된 닉네임 입니다.";
+        System.out.println(UserRole.USER);
+        Optional<User> optUser = userRepository.findByNicknameAndUserRole(nickname, UserRole.USER);
+        Optional<User> optGuest = userRepository.findByNicknameAndUserRole(nickname, UserRole.GUEST);
+        if(optUser.isPresent() || optGuest.isPresent()){
+            result = new ResponseBasic(false, "중복된 닉네임입니다.", null);
         }else{
-            result.status = true;
-            result.data = "success";
+            result = new ResponseBasic( true, "success", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

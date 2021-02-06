@@ -1,25 +1,26 @@
 <template>
-  <div>
-    <v-row class="mx-3 mx-sm-16">
-      Doit Ranking👑
+  <v-container class="px-3 px-sm-16 my-10 ranking-size">  
+    <v-row class="mx-3 mx-sm-16 mb-5">
+      <h4>Doit 그룹랭킹</h4>
     </v-row>
-    <v-row class="py-10">
-      <v-col class="mx-3 mx-sm-16 temp-box d-flex justify-space-around">
-        <div v-for="(group, idx) in groups" :key="idx" class="rank-box d-flex" >
-          <div class="">
-            <h1 class="rank-num">{{idx+1}}</h1>
-          </div>
-          <div class="d-flex flex-column justify-space-around">
-            <div class="rank-wrapper scale">
-              <img class="rank-image box" :src="group.groupImage" alt="그룹이미지" @mouseover="isHover=true" @mouseout="isHover=false">
-              <div class="rank-wrapper"></div>
+    <v-card class="mx-auto mx-3 mx-sm-16">
+      <v-row>
+          <v-col class="mx-3 mx-sm-16 d-flex justify-space-around">
+            <div v-for="(group, idx) in groups" :key="idx" class="rank-box d-flex" >
+              <div class="rank-num">
+                {{idx+1}}
+              </div>
+              <div class="d-flex flex-column justify-space-around">
+                <div class="rank-wrapper">
+                  <img class="rank-image box" :src="group.groupImage" alt="그룹이미지">
+                </div>
+                <div class="group-name">{{group.groupname}}</div>
+              </div>
             </div>
-            <div class="group-name">{{group.groupname}}</div>
-          </div>
-        </div>
-      </v-col>
-    </v-row>
-  </div>
+          </v-col>
+      </v-row>
+    </v-card>
+  </v-container>
     
 </template>
 
@@ -58,16 +59,34 @@ export default {
   height: 100%;
 }
 
-.rank-num {
-  height:40px;
-  width:40px;
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .rank-box {
+    width: 50px;
+  }
 }
 
+.rank-num {
+ font-size: x-large;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .rank-num {
+    font-size: medium;
+  }
+}
   
 .group-name {
-  height:30px; 
   text-align:center;
+  font-size: medium;
 }
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .group-name {
+    text-align:center;
+    font-size: xx-small;
+  }
+}
+
 .rank-wrapper {
   border-radius: 50%;
   position: relative;
@@ -82,13 +101,19 @@ export default {
   position:relative;
 }
 
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .rank-image {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+  }
+}
+
 /* --- */
 /* $randomNumber : random(5); */
 
 .box:hover {
   position: relative;
-  width: 100px;
-  height: 100px;
   border: 5px solid orange;
   display: block;
   border-color: orange;

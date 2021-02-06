@@ -8,7 +8,7 @@
             <v-col cols="12" sm="3">
               <div class="text-center">
                 <img
-                  src="@/assets/logo/profile_temp.png"
+                  src="@/assets/img/profile_temp.png"
                   alt="profile-img"
                   class="profile-img"
                 />

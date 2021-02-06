@@ -36,7 +36,7 @@ public class FeedService {
     // 그룹 내 피드 생성
     @Transactional
     public void createFeed(Long userPk, Feed feedReq) throws Exception {
-        Group group = groupRepository.findByGroupPk(feedReq.getGroupPk()).get();
+        Group group = groupRepository.findById(feedReq.getGroupPk()).get();
         User user = userRepository.findById(userPk).get();
 
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group,user);
@@ -109,7 +109,7 @@ public class FeedService {
     public void authCheckFeed(Long userPk, Long feedPk) throws Exception {
         Feed feed = feedRepository.findById(feedPk).get();
         User user = userRepository.findById(userPk).get();
-        Group group = groupRepository.findByGroupPk(feed.getGroupPk()).get();
+        Group group = groupRepository.findById(feed.getGroupPk()).get();
 
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
         if(!opt.isPresent())

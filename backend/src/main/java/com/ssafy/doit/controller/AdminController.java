@@ -61,12 +61,12 @@ public class AdminController {
                 groupUserService.deleteGroupByUser(userPk);
             }
             result.status = true;
-            result.data = "탈퇴 success";
+            result.data = "success";
         }
         catch (Exception e){
             e.printStackTrace();
             result.status = false;
-            result.data = "error";
+            result.data = "fail";
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -94,7 +94,7 @@ public class AdminController {
     public Object beDeletedGroup(@RequestParam Long groupPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Optional<Group> groupInfo = groupRepository.findByGroupPk(groupPk);
+            Optional<Group> groupInfo = groupRepository.findById(groupPk);
             adminService.deleteAllByGroup(groupPk);
             if (groupInfo.isPresent()) {
                 groupInfo.ifPresent(selectUser -> {
