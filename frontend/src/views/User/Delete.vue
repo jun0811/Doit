@@ -12,9 +12,14 @@
           회원탈퇴를 신청하기 전에 안내 사항을 꼭 확인해주세요.
         </v-col>
       </v-row>
-      <v-row class="mb-7">
+      <v-row>
         <v-col class="keep-all">
-          ✔ 사용하고 계신 아이디 ({{ email }})는 탈퇴할 경우 복구가 불가능합니다.
+          ✔ 사용하고 계신 아이디 ({{ email }})는 탈퇴할 경우 재사용 및 복구가 불가능합니다.
+        </v-col>
+      </v-row>
+      <v-row class="mb-7">
+        <v-col class="ml-5 keep-all">
+          <span class="important">탈퇴한 이메일은 본인과 타인 모두 재사용 및 복구가 불가</span>하오니 신중하게 선택하시기 바랍니다.
         </v-col>
       </v-row>
       <v-row>
