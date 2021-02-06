@@ -1,6 +1,7 @@
 package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.request.RequestGroup;
+import com.ssafy.doit.model.request.RequestPage;
 import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
@@ -12,9 +13,11 @@ import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /***
@@ -35,11 +38,11 @@ public class GroupController {
     //해시태그에 따른 그룹 리스트
     @ApiOperation(value = "해시태그에 따른 그룹 리스트")
     @GetMapping("/searchGroup")
-    public Object searchGroup(@RequestParam String tag) { // 페이징 처리하기
+    public Object searchGroup(@RequestParam String tag, final RequestPage pageable) {
         ResponseBasic result = null;
         try {
-            List<ResponseGroup> list = groupHashTagService.findAllByHashTag(tag);
-            if(list.size() == 0) throw new Exception("해당 해시태그를 포함한 그룹이 없습니다.");
+            Page<ResponseGroup> list = groupHashTagService.findAllByHashTag(tag, pageable);
+            if(list.getTotalElements() == 0) throw new Exception("해당 해시태그를 포함한 그룹이 없습니다.");
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
@@ -51,12 +54,11 @@ public class GroupController {
     // 카테고리에 따른 그룹 리스트
     @ApiOperation(value = "카테고리에 따른 그룹 리스트")
     @GetMapping("/categoryGroup")
-    public Object categoryGroup(@RequestParam String category) { // 페이징 처리하기
+    public Object categoryGroup(@RequestParam String category, final RequestPage pageable) {
         ResponseBasic result = null;
         try {
-            List<ResponseGroup> list = groupHashTagService.findAllByCategory(category);
-            if(list.size() == 0)
-                throw new Exception("해당 카테고리와 관련된 그룹이 아직 생성되지 않았습니다.");
+            Page<ResponseGroup> list = groupHashTagService.findAllByCategory(category, pageable);
+            if(list.getTotalElements() == 0) throw new Exception("해당 카테고리와 관련된 그룹이 아직 생성되지 않았습니다.");
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
