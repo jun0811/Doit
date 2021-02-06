@@ -94,7 +94,7 @@ public class AdminController {
     public Object beDeletedGroup(@RequestParam Long groupPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Optional<Group> groupInfo = groupRepository.findByGroupPk(groupPk);
+            Optional<Group> groupInfo = groupRepository.findById(groupPk);
             adminService.deleteAllByGroup(groupPk);
             if (groupInfo.isPresent()) {
                 groupInfo.ifPresent(selectUser -> {

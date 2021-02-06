@@ -17,7 +17,7 @@ public class ResGroupDetail {
     private String content;
     private String category;
     private Long leader;
-    private String startDate;
+    private String CreateDate;
     private String endDate;
     private int score;
     private int totalNum;
@@ -31,7 +31,7 @@ public class ResGroupDetail {
         this.name = group.getName();
         this.content = group.getContent();
         this.category = group.getCategory();
-        this.startDate = group.getStartDate().toString();
+        this.CreateDate = group.getCreateDate().toString();
         this.endDate = group.getEndDate().toString();
         this.leader = group.getLeader();
         this.score = group.getScore();

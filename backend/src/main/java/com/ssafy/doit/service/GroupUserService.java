@@ -102,10 +102,12 @@ public class GroupUserService {
 
         for (GroupUser groupUser : list) {
             groupUserRepository.delete(groupUser);
-            Group group = groupRepository.findByGroupPk(groupUser.getGroup().getGroupPk()).get();
+            Group group = groupRepository.findById(groupUser.getGroup().getGroupPk()).get();
             Long newLeader = groupUserRepository.findTopByGroup(group).getUser().getId();
             group.setTotalNum(group.getTotalNum() - 1);     // 회원 수 감소
-            group.setLeader(newLeader);                     // 임의의 그룹원으로 그룹장 지정
+            if(userPk == group.getLeader()) {
+                group.setLeader(newLeader);                 // 임의의 그룹원으로 그룹장 지정
+            }
             groupRepository.save(group);
             // 새로운 그룹장에게 알림 보내기
         }

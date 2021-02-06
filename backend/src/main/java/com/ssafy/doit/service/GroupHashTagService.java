@@ -4,12 +4,14 @@ import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.request.RequestGroup;
+import com.ssafy.doit.model.request.RequestPage;
 import com.ssafy.doit.model.response.ResGroupDetail;
 import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.repository.*;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,23 +33,19 @@ public class GroupHashTagService {
 
     // 특정 해시태그 포함한 그룹 찾기
     @Transactional
-    public List<ResponseGroup> findAllByHashTag(String hashtag){
-        List<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true");
-        List<ResponseGroup> resList = new ArrayList<>();
-        for(Group group : groupList){
-            resList.add(new ResponseGroup(group));
-        }
+    public Page<ResponseGroup> findAllByHashTag(String hashtag, RequestPage pageable){
+        Page<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true", pageable.of());
+        Page<ResponseGroup> resList = groupList.map(
+                group -> new ResponseGroup(group));
         return resList;
     }
 
     // 카테고리에 따른 그룹 분류 리스트
     @Transactional
-    public List<ResponseGroup> findAllByCategory(String category){
-        List<Group> groupList = groupRepository.findAllByCategoryAndStatus(category, "true");
-        List<ResponseGroup> resList = new ArrayList<>();
-        for(Group group : groupList){
-            resList.add(new ResponseGroup(group));
-        }
+    public Page<ResponseGroup> findAllByCategory(String category, RequestPage pageable){
+        Page<Group> groupList = groupRepository.findAllByCategoryAndStatus(category,"true",pageable.of());
+        Page<ResponseGroup> resList = groupList.map(
+                group -> new ResponseGroup(group));
         return resList;
     }
 
@@ -67,7 +65,7 @@ public class GroupHashTagService {
                 .content(groupReq.getContent())
                 .category(groupReq.getCategory())
                 .maxNum(groupReq.getMaxNum())
-                .startDate(LocalDate.now())
+                .createDate(LocalDate.now())
                 .endDate(groupReq.getEndDate())
                 .leader(userPk)
                 .build());
