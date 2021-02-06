@@ -61,12 +61,12 @@ public class AdminController {
                 groupUserService.deleteGroupByUser(userPk);
             }
             result.status = true;
-            result.data = "탈퇴 success";
+            result.data = "success";
         }
         catch (Exception e){
             e.printStackTrace();
             result.status = false;
-            result.data = "error";
+            result.data = "fail";
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

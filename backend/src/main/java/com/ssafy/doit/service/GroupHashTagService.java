@@ -4,7 +4,7 @@ import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.request.RequestGroup;
-import com.ssafy.doit.model.response.ResGroupInfo;
+import com.ssafy.doit.model.response.ResGroupDetail;
 import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.repository.*;
 
@@ -53,9 +53,9 @@ public class GroupHashTagService {
 
     // 선택한 그룹 정보 제공
     @Transactional
-    public ResGroupInfo findByGroupPk(Long groupPk) {
+    public ResGroupDetail findByGroupPk(Long groupPk) {
         Group group = groupRepository.findById(groupPk).get();
-        return (new ResGroupInfo(group));
+        return (new ResGroupDetail(group));
     }
 
     // 그룹 생성
