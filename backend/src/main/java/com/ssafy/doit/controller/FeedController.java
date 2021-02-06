@@ -55,7 +55,6 @@ public class FeedController {
         ResponseBasic result = null;
         try {
             List<ResponseFeed> list = feedService.groupFeedList(groupPk);
-            if(list.size() == 0) throw new Exception("그룹 피드가 없습니다.");
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +71,6 @@ public class FeedController {
         ResponseBasic result = null;
         try {
             List<ResMyFeed> list = feedService.userFeedList(userPk);
-            if(list.size() == 0) throw new Exception("개인 피드가 없습니다.");
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();

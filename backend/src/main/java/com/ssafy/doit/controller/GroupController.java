@@ -42,7 +42,6 @@ public class GroupController {
         ResponseBasic result = null;
         try {
             Page<ResponseGroup> list = groupHashTagService.findAllByHashTag(tag, pageable);
-            if(list.getTotalElements() == 0) throw new Exception("해당 해시태그를 포함한 그룹이 없습니다.");
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
@@ -58,7 +57,6 @@ public class GroupController {
         ResponseBasic result = null;
         try {
             Page<ResponseGroup> list = groupHashTagService.findAllByCategory(category, pageable);
-            if(list.getTotalElements() == 0) throw new Exception("해당 카테고리와 관련된 그룹이 아직 생성되지 않았습니다.");
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
@@ -155,7 +153,6 @@ public class GroupController {
         ResponseBasic result = null;
         try {
             List<ResGroupList> list = groupUserService.findGroupByUserPk(userPk);
-            if(list.size() == 0) throw new Exception("가입한 그룹이 없습니다.");
             result = new ResponseBasic(true,"success",list);
         }catch (Exception e) {
             e.printStackTrace();
@@ -172,7 +169,6 @@ public class GroupController {
         try {
             Long userPk = userService.currentUser();
             List<ResGroupList> list = groupUserService.findGroupByUserPk(userPk);
-            if(list.size() == 0) throw new Exception("가입한 그룹이 없습니다.");
             result = new ResponseBasic(true,"success",list);
         }catch (Exception e) {
             e.printStackTrace();

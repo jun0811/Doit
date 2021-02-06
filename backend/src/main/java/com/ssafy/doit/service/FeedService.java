@@ -1,9 +1,6 @@
 package com.ssafy.doit.service;
 
-import com.ssafy.doit.model.Feed;
-import com.ssafy.doit.model.FeedUser;
-import com.ssafy.doit.model.Group;
-import com.ssafy.doit.model.GroupUser;
+import com.ssafy.doit.model.*;
 import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseFeed;
 import com.ssafy.doit.model.user.User;
@@ -13,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +30,8 @@ public class FeedService {
     private final UserRepository userRepository;
     @Autowired
     private final FeedUserRepository feedUserRepository;
+    @Autowired
+    private final CommitRepository commitRepository;
 
     // 그룹 내 피드 생성
     @Transactional
@@ -111,25 +111,31 @@ public class FeedService {
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(feed.getGroupPk()).get();
 
-        Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
-        if(!opt.isPresent())
-            throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가");
+        Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
+        if(!optGU.isPresent())
+            throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
 
         if(userPk == feed.getWriter())
             throw new Exception("자신이 올린 피드에는 인증할 수 없습니다.");
+
+        Optional<FeedUser> optFU = feedUserRepository.findByFeedAndUser(feed, user);
+        if(optFU.isPresent())
+            throw new Exception("이미 해당 피드에 인증을 하였습니다.");
 
         feed.setAuthCnt(feed.getAuthCnt() + 1);     // 인증피드 확인한 그룹원 수 +1
         feedUserRepository.save(FeedUser.builder()  // FeedUser 테이블에도
                 .feed(feed).user(user).build());    // 그 피드에 인증 확인한 그룹원 추가
 
-        Long groupPk = feed.getGroupPk().longValue();
         int cnt = feed.getAuthCnt();
-        int total = groupRepository.findById(groupPk).get().getTotalNum();
-
-        if (cnt >= Math.round(total * 0.7)) {       // 그룹 총 인원수의 70%(반올림) 이상이 인증확인하면
+        int total = groupRepository.findById(feed.getGroupPk()).get().getTotalNum();
+        if (cnt >= Math.round(total * 0.7)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
             feed.setAuthDate(LocalDateTime.now().toString());
-            // commit 테이블에 추가
+            // 마일리지 점수 제공하기 // 인증완료되었다는 알림보내기
+            commitRepository.save(Commit.builder()
+                    .date(LocalDate.now())
+                    .userPk(feed.getWriter())
+                    .groupPk(feed.getGroupPk()).build());
         }
     }
 }
