@@ -113,6 +113,8 @@ export default {
       .then((res)=>{
         if(res.data.status){
           alert('탈퇴 되었습니다.')
+        }else{
+          alert('탈퇴 실패!')
         }
       })
     }
