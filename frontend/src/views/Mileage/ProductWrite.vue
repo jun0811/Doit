@@ -2,7 +2,7 @@
 <div>
   <Header></Header>
     <v-container class="d-flex flex-column justify-center align-center">
-        <v-row>
+        <v-row class="title-wrapper">
           <h1>물품 등록</h1>
         </v-row>
         <hr style="width:570px;" class="my-4">
@@ -40,7 +40,7 @@
                 :label="mileage"
                 solo
               ></v-text-field>
-              <span>마일리지</span>
+              <span class="pl-2">마일리지</span>
             </v-col>
           </v-row>
           <v-row class="my-2">
@@ -110,6 +110,10 @@ export default {
 </script>
 
 <style scoped>
+
+.title-wrapper {
+  width:550px;
+}
 
 .content-wrapper {
   width:560px;
