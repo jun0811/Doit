@@ -28,6 +28,7 @@
 export default {
   data() {
     return {
+      isHover:false,
       groups : [
         {
           groupname:'뚜잇!다이어트',
@@ -88,13 +89,16 @@ export default {
 
 .rank-wrapper {
   border-radius: 50%;
+  position: relative;
+  border: 3px solid transparent;
 }
-
 
 .rank-image {
   width: 100px;
   height: 100px;
   border-radius: 50%;
+  z-index : 1;
+  position:relative;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
@@ -108,7 +112,7 @@ export default {
 /* --- */
 /* $randomNumber : random(5); */
 
-.box {
+.box:hover {
   position: relative;
   border: 5px solid orange;
   display: block;
@@ -150,13 +154,42 @@ export default {
     border-color:#abf25f;
   }
   84% {
-    border-color:#5ff281,;
+    border-color:#5ff281;
   }
   100% {
     border-color:#5ff2f0;
   }
 }
 
+.spin {
+  width: 100px;
+  height: 100px;
+  position:absolute;
+  top: 0;
+  left:0;
+  z-index:10;
+  border: transparent;
+}
+
+
+.spin:hover {
+  border-top-color: orange;
+  border-right-color: orange;
+  border-bottom-color: orange;
+  transition-duration: 5s;
+  transition: border-top-color 0.15s linear, 
+              border-right-color 0.15s linear 0.1s, 
+              border-bottom-color 0.15s linear 0.2s;
+  border-top: 5px solid orange;
+  border-left-width: 5px;
+  border-right-width: 5px;
+  transform: rotate(8000deg);
+  transition: transform 20s linear 0s, border-left-width 3s linear 0.35s;
+}
+
+.scale:hover {
+  transform : scale(1.1);
+}
 
 
 </style>
