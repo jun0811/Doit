@@ -2,7 +2,6 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.Product;
 import com.ssafy.doit.model.response.ResponseBasic;
-import com.ssafy.doit.model.response.ResponseProduct;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -39,7 +37,7 @@ public class ProductController {
 
             if(groupCount < 2) throw new Exception("그룹 수 부족");
 
-            product.setUserPk(userPk);
+            product.setUser(currentUser);
             productRepository.save(product);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
@@ -58,7 +56,7 @@ public class ProductController {
             long currentUser = userService.currentUser();
             Product origin = productRepository.findById(id).get();
 
-            if(origin.getUserPk() != currentUser) throw new Exception("유저 불일치");
+            if(origin.getUser().getId() != currentUser) throw new Exception("유저 불일치");
 
             origin.setTitle(product.getTitle());
             origin.setContent(product.getContent());
@@ -82,7 +80,7 @@ public class ProductController {
             long currentUser = userService.currentUser();
             Product origin = productRepository.findById(id).get();
 
-            if(origin.getUserPk() != currentUser) throw new Exception("유저 불일치");
+            if(origin.getUser().getId() != currentUser) throw new Exception("유저 불일치");
 
             productRepository.delete(origin);
             result = new ResponseBasic(true, "success", null);
@@ -100,7 +98,7 @@ public class ProductController {
         ResponseBasic result = null;
 
         try{
-            ResponseProduct product = productRepository.getById(id);
+            Product product = productRepository.findById(id).get();
             result = new ResponseBasic(true, "success", product);
         }
         catch (Exception e){
@@ -116,7 +114,7 @@ public class ProductController {
     public Object getAll(){
         ResponseBasic result = null;
         try{
-            List<ResponseProduct> products = productRepository.findAllBy();
+            List<Product> products = productRepository.findAll();
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
@@ -132,7 +130,7 @@ public class ProductController {
     public Object searchProduct(@RequestParam String title){
         ResponseBasic result = null;
         try{
-            List<ResponseProduct> products = productRepository.findByTitleContaining(title);
+            List<Product> products = productRepository.findAllByTitleContaining(title);
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
@@ -148,7 +146,7 @@ public class ProductController {
     public Object searchUser(@RequestParam String nickname){
         ResponseBasic result = null;
         try{
-            List<ResponseProduct> products = productRepository.findAllByUserNicknameContaining(nickname);
+            List<Product> products = productRepository.findAllByUserNicknameContaining(nickname);
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
@@ -164,7 +162,7 @@ public class ProductController {
     public Object searchCategory(@RequestParam String category){
         ResponseBasic result = null;
         try{
-            List<ResponseProduct> products = productRepository.findAllByCategory(category);
+            List<Product> products = productRepository.findAllByCategory(category);
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
