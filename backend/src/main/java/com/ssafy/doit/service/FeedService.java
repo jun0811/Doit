@@ -32,6 +32,8 @@ public class FeedService {
     private final UserRepository userRepository;
     @Autowired
     private final FeedUserRepository feedUserRepository;
+    @Autowired
+    private final CommitRepository commitRepository;
 
     // 그룹 내 피드 생성
     @Transactional
