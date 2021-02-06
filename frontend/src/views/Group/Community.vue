@@ -7,10 +7,12 @@
       <v-container>
         <v-row class="d-flex justify-center">
           <v-col cols="4">
-            <h3># Group 1</h3>
-            <p class="ma-0"> 멤버 : 6/10</p>
-            <p class="ma-0"> 2020.01.29 ~ 2021.01.29</p>
-            <p class="ma-0"> #홈트 #운동 #의지</p>
+            <h3>{{user_info.name}}</h3>
+            <p class="ma-0"> 멤버 : {{user_num}}/{{user_info.maxNum}}</p>
+            <p class="ma-0"> {{user_info.startDate}} ~ {{user_info.endDate}}</p>
+            <div class="d-flex justify-start">
+              <p class="ma-0" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  </p>
+            </div>
           </v-col>
           <v-col cols="4" sm-cols="2" class="d-flex align-center justify-space-around">
             <div class="group-image">
@@ -22,6 +24,8 @@
     <hr>
     <!-- 그룹 소개 끝 -->
     <!-- 메인 content -->
+    <v-btn @click="joinGroup">회원가입</v-btn>
+    <v-btn @click="withdrawGroup">탈퇴하기</v-btn>
     <v-container class="pa-3 px-sm-16 py-sm-6 px-0" >
       <v-row class="d-flex justify-center">
         <v-col  cols="9" class="d-flex justify-space-around mx-16">
@@ -33,7 +37,7 @@
             <v-btn text class="text-h5" v-bind:class="{selected: users}" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn>
           </div>
           <div>
-            <v-btn text class="text-h6"> 글작성 </v-btn>
+            <v-btn text class="text-h6" @click="feedWrite"> 글작성 </v-btn>
           </div>
         </v-col>
         <v-col  cols="9" class="d-flex justify-space-around mx-16">
@@ -68,17 +72,21 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import GroupMember from "@/components/group/GroupMember";
-
+import http from "../../http-common"
+// 해야할일 현재 날짜 받아와서 현재 달, 날짜 값으로 feed 보여주기 
 export default {
   components: { Header, Footer, GroupMember },
   props: {
-    groupPk: {type:Number}
+    groupPk: {type:String}
   },
   data() {
     return {
+      user_info: {},
+      user_num: 0,
       feed: true,
-      users: false
-      }
+      users: false,
+      joined : false, // 현재 유저 가입 여부 확인
+    }
   },
   methods: {
     FeedList(){
@@ -88,10 +96,34 @@ export default {
     UserList(){
       this.feed = false
       this.users = true
+    },
+    feedWrite(){
+      this.$router.push({name:"FeedWrite",params:{groupPk:this.groupPk}})
+    },
+    joinGroup(){
+    http.get(`group/joinGroup?groupPk=${this.groupPk}`)
+    .then((res)=>{
+      if(res.data.status){
+        alert('그룹에 가입하였습니다.🐱‍🚀')
+      }
+      })
+    },
+    withdrawGroup(){
+      http.delete(`group/withdrawGroupUser?groupPk=${this.groupPk}`)
+      .then((res)=>{
+        if(res.data.status){
+          alert('탈퇴 되었습니다.')
+        }
+      })
     }
   },
   created(){
-    console.log(this.groupPk)
+    http.get(`group/detailGroup?groupPk=${this.groupPk}`)
+    .then((res)=>{
+      this.user_info= res.data.object
+      console.log(this.user_info)
+      this.user_num = this.user_info.users.length
+    })
   }
 }
 </script>

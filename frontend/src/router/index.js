@@ -93,9 +93,10 @@ const routes = [
     props: true,
   },
   {
-    path: "/group/feedwrite",
+    path: "/group/feedwrite/:groupPk",
     name: "FeedWrite",
     component: FeedWrite,
+    props: true,
   },
   {
     path: "/group/feedupdate",
