@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class ResGroupInfo {
+public class ResGroupDetail {
     private Long groupPk;
     private String name;
     private String content;
@@ -26,7 +26,7 @@ public class ResGroupInfo {
     private List<String> tags;
     private List<ResponseUser> users;
 
-    public ResGroupInfo(Group group){
+    public ResGroupDetail(Group group){
         this.groupPk = group.getGroupPk();
         this.name = group.getName();
         this.content = group.getContent();

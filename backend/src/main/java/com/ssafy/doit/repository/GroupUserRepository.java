@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface GroupUserRepository extends JpaRepository<GroupUser, Long> {
     Optional<GroupUser> findByGroupAndUser(Group group, User user);
+    GroupUser findTopByGroup(Group group);
     List<GroupUser> findByUser(User user);
 }

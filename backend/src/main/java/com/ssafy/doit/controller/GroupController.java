@@ -4,7 +4,7 @@ import com.ssafy.doit.model.request.RequestGroup;
 import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
-import com.ssafy.doit.model.response.ResGroupInfo;
+import com.ssafy.doit.model.response.ResGroupDetail;
 import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
@@ -71,7 +71,7 @@ public class GroupController {
     public Object detailGroup(@RequestParam Long groupPk){
         ResponseBasic result = null;
         try {
-            ResGroupInfo group = groupHashTagService.findByGroupPk(groupPk);
+            ResGroupDetail group = groupHashTagService.findByGroupPk(groupPk);
             if(group == null) throw new Exception("그룹을 찾을 수 없습니다.");
             result = new ResponseBasic(true,"success",group);
         }catch (Exception e) {
