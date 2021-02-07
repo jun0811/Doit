@@ -75,9 +75,6 @@ export default {
       date: null,
       trip: {
         name: '',
-        location: null,
-        start: null,
-        end: null,
       },
       groups: [],
       pageCount:'',

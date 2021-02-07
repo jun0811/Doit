@@ -5,23 +5,32 @@
 
     <hr>
       <v-container>
-        <v-row class="d-flex justify-center">
-          <v-col cols="4">
-            <h3># Group 1</h3>
-            <p class="ma-0"> 멤버 : 6/10</p>
-            <p class="ma-0"> 2020.01.29 ~ 2021.01.29</p>
-            <p class="ma-0"> #홈트 #운동 #의지</p>
-          </v-col>
-          <v-col cols="4" sm-cols="2" class="d-flex align-center justify-space-around">
+        <v-row class="d-flex justify-start">
+       
+          <v-col cols="3" sm-cols="2" class="d-flex align-center  justify-end ml-10">
             <div class="group-image">
                 <img src="" alt="">
             </div>
+          </v-col>
+          <v-col cols="5">
+            <h3>{{user_info.name}}</h3>
+            <p class="ma-0"> 멤버 : {{user_num}}/{{user_info.maxNum}}</p>
+            <p class="ma-0"> {{user_info.startDate}} ~ {{user_info.endDate}}</p>
+            <div class="d-flex justify-start">
+              <p class="ma-0" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  </p>
+            </div>
+          </v-col>
+          <v-col cols="2" class="d-flex flex-column justify-end">
+            <v-btn class="group" outlined width="75" v-if="!joined" @click="joinGroup">가입하기</v-btn>
+            <v-btn class="group" outlined width="75" v-else @click="withdrawGroup">탈퇴하기</v-btn>
           </v-col>
         </v-row>
       </v-container>
     <hr>
     <!-- 그룹 소개 끝 -->
     <!-- 메인 content -->
+
+
     <v-container class="pa-3 px-sm-16 py-sm-6 px-0" >
       <v-row class="d-flex justify-center">
         <v-col  cols="9" class="d-flex justify-space-around mx-16">
@@ -33,7 +42,7 @@
             <v-btn text class="text-h5" v-bind:class="{selected: users}" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn>
           </div>
           <div>
-            <v-btn text class="text-h6"> 글작성 </v-btn>
+            <v-btn text class="text-h6" @click="feedWrite"> 글작성 </v-btn>
           </div>
         </v-col>
         <v-col  cols="9" class="d-flex justify-space-around mx-16">
@@ -41,7 +50,7 @@
             13 14 15 16 17 18 19 20 21 22 23 24
             25 26 27 28 29 30 </span>
         </v-col>
-        <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16 ">
+        <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16">
           <div class="temp d-flex align-center flex-column">
             <p>cards</p>
             <p>cards</p>
@@ -68,17 +77,21 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import GroupMember from "@/components/group/GroupMember";
-
+import http from "../../http-common"
+// 해야할일 현재 날짜 받아와서 현재 달, 날짜 값으로 feed 보여주기 
 export default {
   components: { Header, Footer, GroupMember },
   props: {
-    groupPk: {type:Number}
+    groupPk: {type:String}
   },
   data() {
     return {
+      user_info: {},
+      user_num: 0,
       feed: true,
-      users: false
-      }
+      users: false,
+      joined : false, // 현재 유저 가입 여부 확인
+    }
   },
   methods: {
     FeedList(){
@@ -88,10 +101,46 @@ export default {
     UserList(){
       this.feed = false
       this.users = true
+    },
+    feedWrite(){
+      this.$router.push({name:"FeedWrite",params:{groupPk:this.groupPk}})
+    },
+    joinGroup(){
+    http.get(`group/joinGroup?groupPk=${this.groupPk}`)
+    .then((res)=>{
+      if(res.data.status){
+        alert('그룹에 가입하였습니다.🐱‍🚀')
+        this.$router.go()
+      }
+      })
+    },
+    withdrawGroup(){
+      http.delete(`group/withdrawGroupUser?groupPk=${this.groupPk}`)
+      .then((res)=>{
+        if(res.data.status){
+          alert('탈퇴 되었습니다.')
+          this.$router.push("/")
+        }else{
+          alert('탈퇴 실패!')
+        }
+      })
     }
   },
   created(){
-    console.log(this.groupPk)
+    http.get(`group/detailGroup?groupPk=${this.groupPk}`)
+    .then((res)=>{
+      this.user_info= res.data.object
+      this.user_num = this.user_info.users.length
+    }),
+    http.get('group/currentUserGroup')
+    .then((res)=>{
+      this.joined = res.data.object.some((group)=>{
+        if(this.groupPk == group.groupPk){
+          return true
+        }
+      })
+      // console.log(this.joined)
+    })
   }
 }
 </script>
@@ -113,6 +162,10 @@ export default {
   }
   .selected{
     color:#F9802D
+  }
+  .group{
+    border: 1px solid #F9802D;
+    color: #F9802D
   }
 
 </style>

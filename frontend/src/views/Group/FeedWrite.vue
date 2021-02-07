@@ -4,8 +4,8 @@
 
         <!-- 그룹 간략 소개 시작 -->
 
-        <hr>
-        <v-container>
+  
+        <!-- <v-container>
             <v-row class="d-flex justify-center">
             <v-col cols="4">
                 <h3># Group 1</h3>
@@ -19,8 +19,8 @@
                 </div>
             </v-col>
             </v-row>
-        </v-container>
-        <hr>
+        </v-container> -->
+
         <!-- 그룹 소개 끝 -->
 
         <v-container class="pa-3 pa-sm-16">
@@ -41,7 +41,7 @@
                         </v-col>
                         <v-col cols="9" sm="10" class="pa-0 my-auto">
                             <div>
-                                {{name}}
+                                {{this.$store.getters.getName}}
                             </div>
                         </v-col>
                     </v-row>
@@ -93,33 +93,29 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { createFeed } from "@/api/feed/index.js"
+// import http from "../../http-common";
 
 export default {
     name :"FeedWrite",
+    props:{
+        groupPk: String
+    },
     components: {
         Header,
         Footer
     },
     data() {
         return {
-            name:'Nickname',
             selected : '',
             content :'',
             items : [
                 '인증',
                 '정보 공유'
             ], 
-            authCheck: false,
-            authCnt: 0,
-            authDate: '',
-            createDate: new Date(),
             feedPk:'',
             feedType: true,
-            groupPk: '5', // 변경필요!
             media: "",
             status: true,
-            updateDate: new Date(),
-            userPk: '',
         }
     },
     watch: {
@@ -135,24 +131,18 @@ export default {
         write() {
             createFeed(
                 {
-                    "authCheck": this.authCheck,
-                    "authCnt": this.authCnt,
-                    "authDate": this.authDate,
                     "content": this.content,
-                    "createDate": this.createDate,
-                    "feedPk": this.feedPk,
                     "feedType": this.feedType,
                     "groupPk": this.groupPk,
-                    "media": this.media,
-                    "status": this.status,
-                    "updateDate": this.updateDate,
-                    "userPk": this.$store.state.userpk,
+                    // "media": this.media,
+                    // "status": this.status,
                 },
                 (res) =>{
-                    if (res.status){
+                    if (res.data.status){
                     alert("피드가 생성되었습니다.")
                     console.log(res)
-                    this.$router.push('/') // 어디로 보낼지 정하고 변경!
+                    this.$router.go(-1)
+
                     }
                 },
                 (err) =>{

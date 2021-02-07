@@ -273,7 +273,6 @@ export default {
           http.get('/group/currentUserGroup')
             .then((res)=>{
             this.items[0].items = res.data.object;
-            console.log(this.items.items)
         })
       }
     },
