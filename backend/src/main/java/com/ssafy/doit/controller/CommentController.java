@@ -39,8 +39,8 @@ public class CommentController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    // 그룹 내 피드 리스트
-    @ApiOperation(value = "인증 댓글 리스트")
+    // 해당 피드 댓글 리스트
+    @ApiOperation(value = "해당 피드 댓글 리스트")
     @GetMapping("/commentList")
     public Object commentList(@RequestParam Long feedPk){
         ResponseBasic result = null;
