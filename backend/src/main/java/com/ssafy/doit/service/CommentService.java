@@ -34,5 +34,15 @@ public class CommentService {
                     .createDate(LocalDateTime.now()).build());
         }
     }
+    @Transactional
+    public void updateComment(Comment commentReq) throws Exception {
+        Optional<Comment> comment = commentRepository.findById(commentReq.getCommentPk());
 
+            comment.ifPresent(selectComment -> {
+                selectComment.setContent(commentReq.getContent());
+                selectComment.setUpdateDate(LocalDateTime.now().toString());
+                commentRepository.save(selectComment);
+            });
+
+    }
 }

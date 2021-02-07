@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/comments")
@@ -22,12 +24,29 @@ public class CommentController {
     private UserService userService;
 
     @ApiOperation(value = "댓글 등록")
-    @PostMapping("/comment")
+    @PostMapping("/addComment")
     public Object addComment(@RequestParam Long feedPk,@RequestBody Comment comment){
         ResponseBasic result = null;
         try{
             Long userPk = userService.currentUser();
             commentService.addComment(userPk,feedPk,comment);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @ApiOperation(value = "댓글 수정")
+    @PutMapping("/updateComment")
+    public Object updateComment(@RequestBody Comment comment){
+        ResponseBasic result = null;
+        try{
+            Long userPk = userService.currentUser();
+            System.out.println(userPk+ " " + comment.getUserPk());
+            if(userPk == comment.getUserPk()) {
+                commentService.updateComment(comment);
+            }else throw new Exception("댓글 작성자가 아닙니다.");
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e) {
             e.printStackTrace();
