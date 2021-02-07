@@ -4,6 +4,7 @@ const state = {
   accessToken: null,
   name: null,
   email: null,
+  userpk: null,
 };
 
 const getters = {
@@ -36,19 +37,23 @@ const mutations = {
     state.accessToken = headers.accesstoken;
     state.name = data.object.nickname;
     state.email = data.object.email;
+    state.userpk = data.object.id;
 
     sessionStorage.accessToken = headers.accesstoken;
     sessionStorage.name = data.object.nickname;
     sessionStorage.email = data.object.email;
+    sessionStorage.userpk = data.object.id;
   },
   LOGOUT(state) {
     state.accessToken = null;
     state.name = null;
     state.email = null;
+    state.userpk = null;
 
     sessionStorage.removeItem("accessToken");
     sessionStorage.removeItem("name");
     sessionStorage.removeItem("email");
+    sessionStorage.removeItem("userpk");
   },
 };
 

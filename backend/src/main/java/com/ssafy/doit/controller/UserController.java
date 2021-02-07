@@ -204,24 +204,21 @@ public class UserController {
     @ApiOperation(value = "회원 탈퇴")
     @PutMapping("/deleteUser")
     public Object deleteUser() {
-        ResponseBasic result = new ResponseBasic();
+        ResponseBasic result = null;
         try {
             Long userPk = userService.currentUser();
             groupUserService.deleteGroupByUser(userPk);
-            result.status = true;
-            result.data = "탈퇴 success";
+            result = new ResponseBasic(true, "success", null);
         }
         catch (Exception e){
             e.printStackTrace();
-            result.status = false;
-            result.data = "error";
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     //    피드 리스트 공개 (feed_open)
     //    그룹 리스트 공개 (group_open)
-    //    그룹 공개 - 가입된 그룹에 해당되는 사용자 필요
     //    비공개 - 나만보기
     @ApiOperation(value = "회원 피드,그룹 리스트 공개/비공개")
     @PutMapping("/setOnAndOff")

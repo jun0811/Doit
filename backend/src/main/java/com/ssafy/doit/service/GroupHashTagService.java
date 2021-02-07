@@ -4,12 +4,14 @@ import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupHashTag;
 import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.request.RequestGroup;
-import com.ssafy.doit.model.response.ResGroupInfo;
+import com.ssafy.doit.model.request.RequestPage;
+import com.ssafy.doit.model.response.ResGroupDetail;
 import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.repository.*;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,31 +33,27 @@ public class GroupHashTagService {
 
     // 특정 해시태그 포함한 그룹 찾기
     @Transactional
-    public List<ResponseGroup> findAllByHashTag(String hashtag){
-        List<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true");
-        List<ResponseGroup> resList = new ArrayList<>();
-        for(Group group : groupList){
-            resList.add(new ResponseGroup(group));
-        }
+    public Page<ResponseGroup> findAllByHashTag(String hashtag, RequestPage pageable){
+        Page<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true", pageable.of());
+        Page<ResponseGroup> resList = groupList.map(
+                group -> new ResponseGroup(group));
         return resList;
     }
 
     // 카테고리에 따른 그룹 분류 리스트
     @Transactional
-    public List<ResponseGroup> findAllByCategory(String category){
-        List<Group> groupList = groupRepository.findAllByCategoryAndStatus(category, "true");
-        List<ResponseGroup> resList = new ArrayList<>();
-        for(Group group : groupList){
-            resList.add(new ResponseGroup(group));
-        }
+    public Page<ResponseGroup> findAllByCategory(String category, RequestPage pageable){
+        Page<Group> groupList = groupRepository.findAllByCategoryAndStatus(category,"true",pageable.of());
+        Page<ResponseGroup> resList = groupList.map(
+                group -> new ResponseGroup(group));
         return resList;
     }
 
     // 선택한 그룹 정보 제공
     @Transactional
-    public ResGroupInfo findByGroupPk(Long groupPk) {
+    public ResGroupDetail findByGroupPk(Long groupPk) {
         Group group = groupRepository.findById(groupPk).get();
-        return (new ResGroupInfo(group));
+        return (new ResGroupDetail(group));
     }
 
     // 그룹 생성
@@ -67,7 +65,7 @@ public class GroupHashTagService {
                 .content(groupReq.getContent())
                 .category(groupReq.getCategory())
                 .maxNum(groupReq.getMaxNum())
-                .startDate(LocalDate.now())
+                .createDate(LocalDate.now())
                 .endDate(groupReq.getEndDate())
                 .leader(userPk)
                 .build());
@@ -100,17 +98,15 @@ public class GroupHashTagService {
 
     // 그룹 해시태그 추가
     @Transactional
-    public void updateHashTag(Long userPk, Long groupPk, String hashtag) throws Exception {
+    public void updateHashTag(Long userPk, Long groupPk, String tag) throws Exception {
         Optional<Group> optGroup = groupRepository.findById(groupPk);
         if(userPk == optGroup.get().getLeader()) {
-            Optional<HashTag> hashTag =  hashTagRepository.findByName(hashtag);
+            Optional<HashTag> hashTag =  hashTagRepository.findByName(tag);
             if(hashTag.isPresent()){
                 Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag.get());
                 if(gh.isPresent()) throw new Exception("해시태그가 이미 존재합니다."); // 이미 해시태그 존재
-            }else {
-                Group group = groupRepository.findById(groupPk).get();
-                findOrCreateHashTag(group, hashtag);
             }
+            findOrCreateHashTag(optGroup.get(), tag);
         } else throw new Exception("그룹장이 아닙니다."); // 로그인한 유저가 그룹장이 아니면 수정불가
     }
 

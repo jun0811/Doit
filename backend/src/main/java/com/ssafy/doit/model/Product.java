@@ -21,14 +21,12 @@ public class Product {
     @Column(name = "product_pk")
     private Long id;
 
-    private Long userPk;
     private String category;
     private String title;
     private String content;
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "userPk", insertable = false, updatable = false)
-    @JsonIgnore
+    @JoinColumn(name = "user_pk", insertable = false, updatable = false)
     private User user;
 }

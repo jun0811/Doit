@@ -7,7 +7,7 @@
         cols="4"
         v-for="(item, idx) in paginatedData"
         :key="idx"
-        class="d-flex justify-center px-6 py-6"
+        class="d-flex justify-center px-4 py-4"
       >
           <v-card height="100%" width="100%" router-link :to="{name: 'ProductDetail', params: {product_id: item.id}}">
             <v-img
