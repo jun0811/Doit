@@ -10,20 +10,20 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name= "`commit`")
-public class Commit {
+@Table(name= "`commit_group`")
+public class CommitGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commitPk;
+    private Long id;
 
     private LocalDate date;
-    private Long userPk;
     private Long groupPk;
+    private int cnt;
 
     @Builder
-    public Commit(LocalDate date, Long userPk, Long groupPk){
+    public CommitGroup(LocalDate date, Long groupPk, int cnt){
         this.date = date;
-        this.userPk = userPk;
         this.groupPk = groupPk;
+        this.cnt = cnt;
     }
 }
