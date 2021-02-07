@@ -3,10 +3,12 @@ package com.ssafy.doit.service;
 import com.ssafy.doit.model.*;
 import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseFeed;
+import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -37,13 +39,15 @@ public class FeedService {
 
     // 그룹 내 피드 생성
     @Transactional
-    public void createFeed(Long userPk, Feed feedReq) throws Exception {
+    public int createFeed(Long userPk, Feed feedReq) throws Exception {
         Group group = groupRepository.findById(feedReq.getGroupPk()).get();
         User user = userRepository.findById(userPk).get();
 
-        Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group,user);
-        if(!opt.isPresent())
-            throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가");
+        Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group,user);
+        if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
+
+//        Optional<Feed> optFeed = feedRepository.findByWriterAndCreateDate(userPk, LocalDate.now().toString());
+//        if(optFeed.isPresent()) return 0;
 
         feedRepository.save(Feed.builder()
             //.media(feedReq.getMedia())
@@ -52,14 +56,15 @@ public class FeedService {
             .createDate(LocalDateTime.now())
             .groupPk(feedReq.getGroupPk())
             .writer(userPk).build());
+        return 1;
     }
 
     // 그룹 내 피드 리스트
     @Transactional
-    public List<ResponseFeed> groupFeedList(Long groupPk){
-        List<Feed> list = feedRepository.findAllByGroupPkAndStatus(groupPk, "true");
+    public List<ResponseFeed> groupFeedList(Long groupPk, String date){
+        List<Feed> feedList = feedRepository.findAllByGroupPkAndCreateDateAndStatus(groupPk, date, "true");
         List<ResponseFeed> resList = new ArrayList<>();
-        for(Feed feed : list){
+        for(Feed feed : feedList){
             String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
             resList.add(new ResponseFeed(feed, nickname));
         }
@@ -68,8 +73,8 @@ public class FeedService {
 
     // 개인 피드 리스트
     @Transactional
-    public List<ResMyFeed> userFeedList(Long userPk){
-        List<Feed> list = feedRepository.findAllByWriterAndStatus(userPk, "true");
+    public List<ResMyFeed> userFeedList(Long userPk, String date){
+        List<Feed> list = feedRepository.findAllByWriterAndCreateDateAndStatus(userPk, date, "true");
         List<ResMyFeed> resList = new ArrayList<>();
         for(Feed feed : list){
             String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
@@ -135,8 +140,30 @@ public class FeedService {
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
             feed.setAuthDate(LocalDateTime.now().toString());
             // 마일리지 점수 제공하기 // 인증완료되었다는 알림보내기
+
             Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(userPk, LocalDate.now());
+            if(optCU.isPresent()){
+                CommitUser cu = optCU.get();
+                cu.setCnt(cu.getCnt() + 1);
+                commitUserRepository.save(cu);
+            }else{
+                commitUserRepository.save(CommitUser.builder()
+                        .date(LocalDate.now())
+                        .userPk(feed.getWriter())
+                        .cnt(1).build());
+            }
+
             Optional<CommitGroup> optCG = commitGroupRepository.findByGroupPkAndDate(groupPk, LocalDate.now());
+            if(optCG.isPresent()){
+                CommitGroup cg = optCG.get();
+                cg.setCnt(cg.getCnt() + 1);
+                commitGroupRepository.save(cg);
+            }else{
+                commitGroupRepository.save(CommitGroup.builder()
+                        .date(LocalDate.now())
+                        .groupPk(groupPk)
+                        .cnt(1).build());
+            }
         }
     }
 }
