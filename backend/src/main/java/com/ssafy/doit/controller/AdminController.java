@@ -4,6 +4,7 @@ import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.repository.*;
 import com.ssafy.doit.service.AdminService;
 import com.ssafy.doit.service.GroupUserService;
@@ -57,8 +58,9 @@ public class AdminController {
     public Object beDeletedUser(@RequestParam Long userPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Long adminPk = userService.currentUser();
-            if(adminPk == 2) {
+            Long loginPk = userService.currentUser();
+            User user = userRepository.findById(loginPk).get();
+            if(user.getUserRole().equals(UserRole.ADMIN)) {
                 Optional<User> userInfo = userRepository.findById(userPk);
                 if (userInfo.isPresent()) {
                     groupUserService.deleteGroupByUser(userPk);
@@ -98,8 +100,9 @@ public class AdminController {
     public Object beDeletedGroup(@RequestParam Long groupPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Long adminPk = userService.currentUser();
-            if(adminPk == 2) {
+            Long loginPk = userService.currentUser();
+            User user = userRepository.findById(loginPk).get();
+            if(user.getUserRole().equals(UserRole.ADMIN)) {
               adminService.deleteAllByGroup(groupPk);
             }else throw new Exception("관리자가 아닙니다.");
             result.status = true;
@@ -119,8 +122,9 @@ public class AdminController {
     public Object beDeletedFeed(@RequestParam Long feedPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Long adminPk = userService.currentUser();
-            if(adminPk == 2) {
+            Long loginPk = userService.currentUser();
+            User user = userRepository.findById(loginPk).get();
+            if(user.getUserRole().equals(UserRole.ADMIN)) {
                 adminService.deleteFeed(feedPk);
             }else throw new Exception("관리자가 아닙니다.");
             result.status = true;
