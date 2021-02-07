@@ -5,8 +5,14 @@
 
     <hr>
       <v-container>
-        <v-row class="d-flex justify-center">
-          <v-col cols="4">
+        <v-row class="d-flex justify-start">
+       
+          <v-col cols="3" sm-cols="2" class="d-flex align-center  justify-end ml-10">
+            <div class="group-image">
+                <img src="" alt="">
+            </div>
+          </v-col>
+          <v-col cols="5">
             <h3>{{user_info.name}}</h3>
             <p class="ma-0"> 멤버 : {{user_num}}/{{user_info.maxNum}}</p>
             <p class="ma-0"> {{user_info.startDate}} ~ {{user_info.endDate}}</p>
@@ -14,18 +20,17 @@
               <p class="ma-0" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  </p>
             </div>
           </v-col>
-          <v-col cols="4" sm-cols="2" class="d-flex align-center justify-space-around">
-            <div class="group-image">
-                <img src="" alt="">
-            </div>
+          <v-col cols="2" class="d-flex flex-column justify-end">
+            <v-btn class="group" outlined width="75" v-if="!joined" @click="joinGroup">가입하기</v-btn>
+            <v-btn class="group" outlined width="75" v-else @click="withdrawGroup">탈퇴하기</v-btn>
           </v-col>
         </v-row>
       </v-container>
     <hr>
     <!-- 그룹 소개 끝 -->
     <!-- 메인 content -->
-    <v-btn @click="joinGroup">회원가입</v-btn>
-    <v-btn @click="withdrawGroup">탈퇴하기</v-btn>
+
+
     <v-container class="pa-3 px-sm-16 py-sm-6 px-0" >
       <v-row class="d-flex justify-center">
         <v-col  cols="9" class="d-flex justify-space-around mx-16">
@@ -45,7 +50,7 @@
             13 14 15 16 17 18 19 20 21 22 23 24
             25 26 27 28 29 30 </span>
         </v-col>
-        <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16 ">
+        <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16">
           <div class="temp d-flex align-center flex-column">
             <p>cards</p>
             <p>cards</p>
@@ -105,6 +110,7 @@ export default {
     .then((res)=>{
       if(res.data.status){
         alert('그룹에 가입하였습니다.🐱‍🚀')
+        this.$router.go()
       }
       })
     },
@@ -113,6 +119,7 @@ export default {
       .then((res)=>{
         if(res.data.status){
           alert('탈퇴 되었습니다.')
+          this.$router.push("/")
         }else{
           alert('탈퇴 실패!')
         }
@@ -123,8 +130,16 @@ export default {
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
       this.user_info= res.data.object
-      console.log(this.user_info)
       this.user_num = this.user_info.users.length
+    }),
+    http.get('group/currentUserGroup')
+    .then((res)=>{
+      this.joined = res.data.object.some((group)=>{
+        if(this.groupPk == group.groupPk){
+          return true
+        }
+      })
+      // console.log(this.joined)
     })
   }
 }
@@ -147,6 +162,10 @@ export default {
   }
   .selected{
     color:#F9802D
+  }
+  .group{
+    border: 1px solid #F9802D;
+    color: #F9802D
   }
 
 </style>

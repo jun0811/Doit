@@ -26,10 +26,6 @@
           </v-carousel-item>
         </v-carousel>
     </v-card>
-    <div class="col-12 d-flex align-center justify-center">
-      <span class="mx-12"><router-link to="/">가입하기</router-link></span>
-      <span class="mx-12"><router-link to="/">탈퇴하기</router-link></span>
-    </div>
   </div>
 </template>
 

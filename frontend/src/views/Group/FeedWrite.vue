@@ -4,8 +4,8 @@
 
         <!-- 그룹 간략 소개 시작 -->
 
-        <hr>
-        <v-container>
+  
+        <!-- <v-container>
             <v-row class="d-flex justify-center">
             <v-col cols="4">
                 <h3># Group 1</h3>
@@ -19,8 +19,8 @@
                 </div>
             </v-col>
             </v-row>
-        </v-container>
-        <hr>
+        </v-container> -->
+
         <!-- 그룹 소개 끝 -->
 
         <v-container class="pa-3 pa-sm-16">
@@ -141,7 +141,7 @@ export default {
                     if (res.data.status){
                     alert("피드가 생성되었습니다.")
                     console.log(res)
-                    this.$router.push({name:"Community",params:{groupPk:this.group.groupPk}})
+                    this.$router.go(-1)
 
                     }
                 },
