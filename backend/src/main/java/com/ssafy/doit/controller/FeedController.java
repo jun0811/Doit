@@ -57,7 +57,8 @@ public class FeedController {
     public Object groupFeedList(@RequestParam Long groupPk, @RequestParam String date){
         ResponseBasic result = null;
         try {
-            List<ResponseFeed> list = feedService.groupFeedList(groupPk, date);
+            Long userPk = userService.currentUser();
+            List<ResponseFeed> list = feedService.groupFeedList(userPk, groupPk, date);
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();

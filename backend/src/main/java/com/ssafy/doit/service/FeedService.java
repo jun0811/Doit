@@ -61,7 +61,13 @@ public class FeedService {
 
     // 그룹 내 피드 리스트
     @Transactional
-    public List<ResponseFeed> groupFeedList(Long groupPk, String date){
+    public List<ResponseFeed> groupFeedList(Long userPk, Long groupPk, String date) throws Exception {
+        Group group = groupRepository.findById(groupPk).get();
+        User user = userRepository.findById(userPk).get();
+
+        Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group,user);
+        if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
+        
         List<Feed> feedList = feedRepository.findAllByGroupPkAndCreateDateAndStatus(groupPk, date, "true");
         List<ResponseFeed> resList = new ArrayList<>();
         for(Feed feed : feedList){
