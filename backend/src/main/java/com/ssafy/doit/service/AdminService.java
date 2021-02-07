@@ -25,6 +25,13 @@ public class AdminService {
     private FeedRepository feedRepository;
 
     public void deleteAllByGroup(Long groupPk) {
+        Optional<Group> groupInfo = groupRepository.findById(groupPk);
+        if (groupInfo.isPresent()) {
+            groupInfo.ifPresent(selectUser -> {
+                selectUser.setStatus("false");
+                groupRepository.save(selectUser);
+            });
+        }
         Group group = groupRepository.findById(groupPk).get();
         List<GroupHashTag> list = groupHashTagRepository.findAllByGroup(group);
         for (GroupHashTag o: list) {
@@ -33,7 +40,13 @@ public class AdminService {
 
     }
 
-    public void deleteAllByFeed(Long feedPk) {
-
+    public void deleteFeed(Long feedPk) {
+        Optional<Feed> feedInfo = feedRepository.findById(feedPk);
+        if (feedInfo.isPresent()) {
+            feedInfo.ifPresent(selectUser -> {
+                selectUser.setStatus("false");
+                feedRepository.save(selectUser);
+            });
+        }
     }
 }

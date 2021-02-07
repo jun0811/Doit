@@ -7,6 +7,7 @@ import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
 import com.ssafy.doit.service.AdminService;
 import com.ssafy.doit.service.GroupUserService;
+import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,11 @@ public class AdminController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private UserService userService;
+    @Autowired
     private AdminService adminService;
     @Autowired
     private GroupRepository groupRepository;
-    @Autowired
-    private FeedRepository feedRepository;
     @Autowired
     private GroupUserService groupUserService;
 
@@ -56,10 +57,13 @@ public class AdminController {
     public Object beDeletedUser(@RequestParam Long userPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Optional<User> userInfo = userRepository.findById(userPk);
-            if (userInfo.isPresent()) {
-                groupUserService.deleteGroupByUser(userPk);
-            }
+            Long adminPk = userService.currentUser();
+            if(adminPk == 2) {
+                Optional<User> userInfo = userRepository.findById(userPk);
+                if (userInfo.isPresent()) {
+                    groupUserService.deleteGroupByUser(userPk);
+                }
+            }else throw new Exception("관리자가 아닙니다.");
             result.status = true;
             result.data = "success";
         }
@@ -94,14 +98,10 @@ public class AdminController {
     public Object beDeletedGroup(@RequestParam Long groupPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Optional<Group> groupInfo = groupRepository.findById(groupPk);
-            adminService.deleteAllByGroup(groupPk);
-            if (groupInfo.isPresent()) {
-                groupInfo.ifPresent(selectUser -> {
-                    selectUser.setStatus("false");
-                    groupRepository.save(selectUser);
-                });
-            }
+            Long adminPk = userService.currentUser();
+            if(adminPk == 2) {
+              adminService.deleteAllByGroup(groupPk);
+            }else throw new Exception("관리자가 아닙니다.");
             result.status = true;
             result.data = "success";
         }
@@ -119,14 +119,10 @@ public class AdminController {
     public Object beDeletedFeed(@RequestParam Long feedPk) {
         ResponseBasic result = new ResponseBasic();
         try {
-            Optional<Feed> feedInfo = feedRepository.findById(feedPk);
-            adminService.deleteAllByFeed(feedPk);
-            if (feedInfo.isPresent()) {
-                feedInfo.ifPresent(selectUser -> {
-                    selectUser.setStatus("false");
-                    feedRepository.save(selectUser);
-                });
-            }
+            Long adminPk = userService.currentUser();
+            if(adminPk == 2) {
+                adminService.deleteFeed(feedPk);
+            }else throw new Exception("관리자가 아닙니다.");
             result.status = true;
             result.data = "success";
         }
