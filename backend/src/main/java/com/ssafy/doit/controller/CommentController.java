@@ -39,7 +39,7 @@ public class CommentController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    // 그룹 내 피드 리스트
+
     @ApiOperation(value = "인증 댓글 리스트")
     @GetMapping("/commentList")
     public Object commentList(@RequestParam Long feedPk){
