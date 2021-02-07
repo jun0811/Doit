@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FeedRepository extends JpaRepository<Feed, Long> {
+<<<<<<< backend/src/main/java/com/ssafy/doit/repository/FeedRepository.java
     @Query("select f from Feed f where f.groupPk = :groupPk " +
             "and substring(f.createDate, 1, 10) = :date and f.status = :status")
     List<Feed> findAllByGroupPkAndCreateDateAndStatus(Long groupPk, String date, String status);

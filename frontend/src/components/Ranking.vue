@@ -1,10 +1,10 @@
 <template>
-  <v-container class="px-3 px-sm-16 my-10 ranking-size">  
+  <v-container class="px-3 px-sm-16 my-10">  
     <v-row class="mx-3 mx-sm-16 mb-5">
       <h4>Doit 그룹랭킹</h4>
     </v-row>
     <v-card class="mx-auto mx-3 mx-sm-16">
-      <v-row>
+      <v-row class="py-4">
           <v-col class="mx-3 mx-sm-16 d-flex justify-space-around">
             <div v-for="(group, idx) in groups" :key="idx" class="rank-box d-flex" >
               <div class="rank-num">
@@ -77,7 +77,7 @@ export default {
   
 .group-name {
   text-align:center;
-  font-size: medium;
+  font-size: small;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
