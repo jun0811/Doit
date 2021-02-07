@@ -27,7 +27,7 @@
         </template>
 
         <v-card class="mx-auto">
-          <v-cont>
+          <v-container>
             <v-row>
               <v-col class="d-flex justify-end">
                 <v-btn 
@@ -39,7 +39,7 @@
                 </v-btn>
               </v-col>
             </v-row>
-          </v-cont>
+          </v-container>
 
           <v-container class="px-5 px-sm-16 pb-8 pb-sm-16">
             <v-row>
@@ -149,6 +149,7 @@
         v-model="drawer"
         absolute
         temporary
+        style="height: 100vh;"
       >
         <v-list-item>
           <v-list-item-avatar>
@@ -181,7 +182,18 @@
               v-for="subItem in item.items"
               :key="subItem.groupPk"
               @click="group(subItem.groupPk)"
+              class="px-4"
             >
+              <v-list-item-action>
+                <v-btn
+                  fab
+                  small
+                  depressed
+                  color="orange"
+                >
+                </v-btn>
+              </v-list-item-action>
+
               <v-list-item-content>
                 <v-list-item-title> {{ subItem.name }}</v-list-item-title>
               </v-list-item-content>
@@ -193,7 +205,7 @@
             로그인이 필요한 기능입니다.
           </div>
           <v-btn
-            class="login input"
+            class="login"
             outlined
             @click="dialog=!dialog"
           >로그인</v-btn>
@@ -261,7 +273,6 @@ export default {
           http.get('/group/currentUserGroup')
             .then((res)=>{
             this.items[0].items = res.data.object;
-            console.log(this.items.items)
         })
       }
     },
@@ -320,7 +331,15 @@ export default {
 <style scoped>
   .login.input{
     width: 100%;
-    height: 120%;
+    height: 150%;
+    border: 2px solid #F9802D;
+    border-radius: 8px;
+    color: #F9802D;
+  }
+
+  .login {
+    width: 80%;
+    height: 6%;
     border: 2px solid #F9802D;
     border-radius: 8px;
     color: #F9802D;
@@ -347,6 +366,10 @@ export default {
     font-size: 80%;
     height: 52px;
     line-height: 28px;
+  }
+
+  .drawer-height {
+    height: 100vh;
   }
 </style>
 

@@ -1,37 +1,34 @@
 <template>
   <v-card
-    max-width="400"
     class="mx-auto"
+    tile
   >
-    <v-virtual-scroll
-      :bench="benched"
-      :items="items"
-      height="600"
-      class="joined-size"
-      item-height="64"
+    <v-list
+      nav
+      dense
     >
-      <template v-slot="{ item }">
-        <v-list-item :key="item">
-          <v-list-item-action>
-            <v-btn
-              fab
-              small
-              depressed
-              color="orange"
-            >
-            </v-btn>
-          </v-list-item-action>
+      <v-virtual-scroll
+        :bench="benched"
+        :items="items"
+        item-height="64"
+        class="joined-size"
+      >
+        <v-list-item
+          v-for="subItem in items"
+          :key="subItem.groupPk"
+          @click="group(subItem.groupPk)"
+        >
+          <!-- 추후 그룹 사진 넣을 예정-->
+          <!-- <v-list-item-icon>
+            <v-icon v-text="item.icon"></v-icon>
+          </v-list-item-icon> -->
 
           <v-list-item-content>
-            <v-list-item-title>
-              {{ item.name }}
-            </v-list-item-title>
+            <v-list-item-title v-text="subItem.name"></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-
-        <v-divider></v-divider>
-      </template>
-    </v-virtual-scroll>
+      </v-virtual-scroll>
+    </v-list>
   </v-card>
 
 </template>
@@ -66,13 +63,13 @@ export default {
 <style>
 .joined-size {
   width: 100%;
-  height: 600px;
+  height: 100%;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .joined-size {
     width: 120%;
-    height: 300px;
+    height: 100%;
   }
 }
 </style>
