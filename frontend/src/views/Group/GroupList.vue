@@ -5,7 +5,7 @@
         <SearchBar></SearchBar>
         <br>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
-        <GroupCard v-for="(result,idx) in results" :key="idx" :group="result"></GroupCard>
+        <GroupCard :page="page" :word="word"></GroupCard>
         <div v-if="!results" class="d-flex align-center flex-column">
           <h3>'검색키워드'와(과) 일치하는 검색결과가 없습니다.</h3>
           <br>
@@ -33,37 +33,58 @@ import Header from "@/components/common/Header";
 import SearchBar from "@/components/common/SearchBar";
 import Footer from "@/components/common/Footer";
 import GroupCard from "@/components/group/GroupCard.vue";
-import http from "../../http-common"
-
+// import http from "../../http-common"
+import { searchGroup } from "@/api/group/index.js"
 
 
 export default {
-    name: 'GroupList',
-    props:{
-      word:{ type: String, default: ""}
-    },
-    created() {
-      http.get(`/group/searchGroup?tag=${this.word}`)
-      .then((res)=>{
-        this.results = res.data.object
-      })
-    },
-    components: { 
-        Header, 
-        Footer, 
-        SearchBar, 
-        GroupCard 
-    },
-    data() {
-        return {
-          results: {}
+  name: 'GroupList',
+  props:{
+    word:{ type: String, default: ""}
+  },
+  // created() {
+  //   http.get(`/group/searchGroup?tag=${this.word}`)
+  //   .then((res)=>{
+  //     this.results = res.data.object
+  //   })
+  // },
+  created() {
+    searchGroup(
+      {
+        "direction":"ASC",
+        "page":this.page,
+        "size":10,
+        "tag":this.word,
+      },
+      (res) =>{
+        if (res.status){
+        // console.log(res)
+        this.results = res.data.object.content
         }
-    },
-    methods: {
-      createGroup(){
-        this.$router.push('/group/groupcreate')
+      },
+      (err) =>{
+        console.log(err)
+        alert("검색 결과 가져오기 실패")
       }
+    )
+  },
+  components: { 
+      Header, 
+      Footer, 
+      SearchBar, 
+      GroupCard 
+  },
+  data() {
+      return {
+        results: {},
+        page:1,
+      }
+  },
+  methods: {
+    createGroup(){
+      this.$router.push('/group/groupcreate')
     }
+  }
 }
 </script>
 
