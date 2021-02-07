@@ -39,8 +39,11 @@ public class FeedController {
         ResponseBasic result = null;
         try{
             Long userPk = userService.currentUser();
-            feedService.createFeed(userPk,feedReq);
-            result = new ResponseBasic(true, "success", null);
+            int res = feedService.createFeed(userPk,feedReq);
+            if(res == 1)
+                result = new ResponseBasic(true, "success", null);
+            else if(res == 0)
+                result = new ResponseBasic(false, "오늘 이미 인증피드를 작성하였습니다.", null);
         }catch (Exception e) {
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
@@ -51,10 +54,10 @@ public class FeedController {
     // 그룹 내 피드 리스트
     @ApiOperation(value = "그룹 내 피드 리스트")
     @GetMapping("/groupFeed")
-    public Object groupFeedList(@RequestParam Long groupPk){
+    public Object groupFeedList(@RequestParam Long groupPk, @RequestParam String date){
         ResponseBasic result = null;
         try {
-            List<ResponseFeed> list = feedService.groupFeedList(groupPk);
+            List<ResponseFeed> list = feedService.groupFeedList(groupPk, date);
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
@@ -67,10 +70,10 @@ public class FeedController {
     // 개인 피드 리스트 (+ 다른유저 피드리스트)
     @ApiOperation(value = "개인 피드 리스트 (+ 다른유저 피드리스트)")
     @PostMapping("/userFeed")
-    public Object userFeed(Long userPk){
+    public Object userFeed(Long userPk, @RequestParam String date){
         ResponseBasic result = null;
         try {
-            List<ResMyFeed> list = feedService.userFeedList(userPk);
+            List<ResMyFeed> list = feedService.userFeedList(userPk, date);
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +90,6 @@ public class FeedController {
         try {
             Long userPk = userService.currentUser();
             feedService.updateFeed(userPk, feedReq);
-            result = new ResponseBasic(true, "success", null);
         }catch (Exception e) {
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
@@ -126,5 +128,4 @@ public class FeedController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 }
