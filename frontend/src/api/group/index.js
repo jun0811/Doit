@@ -1,4 +1,5 @@
 import axios from "axios";
+import http from '../../http-common';
 
 const API_BASE_URL = "http://localhost:8080/group";
 
@@ -21,5 +22,14 @@ function createGroup(params,success,fail){
   .catch(fail);
 }
  
+//?direction=ASC&page=1&size=10&tag=%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 
-export { createGroup }
+function searchGroup(query, success, fail) {
+  http
+  .get(`group/searchGroup?direction=${query.direction}&page=${query.page}&size=${query.size}&tag=${query.tag}`)
+  .then(success)
+  .catch(fail);
+} 
+
+
+export { createGroup, searchGroup }
