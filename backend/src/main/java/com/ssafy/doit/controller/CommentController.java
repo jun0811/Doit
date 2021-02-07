@@ -2,6 +2,7 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.Comment;
 import com.ssafy.doit.model.response.ResponseBasic;
+import com.ssafy.doit.model.response.ResponseFeed;
 import com.ssafy.doit.repository.CommentRepository;
 import com.ssafy.doit.service.CommentService;
 import com.ssafy.doit.service.UserService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -35,6 +37,22 @@ public class CommentController {
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
         }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    // 그룹 내 피드 리스트
+    @ApiOperation(value = "인증 댓글 리스트")
+    @GetMapping("/commentList")
+    public Object commentList(@RequestParam Long feedPk){
+        ResponseBasic result = null;
+        try {
+            List<Comment> list = commentService.commentList(feedPk);
+            if(list.size() == 0) throw new Exception("댓글이 없습니다.");
+            result = new ResponseBasic(true, "success", list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @ApiOperation(value = "댓글 수정")

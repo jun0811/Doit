@@ -4,6 +4,7 @@ import com.ssafy.doit.model.Comment;
 import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupUser;
+import com.ssafy.doit.model.response.ResponseFeed;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.CommentRepository;
 import com.ssafy.doit.repository.FeedRepository;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,6 +37,12 @@ public class CommentService {
                     .createDate(LocalDateTime.now()).build());
         }
     }
+    public List<Comment> commentList(Long feedPk) {
+        List<Comment> list = commentRepository.findAllByFeedPk(feedPk);
+
+        return list;
+    }
+
     @Transactional
     public void updateComment(Comment commentReq) throws Exception {
         Optional<Comment> comment = commentRepository.findById(commentReq.getCommentPk());
@@ -45,4 +54,6 @@ public class CommentService {
             });
 
     }
+
+
 }
