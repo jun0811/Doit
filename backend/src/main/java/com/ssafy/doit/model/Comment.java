@@ -1,10 +1,8 @@
 package com.ssafy.doit.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,7 +23,6 @@ public class Comment {
 
     private LocalDateTime createDate;
     private String updateDate;
-
 
     @Builder
     public Comment(String content, LocalDateTime createDate,

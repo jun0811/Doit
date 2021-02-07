@@ -103,6 +103,10 @@ public class GroupUserService {
         for (GroupUser groupUser : list) {
             groupUserRepository.delete(groupUser);
             Group group = groupRepository.findById(groupUser.getGroup().getGroupPk()).get();
+            if(group.getTotalNum() == 1){
+                group.setStatus("false");
+                groupRepository.save(group); continue;
+            }
             Long newLeader = groupUserRepository.findTopByGroup(group).getUser().getId();
             group.setTotalNum(group.getTotalNum() - 1);     // 회원 수 감소
             if(userPk == group.getLeader()) {

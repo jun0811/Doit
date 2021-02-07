@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author 한지현
+ */
 @Service
 public class CommentService {
     @Autowired
@@ -25,11 +28,11 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     @Transactional
-    public void addComment(Long userPk, Long feedPk,Comment comment) throws Exception {
+    public void createComment(Long userPk, Long feedPk, Comment comment) throws Exception {
 
         Optional<Feed> opt = feedRepository.findById(comment.getFeedPk());
 
-        if(!opt.isPresent()) {
+        if (!opt.isPresent()) {
             commentRepository.save(Comment.builder()
                     .content(comment.getContent())
                     .feedPk(feedPk)
@@ -37,30 +40,30 @@ public class CommentService {
                     .createDate(LocalDateTime.now()).build());
         }
     }
+
     public List<Comment> commentList(Long feedPk) {
         List<Comment> list = commentRepository.findAllByFeedPk(feedPk);
-
         return list;
     }
 
     @Transactional
-    public void updateComment(Comment commentReq) throws Exception {
+    public void updateComment(Long userPk, Comment commentReq) throws Exception {
         Optional<Comment> comment = commentRepository.findById(commentReq.getCommentPk());
-
+        if (userPk == comment.get().getUserPk()) {
             comment.ifPresent(selectComment -> {
                 selectComment.setContent(commentReq.getContent());
                 selectComment.setUpdateDate(LocalDateTime.now().toString());
                 commentRepository.save(selectComment);
             });
-
+        } else throw new Exception("댓글 작성자가 아닙니다.");
     }
-    //댓글삭제
+
     public void deleteComment(Long userPk, Long commentPk) throws Exception {
-        Optional<Comment> comment = commentRepository.findByCommentPk(commentPk);
-        if(userPk == comment.get().getUserPk()) {
+        Optional<Comment> comment = commentRepository.findById(commentPk);
+        if (userPk == comment.get().getUserPk()) {
             comment.ifPresent(selectComment -> {
                 commentRepository.delete(selectComment);
             });
-        } else throw new Exception("피드 작성자가 아닙니다.");
+        } else throw new Exception("댓글 작성자가 아닙니다.");
     }
 }
