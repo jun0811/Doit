@@ -1,9 +1,7 @@
 package com.ssafy.doit.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -20,7 +18,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentPk;
 
-    private String comment;
+    private String content;
 
     private Long feedPk;
     private Long userPk;
@@ -28,4 +26,15 @@ public class Comment {
     private LocalDateTime createDate;
     private String updateDate;
 
+
+    @Builder
+    public Comment(String content, LocalDateTime createDate,
+                Long feedPk, Long userPk){
+        this.content = content;
+        this.feedPk = feedPk;
+        this.userPk = userPk;
+        this.createDate = createDate;
+
+        this.updateDate = "0-0-0 0:0:0";
+    }
 }

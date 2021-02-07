@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface FeedRepository extends JpaRepository<Feed, Long> {
     List<Feed> findAllByGroupPkAndStatus(Long groupPk, String status);
     List<Feed> findAllByWriterAndStatus(Long userPk, String status);
+
+    Optional<Feed> findByFeedPk(Long feedPk);
 }
