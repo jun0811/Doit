@@ -54,6 +54,13 @@ public class CommentService {
             });
 
     }
-
-
+    //댓글삭제
+    public void deleteComment(Long userPk, Long commentPk) throws Exception {
+        Optional<Comment> comment = commentRepository.findByCommentPk(commentPk);
+        if(userPk == comment.get().getUserPk()) {
+            comment.ifPresent(selectComment -> {
+                commentRepository.delete(selectComment);
+            });
+        } else throw new Exception("피드 작성자가 아닙니다.");
+    }
 }

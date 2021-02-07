@@ -72,4 +72,19 @@ public class CommentController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @ApiOperation(value = "댓글 삭제")
+    @DeleteMapping("/deleteComment")
+    public Object deleteComment(@RequestParam Long commentPk){
+        ResponseBasic result = null;
+        try {
+            Long userPk = userService.currentUser();
+            commentService.deleteComment(userPk, commentPk);
+            result = new ResponseBasic(true, "success", null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }
