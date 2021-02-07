@@ -27,7 +27,7 @@ public class CommentService {
     @Transactional
     public void addComment(Long userPk, Long feedPk,Comment comment) throws Exception {
 
-        Optional<Feed> opt = feedRepository.findByFeedPk(comment.getFeedPk());
+        Optional<Feed> opt = feedRepository.findById(comment.getFeedPk());
 
         if(!opt.isPresent()) {
             commentRepository.save(Comment.builder()
