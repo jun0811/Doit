@@ -1,7 +1,6 @@
 <template>
   <v-container >
     <div v-for="(group, idx) in paginatedData" :key="idx">
-
       <v-expansion-panels class="px-2 py-2 px-sm-16">
         <v-expansion-panel class="panel">
           <v-expansion-panel-header>
@@ -54,7 +53,7 @@
      <v-pagination
         color="orange"
         v-model="page"
-        :length="7"
+        :length="pageCount"
         :total-visible="7"
       ></v-pagination>
   </v-container>
@@ -81,6 +80,7 @@ export default {
         end: null,
       },
       groups: [],
+      pageCount:'',
     }),
     methods: {
       moveCommunity(){
@@ -99,6 +99,10 @@ export default {
           if (res.status){
           console.log('getgroup',res.data.object.content)
           this.groups = res.data.object.content
+          let listLeng = this.groups.length,
+            listSize = 10;
+          this.pageCount = Math.floor(listLeng / listSize);
+          if (listLeng % listSize > 0) this.pageCount += 1;
           }
         },
         (err) =>{
@@ -109,11 +113,9 @@ export default {
     },
     computed: {
       paginatedData () {
-        // console.log('group',this.groups)
         const listSize = 10
         const start = (this.page -1) * listSize,
               end = start + listSize;
-        // console.log('this',[...this.groups.slice(start, end)])
         return this.groups.slice(start, end);
       }
     },
