@@ -17,7 +17,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/main")
+@RequestMapping("/data")
 public class MainController {
 
     @Autowired

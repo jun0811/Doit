@@ -70,8 +70,8 @@ public class FeedController {
 
     // 개인 피드 리스트 (+ 다른유저 피드리스트)
     @ApiOperation(value = "개인 피드 리스트 (+ 다른유저 피드리스트)")
-    @PostMapping("/userFeed")
-    public Object userFeed(Long userPk, @RequestParam String date){
+    @GetMapping("/userFeed")
+    public Object userFeed(@RequestParam Long userPk, @RequestParam String date){
         ResponseBasic result = null;
         try {
             List<ResMyFeed> list = feedService.userFeedList(userPk, date);

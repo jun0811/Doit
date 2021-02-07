@@ -18,20 +18,21 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/comment")
 public class CommentController {
+
     @Autowired
     private CommentService commentService;
     @Autowired
     private UserService userService;
 
     @ApiOperation(value = "댓글 등록")
-    @PostMapping("/addComment")
-    public Object addComment(@RequestParam Long feedPk,@RequestBody Comment comment){
+    @PostMapping("/createComment")
+    public Object createComment(@RequestParam Long feedPk,@RequestBody Comment comment){
         ResponseBasic result = null;
         try{
             Long userPk = userService.currentUser();
-            commentService.addComment(userPk,feedPk,comment);
+            commentService.createComment(userPk,feedPk,comment);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e) {
             e.printStackTrace();
@@ -47,25 +48,22 @@ public class CommentController {
         ResponseBasic result = null;
         try {
             List<Comment> list = commentService.commentList(feedPk);
-            if(list.size() == 0) throw new Exception("댓글이 없습니다.");
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
-            result = new ResponseBasic(false, e.getMessage(), null);
+            result = new ResponseBasic(false, "fail", null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
     @ApiOperation(value = "댓글 수정")
     @PutMapping("/updateComment")
     public Object updateComment(@RequestBody Comment comment){
         ResponseBasic result = null;
         try{
             Long userPk = userService.currentUser();
-            System.out.println(userPk+ " " + comment.getUserPk());
-            if(userPk == comment.getUserPk()) {
-                commentService.updateComment(comment);
-            }else throw new Exception("댓글 작성자가 아닙니다.");
+            commentService.updateComment(userPk, comment);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e) {
             e.printStackTrace();
@@ -73,6 +71,7 @@ public class CommentController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
     @ApiOperation(value = "댓글 삭제")
     @DeleteMapping("/deleteComment")
     public Object deleteComment(@RequestParam Long commentPk){
