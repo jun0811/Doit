@@ -31,7 +31,9 @@ public class FeedService {
     @Autowired
     private final FeedUserRepository feedUserRepository;
     @Autowired
-    private final CommitRepository commitRepository;
+    private final CommitUserRepository commitUserRepository;
+    @Autowired
+    private final CommitGroupRepository commitGroupRepository;
 
     // 그룹 내 피드 생성
     @Transactional
@@ -126,16 +128,15 @@ public class FeedService {
         feedUserRepository.save(FeedUser.builder()  // FeedUser 테이블에도
                 .feed(feed).user(user).build());    // 그 피드에 인증 확인한 그룹원 추가
 
+        Long groupPk = feed.getGroupPk();
         int cnt = feed.getAuthCnt();
-        int total = groupRepository.findById(feed.getGroupPk()).get().getTotalNum();
+        int total = groupRepository.findById(groupPk).get().getTotalNum();
         if (cnt >= Math.round(total * 0.7)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
             feed.setAuthDate(LocalDateTime.now().toString());
             // 마일리지 점수 제공하기 // 인증완료되었다는 알림보내기
-            commitRepository.save(Commit.builder()
-                    .date(LocalDate.now())
-                    .userPk(feed.getWriter())
-                    .groupPk(feed.getGroupPk()).build());
+            Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(userPk, LocalDate.now());
+            Optional<CommitGroup> optCG = commitGroupRepository.findByGroupPkAndDate(groupPk, LocalDate.now());
         }
     }
 }
