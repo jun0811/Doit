@@ -24,12 +24,16 @@ public class ChatMessage {
 
     private String message;
 
+    private Long roomPk;
+    @JsonIgnore
+    private Long userPk;
+
     @ManyToOne
-    @JoinColumn(name = "room_pk")
+    @JoinColumn(name = "roomPk", insertable = false, updatable = false)
     @JsonIgnore
     private ChatRoom chatRoom;
 
     @ManyToOne
-    @JoinColumn(name = "user_pk")
+    @JoinColumn(name = "userPk", insertable = false, updatable = false)
     private User user;
 }
