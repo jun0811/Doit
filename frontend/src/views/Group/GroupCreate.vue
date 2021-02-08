@@ -75,9 +75,10 @@
                   </v-col>
                 </v-row>
                 <v-row >
-                  <v-col cols="4" class="d-flex justify-start">
+                  <v-col cols="12" class="d-flex justify-start">
                     <v-text-field 
                       v-model="word"
+                      hide-details=""
                       label="해쉬태그"></v-text-field>
                     <v-btn
                       outlined
@@ -86,11 +87,12 @@
                       class ="mt-4 ml-3"
                     >추가</v-btn>
                   </v-col>
-                  <v-col cols="12" class="d-flex flex-wrap">
+                  <v-col cols="12" class="d-flex flex-wrap mb-5 py-0">
                     <ul>
                       <li v-for="(tag,idx) in hashtag" :key="idx" ># {{ tag }}
-                        <button @click="remove(idx)" class>                     
-                          |x|
+                        <button @click="remove(idx)" class="hashtag-del-btn">                     
+                          <!-- |x| -->
+                          <font-awesome-icon icon="times-circle"/>
                         </button>  
                       </li> 
                     </ul>
@@ -235,5 +237,10 @@ ul{
 ul li {
   float: left;
   margin-right: 15px;
+}
+
+.hashtag-del-btn {
+  color:#FFE0B2;
+  outline: transparent;
 }
 </style>
