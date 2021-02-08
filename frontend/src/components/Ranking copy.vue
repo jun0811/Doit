@@ -1,25 +1,27 @@
 <template>
-<div class="d-flex flex-column justify-center">
-  <v-row class="mx-3 mx-sm-1 mb-5">
-    Doit 그룹랭킹👑
-  </v-row>
-  <!-- <v-row> -->
-  <v-card class="px-4 mr-3">
-    <v-row v-for="(group, idx) in groups" :key="idx" class="mb-3">
-      <v-col cols="2" class="text-center">
-        <span class="rank-num">{{idx+1}}</span>
-      </v-col>
-      <v-col cols="2" class="d-flex flex-column justify-center">
-        <img class="rank-image box" :src="group.groupImage" alt="그룹이미지">
-      </v-col>
-      <v-col cols="8">
-        <div class="group-name">{{group.groupname}}</div>
-      </v-col>
-        <!-- <div class="rank-wrapper"> -->
+  <v-container>  
+    <v-row>
+      <h4>Doit 그룹랭킹</h4>
     </v-row>
-  </v-card>
-  <!-- </v-row> -->
-</div>
+    <v-card>
+      <v-row class="py-4">
+          <v-col class="mx-3 mx-sm-16 d-flex justify-space-around">
+            <div v-for="(group, idx) in groups" :key="idx" class="rank-box d-flex" >
+              <div class="rank-num">
+                {{idx+1}}
+              </div>
+              <div class="">
+                <div class="rank-wrapper">
+                  <img class="rank-image box" :src="group.groupImage" alt="그룹이미지">
+                </div>
+                <div class="group-name">{{group.groupname}}</div>
+              </div>
+            </div>
+          </v-col>
+      </v-row>
+    </v-card>
+  </v-container>
+    
 </template>
 
 <script>
@@ -44,10 +46,6 @@ export default {
           groupname:'달려달려',
           groupImage:'https://image.edaily.co.kr/images/Photo/files/NP/S/2016/09/PS16090800342.jpg',
         },
-        {
-          groupname:'일찍 일어나는 새가 벌레를 잡아먹는다.',
-          groupImage:'https://media.istockphoto.com/vectors/early-bird-with-worm-vector-id96612139?k=6&m=96612139&s=612x612&w=0&h=34bGxeM0JaF25Tl4ezvPt1eBst7Cnta5pNfRouwK3wk=',
-        },
       ],
     }
   },
@@ -55,15 +53,14 @@ export default {
 </script>
 
 <style scoped>
-/* .ranking-card-style {
+.ranking-card-style {
   height: 100%;
-  width: 100%;
-} */
+}
 
-/* .rank-box {
+.rank-box {
   width: 150px;
   height: 100%;
-} */
+}
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .rank-box {
@@ -72,31 +69,24 @@ export default {
 }
 
 .rank-num {
-  font-size: x-large;
-  height: 56px;
-  line-height: 56px;
+ font-size: x-large;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .rank-num {
-    font-size: large;
-    height: 56px;
-    line-height: 56px;
+    font-size: medium;
   }
 }
   
 .group-name {
+  text-align:center;
   font-size: small;
-  vertical-align: middle;
-  height: 56px;
-  line-height: 56px;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .group-name {
-    font-size: x-small;
-    height: 56px;
-    line-height: 56px;    
+    text-align:center;
+    font-size: xx-small;
   }
 }
 
