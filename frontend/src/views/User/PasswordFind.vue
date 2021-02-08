@@ -1,8 +1,8 @@
 <template>
   <div>
     <Header></Header>
-     <v-card  class="d-flex align-center flex-column my-15 mx-auto py-15 px-3 card-width">
-    <h3 class="my-5">비밀번호 재설정</h3>
+     <v-card  class="d-flex align-center flex-column my-15 mx-auto py-5 px-3 card-width">
+    <h3 class="my-10">비밀번호 재설정</h3>
     <h5 class="mb-5">비밀번호를 재설정 하려는 이메일을 입력해주세요</h5>
     <div>
       <v-container class="px-0">
@@ -26,12 +26,11 @@
      
       <v-card-actions class="d-flex align-center"> 
         <v-row>
-          <v-col>
+          <v-col class="d-flex flex-column align-center">
             <v-btn 
               @click="sendEmail" 
-              class="next col-12 mt-5"
+              class="next my-5"
               text
-              x-large
             >
             다음
             </v-btn>
@@ -135,8 +134,9 @@ export default {
     font-size: 80%;
   }
   .next {
-    border: 1.5px solid #F9802D;
+    border: 2px solid #F9802D;
     color: #F9802D;
+    border-radius: 8px;
   }
   .card-width {
     width: 35%;
