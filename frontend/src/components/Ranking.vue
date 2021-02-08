@@ -1,9 +1,8 @@
 <template>
   <div class="d-flex flex-column justify-center">
     <v-row class="mx-1 mb-2 mt-16 mt-sm-0">
-      Doit 그룹랭킹👑
+      <h4>Doit 그룹랭킹👑</h4>
     </v-row>
-    <!-- <v-row> -->
     <v-card class="px-4 mr-sm-3">
       <v-row v-for="(group, idx) in groups" :key="idx" class="my-3">
         <v-col cols="2" class="text-center">
@@ -15,10 +14,8 @@
         <v-col cols="8">
           <div class="group-name">{{group.groupname}}</div>
         </v-col>
-          <!-- <div class="rank-wrapper"> -->
       </v-row>
     </v-card>
-    <!-- </v-row> -->
   </div>
 </template>
 
@@ -55,21 +52,6 @@ export default {
 </script>
 
 <style scoped>
-/* .ranking-card-style {
-  height: 100%;
-  width: 100%;
-} */
-
-/* .rank-box {
-  width: 150px;
-  height: 100%;
-} */
-
-@media only screen and (min-width: 300px) and (max-width: 599px) {
-  .rank-box {
-    width: 50px;
-  }
-}
 
 .rank-num {
   font-size: x-large;
@@ -93,6 +75,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
@@ -103,13 +86,8 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap; 
+    cursor: pointer;
   }
-}
-
-.rank-wrapper {
-  border-radius: 50%;
-  position: relative;
-  border: 3px solid transparent;
 }
 
 .rank-image {
@@ -118,6 +96,7 @@ export default {
   border-radius: 50%;
   z-index : 1;
   position:relative;
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
@@ -125,11 +104,9 @@ export default {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    cursor: pointer;
   }
 }
-
-/* --- */
-/* $randomNumber : random(5); */
 
 .box:hover {
   position: relative;

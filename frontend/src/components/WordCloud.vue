@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-row class="mx-1 mx-sm-3 mb-4 mt-0">
-      Doit에서 가장 많이 나온 키워드를 확인해보세요!
+    <v-row class="mx-1 mx-sm-3 mb-5 mt-0">
+      <h4>Doit에서 가장 많이 나온 키워드를 확인해보세요!</h4>
     </v-row>
-    <v-row class="ml-sm-3 px-5 px-sm-0">
+    <v-row class="mx-0 px-3 px-sm-0">
       <img 
         src="@/assets/img/wordcloud.png"  
         alt="word-cloud"
