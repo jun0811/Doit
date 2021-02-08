@@ -6,8 +6,8 @@ import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupUser;
 import com.ssafy.doit.model.response.ResponseFeed;
 import com.ssafy.doit.model.user.User;
-import com.ssafy.doit.repository.CommentRepository;
-import com.ssafy.doit.repository.FeedRepository;
+import com.ssafy.doit.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,28 +21,38 @@ import java.util.Optional;
  * @author 한지현
  */
 @Service
+@RequiredArgsConstructor
 public class CommentService {
+    @Autowired
+    private final UserRepository userRepository;
+    @Autowired
+    private final GroupRepository groupRepository;
+    @Autowired
+    private final GroupUserRepository groupUserRepository;
     @Autowired
     private FeedRepository feedRepository;
     @Autowired
     private CommentRepository commentRepository;
 
     @Transactional
-    public void createComment(Long userPk, Long feedPk, Comment comment) throws Exception {
+    public void createComment(Long userPk, Comment comment) throws Exception {
 
-        Optional<Feed> opt = feedRepository.findById(comment.getFeedPk());
+        Feed feed = feedRepository.findById(comment.getFeedPk()).get();
+        Group group = groupRepository.findById(feed.getGroupPk()).get();
+        User user = userRepository.findById(userPk).get();
 
-        if (!opt.isPresent()) {
-            commentRepository.save(Comment.builder()
-                    .content(comment.getContent())
-                    .feedPk(feedPk)
-                    .userPk(userPk)
-                    .createDate(LocalDateTime.now()).build());
-        }
+        Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group,user);
+        if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
+
+        commentRepository.save(Comment.builder()
+            .content(comment.getContent())
+            .feedPk(comment.getFeedPk())
+            .userPk(userPk)
+            .createDate(LocalDateTime.now()).build());
     }
 
     public List<Comment> commentList(Long feedPk) {
-        List<Comment> list = commentRepository.findAllByFeedPk(feedPk);
+        List<Comment> list = commentRepository.findByFeedPk(feedPk);
         return list;
     }
 

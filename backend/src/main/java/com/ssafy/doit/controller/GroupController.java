@@ -7,6 +7,7 @@ import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.response.ResGroupDetail;
 import com.ssafy.doit.model.response.ResponseGroup;
+import com.ssafy.doit.service.FeedService;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
 import com.ssafy.doit.service.UserService;
@@ -34,6 +35,8 @@ public class GroupController {
     private GroupHashTagService groupHashTagService;
     @Autowired
     private GroupUserService groupUserService;
+    @Autowired
+    private final FeedService feedService;
 
     //해시태그에 따른 그룹 리스트
     @ApiOperation(value = "해시태그에 따른 그룹 리스트")
@@ -201,6 +204,7 @@ public class GroupController {
         try {
             Long userPk = userService.currentUser();
             groupUserService.withdrawGroupUser(userPk, groupPk);
+            feedService.deleteFeedByGroupUser(userPk, groupPk); // 그룹 탈퇴한 유저의 피드 삭제
             result = new ResponseBasic(true,"success",null);
         }catch (Exception e) {
             e.printStackTrace();
@@ -211,12 +215,13 @@ public class GroupController {
 
     // 그룹 내 그룹원 강퇴시키기
     @ApiOperation(value = "그룹 내 그룹원 강퇴시키기")
-    @DeleteMapping("/kickOutUser")
+    @DeleteMapping("/kickOutGroupUser")
     public Object kickOutGroupUser(@RequestParam Long groupPk, @RequestParam Long userPk){
         ResponseBasic result = null;
         try {
             Long leader = userService.currentUser(); //로그인된 회원 - 그룹 리더
             groupUserService.kickOutGroupUser(userPk, groupPk, leader);
+            feedService.deleteFeedByGroupUser(userPk, groupPk); // 그룹 탈퇴한 유저의 피드 삭제
             result = new ResponseBasic(true,"success",null);
         }catch (Exception e) {
             e.printStackTrace();
