@@ -22,10 +22,12 @@ public class ResMyFeed {
     private String authCheck;
     private String authDate;
 
+    private Long groupPk;
+    private String groupName;
     private String createDate;
     private String updateDate;
 
-    public ResMyFeed(Feed feed, String nickname){
+    public ResMyFeed(Feed feed, String nickname, String groupName){
         this.feedPk = feed.getFeedPk();
         this.writer = nickname;
         this.userPk = feed.getWriter();
@@ -33,6 +35,8 @@ public class ResMyFeed {
         this.feedType = feed.getFeedType();
         this.authCheck = feed.getAuthCheck();
         this.authDate = feed.getAuthDate();
+        this.groupPk = feed.getGroupPk();
+        this.groupName = groupName;
         this.createDate = feed.getCreateDate().toString();
         this.updateDate = feed.getUpdateDate();
     }

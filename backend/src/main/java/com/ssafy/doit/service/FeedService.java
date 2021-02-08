@@ -9,6 +9,7 @@ import com.ssafy.doit.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -63,14 +64,14 @@ public class FeedService {
 
     // 그룹 내 피드 리스트
     @Transactional
-    public List<ResponseFeed> groupFeedList(Long userPk, Long groupPk, String date) throws Exception {
+    public List<ResponseFeed> groupFeedList(Long userPk, Long groupPk, String start, String end) throws Exception {
         Group group = groupRepository.findById(groupPk).get();
         User user = userRepository.findById(userPk).get();
 
         Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group,user);
         if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
         
-        List<Feed> feedList = feedRepository.findAllByGroupPkAndCreateDateAndStatus(groupPk, date, "true");
+        List<Feed> feedList = feedRepository.findAllByGroupPkAndStatusAndCreateDateBetween(groupPk, "true", start, end);
         List<ResponseFeed> resList = new ArrayList<>();
         for(Feed feed : feedList){
             String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
@@ -81,12 +82,13 @@ public class FeedService {
 
     // 개인 피드 리스트
     @Transactional
-    public List<ResMyFeed> userFeedList(Long userPk, String date){
-        List<Feed> list = feedRepository.findAllByWriterAndCreateDateAndStatus(userPk, date, "true");
+    public List<ResMyFeed> userFeedList(Long userPk, String start, String end){
+        List<Feed> list = feedRepository.findAllByWriterAndStatusAndCreateDateBetween(userPk, "true", start, end);
         List<ResMyFeed> resList = new ArrayList<>();
         for(Feed feed : list){
             String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
-            resList.add(new ResMyFeed(feed, nickname));
+            String groupName = groupRepository.findById(feed.getGroupPk()).get().getName();
+            resList.add(new ResMyFeed(feed, nickname, groupName));
         }
         return resList;
     }
