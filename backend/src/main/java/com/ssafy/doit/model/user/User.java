@@ -25,9 +25,7 @@ public class User {
     private String email;
     private String nickname;
 
-    @JsonIgnore
     private String password;
-    @JsonIgnore
     private String authKey;
     private String image;
     private int mileage;

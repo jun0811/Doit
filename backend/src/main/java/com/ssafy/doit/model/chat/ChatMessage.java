@@ -24,7 +24,9 @@ public class ChatMessage {
 
     private String message;
 
+    @JsonIgnore
     private Long roomPk;
+
     @JsonIgnore
     private Long userPk;
 
@@ -35,5 +37,6 @@ public class ChatMessage {
 
     @ManyToOne
     @JoinColumn(name = "userPk", insertable = false, updatable = false)
+    @JsonIgnore
     private User user;
 }
