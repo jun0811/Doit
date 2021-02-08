@@ -22,8 +22,8 @@
         <hr style="width:570px;" class="mb-4">
         <v-row class="d-flex flex-column content-wrapper ml-8">
           <v-col class="prd-title">{{product.title}}</v-col>
-          <v-col class="prd-category">{{product.category}}</v-col>
-          <v-col class="prd-mileage">{{product.mileage}}</v-col>
+          <v-col class="prd-category">{{product.category}} 카테고리</v-col>
+          <v-col class="prd-mileage">{{product.mileage}} 마일리지</v-col>
           <v-col class="prd-content">{{product.content}}</v-col>
         </v-row>
         <hr style="width:570px;" class="mt-4">

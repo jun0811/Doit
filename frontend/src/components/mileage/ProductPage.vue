@@ -75,13 +75,17 @@ import http from "../../http-common";
                 this.products = res.data.object
               })
             }
+          },
+        deep: true,
+      },
+      products : {
+        handler :function () {
           let listLeng = this.products.length,
             listSize = 9,
             page = Math.floor(listLeng / listSize);
           if (listLeng % listSize > 0) page += 1;
           this.pageCount = page
-          },
-        deep: true,
+        }
       }
     },
     computed: {
