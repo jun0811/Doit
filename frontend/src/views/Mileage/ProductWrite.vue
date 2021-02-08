@@ -40,6 +40,7 @@
                 hide-details=""
                 :label="mileage"
                 solo
+                v-model="product.mileage"
               ></v-text-field>
               <span class="ml-2">마일리지</span>
             </v-col>
@@ -93,7 +94,7 @@ export default {
   data() {
     return {
       title : "상품명 및 제목을 입력하세요.",
-      categories : ['카테고리1', '카테고리2', '카테고리3', '카테고리4', '카테고리5', ],
+      categories : ['음식', '책', '운동', '카테고리4', '카테고리5', ],
       mileage: "300",
       product : {
         category : '',
@@ -101,6 +102,7 @@ export default {
         image : '',
         title : '',
         userPk : 0,
+        mileage:'',
       },
     }
   },
@@ -110,16 +112,16 @@ export default {
         {
           "category": this.product.category,
           "content":  this.product.content,
-          "id": 0,
           "image": this.product.image,
           "title":  this.product.title,
-          "userPk": this.$store.state.userpk,
+          "id":0,
+          "mileage": this.product.mileage,
         },
         (res) =>{
           if (res.status){
           alert("물품을 등록했습니다.")
           console.log(res)
-          this.$router.push('/') // 어디로 보낼지 정하고 변경!
+          // this.$router.push('/') // 어디로 보낼지 정하고 변경!
           }
         },
         (err) =>{
@@ -156,3 +158,5 @@ export default {
 }
 
 </style>
+
+

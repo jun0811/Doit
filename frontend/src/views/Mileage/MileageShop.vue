@@ -14,12 +14,14 @@
           class="d-flex justify-center"
           v-for="(category, idx) in categories"
           :key="idx"
+          value ="category"
+          @click="selectCategory"
         >
           {{category}}
         </v-btn>
       </v-row>
 
-        <ProductPage :page="page" :pageCount="pageCount">{{page}}</ProductPage>
+        <ProductPage :page="page" :pageCount="pageCount" :selectedCategory="selectedCategory">{{page}}</ProductPage>
 
     </v-container>
     <Footer></Footer>
@@ -42,9 +44,9 @@ export default {
   },
   data() {
     return {
-      selectedCategory : 'All',
+      selectedCategory : '전체',
       categories:[
-        '카테고리1', '카테고리2', '카테고리3', '카테고리4', '카테고리5', '카테고리6', 
+        '전체','음식', '카테고리2', '카테고리3', '카테고리4', '카테고리5', '카테고리6', 
       ],
       products:[],
       page:1,
@@ -65,6 +67,12 @@ export default {
       if (listLeng % listSize > 0) page += 1;
       return page;
     },
+  },
+  methods: {
+    selectCategory (e) {
+      console.log(e.target.innerText)
+      this.selectedCategory = e.target.innerText
+    }
   }
 };
 </script>
