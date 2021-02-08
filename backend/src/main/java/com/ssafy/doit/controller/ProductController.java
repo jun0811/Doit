@@ -2,6 +2,7 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.Product;
 import com.ssafy.doit.model.response.ResponseBasic;
+import com.ssafy.doit.model.response.ResponseProduct;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
@@ -38,6 +39,7 @@ public class ProductController {
             if(groupCount < 2) throw new Exception("그룹 수 부족");
 
             product.setUser(currentUser);
+            System.out.println("왜 안돼! : " + product.getUser().getId());
             productRepository.save(product);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
@@ -98,7 +100,7 @@ public class ProductController {
         ResponseBasic result = null;
 
         try{
-            Product product = productRepository.findById(id).get();
+            ResponseProduct product = productRepository.getById(id);
             result = new ResponseBasic(true, "success", product);
         }
         catch (Exception e){
@@ -114,7 +116,7 @@ public class ProductController {
     public Object getAll(){
         ResponseBasic result = null;
         try{
-            List<Product> products = productRepository.findAll();
+            List<ResponseProduct> products = productRepository.findAllBy();
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
@@ -130,7 +132,7 @@ public class ProductController {
     public Object searchProduct(@RequestParam String title){
         ResponseBasic result = null;
         try{
-            List<Product> products = productRepository.findAllByTitleContaining(title);
+            List<ResponseProduct> products = productRepository.findAllByTitleContaining(title);
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
@@ -146,7 +148,7 @@ public class ProductController {
     public Object searchUser(@RequestParam String nickname){
         ResponseBasic result = null;
         try{
-            List<Product> products = productRepository.findAllByUserNicknameContaining(nickname);
+            List<ResponseProduct> products = productRepository.findAllByUserNicknameContaining(nickname);
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
@@ -162,7 +164,7 @@ public class ProductController {
     public Object searchCategory(@RequestParam String category){
         ResponseBasic result = null;
         try{
-            List<Product> products = productRepository.findAllByCategory(category);
+            List<ResponseProduct> products = productRepository.findAllByCategory(category);
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
