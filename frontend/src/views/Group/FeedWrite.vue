@@ -25,7 +25,7 @@
 
         <v-container class="pa-3 pa-sm-16">
             <v-card  class="d-flex align-center flex-column my-15 mx-sm-auto px-5 col-sm-10" width=100%>
-                <h3 class="mt-5 mb-3">피드 작성</h3>
+                <h3 class="my-4">피드 작성</h3>
                 <v-divider style="width:100%;"></v-divider>
                  <v-col cols="12" lg="8" xl="6" class="my-5">
                     <v-row class="text-left">
@@ -49,6 +49,7 @@
                         <v-container fluid class="py-5">
                             <v-textarea
                                 label="인증 내용 입력"
+                                hide-details=""
                                 v-model="content"
                                 auto-grow
                                 outlined
@@ -58,23 +59,27 @@
                         </v-container>
                     </v-row>
                     <v-row class="d-flex mt-5">
-                        <v-col cols="12" sm="4" class="my-auto">
+                        <v-col cols="12" sm="6" class="my-auto">
                         <v-select
                             :items="items"
+                            hide-details=""
                             label="피드 종류 선택"
                             dense
                             outlined
                             v-model="selected"
                         ></v-select>                            
                         </v-col>                        
-                        <v-col cols="12" sm="5">
+                        <v-col cols="12" sm="6">
                             <v-file-input
                                 class="py-0"
+                                hide-details=""
                                 truncate-length="50"
                                 label="첨부파일 선택"
                             ></v-file-input>
                         </v-col>
-                        <v-col cols="12" sm="2" class="ml-auto">
+                    </v-row>
+                    <v-row>
+                        <v-col class="mt-6 d-flex justify-center">
                             <v-btn
                             @click="write"
                             outlined
@@ -158,7 +163,6 @@ export default {
 
 <style scoped>
 .complete-btn {
-    width: 100%;
     border: 1px solid #F9802D;
     color: #F9802D;
 }

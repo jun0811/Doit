@@ -3,7 +3,7 @@
         <Header></Header>
         <v-container class="pa-3 pa-sm-16">
             <v-card  class="d-flex align-center flex-column my-15 mx-sm-auto px-5 col-sm-10" width=100%>
-                <h3 class="mt-5 mb-3">그룹 만들기</h3>
+                <h3 class="my-4">그룹 만들기</h3>
                 <v-divider style="width:100%;"></v-divider>
                 <v-container class="d-flex flex-column">
                   <v-row class="my-5">
@@ -103,10 +103,10 @@
                     <v-btn
                       outlined
                       @click="create"
+                      class="group-create-btn mt-4 mb-6"
                     >그룹 생성</v-btn>
                   </v-col>
                 </v-row>
-                
               </v-container>
             </v-card>
         </v-container>
@@ -243,4 +243,10 @@ ul li {
   color:#FFE0B2;
   outline: transparent;
 }
+
+.group-create-btn {
+  border: 1px solid #F9802D;
+  color: #F9802D;
+}
+
 </style>
