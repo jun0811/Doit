@@ -79,7 +79,7 @@ public class GroupUserService {
         }else throw new Exception("가입되어 있지 않은 그룹원입니다.");
     }
 
-    // 그룹 내 그룹원 강퇴시키기
+    // 그룹 내 그룹원 강퇴시키기 (그룹장이)
     @Transactional
     public void kickOutGroupUser(Long userPk, Long groupPk, Long leader) throws Exception {
         Group group = groupRepository.findById(groupPk).get();
@@ -94,7 +94,7 @@ public class GroupUserService {
         }else throw new Exception("그룹장이 아닙니다.");
     }
 
-    // 랄퇴한 회원 가입된 그룹에서 delete
+    // 랄퇴한 회원, 가입된 그룹에서 delete
     @Transactional
     public void deleteGroupByUser(Long userPk) throws Exception {
         User user = userRepository.findById(userPk).get();
