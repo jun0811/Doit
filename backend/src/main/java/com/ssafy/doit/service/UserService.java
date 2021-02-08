@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -18,6 +20,8 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private S3Service s3Service;
 
     public Long currentUser(){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -36,10 +40,24 @@ public class UserService {
     }
 
     // 회원정보 수정
-    @Transactional
-    public void updateUser(Long userPk, User userReq){
+    public void updateUser(Long userPk, User userReq, MultipartFile file){
+        System.out.println("ㅅㅄㅂ");
         Optional<User> user = userRepository.findById(userPk);
+
         user.ifPresent(selectUser->{
+            String imgPath = null;
+
+
+                try {
+                    System.out.println("tryㅅㅄㅂ");
+                    imgPath = s3Service.upload(userReq.getImage(),file);
+                } catch (IOException e) {
+                    System.out.println("catchㅅㅄㅂ");
+                    e.printStackTrace();
+                }
+                selectUser.setImage(imgPath);
+
+
             selectUser.setNickname(userReq.getNickname());
             userRepository.save(selectUser);
         });
