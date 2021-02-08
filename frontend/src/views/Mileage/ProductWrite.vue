@@ -94,7 +94,7 @@ export default {
   data() {
     return {
       title : "상품명 및 제목을 입력하세요.",
-      categories : ['카테고리1', '카테고리2', '카테고리3', '카테고리4', '카테고리5', ],
+      categories : ['음식', '책', '운동', '카테고리4', '카테고리5', ],
       mileage: "300",
       product : {
         category : '',
