@@ -70,10 +70,7 @@ public class ChatController {
             if(!opt.isPresent()) throw new Exception("유저 불일치");
 
             ChatRoom chatRoom = chatService.getRoom(roomPk);
-            Map<String, Object> room = new HashMap<>();
-            room.put("room", chatRoom);
-            room.put("message", chatRoom.getMessages());
-            result = new ResponseBasic(true, "success", room);
+            result = new ResponseBasic(true, "success", chatRoom);
         } catch (Exception e){
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
