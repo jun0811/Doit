@@ -17,4 +17,5 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "where h.group = g and h.hashTag.name like %:hashtag% ) and g.status = :status", nativeQuery = true)
     Page<Group> findAllByHashTagAndStatus(@Param("hashtag") String hashtag, String status, Pageable pageable);
     Page<Group> findAllByCategoryAndStatus(String category, String status, Pageable pageable);
+    Optional<Group> findByGroupPkAndStatus(Long groupPk, String status);
 }
