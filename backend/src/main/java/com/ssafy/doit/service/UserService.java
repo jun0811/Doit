@@ -51,7 +51,7 @@ public class UserService {
                 try {
                     System.out.println("tryㅅㅄㅂ");
                     imgPath = s3Service.upload(userReq.getImage(),file);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     System.out.println("catchㅅㅄㅂ");
                     e.printStackTrace();
                 }

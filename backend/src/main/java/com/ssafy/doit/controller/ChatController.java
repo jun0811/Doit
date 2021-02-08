@@ -3,6 +3,7 @@ package com.ssafy.doit.controller;
 import com.ssafy.doit.model.chat.ChatRoom;
 import com.ssafy.doit.model.chat.ChatRoomJoin;
 import com.ssafy.doit.model.response.ResponseBasic;
+import com.ssafy.doit.model.response.ResponseMessage;
 import com.ssafy.doit.service.ChatService;
 import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -69,8 +70,10 @@ public class ChatController {
 
             if(!opt.isPresent()) throw new Exception("유저 불일치");
 
-            ChatRoom chatRoom = chatService.getRoom(roomPk);
-            result = new ResponseBasic(true, "success", chatRoom);
+            Map<String, Object> res = new HashMap<>();
+            res.put("room", chatService.getRoom(roomPk));
+            res.put("message", chatService.getMessages(roomPk));
+            result = new ResponseBasic(true, "success", res);
         } catch (Exception e){
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);

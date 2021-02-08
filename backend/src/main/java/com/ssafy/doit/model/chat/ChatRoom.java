@@ -27,6 +27,7 @@ public class ChatRoom {
     @JoinColumn(name = "product_pk")
     private Product product;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> messages = new ArrayList<>();
 }
