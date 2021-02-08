@@ -1,25 +1,25 @@
 <template>
-<div class="d-flex flex-column justify-center">
-  <v-row class="mx-3 mx-sm-1 mb-5">
-    Doit 그룹랭킹👑
-  </v-row>
-  <!-- <v-row> -->
-  <v-card class="px-4 mr-3">
-    <v-row v-for="(group, idx) in groups" :key="idx" class="mb-3">
-      <v-col cols="2" class="text-center">
-        <span class="rank-num">{{idx+1}}</span>
-      </v-col>
-      <v-col cols="2" class="d-flex flex-column justify-center">
-        <img class="rank-image box" :src="group.groupImage" alt="그룹이미지">
-      </v-col>
-      <v-col cols="8">
-        <div class="group-name">{{group.groupname}}</div>
-      </v-col>
-        <!-- <div class="rank-wrapper"> -->
+  <div class="d-flex flex-column justify-center">
+    <v-row class="mx-1 mb-2 mt-16 mt-sm-0">
+      Doit 그룹랭킹👑
     </v-row>
-  </v-card>
-  <!-- </v-row> -->
-</div>
+    <!-- <v-row> -->
+    <v-card class="px-4 mr-sm-3">
+      <v-row v-for="(group, idx) in groups" :key="idx" class="my-3">
+        <v-col cols="2" class="text-center">
+          <span class="rank-num">{{idx+1}}</span>
+        </v-col>
+        <v-col cols="2" class="d-flex flex-column justify-center">
+          <img class="rank-image box" :src="group.groupImage" alt="그룹이미지">
+        </v-col>
+        <v-col cols="8">
+          <div class="group-name">{{group.groupname}}</div>
+        </v-col>
+          <!-- <div class="rank-wrapper"> -->
+      </v-row>
+    </v-card>
+    <!-- </v-row> -->
+  </div>
 </template>
 
 <script>
@@ -79,24 +79,30 @@ export default {
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .rank-num {
-    font-size: large;
+    font-size: x-large;
     height: 56px;
     line-height: 56px;
   }
 }
   
 .group-name {
-  font-size: small;
+  font-size: medium;
   vertical-align: middle;
   height: 56px;
   line-height: 56px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .group-name {
-    font-size: x-small;
+    font-size: medium;
     height: 56px;
-    line-height: 56px;    
+    line-height: 56px;   
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; 
   }
 }
 
