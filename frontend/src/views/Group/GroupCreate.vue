@@ -1,19 +1,20 @@
 <template>
     <div>
         <Header></Header>
-        <v-container class="pa-3 pa-sm-16">
-            <v-card  class="d-flex align-center flex-column my-15 mx-sm-auto px-5 col-sm-10" width=100%>
-                <h3 class="my-4">그룹 만들기</h3>
+        <v-container class="pa-3 pa-sm-16" >
+            <v-card  class="d-flex align-center flex-column mb-12 mx-sm-auto px-5 col-sm-10" width=100% max-width=600>
+                <h3 class="my-4" style="width:100%">그룹 만들기</h3>
                 <v-divider style="width:100%;"></v-divider>
                 <v-container class="d-flex flex-column">
-                  <v-row class="my-5">
-                    <v-col cols="8" sm="7" md="6" class="text-left">
+                  <v-row class="mb-5">
+                    <v-col cols="12" sm="12" md="6" class="text-left">
                       <v-text-field 
                       v-model="name"
+                      hide-details=""
                       label="그룹명"></v-text-field>
                     </v-col>
                     <!-- 달력 시작-->
-                    <v-col cols="10" md="6">
+                    <v-col cols="12" md="6" sm="12">
                       <!-- <span class="mr-3">|마감|</span> -->
                           <v-menu
                             v-model="menu"
@@ -22,10 +23,12 @@
                             offset-y
                             max-width="290px"
                             min-width="auto"
+                            hide-details=""
                           >
                             <template v-slot:activator="{ on, attrs }">
                               <v-text-field
                                 v-model="endDate"
+                                hide-details=""
                                 label="만료 날짜"
                                 prepend-icon="mdi-calendar"
                                 v-bind="attrs"
@@ -43,11 +46,12 @@
                       <!-- 달력 끝 -->
                     </v-col>
                   </v-row>
-                  <v-row>
-                    <v-col cols="10" sm="10" md="6">
+                  <v-row class="mb-3">
+                    <v-col cols="12" md="6" sm="12">
                       <span>최대 멤버수: {{maxNum}}</span>
                       <v-slider
                         v-model="maxNum"
+                        hide-details=""
                         color="orange"
                         min="4"
                         max="16"
@@ -56,17 +60,19 @@
                     </v-col>
                     <v-col class="pt-1">
                       <v-select
+                        hide-details=""
                         :items="items"
                         label="카테고리"
                         v-model="tmp"
                       ></v-select>
                     </v-col>
                   </v-row>
-                  <v-row>
+                  <v-row class="mb-2">
                     <v-col cols="12">
                     <v-textarea
                       label="그룹 소개글"
                       v-model="content"
+                      hide-details=""
                       auto-grow
                       outlined
                       rows="3"
@@ -98,17 +104,17 @@
                     </ul>
                   </v-col>
                 </v-row>
-                <v-row>
-                  <v-col class="d-flex justify-center">
-                    <v-btn
-                      outlined
-                      @click="create"
-                      class="group-create-btn mt-4 mb-6"
-                    >그룹 생성</v-btn>
-                  </v-col>
-                </v-row>
               </v-container>
             </v-card>
+          <v-row>
+            <v-col class="d-flex justify-center">
+              <v-btn
+                outlined
+                @click="create"
+                class="group-create-btn"
+              >그룹 생성</v-btn>
+            </v-col>
+          </v-row>
         </v-container>
         <Footer></Footer>
     </div>
@@ -245,8 +251,9 @@ ul li {
 }
 
 .group-create-btn {
-  border: 1px solid #F9802D;
+  border: 2px solid #F9802D;
   color: #F9802D;
+  border-radius: 8px;
 }
 
 </style>
