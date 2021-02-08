@@ -8,6 +8,8 @@ public interface ResponseProduct {
     String getTitle();
     String getContent();
     String getImage();
+    int getMileage();
+    boolean getStatus();
 
     default Long getUser_pk(){ return getUserId(); }
 

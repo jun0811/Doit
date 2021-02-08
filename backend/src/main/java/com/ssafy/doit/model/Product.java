@@ -24,6 +24,9 @@ public class Product {
     private String content;
     private String image;
 
+    private int mileage;
+    private boolean status;
+
     @ManyToOne
     @JoinColumn(name = "user_pk")
     @JsonIgnore
