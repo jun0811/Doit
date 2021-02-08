@@ -43,7 +43,7 @@
             ></v-text-field>
           </v-col>
           <v-col cols="3" sm="1">
-            <v-btn text @click="checkEmail"  v-bind:class="{check : c_Email }" class="mt-4"> 
+            <v-btn text @click="checkEmail" v-bind:class="{check : c_Email }" class="mt-4"> 
                 <font-awesome-icon icon="check-circle"/> 
             </v-btn>
           </v-col>

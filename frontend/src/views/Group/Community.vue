@@ -20,7 +20,7 @@
               <p class="ma-0" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  </p>
             </div>
           </v-col>
-          <v-col cols="2" class="d-flex flex-column justify-end">
+          <v-col cols="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
             <v-btn class="group" outlined width="75" v-if="!joined" @click="joinGroup">가입하기</v-btn>
             <v-btn class="group" outlined width="75" v-else @click="withdrawGroup">탈퇴하기</v-btn>
           </v-col>
@@ -35,29 +35,72 @@
       <v-row class="d-flex justify-center">
         <v-col  cols="9" class="d-flex justify-space-around mx-16">
           <div>
-            <span class="text-h6"> | 01 | </span>
+            <span class="text-h6"></span>
           </div>
-          <div >
-            <v-btn text v-bind:class="{selected : feed}" class="text-h5" :model="feed" @click="FeedList"> <font-awesome-icon icon="rss-square"/>FEED</v-btn>
-            <v-btn text class="text-h5" v-bind:class="{selected: users}" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn>
+          <div>
+            <v-btn text v-bind:class="{selected: feed}" class="text-h5" :model="feed" @click="FeedList"> <font-awesome-icon icon="rss-square"/>FEED</v-btn>
+            <v-btn text v-bind:class="{selected: users}" class="text-h5" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn>
           </div>
           <div>
             <v-btn text class="text-h6" @click="feedWrite"> 글작성 </v-btn>
           </div>
         </v-col>
-        <v-col  cols="9" class="d-flex justify-space-around mx-16">
-          <span>1 2 3 4 5 6 7 8 9 10 11 12 
-            13 14 15 16 17 18 19 20 21 22 23 24
-            25 26 27 28 29 30 </span>
+        <v-col  cols="9" class="d-flex justify-space-around mx-16"> 
+          <!-- 날짜 선택 시작 -->
+          <!-- start day -->
+          <v-menu
+            v-model="menu1"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="start"
+                label="시작일"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="start"
+              @input="menu1 = false"
+            ></v-date-picker>
+          </v-menu>
+          <h2 class="ma-4"> ~ </h2>
+          <!-- end day -->
+          <v-menu
+            v-model="menu2"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="end"
+                label="종료일"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="end"
+              @input="menu2 = false"
+            ></v-date-picker>
+          </v-menu>
+          <!-- 날짜 선택 끝 -->
+          <v-btn @click="feedRead" text class="ma-4"> 검색 </v-btn >
         </v-col>
         <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16">
           <div class="temp d-flex align-center flex-column">
-            <p>cards</p>
-            <p>cards</p>
-            <p>cards</p>
-            <p>cards</p>
-            <p>cards</p>
-            <p>cards</p>
             <p>cards</p>
           </div>
         </v-col>
@@ -79,6 +122,10 @@ import Footer from "@/components/common/Footer";
 import GroupMember from "@/components/group/GroupMember";
 import http from "../../http-common"
 // 해야할일 현재 날짜 받아와서 현재 달, 날짜 값으로 feed 보여주기 
+
+
+const date=new Date()
+
 export default {
   components: { Header, Footer, GroupMember },
   props: {
@@ -86,13 +133,65 @@ export default {
   },
   data() {
     return {
+      menu2: false,
+      menu1: false,
       user_info: {},
       user_num: 0,
-      feed: true,
-      users: false,
-      joined : false, // 현재 유저 가입 여부 확인
+      feed: true, //
+      users: false, 
+      joined: false, // 현재 유저 가입 여부 확인
+      start: new Date().toISOString().substr(0,10),
+      end: new Date().toISOString().substr(0,10),
+      year: date.getFullYear(),
+      month: date.getMonth()+1,
+      day :date.getDate(),
+      submit: false
     }
   },
+  watch: {
+    end(){
+      this.submit = false
+      const start = new Date(this.start)
+      const end = new Date(this.end)
+      const TODAY = new Date() // 
+      let dateDiff = Math.ceil((end.getTime()-start.getTime())/(1000*3600*24));
+      let check = Math.ceil((end.getTime()-TODAY.getTime())/(1000*3600*24));
+      if (check>=1){
+        alert('미래를 볼순 없어요!')
+        this.end = `${this.year}-${String(this.month).padStart(2, "0")}-${String(this.day).padStart(2, "0")}`
+        this.submit = true
+      }
+      else if (dateDiff<0){
+        alert('시작 날짜 이후 날짜를 선택해주세요')
+        this.end = this.start
+        this.submit = true
+      }else{
+        this.submit = true
+      }
+    },
+    start(){
+      this.submit = false
+      const start = new Date(this.start)
+      const end = new Date(this.end)
+      const TODAY = new Date() // 
+      let dateDiff = Math.ceil((end.getTime()-start.getTime())/(1000*3600*24));
+      let check = Math.ceil((start.getTime()-TODAY.getTime())/(1000*3600*24));
+      if (check>=1){
+        alert('미래를 볼순 없어요!')
+        this.start = `${this.year}-${String(this.month).padStart(2, "0")}-${String(this.day).padStart(2, "0")}`
+        this.submit = true
+
+      }
+      else if (dateDiff<0){
+        alert('끝 날짜 이전 날짜를 선택해주세요')
+        this.start=  this.end
+        this.submit = true
+      }else{
+        this.submit = true
+      }
+    }
+  }
+  ,
   methods: {
     FeedList(){
       this.feed = true
@@ -124,6 +223,9 @@ export default {
           alert('탈퇴 실패!')
         }
       })
+    },
+    feedRead(){
+      console.log('피드 호출')
     }
   },
   created(){
@@ -133,14 +235,14 @@ export default {
       this.user_num = this.user_info.users.length
     }),
     http.get('group/currentUserGroup')
-    .then((res)=>{
-      this.joined = res.data.object.some((group)=>{
-        if(this.groupPk == group.groupPk){
-          return true
-        }
+      .then((res)=>{
+        this.joined = res.data.object.some((group)=>{
+          if(this.groupPk == group.groupPk){
+            return true
+          }
+        })
+        // console.log(this.joined)
       })
-      // console.log(this.joined)
-    })
   }
 }
 </script>

@@ -304,7 +304,7 @@ export default {
         })}
       },
       group(no) {
-        this.$router.push(`/group/community?no=${no}`);
+        this.$router.push(`/group/community/${no}`);
       },
       logout() {
         this.LOGOUT()
