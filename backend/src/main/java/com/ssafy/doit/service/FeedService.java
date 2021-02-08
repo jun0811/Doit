@@ -112,39 +112,43 @@ public class FeedService {
         Optional<Feed> feed = feedRepository.findById(feedPk);
         if(userPk == feed.get().getWriter()) {
             feed.ifPresent(selectFeed -> {
-                selectFeed.setStatus("false");
-                feedRepository.save(selectFeed);
+//                selectFeed.setStatus("false");
+//                feedRepository.save(selectFeed);
+                feedRepository.delete(selectFeed);
             });
+            feedUserRepository.deleteByFeedPk(feedPk);
+            commentRepository.deleteByFeedPk(feedPk);
         } else throw new Exception("피드 작성자가 아닙니다.");
     }
 
-    // 그룹을 탈퇴한 경우 그룹+회원의 피드 삭제
+    // 그룹을 탈퇴한 경우 그룹&회원의 피드 삭제
     @Transactional
     public void deleteFeedByGroupUser(Long userPk, Long groupPk) {
         List<Feed> feedList = feedRepository.findByGroupPkAndWriter(groupPk, userPk);
-        for(Feed feed : feedList){
-            feed.setStatus("false");
-            feedRepository.save(feed);
-        }
+        getObject(feedList);
     }
 
     // 회원이 탈퇴했거나 강퇴된 경우 그 회원의 모든 피드 삭제
     @Transactional
     public void deleteFeedByUser(Long userPk) {
         List<Feed> feedList = feedRepository.findByWriter(userPk);
-        for(Feed feed : feedList){
-            feed.setStatus("false");
-            feedRepository.save(feed);
-        }
+        getObject(feedList);
     }
 
-    // 관리자가 그룹을 삭제할 경우 그 그룹과 관련된 모든 피드 삭제
+    // 관리자가 그룹을 삭제했을 경우 그 그룹과 관련된 모든 피드 삭제
     @Transactional
     public void deleteFeedByGroup(Long groupPk) {
         List<Feed> feedList = feedRepository.findByGroupPk(groupPk);
+        getObject(feedList);
+    }
+
+    public void getObject(List<Feed> feedList){
         for(Feed feed : feedList){
-            feed.setStatus("false");
-            feedRepository.save(feed);
+//            feed.setStatus("false");
+//            feedRepository.save(feed);
+            feedUserRepository.deleteByFeedPk(feed.getFeedPk());
+            commentRepository.deleteByFeedPk(feed.getFeedPk());
+            feedRepository.deleteById(feed.getFeedPk());
         }
     }
 
