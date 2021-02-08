@@ -1,12 +1,12 @@
 <template>
-<div>
+<v-container>
   <Header></Header>
-    <v-container class="d-flex flex-column justify-center align-center">
+    <v-container class="d-flex flex-column justify-center align-center" sm="10" md="6" style="max-width:600px;">
         <v-row class="title-wrapper">
           <h1>물품 등록</h1>
         </v-row>
-        <hr style="width:570px;" class="my-4">
-        <v-row class="d-flex flex-column content-wrapper mt-1">
+        <hr style="width:100%;" class="my-4">
+        <v-row class="d-flex flex-column content-wrapper mt-1" >
           <v-text-field
             solo
             :label="title"
@@ -38,11 +38,11 @@
             <v-col cols="8" class="d-flex align-center">
               <v-text-field
                 hide-details=""
-                :label="mileage"
+                label="판매금액"
                 solo
                 v-model="product.mileage"
               ></v-text-field>
-              <span class="ml-2">마일리지</span>
+              <span class="ml-2" style="word-break: keep-all">마일리지</span>
             </v-col>
           </v-row>
           <v-row class="my-2">
@@ -76,7 +76,7 @@
     </v-container>
   <Footer></Footer>
 
-</div>
+</v-container>
 </template>
 
 <script>
@@ -137,15 +137,15 @@ export default {
 <style scoped>
 
 .title-wrapper {
-  width:550px;
+  width:100%;
 }
 
 .content-wrapper {
-  width:560px;
+  width:100%;
 }
 
 .content-card {
-  width:560px;
+  width:100%;
   padding : 30px;
 }
 
