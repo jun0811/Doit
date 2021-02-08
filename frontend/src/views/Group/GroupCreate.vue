@@ -253,7 +253,7 @@ ul li {
 .group-create-btn {
   border: 2px solid #F9802D;
   color: #F9802D;
-  border-radius: 8px;
+  border-radius: 15px;
 }
 
 </style>
