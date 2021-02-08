@@ -35,7 +35,7 @@
               <v-btn
                 text
                 color="secondary"
-                @click="moveCommunity"
+                @click="moveCommunity(idx)"
               >
                 그룹으로 이동
               </v-btn>
@@ -64,7 +64,6 @@
 import { searchGroup } from "@/api/group/index.js"
 export default {
     props:{
-      group: Object,
       page: Number,
       word: String,
     },
@@ -80,8 +79,9 @@ export default {
       pageCount:'',
     }),
     methods: {
-      moveCommunity(){
-        this.$router.push({name:"Community",params:{groupPk:this.group.groupPk}})
+      moveCommunity(idx){
+        console.log(this.groups[idx])
+        this.$router.push({name:"Community",params:{groupPk:this.groups[idx].groupPk}})
       }  
     },
     created() {
@@ -94,8 +94,8 @@ export default {
         },
         (res) =>{
           if (res.status){
-          console.log('getgroup',res.data.object.content)
-          this.groups = res.data.object.content
+          console.log('getgroup',res.data.object.content[0])
+          this.groups = res.data.object.content // 배열로 집어넣기
           let listLeng = this.groups.length,
             listSize = 10;
           this.pageCount = Math.floor(listLeng / listSize);
