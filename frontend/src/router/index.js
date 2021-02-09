@@ -18,6 +18,7 @@ import MileageShop from "../views/Mileage/MileageShop.vue";
 import ProductDetail from "../views/Mileage/ProductDetail.vue";
 import ProductWrite from "../views/Mileage/ProductWrite.vue";
 import PasswordFind from "../views/User/PasswordFind.vue";
+import Chat from "../views/chat/Chat.vue";
 
 Vue.use(VueRouter);
 const routes = [
@@ -114,6 +115,11 @@ const routes = [
     path: "/mileageshop/productwrite",
     name: "ProductWrite",
     component: ProductWrite,
+  },
+  {
+    path: "/chat",
+    name: "Chat",
+    component: Chat,
   },
 ];
 

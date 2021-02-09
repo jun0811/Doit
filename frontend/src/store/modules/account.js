@@ -23,10 +23,11 @@ const getters = {
 };
 
 const mutations = {
-  SET_ACCESSTOKEN(state, { accessToken, email, name }) {
+  SET_ACCESSTOKEN(state, { accessToken, email, name, userpk }) {
     state.accessToken = accessToken;
     state.email = email;
     state.name = name;
+    state.userpk = userpk;
   },
   SET_NAME(state, { name }){
     state.name = name;
@@ -59,6 +60,7 @@ const mutations = {
 
 const actions = {
   async LOGIN({ commit }, payload) {
+
     const response = await api.login(payload);
     console.log(response)
     commit('LOGIN', response);
