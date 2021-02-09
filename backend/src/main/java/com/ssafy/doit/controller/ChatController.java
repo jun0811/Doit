@@ -3,7 +3,7 @@ package com.ssafy.doit.controller;
 import com.ssafy.doit.model.chat.ChatRoom;
 import com.ssafy.doit.model.chat.ChatRoomJoin;
 import com.ssafy.doit.model.response.ResponseBasic;
-import com.ssafy.doit.model.response.ResponseMessage;
+import com.ssafy.doit.repository.chat.ChatMessageRepository;
 import com.ssafy.doit.service.ChatService;
 import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +27,8 @@ public class ChatController {
     private final UserService userService;
     @Autowired
     private final ChatService chatService;
+    @Autowired
+    private final ChatMessageRepository chatMessageRepository;
 
     @ApiOperation(value = "채팅방 생성")
     @PostMapping("/createRoom")
@@ -72,7 +74,7 @@ public class ChatController {
 
             Map<String, Object> res = new HashMap<>();
             res.put("room", chatService.getRoom(roomPk));
-            res.put("message", chatService.getMessages(roomPk));
+            res.put("messages", chatMessageRepository.findAllByRoomPk(roomPk));
             result = new ResponseBasic(true, "success", res);
         } catch (Exception e){
             e.printStackTrace();

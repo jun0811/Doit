@@ -1,13 +1,11 @@
 package com.ssafy.doit.repository.chat;
 
 import com.ssafy.doit.model.chat.ChatMessage;
-import com.ssafy.doit.model.response.ResponseMessage;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
-    ResponseMessage getById(Long id);
-    List<ResponseMessage> findAllByRoomPk(Long roomPk);
+public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long> {
+    List<ChatMessage> findAllByRoomPk(Long roomPk);
 }
