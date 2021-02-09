@@ -38,7 +38,6 @@
                             max-height="44"
                             max-width="44"
                             />
-                            <span class="ml-4">nickname</span>
                         </v-col>
                         <v-col cols="9" sm="10" class="pa-0 my-auto">
                             <div>
