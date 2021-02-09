@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query(value = "select g from Group g where exists (select h from GroupHashTag h " +
-            "where h.group = g and h.hashTag.name like %:hashtag% ) and g.status = :status", nativeQuery = true)
+            "where h.group = g and h.hashTag.name like %:hashtag% ) and g.status = :status")
     Page<Group> findAllByHashTagAndStatus(@Param("hashtag") String hashtag, String status, Pageable pageable);
     Page<Group> findAllByCategoryAndStatus(String category, String status, Pageable pageable);
     Optional<Group> findByGroupPkAndStatus(Long groupPk, String status);

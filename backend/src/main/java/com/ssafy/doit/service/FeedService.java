@@ -194,13 +194,12 @@ public class FeedService {
                 CommitUser cu = optCU.get();
                 cu.setCnt(cu.getCnt() + 1);
                 commitUserRepository.save(cu);
+            }else{
+                commitUserRepository.save(CommitUser.builder()
+                        .date(LocalDate.now())
+                        .userPk(writerPk)
+                        .cnt(1).build());
             }
-//            else{
-//                commitUserRepository.save(CommitUser.builder()
-//                        .date(LocalDate.now())
-//                        .userPk(writerPk)
-//                        .cnt(1).build());
-//            }
 
             Optional<CommitGroup> optCG = commitGroupRepository.findByGroupPkAndDate(groupPk, LocalDate.now());
             if(optCG.isPresent()){
