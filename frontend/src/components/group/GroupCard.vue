@@ -76,7 +76,7 @@ export default {
         name: '',
       },
       groups: [],
-      pageCount:'',
+      pageCount:0,
     }),
     methods: {
       moveCommunity(idx){
@@ -93,9 +93,11 @@ export default {
           "tag":this.word,
         },
         (res) =>{
+          console.log(res)
           if (res.status){
           console.log('getgroup',res.data.object.content[0])
           this.groups = res.data.object.content // 배열로 집어넣기
+          console.log('group',this.groups)
           let listLeng = this.groups.length,
             listSize = 10;
           this.pageCount = Math.floor(listLeng / listSize);
