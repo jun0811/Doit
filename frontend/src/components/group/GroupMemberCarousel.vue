@@ -7,6 +7,7 @@
       <span class="mx-2">{{item.nickname}}</span>
       <v-btn v-if="loginUser==leader && item.userPk != leader" normal x-small class="px-0" @click="kickout(item.userPk)">강퇴</v-btn>
       <span v-if="item.userPk == leader" class="groupleader"><font-awesome-icon icon="crown"/></span>
+      <!-- <span v-if="item.userPk == leader" class="groupleader">👑</span> -->
     </v-col>
   </v-row>
 </template>
@@ -82,11 +83,11 @@ import http from "../../http-common";
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  border: 1px solid orange;
+  border: 1px solid #F9802D;
 }
 
 .groupleader {
-  color:orange;
+  color:#F9802D;
 }
 
 </style>

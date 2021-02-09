@@ -17,8 +17,9 @@
             <p class="ma-0"> 멤버 : {{user_num}}/{{user_info.maxNum}}</p>
             <p class="ma-0"> {{user_info.startDate}} ~ {{user_info.endDate}}</p>
             <div class="d-flex justify-start">
-              <p class="ma-0" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  
+              <p class="ma-0 mr-1" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  
                 <button  @click="remove(tag)"                       
+                  v-if="loginUser==leader"
                   class="hashtag-del-btn mr-1"> 
                   <font-awesome-icon icon="times-circle"/>
                 </button>
@@ -27,9 +28,9 @@
           </v-col>
           <v-col cols="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
             
-            <v-btn class="group" outlined width="75" @click="updateGroup">그룹 수정</v-btn>
+            <v-btn class="group" outlined width="75" v-if="loginUser==leader" @click="updateGroup">그룹 수정</v-btn>
             <v-btn class="group" outlined width="75" v-if="!joined" @click="joinGroup">가입하기</v-btn>
-            <v-btn class="group" outlined width="75" v-else @click="withdrawGroup">탈퇴하기</v-btn>
+            <v-btn class="group" outlined width="75" v-if="joined && loginUser != leader" @click="withdrawGroup">탈퇴하기</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -154,7 +155,9 @@ export default {
       month: date.getMonth()+1,
       day :date.getDate(),
       submit: false,
-      cards: []
+      cards: [],
+      leader:'',
+      loginUser:'',
     }
   },
   watch: {
@@ -249,7 +252,7 @@ export default {
       // this.hashtag.splice(idx,1)
       http.delete(`group/deleteHashTag?groupPk=${Number(this.groupPk)}&hashtag=${val}`)
       .then(()=>{
-        this.$push.go()
+        // const delIdx = this.hashtag.findIndex(i => i.userPk === userPk);
       })
     }
   },
@@ -258,6 +261,8 @@ export default {
     .then((res)=>{
       this.user_info= res.data.object
       this.user_num = this.user_info.users.length
+      this.leader = res.data.object.leader
+      this.loginUser = this.$store.state.account.userpk
     }),
     http.get('group/currentUserGroup')
       .then((res)=>{

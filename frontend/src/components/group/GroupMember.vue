@@ -6,8 +6,10 @@
       width="600"
     >
         <div class="mx-6 my-4 align-self-end">
-          <span class="mx-1">팀 스코어 : </span>{{score}}
-          <span class="mx-1">그룹원 수 : </span>{{totalNum}}
+          <span class="mx-1">팀 스코어 : </span>
+          <span class="team-info mr-4">{{score}}</span>
+          <span class="mx-1">그룹원 수 : </span>
+          <span class="team-info">{{totalNum}}</span>
         </div>
         <v-card
         width="80%"
@@ -86,6 +88,10 @@ import http from "../../http-common";
 
 .member-card {
   border-radius: 20px;
+}
+
+.team-info {
+  color:#F9802D;
 }
 
 </style>
