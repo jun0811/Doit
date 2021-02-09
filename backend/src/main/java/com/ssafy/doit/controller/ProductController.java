@@ -39,12 +39,11 @@ public class ProductController {
             if(groupCount < 2) throw new Exception("그룹 수 부족");
 
             product.setUser(currentUser);
-            System.out.println("왜 안돼! : " + product.getUser().getId());
             productRepository.save(product);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -68,7 +67,7 @@ public class ProductController {
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -88,7 +87,7 @@ public class ProductController {
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -105,7 +104,7 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -121,7 +120,7 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -137,7 +136,7 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -153,7 +152,7 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -169,7 +168,7 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
