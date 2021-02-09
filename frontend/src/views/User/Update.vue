@@ -31,10 +31,7 @@
                     v-model="name"
                     required
                     clearable
-                    :error-messages="nameErrors"
                     :counter="8"
-                    @input="$v.name.$touch()"
-                    @blur="$v.name.$touch()"
                     class="mt-0 pt-1"
                   ></v-text-field>
                 </v-col>
@@ -130,6 +127,16 @@ export default {
       c_Nick: false,
     };
   },
+  // computed: {
+  //   nameErrors () {
+  //     const errors = []
+  //     if (!this.$v.name.$dirty) return errors
+  //     !this.$v.name.maxLength && errors.push('닉네임은 8자이하입니다.')
+  //     !this.$v.name.required && errors.push('닉네임이 필요합니다.')
+  //     return errors
+  //   }
+  // }
+  // ,
   watch: {
     name() {
       this.check();
@@ -151,8 +158,7 @@ export default {
     },
     save() {
       if (this.c_Nick) {
-        http
-          .put(`/user/updateInfo?email=${this.email}&name=${this.name}`)
+        http.put(`/user/updateInfo?email=${this.email}&name=${this.name}`)
           .then((res) => {
             if (res.data.status) {
               alert("회원정보가 변경되었습니다");
