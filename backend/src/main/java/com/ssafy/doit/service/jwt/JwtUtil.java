@@ -45,12 +45,12 @@ public class JwtUtil {
                 .getBody();
     }
 
-    public Object getUser(String token) {
-        return extractAllClaims(token).get("User");
+    public String getUser(String token) {
+        return (String) extractAllClaims(token).get("User");
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername((String) getUser(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(getUser(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
