@@ -58,7 +58,7 @@ export default {
       },
       (res) =>{
         if (res.status){
-        // console.log(res)
+        console.log(res)
         this.results = res.data.object.content
         }
       },
