@@ -77,6 +77,7 @@ public class SignupController {
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .nickname(request.getNickname())
+                    .createDate(LocalDate.now())
                     .userRole(UserRole.GUEST)
                     .authKey(authKey)
                     .build());
