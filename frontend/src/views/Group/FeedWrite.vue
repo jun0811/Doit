@@ -104,7 +104,7 @@ import { createFeed } from "@/api/feed/index.js"
 export default {
     name :"FeedWrite",
     props:{
-        groupPk: String
+        groupPk: String,
     },
     components: {
         Header,

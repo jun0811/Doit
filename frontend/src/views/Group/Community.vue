@@ -101,7 +101,7 @@
         </v-col>
         <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16">
           <div class="temp d-flex align-center flex-column">
-            <p>cards</p>
+            <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card"></FeedCard>
           </div>
         </v-col>
         <v-col v-if="users" cols="9" class="d-flex justify-center mx-sm-16 ">
@@ -120,6 +120,7 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import GroupMember from "@/components/group/GroupMember";
+import FeedCard from "@/components/group/FeedCard";
 import http from "../../http-common"
 // 해야할일 현재 날짜 받아와서 현재 달, 날짜 값으로 feed 보여주기 
 
@@ -127,7 +128,7 @@ import http from "../../http-common"
 const date=new Date()
 
 export default {
-  components: { Header, Footer, GroupMember },
+  components: { Header, Footer, GroupMember,FeedCard },
   props: {
     groupPk: {type:String}
   },
@@ -145,7 +146,8 @@ export default {
       year: date.getFullYear(),
       month: date.getMonth()+1,
       day :date.getDate(),
-      submit: false
+      submit: false,
+      cards: []
     }
   },
   watch: {
@@ -226,10 +228,11 @@ export default {
     },
     feedRead(){
       const pk = Number(this.groupPk)
-      console.log(typeof pk) 
       http.get(`feed/groupFeed?end=${this.end}&groupPk=${pk}&start=${this.start}`)
       .then((res)=>{
-        console.log(res)
+        // console.log(res.data.object)
+        this.cards = res.data.object
+        console.log(this.cards)
       })
     }
   },
