@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -39,7 +38,8 @@ public class ProductController {
 
             if(groupCount < 2) throw new Exception("그룹 수 부족");
 
-            product.setUserPk(userPk);
+            product.setUser(currentUser);
+            System.out.println("왜 안돼! : " + product.getUser().getId());
             productRepository.save(product);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
@@ -58,7 +58,7 @@ public class ProductController {
             long currentUser = userService.currentUser();
             Product origin = productRepository.findById(id).get();
 
-            if(origin.getUserPk() != currentUser) throw new Exception("유저 불일치");
+            if(origin.getUser().getId() != currentUser) throw new Exception("유저 불일치");
 
             origin.setTitle(product.getTitle());
             origin.setContent(product.getContent());
@@ -82,7 +82,7 @@ public class ProductController {
             long currentUser = userService.currentUser();
             Product origin = productRepository.findById(id).get();
 
-            if(origin.getUserPk() != currentUser) throw new Exception("유저 불일치");
+            if(origin.getUser().getId() != currentUser) throw new Exception("유저 불일치");
 
             productRepository.delete(origin);
             result = new ResponseBasic(true, "success", null);
@@ -132,7 +132,7 @@ public class ProductController {
     public Object searchProduct(@RequestParam String title){
         ResponseBasic result = null;
         try{
-            List<ResponseProduct> products = productRepository.findByTitleContaining(title);
+            List<ResponseProduct> products = productRepository.findAllByTitleContaining(title);
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){

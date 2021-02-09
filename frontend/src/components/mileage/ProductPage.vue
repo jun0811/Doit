@@ -7,7 +7,7 @@
         cols="4"
         v-for="(item, idx) in paginatedData"
         :key="idx"
-        class="d-flex justify-center px-6 py-6"
+        class="d-flex justify-center px-4 py-4"
       >
           <v-card height="100%" width="100%" router-link :to="{name: 'ProductDetail', params: {product_id: item.id}}">
             <v-img
@@ -51,6 +51,7 @@ import http from "../../http-common";
     props: {
       page:Number,
       pageCount:Number,
+      selectedCategory:String,
     }, 
     created() {
       http.get('/product/getAll')
@@ -59,8 +60,36 @@ import http from "../../http-common";
         console.log(this.products)
       })
     },
+    watch: {
+      selectedCategory: {
+        handler : function () {
+          console.log(this.selectedCategory)
+          if(this.selectedCategory==='전체') {
+              http.get('/product/getAll')
+              .then((res)=>{
+                this.products = res.data.object
+              })
+            } else {
+              http.get(`product/searchCategory?category=${this.selectedCategory}`)
+              .then((res)=>{
+                this.products = res.data.object
+              })
+            }
+          },
+        deep: true,
+      },
+      products : {
+        handler :function () {
+          let listLeng = this.products.length,
+            listSize = 9,
+            page = Math.floor(listLeng / listSize);
+          if (listLeng % listSize > 0) page += 1;
+          this.pageCount = page
+        }
+      }
+    },
     computed: {
-       paginatedData () {
+      paginatedData () {
         const listSize = 9
         const start = (this.page -1) * listSize,
               end = start + listSize;

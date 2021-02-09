@@ -1,21 +1,18 @@
 package com.ssafy.doit.controller;
 
-import com.ssafy.doit.model.Profile;
 import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.response.ResponseUser;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
-import com.ssafy.doit.repository.ProfileRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.GroupUserService;
+import com.ssafy.doit.service.S3Service;
 import com.ssafy.doit.service.UserService;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -43,11 +39,11 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private ProfileRepository profileRepository;
-    @Autowired
     private final UserService userService;
     @Autowired
     private GroupUserService groupUserService;
+    @Autowired
+    private S3Service s3Service;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -115,13 +111,21 @@ public class UserController {
     }
 
     // 회원정보 수정
-    @ApiOperation(value = "회원정보(닉네임) 수정")
-    @PutMapping("/updateInfo")
-    public Object updateInfo(@RequestBody User userReq) {
+    @ApiOperation(value = "회원정보(닉네임,프로필) 수정")
+    @PutMapping(value="/updateInfo", produces = { "application/json", "application/xml" })
+    public Object updateInfo(@RequestBody User userReq,@RequestParam MultipartFile file) {
         ResponseBasic result = null;
+        System.out.println("hello");
         try {
             Long userPk = userService.currentUser();
-            userService.updateUser(userPk, userReq);
+            String imgPath = s3Service.upload(userReq.getImage(),file);
+            Optional<User> user = userRepository.findById(userPk);
+
+            user.ifPresent(selectUser->{
+                selectUser.setImage(imgPath);
+                selectUser.setNickname(userReq.getNickname());
+                userRepository.save(selectUser);
+            });
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             e.printStackTrace();
@@ -149,79 +153,25 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "프로필사진 변경")
-    @PostMapping("/insertImg")
-    public Object insertImg(HttpServletRequest req, @RequestParam("image") MultipartFile files) {
-        ResponseBasic result = new ResponseBasic();
-        Profile profile = new Profile();
-
-        String sourceFileName = files.getOriginalFilename();
-        String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
-
-        File destinationFile;
-        String destinationFileName;
-
-        String fileUrl = "C:/";
-
-        try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails) principal;
-            User user = userRepository.findByEmail(userDetails.getUsername()).get();
-            System.out.println(user.getId());
-            Optional<Profile> userProfile = profileRepository.findByUserPk(user.getId());
-
-            if (userProfile.isPresent()) {
-                userProfile.ifPresent(selectUser -> {
-                    profileRepository.delete(selectUser);
-                });
-            }
-            do {
-                destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
-                destinationFile = new File(fileUrl + destinationFileName);
-            } while (destinationFile.exists());
-
-            destinationFile.getParentFile().mkdirs();
-            files.transferTo(destinationFile);
-
-            profile.setFileName(destinationFileName);
-            profile.setFileOriname(sourceFileName);
-            profile.setFileUrl(fileUrl);
-            profile.setUserPk(user.getId());
-            profileRepository.save(profile);
-
-            result.status = true;
-            result.data = "profile upload success";
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            result.status = false;
-            result.data = "error";
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    // 회원 탈퇴
+        // 회원 탈퇴
     @ApiOperation(value = "회원 탈퇴")
     @PutMapping("/deleteUser")
     public Object deleteUser() {
-        ResponseBasic result = new ResponseBasic();
+        ResponseBasic result = null;
         try {
             Long userPk = userService.currentUser();
             groupUserService.deleteGroupByUser(userPk);
-            result.status = true;
-            result.data = "탈퇴 success";
+            result = new ResponseBasic(true, "success", null);
         }
         catch (Exception e){
             e.printStackTrace();
-            result.status = false;
-            result.data = "error";
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     //    피드 리스트 공개 (feed_open)
     //    그룹 리스트 공개 (group_open)
-    //    그룹 공개 - 가입된 그룹에 해당되는 사용자 필요
     //    비공개 - 나만보기
     @ApiOperation(value = "회원 피드,그룹 리스트 공개/비공개")
     @PutMapping("/setOnAndOff")

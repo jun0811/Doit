@@ -24,20 +24,21 @@
         <!-- 그룹 소개 끝 -->
 
         <v-container class="pa-3 pa-sm-16">
-            <v-card  class="d-flex align-center flex-column my-15 mx-sm-auto px-5 col-sm-10" width=100%>
-                <h3 class="mt-5 mb-3">피드 작성</h3>
+            <v-card  class="d-flex align-center flex-column mb-15 mx-sm-auto px-5 col-sm-10" width=100% max-width="600">
+                <h3 class="my-4" style="width:100%">피드 작성</h3>
                 <v-divider style="width:100%;"></v-divider>
-                 <v-col cols="12" lg="8" xl="6" class="my-5">
+                 <v-container cols="12" lg="8" xl="6" class="my-2">
                     <v-row class="text-left">
-                        <v-col cols="3" sm="2">
+                        <v-col cols="3" sm="2" class="d-flex align-center">
                             <v-img
                             id="profile"
-                            src="@/assets/logo/profile_temp.png"
+                            src="@/assets/img/profile_temp.png"
                             alt="profile-img"
                             class="profile-img my-auto mx-auto"
-                            max-height="50"
-                            max-width="50"
+                            max-height="44"
+                            max-width="44"
                             />
+                            <span class="ml-4">nickname</span>
                         </v-col>
                         <v-col cols="9" sm="10" class="pa-0 my-auto">
                             <div>
@@ -49,41 +50,46 @@
                         <v-container fluid class="py-5">
                             <v-textarea
                                 label="인증 내용 입력"
+                                hide-details=""
                                 v-model="content"
                                 auto-grow
                                 outlined
                                 rows="3"
-                                row-height="23"
+                                row-height="50"
                             ></v-textarea>                            
                         </v-container>
                     </v-row>
                     <v-row class="d-flex mt-5">
-                        <v-col cols="12" sm="4" class="my-auto">
+                        <v-col cols="12" sm="6" class="my-auto">
                         <v-select
                             :items="items"
+                            hide-details=""
                             label="피드 종류 선택"
                             dense
                             outlined
                             v-model="selected"
                         ></v-select>                            
                         </v-col>                        
-                        <v-col cols="12" sm="5">
+                        <v-col cols="12" sm="6" class="mb-5">
                             <v-file-input
                                 class="py-0"
+                                hide-details=""
                                 truncate-length="50"
                                 label="첨부파일 선택"
                             ></v-file-input>
                         </v-col>
-                        <v-col cols="12" sm="2" class="ml-auto">
-                            <v-btn
-                            @click="write"
-                            outlined
-                            class="complete-btn text-size"
-                            >작성 완료</v-btn>
-                        </v-col>
                     </v-row>
-                </v-col>
+                </v-container>
             </v-card>
+            <v-row>
+                <v-col class=" d-flex justify-center">
+                    <v-btn
+                    @click="write"
+                    outlined
+                    class="complete-btn text-size"
+                    >작성 완료</v-btn>
+                </v-col>
+            </v-row>
         </v-container>
         <Footer></Footer>
     </div>
@@ -98,7 +104,7 @@ import { createFeed } from "@/api/feed/index.js"
 export default {
     name :"FeedWrite",
     props:{
-        groupPk: String
+        groupPk: String,
     },
     components: {
         Header,
@@ -158,9 +164,9 @@ export default {
 
 <style scoped>
 .complete-btn {
-    width: 100%;
-    border: 1px solid #F9802D;
+    border: 2px solid #F9802D;
     color: #F9802D;
+    border-radius: 15px;
 }
 
 .text-size {

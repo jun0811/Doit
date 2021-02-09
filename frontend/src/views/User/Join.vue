@@ -1,105 +1,105 @@
 <template>
-  <div>
+  <div class="">
     <Header></Header>
-  <v-container class="pa-3 pa-sm-16">
-  <v-card  class="d-flex align-center flex-column mx-3 mx-sm-16 py-16">
-    <h3 class="my-5">회원가입</h3>
-      <v-container class="input-width">
-        <v-row no-gutters class="d-flex flex-nowrap" >
-          <v-col cols="9" sm="11">
+    <v-container class="d-flex justify-center" >
+      <v-card  class="d-flex align-center flex-column" pa-4 style="width:100%;max-width:600px;">
+        <h3 class="mt-10 mb-4">회원가입</h3>
+        <v-container class="input-width">
+          <v-row no-gutters class="d-flex flex-nowrap" >
+            <v-col cols="9" sm="11">
+              <v-text-field
+                v-model="name"
+                :error-messages="nameErrors"
+                :counter="8"
+                maxlength="8"
+                label="닉네임"
+                required
+                clearable
+                @input="$v.name.$touch()"
+                @blur="$v.name.$touch()"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3" sm="1">
+              <v-btn 
+                text 
+                @click="checkNick" 
+                v-bind:class="{check : c_Nick}"
+                class="mt-4 mx-0"
+              >
+                <font-awesome-icon icon="check-circle"/>
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row no-gutters class="d-flex flex-nowrap">
+            <v-col cols="9" sm="11">
+              <v-text-field
+                v-model="email"
+                :error-messages="emailErrors"
+                label="E-mail"
+                required
+                clearable
+                @input="$v.email.$touch()"
+                @blur="$v.email.$touch()"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3" sm="1">
+              <v-btn text @click="checkEmail"  v-bind:class="{check : c_Email }" class="mt-4"> 
+                  <font-awesome-icon icon="check-circle"/> 
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row no-gutters class="d-flex flex-nowrap">
             <v-text-field
-              v-model="name"
-              :error-messages="nameErrors"
-              :counter="8"
-              maxlength="8"
-              label="닉네임"
-              required
+              v-model="password"
+              :error-messages="passwordErrors"
+              label="비밀번호"
               clearable
-              @input="$v.name.$touch()"
-              @blur="$v.name.$touch()"
+              required
+              type="password"
+              @input="$v.password.$touch()"
+              @blur="$v.password.$touch()"
             ></v-text-field>
-          </v-col>
-          <v-col cols="3" sm="1">
-            <v-btn 
-              text 
-              @click="checkNick" 
-              v-bind:class="{check : c_Nick}"
-              class="mt-4 mx-0"
-            >
-              <font-awesome-icon icon="check-circle"/>
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-row no-gutters class="d-flex flex-nowrap">
-          <v-col cols="9" sm="11">
+          </v-row>
+          <v-row no-gutters class="d-flex flex-nowrap">
             <v-text-field
-              v-model="email"
-              :error-messages="emailErrors"
-              label="E-mail"
-              required
+              v-model="passwordConfirm"
+              :error-messages="passwordConfirmErrors"
+              label="비밀번호 확인"
               clearable
-              @input="$v.email.$touch()"
-              @blur="$v.email.$touch()"
+              required
+              type="password"
+              @input="$v.passwordConfirm.$touch()"
+              @blur="$v.passwordConfirm.$touch()"
             ></v-text-field>
-          </v-col>
-          <v-col cols="3" sm="1">
-            <v-btn text @click="checkEmail"  v-bind:class="{check : c_Email }" class="mt-4"> 
-                <font-awesome-icon icon="check-circle"/> 
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-row no-gutters class="d-flex flex-nowrap">
-        <v-text-field
-          v-model="password"
-          :error-messages="passwordErrors"
-          label="비밀번호"
-          clearable
-          required
-          type="password"
-          @input="$v.password.$touch()"
-          @blur="$v.password.$touch()"
-        ></v-text-field>
-        </v-row>
-        <v-row no-gutters class="d-flex flex-nowrap">
-        <v-text-field
-          v-model="passwordConfirm"
-          :error-messages="passwordConfirmErrors"
-          label="비밀번호 확인"
-          clearable
-          required
-          type="password"
-          @input="$v.passwordConfirm.$touch()"
-          @blur="$v.passwordConfirm.$touch()"
-        ></v-text-field>
-        </v-row>
-        <v-row no-gutters class="d-flex flex-nowrap">
-        <v-checkbox
-          v-model="checkbox"
-          :error-messages="checkboxErrors"
-          label="약관에 동의합니다."
-          required
-          @change="$v.checkbox.$touch()"
-          @blur="$v.checkbox.$touch()"
-          class="mt-0"
-        ></v-checkbox>
-        </v-row>
-        <v-row no-gutters class="d-flex flex-nowrap">
-          <v-col cols="12">
-            <v-btn 
-              type="submit" 
-              @click="signup()" 
-              class="join input mt-2"
-              outlined
-            >
-            가입하기
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-row no-gutters class="d-flex justify-end flex-nowrap mt-3 font-sytle">
-          <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
-        </v-row>
-      </v-container>
-    </v-card>
+          </v-row>
+          <v-row no-gutters class="d-flex flex-nowrap">
+            <v-checkbox
+              v-model="checkbox"
+              :error-messages="checkboxErrors"
+              label="약관에 동의합니다."
+              required
+              @change="$v.checkbox.$touch()"
+              @blur="$v.checkbox.$touch()"
+              class="mt-0"
+            ></v-checkbox>
+          </v-row>
+          <v-row no-gutters class="d-flex flex-nowrap">
+            <v-col cols="12" class="d-flex justify-center">
+              <v-btn 
+                type="submit" 
+                @click="signup()" 
+                class="join input mt-2"
+                outlined
+              >
+              가입하기
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row no-gutters class="d-flex justify-end flex-nowrap mt-6 font-sytle">
+            <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
+          </v-row>
+        </v-container>
+      </v-card>
     </v-container>
     <Footer></Footer>
   </div>
@@ -267,14 +267,13 @@ export default {
     color: black;
   }
   .join.input{
-    width:100%;
     border:2px solid #F9802D;
     border-radius: 8px;
     color: #F9802D;
   }
 
   .input-width {
-    width: 60%;
+    width: 80%;
   }
   
   @media only screen and (min-width: 300px) and (max-width: 599px) {

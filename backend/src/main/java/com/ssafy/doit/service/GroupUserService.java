@@ -50,8 +50,10 @@ public class GroupUserService {
     @Transactional
     public void join(Long userPk, Long groupPk) throws Exception {
         User user = userRepository.findById(userPk).get();
-        Group group = groupRepository.findById(groupPk).get();
+        Optional<Group> optGroup = groupRepository.findByGroupPkAndStatus(groupPk, "true");
+        if(!optGroup.isPresent()) throw new Exception("활동하지 않는 그룹입니다.");
 
+        Group group = optGroup.get();
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
         if(!opt.isPresent()){
             if(group.getTotalNum() == group.getMaxNum()) throw new Exception("인원이 가득 찼습니다.");
@@ -64,12 +66,13 @@ public class GroupUserService {
     }
 
     // 그룹 탈퇴하기
+    @Transactional
     public void withdrawGroupUser(Long userPk, Long groupPk) throws Exception {
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(groupPk).get();
-        Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
         if(userPk == group.getLeader()) throw new Exception("그룹장은 탈퇴할 수 없습니다.");
 
+        Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
         if(opt.isPresent()) {
             opt.ifPresent(selectGU -> groupUserRepository.delete(selectGU));
             // 마일리지 감소 추가하기 예시 :  user.setMileage(user.getMileage() - 10);
@@ -78,7 +81,8 @@ public class GroupUserService {
         }else throw new Exception("가입되어 있지 않은 그룹원입니다.");
     }
 
-    // 그룹 내 그룹원 강퇴시키기
+    // 그룹 내 그룹원 강퇴시키기 (그룹장이)
+    @Transactional
     public void kickOutGroupUser(Long userPk, Long groupPk, Long leader) throws Exception {
         Group group = groupRepository.findById(groupPk).get();
         if(leader == group.getLeader()){
@@ -87,21 +91,31 @@ public class GroupUserService {
             groupUser.ifPresent(selectUser ->{
                groupUserRepository.delete(selectUser);
             });
-            group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
+            group.setTotalNum(group.getTotalNum() - 1); // 회원 수 감소
             groupRepository.save(group);
         }else throw new Exception("그룹장이 아닙니다.");
     }
 
-    // 랄퇴한 회원 가입된 그룹에서 delete
-    public void deleteGroupByUser(Long userPk){
+    // 랄퇴한 회원, 가입된 그룹에서 delete
+    @Transactional
+    public void deleteGroupByUser(Long userPk) throws Exception {
         User user = userRepository.findById(userPk).get();
         List<GroupUser> list = groupUserRepository.findByUser(user);
 
-        for(GroupUser gu : list){
-            Group group = groupRepository.findByGroupPk(gu.getGroup().getGroupPk()).get();
-            groupUserRepository.delete(gu);
-            group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
+        for (GroupUser groupUser : list) {
+            groupUserRepository.delete(groupUser);
+            Group group = groupRepository.findById(groupUser.getGroup().getGroupPk()).get();
+            if(group.getTotalNum() == 1){
+                group.setStatus("false");
+                groupRepository.save(group); continue;
+            }
+            Long newLeader = groupUserRepository.findTopByGroup(group).getUser().getId();
+            group.setTotalNum(group.getTotalNum() - 1);     // 회원 수 감소
+            if(userPk == group.getLeader()) {
+                group.setLeader(newLeader);                 // 임의의 그룹원으로 그룹장 지정
+            }
             groupRepository.save(group);
+            // 새로운 그룹장에게 알림 보내기
         }
         user.setUserRole(UserRole.WITHDRAW);
         userRepository.save(user);

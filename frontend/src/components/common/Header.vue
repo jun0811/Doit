@@ -2,7 +2,7 @@
   <header class="header">
 
     <img 
-      src="@/assets/logo/logo.png" 
+      src="@/assets/img/logo.png" 
       alt="Logo"
       class="logo"
       @click="logoClick"
@@ -29,9 +29,9 @@
         <v-card class="mx-auto">
           <v-container>
             <v-row>
-              <v-col class="d-flex justify-end">
+              <v-col class="d-flex justify-end pt-2 pb-0">
                 <v-btn 
-                  class="ml-auto mt-2"
+                  class=""
                   text
                   @click="close"
                 >
@@ -44,9 +44,9 @@
           <v-container class="px-5 px-sm-16 pb-8 pb-sm-16">
             <v-row>
               <v-col cols="12" class="d-flex justify-center">
-                <v-card-title>
-                  <h3 class="my-7">로그인</h3>
-                </v-card-title>
+                <!-- <v-card-title> -->
+                <h3 class="">로그인</h3>
+                <!-- </v-card-title> -->
               </v-col>
             </v-row>
             <v-row class="d-flex justify-center">
@@ -74,16 +74,15 @@
                 ></v-text-field>
               </v-col>
           </v-row>
-          <v-row class="d-flex justify-center mt-10">
-            <v-col cols="11" sm="8">
-              <v-btn
-                color="#F9802D"
-                class="login input" 
-                text
-                @click="login()"
-              >로그인
-              </v-btn>
-            </v-col>
+          <v-row class="d-flex justify-center my-6">
+            <v-btn
+              color="#F9802D"
+              class="login input" 
+              text
+              @click="login()"
+            >로그인
+            </v-btn>
+
           </v-row>
           <v-row class="d-flex justify-center mt-5">
             <v-col cols="8" sm="5" class="font-small-style">
@@ -153,7 +152,7 @@
       >
         <v-list-item>
           <v-list-item-avatar>
-            <v-img src="@/assets/logo/profile_temp.png"></v-img>
+            <v-img src="@/assets/img/profile_temp.png"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content>
@@ -304,7 +303,7 @@ export default {
         })}
       },
       group(no) {
-        this.$router.push(`/group/community?no=${no}`);
+        this.$router.push(`/group/community/${no}`);
       },
       logout() {
         this.LOGOUT()
@@ -330,7 +329,7 @@ export default {
 
 <style scoped>
   .login.input{
-    width: 100%;
+
     height: 150%;
     border: 2px solid #F9802D;
     border-radius: 8px;
@@ -338,7 +337,7 @@ export default {
   }
 
   .login {
-    width: 80%;
+
     height: 6%;
     border: 2px solid #F9802D;
     border-radius: 8px;

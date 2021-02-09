@@ -7,6 +7,7 @@ import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.repository.FeedRepository;
 import com.ssafy.doit.repository.GroupHashTagRepository;
 import com.ssafy.doit.repository.GroupRepository;
+import com.ssafy.doit.repository.GroupUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,18 +23,31 @@ public class AdminService {
     @Autowired
     private GroupHashTagRepository groupHashTagRepository;
     @Autowired
+    private GroupUserRepository groupUserRepository;
+    @Autowired
     private FeedRepository feedRepository;
 
-    public void deleteAllByGroup(Long groupPk) {
-        Group group = groupRepository.findById(groupPk).get();
-        List<GroupHashTag> list = groupHashTagRepository.findAllByGroup(group);
-        for (GroupHashTag o: list) {
-            groupHashTagRepository.delete(o);
+    // 관리자에 의한 그룹 삭제
+    public void deleteGroupByAdmin(Long groupPk) {
+        Optional<Group> groupInfo = groupRepository.findById(groupPk);
+        if (groupInfo.isPresent()) {
+            groupInfo.ifPresent(selectGroup -> {
+                selectGroup.setStatus("false");
+                groupRepository.save(selectGroup);
+            });
         }
-
+        groupHashTagRepository.deleteByGroupPk(groupPk);
+        groupUserRepository.deleteByGroupPk(groupPk);
     }
 
-    public void deleteAllByFeed(Long feedPk) {
-
+    // 관리자에 의한 피드 삭제
+    public void deleteFeed(Long feedPk) {
+        Optional<Feed> feedInfo = feedRepository.findById(feedPk);
+        if (feedInfo.isPresent()) {
+            feedInfo.ifPresent(selectUser -> {
+                selectUser.setStatus("false");
+                feedRepository.save(selectUser);
+            });
+        }
     }
 }

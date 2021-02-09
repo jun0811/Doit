@@ -17,10 +17,11 @@
       src="https://wonderfulmind.co.kr/wp-content/uploads/2018/05/knitting.jpg"
     ></v-img>
 
-    <v-card-title>뜨개질 인증 1일차✌</v-card-title>
+    <v-card-title>{{this.card.content}}</v-card-title>
 
     <v-card-text>
-      <div>열심히 했따~~</div>
+      <div>{{this.card.writer}}</div>
+      <div>작성날짜: {{this.card.createDate.slice(0,10)}}</div>
     </v-card-text>
 
     <v-divider class="mx-4"></v-divider>
@@ -29,6 +30,12 @@
 
 <script>
   export default {
+    props: {
+      card: Object
+    },
+    created(){
+      console.log(this.card)
+    },
     data: () => ({
       loading: false,
       selection: 1,

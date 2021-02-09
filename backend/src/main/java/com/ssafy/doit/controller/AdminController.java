@@ -1,12 +1,14 @@
 package com.ssafy.doit.controller;
 
-import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.repository.*;
 import com.ssafy.doit.service.AdminService;
+import com.ssafy.doit.service.FeedService;
 import com.ssafy.doit.service.GroupUserService;
+import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,119 +23,112 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
+
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
     @Autowired
     private AdminService adminService;
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
-    private FeedRepository feedRepository;
-    @Autowired
     private GroupUserService groupUserService;
+    @Autowired
+    private final FeedService feedService;
 
-    //관리자 - 회원 리스트
+    // 관리자 - 회원 리스트
     @ApiOperation(value = "관리자 - 회원 리스트")
     @GetMapping("/searchAllUser")
     public Object searchAllUser(){ // 페이징 처리하기
-        ResponseBasic result = new ResponseBasic();
+        ResponseBasic result = null;
+        try {
         List<User> list = userRepository.findAll();
-
-        if(list.size() == 0){
-            result.status =false;
-            result.data= "fail";
-        }else{
-            result.status = true;
-            result.data = "success";
-            result.object = list;
+            result = new ResponseBasic(true, "success", list);
+        }catch (Exception e){
+        e.printStackTrace();
+        result = new ResponseBasic(false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    //관리자 - 회원 삭제
-    @ApiOperation(value = "관리자 - 회원 탈퇴")
-    @PutMapping("/beDeletedUser")
-    public Object beDeletedUser(@RequestParam Long userPk) {
-        ResponseBasic result = new ResponseBasic();
+    // 관리자 - 회원 강퇴
+    @ApiOperation(value = "관리자 - 회원 강퇴")
+    @PutMapping("/deleteUserByAdmin")
+    public Object deleteUserByAdmin(@RequestParam Long userPk) {
+        ResponseBasic result = null;
         try {
-            Optional<User> userInfo = userRepository.findById(userPk);
-            if (userInfo.isPresent()) {
-                groupUserService.deleteGroupByUser(userPk);
-            }
-            result.status = true;
-            result.data = "탈퇴 success";
+            Long adminPk = userService.currentUser();
+            User Admin = userRepository.findById(adminPk).get();
+            if(Admin.getUserRole().equals(UserRole.ADMIN)) {
+                Optional<User> userInfo = userRepository.findById(userPk);
+                if (userInfo.isPresent()) {
+                    groupUserService.deleteGroupByUser(userPk);
+                    feedService.deleteFeedByUser(userPk);
+                }
+            }else throw new Exception("관리자가 아닙니다.");
+            result = new ResponseBasic(true, "success", null);
         }
         catch (Exception e){
             e.printStackTrace();
-            result.status = false;
-            result.data = "error";
+            result = new ResponseBasic(false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    //관리자 - 그룹 리스트
-    @ApiOperation(value = "관리자 -그룹 리스트")
+    // 관리자 - 그룹 리스트
+    @ApiOperation(value = "관리자 - 그룹 리스트")
     @GetMapping("/searchAllGroup")
     public Object searchAllGroup(){ // 페이징 처리하기
-        List<Group> list = groupRepository.findAll();
-        ResponseBasic result = new ResponseBasic();
-        if(list.size() == 0){
-            result.status =false;
-            result.data= "fail";
-        }else{
-            result.status = true;
-            result.data = "success";
-            result.object = list;
+        ResponseBasic result = null;
+        try {
+            List<Group> list = groupRepository.findAll();
+            result = new ResponseBasic(true, "success", list);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    //그룹 삭제
+    // 관리자 - 그룹 삭제
     @ApiOperation(value = "관리자 - 그룹 삭제")
-    @PutMapping("/beDeletedGroup")
-    public Object beDeletedGroup(@RequestParam Long groupPk) {
-        ResponseBasic result = new ResponseBasic();
+    @PutMapping("/deleteGroupByAdmin")
+    public Object deleteGroupByAdmin(@RequestParam Long groupPk) {
+        ResponseBasic result = null;
         try {
-            Optional<Group> groupInfo = groupRepository.findByGroupPk(groupPk);
-            adminService.deleteAllByGroup(groupPk);
-            if (groupInfo.isPresent()) {
-                groupInfo.ifPresent(selectUser -> {
-                    selectUser.setStatus("false");
-                    groupRepository.save(selectUser);
-                });
-            }
-            result.status = true;
-            result.data = "success";
+            Long loginPk = userService.currentUser();
+            User user = userRepository.findById(loginPk).get();
+            if(user.getUserRole().equals(UserRole.ADMIN)) {
+                adminService.deleteGroupByAdmin(groupPk);
+                feedService.deleteFeedByGroup(groupPk);
+            }else throw new Exception("관리자가 아닙니다.");
+            result = new ResponseBasic(true, "success", null);
         }
         catch (Exception e){
             e.printStackTrace();
-            result.status = false;
-            result.data = "error";
+            result = new ResponseBasic(false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    //관리자 - 피드 삭제
+    // 관리자 - 피드 삭제
     @ApiOperation(value = "관리자 - 피드 삭제")
-    @PutMapping("/beDeletedFeed")
-    public Object beDeletedFeed(@RequestParam Long feedPk) {
-        ResponseBasic result = new ResponseBasic();
+    @PutMapping("/deleteFeedByAdmin")
+    public Object deleteFeedByAdmin(@RequestParam Long feedPk) {
+        ResponseBasic result = null;
         try {
-            Optional<Feed> feedInfo = feedRepository.findById(feedPk);
-            adminService.deleteAllByFeed(feedPk);
-            if (feedInfo.isPresent()) {
-                feedInfo.ifPresent(selectUser -> {
-                    selectUser.setStatus("false");
-                    feedRepository.save(selectUser);
-                });
-            }
-            result.status = true;
-            result.data = "success";
+            Long loginPk = userService.currentUser();
+            User user = userRepository.findById(loginPk).get();
+            if(user.getUserRole().equals(UserRole.ADMIN)) {
+                adminService.deleteFeed(feedPk);
+            }else throw new Exception("관리자가 아닙니다.");
+            result = new ResponseBasic(true, "success", null);
         }
         catch (Exception e){
             e.printStackTrace();
-            result.status = false;
-            result.data = "error";
+            result = new ResponseBasic(false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

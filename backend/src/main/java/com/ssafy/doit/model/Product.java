@@ -2,10 +2,7 @@ package com.ssafy.doit.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.doit.model.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,6 +11,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Product {
 
     @Id
@@ -21,14 +19,16 @@ public class Product {
     @Column(name = "product_pk")
     private Long id;
 
-    private Long userPk;
     private String category;
     private String title;
     private String content;
     private String image;
 
+    private int mileage;
+    private boolean status;
+
     @ManyToOne
-    @JoinColumn(name = "userPk", insertable = false, updatable = false)
+    @JoinColumn(name = "user_pk")
     @JsonIgnore
     private User user;
 }

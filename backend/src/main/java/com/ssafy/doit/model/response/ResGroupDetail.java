@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class ResGroupInfo {
+public class ResGroupDetail {
     private Long groupPk;
     private String name;
     private String content;
     private String category;
     private Long leader;
-    private String startDate;
+    private String createDate;
     private String endDate;
     private int score;
     private int totalNum;
@@ -26,12 +26,12 @@ public class ResGroupInfo {
     private List<String> tags;
     private List<ResponseUser> users;
 
-    public ResGroupInfo(Group group){
+    public ResGroupDetail(Group group){
         this.groupPk = group.getGroupPk();
         this.name = group.getName();
         this.content = group.getContent();
         this.category = group.getCategory();
-        this.startDate = group.getStartDate().toString();
+        this.createDate = group.getCreateDate().toString();
         this.endDate = group.getEndDate().toString();
         this.leader = group.getLeader();
         this.score = group.getScore();

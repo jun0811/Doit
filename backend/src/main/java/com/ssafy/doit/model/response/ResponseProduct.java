@@ -8,8 +8,10 @@ public interface ResponseProduct {
     String getTitle();
     String getContent();
     String getImage();
+    int getMileage();
+    boolean getStatus();
 
-    default String getUserpk(){ return getUserId(); }
+    default Long getUser_pk(){ return getUserId(); }
 
     default String getNickname(){
         return getUserNickname();
@@ -20,7 +22,7 @@ public interface ResponseProduct {
     }
 
     @JsonIgnore
-    String getUserId();
+    Long getUserId();
 
     @JsonIgnore
     String getUserNickname();

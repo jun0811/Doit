@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     group(no) {
-      this.$router.push(`/group/community?no=${no}`);
+      this.$router.push({name:"Community",params:{groupPk:no}});
     },
   }
 }
