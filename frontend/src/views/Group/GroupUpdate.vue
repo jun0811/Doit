@@ -150,6 +150,7 @@ export default {
       return{
       leader: 0,
       menu: false,
+      submit: false,
       date: new Date().toISOString().substr(0,10),
       minLength : false,
       name: "",
@@ -173,6 +174,20 @@ export default {
       }
     },
     watch: {
+      endDate(){
+        let END = new Date(this.endDate)
+        console.log(END)
+        const TODAY = new Date()
+        let check = Math.ceil((END.getTime() - TODAY.getTime())/(1000*3600*24));
+        if (check<7){
+          alert('최소 일주일 이후 날짜를 선택해주세요.')
+          // this.endDate = `${}`
+          this.endDate =""
+          this.submit = false
+        }else if(check>=7){
+          this.submit = true
+        } 
+      },
       date(){
         this.endDate = this.formatDate(this.date)
       },
@@ -214,7 +229,7 @@ export default {
         })
       },
       update(){
-        if (this.minLength && this.name){
+        if (this.minLength && this.name &&this.submit && this.category.length>0){
           http.put('/group/updateGroup',
           {
             "name": this.name,
@@ -232,7 +247,8 @@ export default {
           })
         }else{
           if(this.name.length<1) alert('그룹명을 입력해주세요')
-          else if(this.category ===false) alert('카테고리를 골라주세요')
+          else if(this.submit ===false) alert('만료 날짜를 선택해주세요')
+          else if(this.category.length==0) alert('카테고리를 골라주세요')
           else {alert(`그룹 소개글을 20자 이상 작성해주세요 ` )}
         }
       }
