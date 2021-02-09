@@ -6,6 +6,7 @@ import FeedWrite from "../views/Group/FeedWrite.vue";
 import Community from "../views/Group/Community.vue";
 import GroupCreate from "../views/Group/GroupCreate.vue";
 import GroupList from "../views/Group/GroupList.vue";
+import GroupUpdate from "../views/Group/GroupUpdate.vue";
 import Join from "../views/User/Join.vue";
 import MailCheck from "../views/User/MailCheck.vue";
 import PasswordChange from "../views/User/PasswordChange.vue";
@@ -92,6 +93,12 @@ const routes = [
     path: "/group/community/:groupPk",
     name: "Community",
     component: Community,
+    props: true,
+  },
+  {
+    path: "/group/GroupUpdate/:groupPk",
+    name: "GroupUpdate",
+    component: GroupUpdate,
     props: true,
   },
   {

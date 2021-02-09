@@ -26,6 +26,8 @@
             </div>
           </v-col>
           <v-col cols="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
+            
+            <v-btn class="group" outlined width="75" @click="updateGroup">그룹 수정</v-btn>
             <v-btn class="group" outlined width="75" v-if="!joined" @click="joinGroup">가입하기</v-btn>
             <v-btn class="group" outlined width="75" v-else @click="withdrawGroup">탈퇴하기</v-btn>
           </v-col>
@@ -200,6 +202,9 @@ export default {
   }
   ,
   methods: {
+    updateGroup(){
+      this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
+    },
     FeedList(){
       this.feed = true
       this.users = false
