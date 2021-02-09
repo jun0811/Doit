@@ -112,7 +112,7 @@
           </div>
         </v-col>
         <v-col v-if="users" cols="9" class="d-flex justify-center mx-sm-16 ">
-          <GroupMember></GroupMember>
+          <GroupMember :groupPk="groupPk"></GroupMember>
           <!-- <div class="temp">
             asdasdasd
           </div> -->
