@@ -3,6 +3,7 @@ package com.ssafy.doit.service;
 import com.ssafy.doit.model.Product;
 import com.ssafy.doit.model.chat.ChatRoom;
 import com.ssafy.doit.model.chat.ChatRoomJoin;
+import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.repository.chat.ChatMessageRepository;
@@ -26,8 +27,6 @@ public class ChatService {
     private final ChatRoomJoinRepository chatRoomJoinRepository;
     @Autowired
     private final ProductRepository productRepository;
-    @Autowired
-    private final ChatMessageRepository chatMessageRepository;
 
     public ChatRoom checkByProduct(Long uid, Long pid) throws Exception {
         Optional<ChatRoomJoin> opt = chatRoomJoinRepository.findChatRoomJoinByUserAndProduct(uid, pid);
@@ -43,6 +42,9 @@ public class ChatService {
 
     public ChatRoom createRoom(Long uid, Long pid) throws Exception{
         Product product = productRepository.findById(pid).get();
+        User currentUser = userRepository.findById(uid).get();
+        if(product.getUser().equals(currentUser))
+            throw new Exception("판매자와 동일 유저");
 
         ChatRoom resRoom = checkByProduct(uid, pid);
         if(resRoom != null) return resRoom;

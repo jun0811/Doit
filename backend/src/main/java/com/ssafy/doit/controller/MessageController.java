@@ -3,6 +3,7 @@ package com.ssafy.doit.controller;
 import com.ssafy.doit.model.chat.ChatMessage;
 import com.ssafy.doit.repository.chat.ChatMessageRepository;
 import com.ssafy.doit.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
