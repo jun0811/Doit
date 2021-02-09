@@ -40,6 +40,8 @@ public class FeedService {
     private final CommitUserRepository commitUserRepository;
     @Autowired
     private final CommitGroupRepository commitGroupRepository;
+    @Autowired
+    private MileageRepository mileageRepository;
 
     // 그룹 내 피드 생성
     @Transactional
@@ -60,6 +62,22 @@ public class FeedService {
             .createDate(LocalDateTime.now())
             .groupPk(feedReq.getGroupPk())
             .writer(userPk).build());
+
+        if(feedReq.getFeedType().equals("true")){
+            user.setMileage(user.getMileage() + 100);
+            userRepository.save(user);
+            mileageRepository.save(Mileage.builder()
+                    .content("인증피드 등록 마일리지 지급")
+                    .date(LocalDate.now())
+                    .user(user).build());
+        }else if(feedReq.getFeedType().equals("false")){
+            user.setMileage(user.getMileage() + 100);
+            userRepository.save(user);
+            mileageRepository.save(Mileage.builder()
+                    .content("공유피드 등록 마일리지 지급")
+                    .date(LocalDate.now())
+                    .user(user).build());
+        }
         return 1;
     }
 
@@ -180,14 +198,29 @@ public class FeedService {
         feedUserRepository.save(FeedUser.builder()  // FeedUser 테이블에도
                 .feed(feed).user(user).build());    // 그 피드에 인증 확인한 그룹원 추가
 
+        user.setMileage(user.getMileage() + 50);    // 인증피드 확인 마일리지 지금 + 50
+        userRepository.save(user);
+        mileageRepository.save(Mileage.builder()
+                .content("인증피드 확인 마일리지 지급")
+                .date(LocalDate.now())
+                .user(user).build());
+
         Long groupPk = feed.getGroupPk();
         Long writerPk = feed.getWriter();
+        User writer = userRepository.findById(writerPk).get();
         int cnt = feed.getAuthCnt();
         int total = groupRepository.findById(groupPk).get().getTotalNum();
         if (cnt >= Math.round(total * 0.7)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
             feed.setAuthDate(LocalDateTime.now().toString());
-            // 마일리지 점수 제공하기 // 인증완료되었다는 알림보내기
+            // 인증완료되었다는 알림보내기
+
+            writer.setMileage(writer.getMileage() + 100); // 인증피드 인증 완료 마일리지 지금 + 100
+            userRepository.save(writer);
+            mileageRepository.save(Mileage.builder()
+                    .content("인증피드 인증 완료 마일리지 지급")
+                    .date(LocalDate.now())
+                    .user(writer).build());
 
             Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(writerPk, LocalDate.now());
             if(optCU.isPresent()){
