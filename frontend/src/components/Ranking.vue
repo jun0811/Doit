@@ -1,27 +1,22 @@
 <template>
-  <v-container class="px-3 px-sm-16 my-10">  
-    <v-row class="mx-3 mx-sm-16 mb-5">
-      <h4>Doit 그룹랭킹</h4>
+  <div class="d-flex flex-column justify-center">
+    <v-row class="mx-1 mb-2 mt-16 mt-sm-0">
+      <h4>Doit 그룹랭킹👑</h4>
     </v-row>
-    <v-card class="mx-auto mx-3 mx-sm-16">
-      <v-row class="py-4">
-          <v-col class="mx-3 mx-sm-16 d-flex justify-space-around">
-            <div v-for="(group, idx) in groups" :key="idx" class="rank-box d-flex" >
-              <div class="rank-num">
-                {{idx+1}}
-              </div>
-              <div class="d-flex flex-column justify-space-around">
-                <div class="rank-wrapper">
-                  <img class="rank-image box" :src="group.groupImage" alt="그룹이미지">
-                </div>
-                <div class="group-name">{{group.groupname}}</div>
-              </div>
-            </div>
-          </v-col>
+    <v-card class="px-4 mr-sm-3">
+      <v-row v-for="(group, idx) in groups" :key="idx" class="my-3">
+        <v-col cols="2" class="text-center">
+          <span class="rank-num">{{idx+1}}</span>
+        </v-col>
+        <v-col cols="2" class="d-flex flex-column justify-center">
+          <img class="rank-image box" :src="group.groupImage" alt="그룹이미지">
+        </v-col>
+        <v-col cols="8">
+          <div class="group-name">{{group.groupname}}</div>
+        </v-col>
       </v-row>
     </v-card>
-  </v-container>
-    
+  </div>
 </template>
 
 <script>
@@ -46,6 +41,10 @@ export default {
           groupname:'달려달려',
           groupImage:'https://image.edaily.co.kr/images/Photo/files/NP/S/2016/09/PS16090800342.jpg',
         },
+        {
+          groupname:'일찍 일어나는 새가 벌레를 잡아먹는다.',
+          groupImage:'https://media.istockphoto.com/vectors/early-bird-with-worm-vector-id96612139?k=6&m=96612139&s=612x612&w=0&h=34bGxeM0JaF25Tl4ezvPt1eBst7Cnta5pNfRouwK3wk=',
+        },
       ],
     }
   },
@@ -54,63 +53,60 @@ export default {
 
 <style scoped>
 
-.rank-box {
-  width: 150px;
-  height: 100%;
-}
-
-@media only screen and (min-width: 300px) and (max-width: 599px) {
-  .rank-box {
-    width: 50px;
-  }
-}
-
 .rank-num {
- font-size: x-large;
+  font-size: x-large;
+  height: 56px;
+  line-height: 56px;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .rank-num {
-    font-size: medium;
+    font-size: x-large;
+    height: 56px;
+    line-height: 56px;
   }
 }
   
 .group-name {
-  text-align:center;
-  font-size: small;
+  font-size: medium;
+  vertical-align: middle;
+  height: 56px;
+  line-height: 56px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .group-name {
-    text-align:center;
-    font-size: xx-small;
+    font-size: medium;
+    height: 56px;
+    line-height: 56px;   
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+    cursor: pointer;
   }
 }
 
-.rank-wrapper {
-  border-radius: 50%;
-  position: relative;
-  border: 3px solid transparent;
-}
-
 .rank-image {
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   z-index : 1;
   position:relative;
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .rank-image {
-    width: 55px;
-    height: 55px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
+    cursor: pointer;
   }
 }
-
-/* --- */
-/* $randomNumber : random(5); */
 
 .box:hover {
   position: relative;
