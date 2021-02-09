@@ -3,16 +3,14 @@ package com.ssafy.doit.model.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ssafy.doit.model.GroupUser;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -41,14 +39,14 @@ public class User {
     public List<GroupUser> groupList; // 그룹리스트
 
     @Builder
-    public User(String email, String password, String nickname,String image, UserRole userRole, String authKey) {
+    public User(String email, String password, String nickname, String image, UserRole userRole, String authKey) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.image = image;
         this.userRole = userRole;
         this.authKey = authKey;
-        this.mileage = 0;
+        this.mileage = 1000;
         this.feedOpen = "true";
         this.groupOpen = "true";
         this.status = "true";
