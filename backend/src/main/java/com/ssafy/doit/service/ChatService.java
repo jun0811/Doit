@@ -26,8 +26,6 @@ public class ChatService {
     private final ChatRoomJoinRepository chatRoomJoinRepository;
     @Autowired
     private final ProductRepository productRepository;
-    @Autowired
-    private final ChatMessageRepository chatMessageRepository;
 
     public ChatRoom checkByProduct(Long uid, Long pid) throws Exception {
         Optional<ChatRoomJoin> opt = chatRoomJoinRepository.findChatRoomJoinByUserAndProduct(uid, pid);
