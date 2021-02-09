@@ -225,7 +225,12 @@ export default {
       })
     },
     feedRead(){
-      console.log('피드 호출')
+      const pk = Number(this.groupPk)
+      console.log(typeof pk) 
+      http.get(`feed/groupFeed?end=${this.end}&groupPk=${pk}&start=${this.start}`)
+      .then((res)=>{
+        console.log(res)
+      })
     }
   },
   created(){
@@ -241,8 +246,12 @@ export default {
             return true
           }
         })
-        // console.log(this.joined)
-      })
+      }),
+    http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.start}`)
+    .then((res)=>{
+        console.log(res)
+    })
+
   }
 }
 </script>
