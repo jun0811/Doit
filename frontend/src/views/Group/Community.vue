@@ -16,20 +16,31 @@
             <h3>{{user_info.name}}</h3>
             <p class="ma-0"> 멤버 : {{user_num}}/{{user_info.maxNum}}</p>
             <p class="ma-0"> {{user_info.startDate}} ~ {{user_info.endDate}}</p>
-            <div class="d-flex justify-start">
-              <p class="ma-0" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  
+            <div class="" style="display:inline-block" v-for="(tag,idx) in user_info.tags" :key="idx">
+              <router-link :to="{name: 'GroupList', params: {word: tag}}" style="display:inline-block">
+                <p class="ma-0 mr-1" > #{{tag}}</p>
+              </router-link>
+              <button  @click="remove(tag)"                       
+                v-if="loginUser==leader"
+                class="hashtag-del-btn mr-1"> 
+                <font-awesome-icon icon="times-circle"/>
+              </button>
+            </div>
+            <!-- <div class="d-flex justify-start">
+              <p class="ma-0 mr-1" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  
                 <button  @click="remove(tag)"                       
+                  v-if="loginUser==leader"
                   class="hashtag-del-btn mr-1"> 
                   <font-awesome-icon icon="times-circle"/>
                 </button>
               </p>
-            </div>
+            </div> -->
           </v-col>
           <v-col cols="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
             
-            <v-btn class="group" outlined width="75" @click="updateGroup">그룹 수정</v-btn>
+            <v-btn class="group" outlined width="75" v-if="loginUser==leader" @click="updateGroup">그룹 수정</v-btn>
             <v-btn class="group" outlined width="75" v-if="!joined" @click="joinGroup">가입하기</v-btn>
-            <v-btn class="group" outlined width="75" v-else @click="withdrawGroup">탈퇴하기</v-btn>
+            <v-btn class="group" outlined width="75" v-if="joined && loginUser != leader" @click="withdrawGroup">탈퇴하기</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -104,7 +115,7 @@
             ></v-date-picker>
           </v-menu>
           <!-- 날짜 선택 끝 -->
-          <v-btn @click="feedRead" text class="ma-4"> 검색 </v-btn >
+          <v-btn @click="feedRead" text class="ma-4 search-btn" outlined> 검색 </v-btn >
         </v-col>
         <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16">
           <div class="temp d-flex align-center flex-column">
@@ -112,7 +123,7 @@
           </div>
         </v-col>
         <v-col v-if="users" cols="9" class="d-flex justify-center mx-sm-16 ">
-          <GroupMember></GroupMember>
+          <GroupMember :groupPk="groupPk"></GroupMember>
           <!-- <div class="temp">
             asdasdasd
           </div> -->
@@ -154,7 +165,10 @@ export default {
       month: date.getMonth()+1,
       day :date.getDate(),
       submit: false,
-      cards: []
+      cards: [],
+      leader:'',
+      loginUser:'',
+      tags:[],
     }
   },
   watch: {
@@ -246,10 +260,10 @@ export default {
       })
     },
     remove(val){
-      // this.hashtag.splice(idx,1)
       http.delete(`group/deleteHashTag?groupPk=${Number(this.groupPk)}&hashtag=${val}`)
       .then(()=>{
-        this.$push.go()
+        const delIdx = this.tags.indexOf(val)
+        this.tags.splice(delIdx,1)
       })
     }
   },
@@ -258,6 +272,9 @@ export default {
     .then((res)=>{
       this.user_info= res.data.object
       this.user_num = this.user_info.users.length
+      this.leader = res.data.object.leader
+      this.tags = res.data.object.tags
+      this.loginUser = this.$store.state.account.userpk
     }),
     http.get('group/currentUserGroup')
       .then((res)=>{
@@ -301,6 +318,10 @@ export default {
   .hashtag-del-btn {
     color:#FFE0B2;
     outline: transparent;
+  }
+
+  .search-btn {
+    border : 1ps solid grey;
   }
 
 </style>

@@ -6,7 +6,6 @@ import com.ssafy.doit.model.chat.ChatRoomJoin;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
-import com.ssafy.doit.repository.chat.ChatMessageRepository;
 import com.ssafy.doit.repository.chat.ChatRoomJoinRepository;
 import com.ssafy.doit.repository.chat.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
