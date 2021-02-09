@@ -6,6 +6,7 @@ import com.ssafy.doit.model.GroupUser;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -22,8 +23,8 @@ public class User {
 
     private String email;
     private String nickname;
-
     private String password;
+    private LocalDate createDate;
     private String authKey;
     private String image;
     private int mileage;
@@ -39,10 +40,12 @@ public class User {
     public List<GroupUser> groupList; // 그룹리스트
 
     @Builder
-    public User(String email, String password, String nickname, String image, UserRole userRole, String authKey) {
+    public User(String email, String password, String nickname, LocalDate createDate,
+                String image, UserRole userRole, String authKey) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.createDate = createDate;
         this.image = image;
         this.userRole = userRole;
         this.authKey = authKey;
