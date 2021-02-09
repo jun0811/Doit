@@ -1,11 +1,13 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.Mileage;
 import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.response.ResponseUser;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.GroupUserService;
 import com.ssafy.doit.service.S3Service;
@@ -29,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.util.Optional;
 
 //@MultipartConfig(
@@ -52,6 +55,8 @@ public class UserController {
     private GroupUserService groupUserService;
     @Autowired
     private S3Service s3Service;
+    @Autowired
+    private MileageRepository mileageRepository;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -79,6 +84,12 @@ public class UserController {
                     result = new ResponseBasic(false, "잘못된 비밀번호입니다.", null);
                     return new ResponseEntity<>(result, HttpStatus.OK);
                 }else {
+                    user.setMileage(user.getMileage() + 50);
+                    userRepository.save(user);
+                    mileageRepository.save(Mileage.builder()
+                            .content("로그인 마일리지 지급")
+                            .date(LocalDate.now())
+                            .user(user).build());
                     result = new ResponseBasic(true, "success", user);
                     httpHeaders.set("accessToken", jwtUtil.generateToken(user));
                 }
