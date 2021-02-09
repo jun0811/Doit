@@ -84,12 +84,15 @@ public class UserController {
                     result = new ResponseBasic(false, "잘못된 비밀번호입니다.", null);
                     return new ResponseEntity<>(result, HttpStatus.OK);
                 }else {
-                    user.setMileage(user.getMileage() + 50);
-                    userRepository.save(user);
-                    mileageRepository.save(Mileage.builder()
-                            .content("로그인 마일리지 지급")
-                            .date(LocalDate.now())
-                            .user(user).build());
+                    Optional<Mileage> opt = mileageRepository.findByDateAndUser(LocalDate.now(), user);
+                    if(!opt.isPresent()){
+                        user.setMileage(user.getMileage() + 50);
+                        userRepository.save(user);
+                        mileageRepository.save(Mileage.builder()
+                                .content("로그인 마일리지 지급")
+                                .date(LocalDate.now())
+                                .user(user).build());
+                    }
                     result = new ResponseBasic(true, "success", user);
                     httpHeaders.set("accessToken", jwtUtil.generateToken(user));
                 }
