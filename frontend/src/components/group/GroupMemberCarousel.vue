@@ -3,9 +3,10 @@
     class="my-6 mx-12 d-flex align-center flex-wrap justify-space-between"
   >
     <v-col cols="5" class="profile-card d-flex align-center" v-for="(item, idx) in paginatedData" :key="idx">
-      <img class="profile-image" :src="item.userimage">
+      <img class="profile-image">
       <span class="mx-2">{{item.nickname}}</span>
-      <v-btn normal x-small class="px-0">강퇴</v-btn>
+      <v-btn v-if="loginUser==leader && item.userPk != leader" normal x-small class="px-0" @click="kickout(item.userPk)">강퇴</v-btn>
+      <span v-if="item.userPk == leader" class="groupleader"><font-awesome-icon icon="crown"/></span>
     </v-col>
   </v-row>
 </template>
@@ -16,6 +17,7 @@ import http from "../../http-common";
 
   export default {
     data: () => ({
+      loginUser: '',
       loading: false,
       selection: 1,
       users :[],
@@ -34,7 +36,6 @@ import http from "../../http-common";
     created() {
       http.get(`/group/detailGroup?groupPk=${this.groupPk}`)
       .then((res)=>{
-        console.log(res.data.object)
         this.users = res.data.object.users
         this.category = res.data.object.category
         this.content = res.data.object.content
@@ -43,15 +44,26 @@ import http from "../../http-common";
         this.totalNum = res.data.object.totalNum
         this.endDate = res.data.object.endDate
         this.createDate = res.data.object.createDate
+        this.loginUser = this.$store.state.account.userpk
       })
     },
     computed: {
       paginatedData () {
-        // console.log(this.page)
         const start = (this.page-1) * 4,
               end = start + 4;
-        // console.log(this.member.slice(start, end))
+        console.log(this.users.slice(start, end))
         return this.users.slice(start, end);
+      }
+    },
+    methods : {
+      kickout (userPk) {
+        const delIdx = this.users.findIndex(i => i.userPk === userPk);
+        console.log(delIdx)
+        this.users.splice(delIdx, 1)
+        http.delete(`/group/kickOutGroupUser?groupPk=${this.groupPk}&userPk=${userPk}`)
+        .then((res)=>{
+          console.log(res)
+        })
       }
     }
   }
@@ -71,6 +83,10 @@ import http from "../../http-common";
   height: 50px;
   border-radius: 50%;
   border: 1px solid orange;
+}
+
+.groupleader {
+  color:orange;
 }
 
 </style>

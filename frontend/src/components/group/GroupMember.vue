@@ -6,13 +6,15 @@
       width="600"
     >
         <div class="mx-6 my-4 align-self-end">
-          팀 스코어 : 500   그룹원 수 : 5
+          <span class="mx-1">팀 스코어 : </span>{{score}}
+          <span class="mx-1">그룹원 수 : </span>{{totalNum}}
         </div>
         <v-card
         width="80%"
         height="200"
+        class="pa-5"
         >
-          소개글
+          {{content}}
         </v-card>
         <v-carousel :show-arrows="false"
         hide-delimiter-background
@@ -36,7 +38,6 @@ import http from "../../http-common";
   export default {
     data: () => ({
       loading: false,
-      selection: 1,
       users :[],
       category:'',
       content:'',
@@ -45,6 +46,7 @@ import http from "../../http-common";
       leader:'',
       groupName:'',
       totalNum:'',
+      score:'',
     }),
     components: {
       GroupMemberCarousel,
@@ -64,9 +66,10 @@ import http from "../../http-common";
     created() {
       http.get(`/group/detailGroup?groupPk=${this.groupPk}`)
       .then((res)=>{
-        console.log(res.data.object)
+        // console.log(res.data.object)
         this.users = res.data.object.users
         this.category = res.data.object.category
+        this.score = res.data.object.score
         this.content = res.data.object.content
         this.leader = res.data.object.leader
         this.groupName = res.data.object.name
