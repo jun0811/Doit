@@ -53,7 +53,7 @@ export default {
      if(this.content.trim() !='' && this.stompClient!=null) {
         let chatMessage = {
           'message': this.content,
-          'roomPk' : this.room.id,
+          'roomPk' : this.roomid,
           'userPk' : this.$store.state.account.userpk,
           'nickname' : this.nickname
         }
@@ -67,8 +67,12 @@ export default {
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      const accessToken = sessionStorage.getItem("accessToken")
+      var headers = {
+        'accessToken': accessToken
+        };
        this.stompClient.connect(
-        {},
+        headers,
         frame => {
           // 소켓 연결 성공
           this.connected = true;
