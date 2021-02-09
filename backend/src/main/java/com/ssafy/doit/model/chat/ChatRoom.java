@@ -1,5 +1,6 @@
 package com.ssafy.doit.model.chat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.doit.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -21,7 +23,11 @@ public class ChatRoom {
     @Column(name = "room_pk")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_pk")
     private Product product;
+
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ChatRoomJoin> chatRoomJoins;
 }
