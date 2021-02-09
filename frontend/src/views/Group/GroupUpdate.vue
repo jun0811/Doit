@@ -53,7 +53,7 @@
                         v-model="maxNum"
                         hide-details=""
                         color="orange"
-                        min="4"
+                        min="3"
                         max="16"
                         thumb-label
                       ></v-slider>
