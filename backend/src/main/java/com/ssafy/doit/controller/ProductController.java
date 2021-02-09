@@ -1,9 +1,11 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.Mileage;
 import com.ssafy.doit.model.Product;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseProduct;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.UserService;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -27,6 +30,9 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private MileageRepository mileageRepository;
+
     @ApiOperation(value = "물품 등록")
     @PostMapping("/createProduct")
     public Object createProduct(@RequestBody Product product){
@@ -39,12 +45,11 @@ public class ProductController {
             if(groupCount < 2) throw new Exception("그룹 수 부족");
 
             product.setUser(currentUser);
-            System.out.println("왜 안돼! : " + product.getUser().getId());
             productRepository.save(product);
-            result = new ResponseBasic(true, "success", null);
+            result = new ResponseBasic(true, "success", product);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -68,7 +73,7 @@ public class ProductController {
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -88,7 +93,7 @@ public class ProductController {
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -105,7 +110,7 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -121,7 +126,7 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -137,7 +142,7 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -153,7 +158,7 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -169,7 +174,45 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "물품 판매")
+    @GetMapping("/sell")
+    public Object sell(@RequestParam Long pid, @RequestParam Long uid){
+        ResponseBasic result = null;
+        try{
+            User host = userRepository.findById(userService.currentUser()).get();
+            User consumer = userRepository.findById(uid).get();
+            Product product = productRepository.findById(pid).get();
+
+            if(host.getId() != product.getUser().getId()) throw new Exception("유저 불일치");
+            if(consumer.getMileage() < product.getMileage()) throw new Exception("마일리지 부족");
+
+            host.setMileage(host.getMileage() + product.getMileage());
+            userRepository.save(host);
+            mileageRepository.save(Mileage.builder()
+                    .content("마일리지 상점 물품 판매")
+                    .date(LocalDate.now())
+                    .user(host).build());
+
+            consumer.setMileage(consumer.getMileage() - product.getMileage());
+            userRepository.save(consumer);
+            mileageRepository.save(Mileage.builder()
+                    .content("마일리지 상점 물품 판매")
+                    .date(LocalDate.now())
+                    .user(consumer).build());
+
+            product.setStatus(true);
+            productRepository.save(product);
+            result = new ResponseBasic(true, "판매 완료", null);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
