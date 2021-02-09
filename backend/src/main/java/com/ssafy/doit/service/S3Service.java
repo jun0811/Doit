@@ -44,7 +44,7 @@ public class S3Service {
                 .build();
     }
 
-    public String upload(MultipartFile file) throws IOException {
+    public String upload(MultipartFile file) throws Exception {
         String fileName = file.getOriginalFilename();
 
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
@@ -52,7 +52,7 @@ public class S3Service {
         return s3Client.getUrl(bucket, fileName).toString();
     }
 
-    public String upload(String currentFilePath, MultipartFile file) throws IOException {
+    public String upload(String currentFilePath, MultipartFile file) throws Exception {
         // 고유한 key 값을 갖기위해 현재 시간을 postfix로 붙여줌
         SimpleDateFormat date = new SimpleDateFormat("yyyymmddHHmmss");
         String fileName = file.getOriginalFilename() + "-" + date.format(new Date());

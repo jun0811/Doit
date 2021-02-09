@@ -10,11 +10,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = ResponseBasic.class),
@@ -54,11 +56,11 @@ public class FeedController {
     // 그룹 내 피드 리스트
     @ApiOperation(value = "그룹 내 피드 리스트")
     @GetMapping("/groupFeed")
-    public Object groupFeedList(@RequestParam Long groupPk, @RequestParam String date){
+    public Object groupFeedList(@RequestParam Long groupPk, @RequestParam String start, @RequestParam String end){
         ResponseBasic result = null;
         try {
             Long userPk = userService.currentUser();
-            List<ResponseFeed> list = feedService.groupFeedList(userPk, groupPk, date);
+            List<ResponseFeed> list = feedService.groupFeedList(userPk, groupPk, start, end);
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
@@ -71,10 +73,10 @@ public class FeedController {
     // 개인 피드 리스트 (+ 다른유저 피드리스트)
     @ApiOperation(value = "개인 피드 리스트 (+ 다른유저 피드리스트)")
     @GetMapping("/userFeed")
-    public Object userFeed(@RequestParam Long userPk, @RequestParam String date){
+    public Object userFeed(@RequestParam Long userPk, @RequestParam String start, @RequestParam String end){
         ResponseBasic result = null;
         try {
-            List<ResMyFeed> list = feedService.userFeedList(userPk, date);
+            List<ResMyFeed> list = feedService.userFeedList(userPk, start, end);
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();

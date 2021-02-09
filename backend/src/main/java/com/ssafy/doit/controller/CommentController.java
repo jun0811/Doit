@@ -28,11 +28,11 @@ public class CommentController {
 
     @ApiOperation(value = "댓글 등록")
     @PostMapping("/createComment")
-    public Object createComment(@RequestParam Long feedPk,@RequestBody Comment comment){
+    public Object createComment(@RequestBody Comment comment){
         ResponseBasic result = null;
         try{
             Long userPk = userService.currentUser();
-            commentService.createComment(userPk,feedPk,comment);
+            commentService.createComment(userPk,comment);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e) {
             e.printStackTrace();
@@ -86,5 +86,4 @@ public class CommentController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 }
