@@ -75,6 +75,7 @@ public class ChatController {
             Map<String, Object> res = new HashMap<>();
             res.put("room", chatService.getRoom(roomPk));
             res.put("messages", chatMessageRepository.findAllByRoomPk(roomPk));
+            System.out.println(chatMessageRepository.findAllByRoomPk(roomPk));
             result = new ResponseBasic(true, "success", res);
         } catch (Exception e){
             e.printStackTrace();

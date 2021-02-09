@@ -6,6 +6,8 @@ import com.ssafy.doit.repository.chat.ChatMessageRepository;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -29,7 +31,6 @@ public class MessageController {
 
     @MessageMapping("/chat")
     public void message(ChatMessage chatMessage, @Header("accessToken") String Token){
-        System.out.println(chatMessage);
         String currentUser = jwtUtil.getUser(Token);
         chatMessage.setUserPk(userRepository.findByEmail(currentUser).get().getId());
         chatMessageRepository.save(chatMessage);

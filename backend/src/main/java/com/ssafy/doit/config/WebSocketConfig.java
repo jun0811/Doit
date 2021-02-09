@@ -1,5 +1,6 @@
 package com.ssafy.doit.config;
 
+import com.ssafy.doit.config.handler.StompHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
