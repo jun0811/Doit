@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -161,6 +162,9 @@ public class FeedService {
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(feed.getGroupPk()).get();
 
+        if(!feed.getFeedType().equals("true"))
+            throw new Exception("인증피드가 아닙니다.");
+
         Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
         if(!optGU.isPresent())
             throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
@@ -177,6 +181,7 @@ public class FeedService {
                 .feed(feed).user(user).build());    // 그 피드에 인증 확인한 그룹원 추가
 
         Long groupPk = feed.getGroupPk();
+        Long writerPk = feed.getWriter();
         int cnt = feed.getAuthCnt();
         int total = groupRepository.findById(groupPk).get().getTotalNum();
         if (cnt >= Math.round(total * 0.7)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
@@ -184,7 +189,7 @@ public class FeedService {
             feed.setAuthDate(LocalDateTime.now().toString());
             // 마일리지 점수 제공하기 // 인증완료되었다는 알림보내기
 
-            Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(userPk, LocalDate.now());
+            Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(writerPk, LocalDate.now());
             if(optCU.isPresent()){
                 CommitUser cu = optCU.get();
                 cu.setCnt(cu.getCnt() + 1);
@@ -192,7 +197,7 @@ public class FeedService {
             }else{
                 commitUserRepository.save(CommitUser.builder()
                         .date(LocalDate.now())
-                        .userPk(feed.getWriter())
+                        .userPk(writerPk)
                         .cnt(1).build());
             }
 

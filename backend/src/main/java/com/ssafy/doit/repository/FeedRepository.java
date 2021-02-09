@@ -22,8 +22,8 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     @Query(value = "select f from Feed f where f.writer = :userPk " +
             "and substring(f.createDate, 1, 10) = :now")
     Optional<Feed> findByWriterAndCreateDate(Long userPk, String now);
-
     List<Feed> findByGroupPkAndWriter(Long groupPk, Long userPk);
     List<Feed> findByWriter(Long userPk);
     List<Feed> findByGroupPk(Long groupPk);
+
 }
