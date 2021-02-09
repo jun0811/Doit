@@ -9,6 +9,8 @@ public class ResponseUser {
     private String email;
     private String nickname;
     private int mileage;
+    private String role;
+    private String createDate;
     private String image;
 
     public ResponseUser(User user){
@@ -16,5 +18,7 @@ public class ResponseUser {
         this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.mileage = user.getMileage();
+        this.role = user.getRoleKey();
+        this.createDate = user.getCreateDate().toString();
     }
 }

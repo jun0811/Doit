@@ -6,6 +6,7 @@ import FeedWrite from "../views/Group/FeedWrite.vue";
 import Community from "../views/Group/Community.vue";
 import GroupCreate from "../views/Group/GroupCreate.vue";
 import GroupList from "../views/Group/GroupList.vue";
+import GroupUpdate from "../views/Group/GroupUpdate.vue";
 import Join from "../views/User/Join.vue";
 import MailCheck from "../views/User/MailCheck.vue";
 import PasswordChange from "../views/User/PasswordChange.vue";
@@ -18,6 +19,7 @@ import MileageShop from "../views/Mileage/MileageShop.vue";
 import ProductDetail from "../views/Mileage/ProductDetail.vue";
 import ProductWrite from "../views/Mileage/ProductWrite.vue";
 import PasswordFind from "../views/User/PasswordFind.vue";
+import Chat from "../views/chat/Chat.vue";
 
 Vue.use(VueRouter);
 const routes = [
@@ -94,6 +96,12 @@ const routes = [
     props: true,
   },
   {
+    path: "/group/GroupUpdate/:groupPk",
+    name: "GroupUpdate",
+    component: GroupUpdate,
+    props: true,
+  },
+  {
     path: "/group/feedwrite/:groupPk",
     name: "FeedWrite",
     component: FeedWrite,
@@ -114,6 +122,11 @@ const routes = [
     path: "/mileageshop/productwrite",
     name: "ProductWrite",
     component: ProductWrite,
+  },
+  {
+    path: "/chat",
+    name: "Chat",
+    component: Chat,
   },
 ];
 

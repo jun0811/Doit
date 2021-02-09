@@ -6,13 +6,17 @@
       width="600"
     >
         <div class="mx-6 my-4 align-self-end">
-          팀 스코어 : 500   그룹원 수 : 5
+          <span class="mx-1">팀 스코어 : </span>
+          <span class="team-info mr-4">{{score}}</span>
+          <span class="mx-1">그룹원 수 : </span>
+          <span class="team-info">{{totalNum}}</span>
         </div>
         <v-card
         width="80%"
         height="200"
+        class="pa-5"
         >
-          소개글
+          {{content}}
         </v-card>
         <v-carousel :show-arrows="false"
         hide-delimiter-background
@@ -22,7 +26,7 @@
             v-for="(page,i) in pageCount"
             :key="i"
           >
-            <GroupMemberCarousel :page="page"></GroupMemberCarousel>
+            <GroupMemberCarousel :page="page" :groupPk="groupPk"></GroupMemberCarousel>
           </v-carousel-item>
         </v-carousel>
     </v-card>
@@ -31,46 +35,51 @@
 
 <script>
 import GroupMemberCarousel from '@/components/group/GroupMemberCarousel.vue'
+import http from "../../http-common";
 
   export default {
     data: () => ({
       loading: false,
-      selection: 1,
-      member:[
-        {
-          username:'user1',
-          userimage:'',
-        },
-        {
-          username:'user2',
-          userimage:'',
-        },
-        {
-          username:'user3',
-          userimage:'',
-        },
-        {
-          username:'user4',
-          userimage:'',
-        },
-        {
-          username:'user5',
-          userimage:'',
-        },
-      ],
+      users :[],
+      category:'',
+      content:'',
+      endDate:'',
+      createDate:'',
+      leader:'',
+      groupName:'',
+      totalNum:'',
+      score:'',
     }),
     components: {
       GroupMemberCarousel,
     },
+    props: {
+      groupPk: String,
+    }, 
     computed: {
       pageCount () {
-        let listLeng = this.member.length,
+        let listLeng = this.users.length,
             listSize = 4,
             page = Math.floor(listLeng / listSize);
         if (listLeng % listSize > 0) page += 1;
         return page;
       },
-    }
+    },
+    created() {
+      http.get(`/group/detailGroup?groupPk=${this.groupPk}`)
+      .then((res)=>{
+        // console.log(res.data.object)
+        this.users = res.data.object.users
+        this.category = res.data.object.category
+        this.score = res.data.object.score
+        this.content = res.data.object.content
+        this.leader = res.data.object.leader
+        this.groupName = res.data.object.name
+        this.totalNum = res.data.object.totalNum
+        this.endDate = res.data.object.endDate
+        this.createDate = res.data.object.createDate
+      })
+    },
   }
 </script>
 
@@ -79,6 +88,10 @@ import GroupMemberCarousel from '@/components/group/GroupMemberCarousel.vue'
 
 .member-card {
   border-radius: 20px;
+}
+
+.team-info {
+  color:#F9802D;
 }
 
 </style>
