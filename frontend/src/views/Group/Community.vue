@@ -17,7 +17,12 @@
             <p class="ma-0"> 멤버 : {{user_num}}/{{user_info.maxNum}}</p>
             <p class="ma-0"> {{user_info.startDate}} ~ {{user_info.endDate}}</p>
             <div class="d-flex justify-start">
-              <p class="ma-0" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  </p>
+              <p class="ma-0" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  
+                <button  @click="remove(tag)"                       
+                  class="hashtag-del-btn mr-1"> 
+                  <font-awesome-icon icon="times-circle"/>
+                </button>
+              </p>
             </div>
           </v-col>
           <v-col cols="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
@@ -234,6 +239,13 @@ export default {
         this.cards = res.data.object
         console.log(this.cards)
       })
+    },
+    remove(val){
+      // this.hashtag.splice(idx,1)
+      http.delete(`group/deleteHashTag?groupPk=${Number(this.groupPk)}&hashtag=${val}`)
+      .then(()=>{
+        this.$push.go()
+      })
     }
   },
   created(){
@@ -280,6 +292,10 @@ export default {
   .group{
     border: 1px solid #F9802D;
     color: #F9802D
+  }
+  .hashtag-del-btn {
+    color:#FFE0B2;
+    outline: transparent;
   }
 
 </style>
