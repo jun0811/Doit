@@ -26,9 +26,9 @@ export default {
   name: "Chat",
     data: () => {
     return {
-      roomid : 13,
-      id : 105,
-      nickname: '버징가',
+      roomid : 14,
+      id : 84,
+      nickname: '소정소정',
       idx:0,
       msg:[],
       room: '',
@@ -53,7 +53,7 @@ export default {
      if(this.content.trim() !='' && this.stompClient!=null) {
         let chatMessage = {
           'message': this.content,
-          'roomPk' : this.room.id,
+          'roomPk' : this.roomid,
           'userPk' : this.$store.state.account.userpk,
           'nickname' : this.nickname
         }
