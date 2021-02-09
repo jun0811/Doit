@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,10 +26,17 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
+//@MultipartConfig(
+//        fileSizeThreshold    = 1024,
+//        maxFileSize       = -1,
+//        maxRequestSize      = -1
+//)
+//@CrossOrigin("*")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -111,18 +119,16 @@ public class UserController {
     }
 
     // 회원정보 수정
-    @ApiOperation(value = "회원정보(닉네임,프로필) 수정")
-    @PutMapping(value="/updateInfo", produces = { "application/json", "application/xml" })
-    public Object updateInfo(@RequestBody User userReq,@RequestParam MultipartFile file) {
+    @ApiOperation(value = "회원정보(닉네임) 수정")
+    @PutMapping("/updateInfo")
+    public Object updateInfo(@RequestBody User userReq) {
         ResponseBasic result = null;
         System.out.println("hello");
         try {
             Long userPk = userService.currentUser();
-            String imgPath = s3Service.upload(userReq.getImage(),file);
             Optional<User> user = userRepository.findById(userPk);
 
             user.ifPresent(selectUser->{
-                selectUser.setImage(imgPath);
                 selectUser.setNickname(userReq.getNickname());
                 userRepository.save(selectUser);
             });
@@ -130,6 +136,27 @@ public class UserController {
         }catch (Exception e){
             e.printStackTrace();
             result = new ResponseBasic(false, "fail", null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+    @ApiOperation(value = "마이페이지 - 프로필사진 변경")
+    @PostMapping("/updateImg")
+    public Object updateImg(@RequestParam MultipartFile file) {
+        ResponseBasic result = null;
+        try {
+            Long userPk = userService.currentUser();
+            User currentUser = userRepository.findById(userPk).get();
+            String imgPath = s3Service.upload(currentUser.getImage(),file);
+
+            currentUser.setImage(imgPath);
+            userRepository.save(currentUser);
+            result = new ResponseBasic(true, "success", null);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, "프로필 사진 변경 실패", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
