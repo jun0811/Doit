@@ -1,56 +1,57 @@
 <template>
 <div>
   <Header></Header>
-    <v-container class="d-flex flex-column justify-center align-center">
-        <v-row class="title-wrapper">
-          <h1>물품 등록</h1>
-        </v-row>
-        <hr style="width:570px;" class="my-4">
-        <v-row class="d-flex flex-column content-wrapper mt-1">
-          <v-text-field
-            solo
-            :label="title"
-            clearable
-            v-model="product.title"
-          ></v-text-field>
-        </v-row>
+    <v-container class="d-flex flex-column justify-center align-center pa-0" sm="10" md="6" style="max-width:600px;">
         <v-card
           elevation="2"
           outlined
           shaped
           tile
-          class="content-card"
+          class="content-card pt-3 pb-6"
         >
-          <v-row class="d-flex align-center">
+          <h3 class="my-4" style="width:100%;">물품 등록</h3>
+          <v-divider style="width:100%;"></v-divider>
+          <v-row class="d-flex flex-column mt-3" >
+            <v-col cols="12">
+              <v-text-field
+                hide-details=""
+                solo
+                :label="title"
+                clearable
+                v-model="product.title"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="d-flex align-center mt-3">
             <v-col cols="4">카테고리 선택</v-col>
             <v-col cols="8">
               <v-select
                 hide-details=""
                 :items="categories"
                 label="카테고리 선택"
-                solo
+                outlined
                 v-model="product.category"
               ></v-select>
             </v-col>
           </v-row>
-          <v-row class="d-flex align-center">
+          <v-row class="d-flex align-center mt-3">
             <v-col cols="4">판매 금액 설정</v-col>
             <v-col cols="8" class="d-flex align-center">
               <v-text-field
                 hide-details=""
-                :label="mileage"
-                solo
+                label="판매금액"
+                outlined
                 v-model="product.mileage"
               ></v-text-field>
-              <span class="ml-2">마일리지</span>
+              <span class="ml-2" style="word-break: keep-all">마일리지</span>
             </v-col>
           </v-row>
-          <v-row class="my-2">
+          <v-row class="my-3">
             <v-col cols="12">내용 입력</v-col>
             <v-textarea
-              solo
+              outlined
               name="input-7-4"
-              label="Solo textarea"
+              label="판매 물품에 대한 설명"
               hide-details=""
               v-model="product.content"
             ></v-textarea>
@@ -67,8 +68,8 @@
           </v-row>
         </v-card>
 
-        <v-btn class="submit-btn" 
-          large
+        <v-btn class="submit-btn mt-12" 
+          outlined
           @click="write"
           >
           등록하기
@@ -137,15 +138,13 @@ export default {
 <style scoped>
 
 .title-wrapper {
-  width:550px;
+  width:100%;
 }
 
-.content-wrapper {
-  width:560px;
-}
+
 
 .content-card {
-  width:560px;
+  width:100%;
   padding : 30px;
 }
 

@@ -50,8 +50,10 @@ public class GroupUserService {
     @Transactional
     public void join(Long userPk, Long groupPk) throws Exception {
         User user = userRepository.findById(userPk).get();
-        Group group = groupRepository.findById(groupPk).get();
+        Optional<Group> optGroup = groupRepository.findByGroupPkAndStatus(groupPk, "true");
+        if(!optGroup.isPresent()) throw new Exception("활동하지 않는 그룹입니다.");
 
+        Group group = optGroup.get();
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
         if(!opt.isPresent()){
             if(group.getTotalNum() == group.getMaxNum()) throw new Exception("인원이 가득 찼습니다.");
@@ -79,7 +81,7 @@ public class GroupUserService {
         }else throw new Exception("가입되어 있지 않은 그룹원입니다.");
     }
 
-    // 그룹 내 그룹원 강퇴시키기
+    // 그룹 내 그룹원 강퇴시키기 (그룹장이)
     @Transactional
     public void kickOutGroupUser(Long userPk, Long groupPk, Long leader) throws Exception {
         Group group = groupRepository.findById(groupPk).get();
@@ -94,7 +96,7 @@ public class GroupUserService {
         }else throw new Exception("그룹장이 아닙니다.");
     }
 
-    // 랄퇴한 회원 가입된 그룹에서 delete
+    // 랄퇴한 회원, 가입된 그룹에서 delete
     @Transactional
     public void deleteGroupByUser(Long userPk) throws Exception {
         User user = userRepository.findById(userPk).get();

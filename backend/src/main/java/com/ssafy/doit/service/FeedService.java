@@ -9,6 +9,8 @@ import com.ssafy.doit.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,6 +34,8 @@ public class FeedService {
     private final UserRepository userRepository;
     @Autowired
     private final FeedUserRepository feedUserRepository;
+    @Autowired
+    private final CommentRepository commentRepository;
     @Autowired
     private final CommitUserRepository commitUserRepository;
     @Autowired
@@ -61,14 +65,14 @@ public class FeedService {
 
     // 그룹 내 피드 리스트
     @Transactional
-    public List<ResponseFeed> groupFeedList(Long userPk, Long groupPk, String date) throws Exception {
+    public List<ResponseFeed> groupFeedList(Long userPk, Long groupPk, String start, String end) throws Exception {
         Group group = groupRepository.findById(groupPk).get();
         User user = userRepository.findById(userPk).get();
 
         Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group,user);
         if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
         
-        List<Feed> feedList = feedRepository.findAllByGroupPkAndCreateDateAndStatus(groupPk, date, "true");
+        List<Feed> feedList = feedRepository.findAllByGroupPkAndStatusAndCreateDateBetween(groupPk, "true", start, end);
         List<ResponseFeed> resList = new ArrayList<>();
         for(Feed feed : feedList){
             String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
@@ -79,12 +83,13 @@ public class FeedService {
 
     // 개인 피드 리스트
     @Transactional
-    public List<ResMyFeed> userFeedList(Long userPk, String date){
-        List<Feed> list = feedRepository.findAllByWriterAndCreateDateAndStatus(userPk, date, "true");
+    public List<ResMyFeed> userFeedList(Long userPk, String start, String end){
+        List<Feed> list = feedRepository.findAllByWriterAndStatusAndCreateDateBetween(userPk, "true", start, end);
         List<ResMyFeed> resList = new ArrayList<>();
         for(Feed feed : list){
             String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
-            resList.add(new ResMyFeed(feed, nickname));
+            String groupName = groupRepository.findById(feed.getGroupPk()).get().getName();
+            resList.add(new ResMyFeed(feed, nickname, groupName));
         }
         return resList;
     }
@@ -110,11 +115,44 @@ public class FeedService {
         Optional<Feed> feed = feedRepository.findById(feedPk);
         if(userPk == feed.get().getWriter()) {
             feed.ifPresent(selectFeed -> {
-                selectFeed.setStatus("false");
-                feedRepository.save(selectFeed);
-                //feedRepository.delete(selectFeed);
+//                selectFeed.setStatus("false");
+//                feedRepository.save(selectFeed);
+                feedRepository.delete(selectFeed);
             });
+            feedUserRepository.deleteByFeedPk(feedPk);
+            commentRepository.deleteByFeedPk(feedPk);
         } else throw new Exception("피드 작성자가 아닙니다.");
+    }
+
+    // 그룹을 탈퇴한 경우 그룹&회원의 피드 삭제
+    @Transactional
+    public void deleteFeedByGroupUser(Long userPk, Long groupPk) {
+        List<Feed> feedList = feedRepository.findByGroupPkAndWriter(groupPk, userPk);
+        getObject(feedList);
+    }
+
+    // 회원이 탈퇴했거나 강퇴된 경우 그 회원의 모든 피드 삭제
+    @Transactional
+    public void deleteFeedByUser(Long userPk) {
+        List<Feed> feedList = feedRepository.findByWriter(userPk);
+        getObject(feedList);
+    }
+
+    // 관리자가 그룹을 삭제했을 경우 그 그룹과 관련된 모든 피드 삭제
+    @Transactional
+    public void deleteFeedByGroup(Long groupPk) {
+        List<Feed> feedList = feedRepository.findByGroupPk(groupPk);
+        getObject(feedList);
+    }
+
+    public void getObject(List<Feed> feedList){
+        for(Feed feed : feedList){
+//            feed.setStatus("false");
+//            feedRepository.save(feed);
+            feedUserRepository.deleteByFeedPk(feed.getFeedPk());
+            commentRepository.deleteByFeedPk(feed.getFeedPk());
+            feedRepository.deleteById(feed.getFeedPk());
+        }
     }
 
     // 인증피드 인증확인
@@ -123,6 +161,9 @@ public class FeedService {
         Feed feed = feedRepository.findById(feedPk).get();
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(feed.getGroupPk()).get();
+
+        if(!feed.getFeedType().equals("true"))
+            throw new Exception("인증피드가 아닙니다.");
 
         Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
         if(!optGU.isPresent())
@@ -140,6 +181,7 @@ public class FeedService {
                 .feed(feed).user(user).build());    // 그 피드에 인증 확인한 그룹원 추가
 
         Long groupPk = feed.getGroupPk();
+        Long writerPk = feed.getWriter();
         int cnt = feed.getAuthCnt();
         int total = groupRepository.findById(groupPk).get().getTotalNum();
         if (cnt >= Math.round(total * 0.7)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
@@ -147,7 +189,7 @@ public class FeedService {
             feed.setAuthDate(LocalDateTime.now().toString());
             // 마일리지 점수 제공하기 // 인증완료되었다는 알림보내기
 
-            Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(userPk, LocalDate.now());
+            Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(writerPk, LocalDate.now());
             if(optCU.isPresent()){
                 CommitUser cu = optCU.get();
                 cu.setCnt(cu.getCnt() + 1);
@@ -155,7 +197,7 @@ public class FeedService {
             }else{
                 commitUserRepository.save(CommitUser.builder()
                         .date(LocalDate.now())
-                        .userPk(feed.getWriter())
+                        .userPk(writerPk)
                         .cnt(1).build());
             }
 

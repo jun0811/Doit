@@ -8,11 +8,11 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 // 설치했던 아이콘파일에서 해당 아이콘만 불러옵니다.
 // 1. 아이콘 등록
-import { faTimesCircle, faCheckCircle, faRssSquare, faUsers, faGuitar, faBook, faLaptopCode, faRunning, faCarrot, faSpellCheck} from "@fortawesome/free-solid-svg-icons"; // fas로 시작하는것
+import { faTimesCircle, faCheckCircle, faRssSquare, faUsers, faTimes} from "@fortawesome/free-solid-svg-icons"; // fas로 시작하는것
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 // 불러온 아이콘을 라이브러리에 담습니다.
-library.add(faTrashAlt, );
-library.add( faTimesCircle, faCheckCircle, faRssSquare, faUsers, faGuitar, faBook, faLaptopCode, faRunning, faCarrot, faSpellCheck);
+library.add(faTrashAlt);
+library.add( faTimesCircle, faCheckCircle, faRssSquare, faUsers, faTimes);
 // 쓸 때는  <font-awesome-icon icon="times-circle"/>  
 // fontawesome아이콘을 Vue탬플릿에 사용할 수 있게 등록해 줍니다.
 Vue.component("font-awesome-icon", FontAwesomeIcon );

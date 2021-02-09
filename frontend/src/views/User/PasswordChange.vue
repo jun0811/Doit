@@ -2,7 +2,7 @@
   <div>
     <Header></Header>
      <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width="360px">
-    <h3 class="my-5">비밀번호 변경</h3>
+    <h3 class="my-10">비밀번호 변경</h3>
     <div>
       <v-text-field
         v-model="password"
@@ -27,9 +27,9 @@
       
       <v-card-actions class="d-flex align-center"> 
         <v-row>
-          <v-col>
-            <button @click="execute" class="join input col-12">변경하기</button>
-            <div class="col-12 text-center">
+          <v-col class="d-flex flex-column align-center">
+            <v-btn type="submit" @click="execute" class="change-btn pa-1 ma-5">변경하기</v-btn>
+            <div class="col-12 text-center mb-2">
               <span><router-link to="/">메인페이지로 돌아가기</router-link></span>
             </div>
           <br>
@@ -118,6 +118,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.change-btn  {
+  border: 2px solid #F9802D;
+  color: #F9802D;
+  border-radius: 8px;
+}
 
 </style>

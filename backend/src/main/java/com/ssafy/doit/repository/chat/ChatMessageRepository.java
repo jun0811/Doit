@@ -1,8 +1,11 @@
 package com.ssafy.doit.repository.chat;
 
 import com.ssafy.doit.model.chat.ChatMessage;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
+import java.util.List;
+import java.util.Optional;
 
+public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long> {
+    List<ChatMessage> findAllByRoomPk(Long roomPk);
 }
