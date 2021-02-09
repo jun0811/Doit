@@ -18,7 +18,7 @@ import MileageShop from "../views/Mileage/MileageShop.vue";
 import ProductDetail from "../views/Mileage/ProductDetail.vue";
 import ProductWrite from "../views/Mileage/ProductWrite.vue";
 import PasswordFind from "../views/User/PasswordFind.vue";
-import Chat from "../views/chat/Chat-ds.vue";
+import Chat from "../views/chat/Chat.vue";
 
 Vue.use(VueRouter);
 const routes = [
