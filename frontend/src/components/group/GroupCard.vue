@@ -81,7 +81,7 @@ export default {
     methods: {
       moveCommunity(idx){
         console.log(this.groups[idx])
-        this.$router.push({name:"Community",params:{groupPk:this.groups[idx].groupPk}})
+        this.$router.push({name:"Community",params:{groupPk:String(this.groups[idx].groupPk)}})
       }  
     },
     created() {
