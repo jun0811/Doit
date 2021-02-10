@@ -19,6 +19,7 @@ import MileageShop from "../views/Mileage/MileageShop.vue";
 import ProductDetail from "../views/Mileage/ProductDetail.vue";
 import ProductWrite from "../views/Mileage/ProductWrite.vue";
 import PasswordFind from "../views/User/PasswordFind.vue";
+import MileageHistory from "../views/Mileage/MileageHistory.vue";
 import Chat from "../views/chat/Chat.vue";
 
 Vue.use(VueRouter);
@@ -72,6 +73,11 @@ const routes = [
     path: "/user/delete/complete",
     name: "DeleteComplete",
     component: DeleteComplete,
+  },
+  {
+    path: "/user/mileagehistory",
+    name: "MileageHistory",
+    component: MileageHistory,
   },
   {
     path: "/mileageshop",
