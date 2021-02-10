@@ -265,7 +265,7 @@ export default {
     },
     created(){
       console.log(this.$store.state.account.accessToken)
-      this.nickname = this.$store.getters.getName;
+      this.nickname = this.$store.getters.getName; 
 
       // 현재 로그인 한사람의 가입 그룹 리스트
       if(this.$store.getters.getAccessToken){

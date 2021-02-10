@@ -22,6 +22,7 @@
     <v-card-text>
       <div>{{this.card.writer}}</div>
       <div>작성날짜: {{this.card.createDate.slice(0,10)}}</div>
+      <v-btn class="my-3" @click="accept">{{message}}</v-btn>
     </v-card-text>
 
     <v-divider class="mx-4"></v-divider>
@@ -33,13 +34,16 @@
     props: {
       card: Object
     },
-    created(){
-      console.log(this.card)
-    },
     data: () => ({
       loading: false,
       selection: 1,
+      message: "미인증",
     }),
+    methods: {
+      accept(){
+        if(this.card.writer == this.$store.getters.getName) console.log("동일인물")
+      }  
+    }
   }
 </script>
 
