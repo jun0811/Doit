@@ -38,7 +38,7 @@ public class ResponseFeed {
         this.feedType = feed.getFeedType();
         this.authCheck = feed.getAuthCheck();
         this.authDate = feed.getAuthDate();
-        this.createDate = feed.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.createDate = feed.getCreateDate().toString();
         this.updateDate = feed.getUpdateDate();
         this.authUsers = this.getAuthUsers(feed);
     }

@@ -28,7 +28,7 @@ public class ResponseGroup {
         this.name = group.getName();
         this.content = group.getContent();
         this.category = group.getCategory();
-        this.createDate = group.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.createDate = group.getCreateDate().toString();
         this.endDate = group.getEndDate();
         this.leader = group.getLeader();
         this.score = group.getScore();

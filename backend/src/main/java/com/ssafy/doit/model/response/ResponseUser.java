@@ -21,6 +21,6 @@ public class ResponseUser {
         this.nickname = user.getNickname();
         this.mileage = user.getMileage();
         this.role = user.getRoleKey();
-        this.createDate = user.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.createDate = user.getCreateDate().toString();
     }
 }
