@@ -3,6 +3,8 @@ package com.ssafy.doit.model.response;
 import com.ssafy.doit.model.user.User;
 import lombok.Getter;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter
 public class ResponseUser {
     private Long userPk;
@@ -19,6 +21,6 @@ public class ResponseUser {
         this.nickname = user.getNickname();
         this.mileage = user.getMileage();
         this.role = user.getRoleKey();
-        this.createDate = user.getCreateDate().toString();
+        this.createDate = user.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }

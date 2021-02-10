@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Column;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +38,7 @@ public class ResponseFeed {
         this.feedType = feed.getFeedType();
         this.authCheck = feed.getAuthCheck();
         this.authDate = feed.getAuthDate();
-        this.createDate = feed.getCreateDate().toString();
+        this.createDate = feed.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         this.updateDate = feed.getUpdateDate();
         this.authUsers = this.getAuthUsers(feed);
     }

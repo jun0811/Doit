@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,7 +23,7 @@ public class Mileage {
 
     private String content;
     private String mileage;
-    private LocalDate date;
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "user_pk")

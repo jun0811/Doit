@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -169,14 +170,14 @@ public class ProductController {
             userRepository.save(host);
             mileageRepository.save(Mileage.builder()
                     .content("마일리지 상점 물품 판매")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
                     .user(host).build());
 
             consumer.setMileage(consumer.getMileage() - product.getMileage());
             userRepository.save(consumer);
             mileageRepository.save(Mileage.builder()
                     .content("마일리지 상점 물품 판매")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
                     .user(consumer).build());
 
             product.setStatus(false);
