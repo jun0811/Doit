@@ -104,11 +104,14 @@
           <v-btn @click="feedRead" text class="ma-4 search-btn" outlined> 검색 </v-btn >
         </v-col>
         <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16">
-          <div class="temp d-flex align-center flex-column">
+          <div v-if="cards.length" class="d-flex align-center flex-column">
             <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card"></FeedCard>
           </div>
+          <div v-else> 
+            <h2>해당 기간에는 작성된 피드가 없어요🤷‍♂️</h2>
+          </div>
         </v-col>
-        <v-col v-if="users" cols="9" class="d-flex justify-center mx-sm-16 ">
+        <v-col v-if="users" cols="9" class="d-flex justify-center mx-sm-16">
           <GroupMember :groupPk="groupPk"></GroupMember>
           <!-- <div class="temp">
             asdasdasd
@@ -242,18 +245,19 @@ export default {
       .then((res)=>{
         // console.log(res.data.object)
         this.cards = res.data.object
-        console.log(this.cards)
+        // console.log(this.cards)
       })
     },
   },
   created(){
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
-      this.user_info= res.data.object
-      this.user_num = this.user_info.users.length
-      this.leader = res.data.object.leader
-      this.tags = res.data.object.tags
-      this.loginUser = this.$store.state.account.userpk
+      
+        this.user_info= res.data.object
+        this.user_num = this.user_info.users.length
+        this.leader = res.data.object.leader
+        this.tags = res.data.object.tags
+        this.loginUser = this.$store.state.account.userpk
     }),
     http.get('group/currentUserGroup')
       .then((res)=>{
@@ -265,7 +269,7 @@ export default {
       }),
     http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.start}`)
     .then((res)=>{
-        console.log(res)
+      this.cards = res.data.object
     })
   }
 }
@@ -282,10 +286,10 @@ export default {
   .text-h5 {
     color: #E0E0E0
   }
-  .temp {
+  /* .temp {
     border: 1px solid;
     width: 100%;
-  }
+  } */
   .selected{
     color:#F9802D
   }

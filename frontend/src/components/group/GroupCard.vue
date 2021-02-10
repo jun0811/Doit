@@ -9,7 +9,7 @@
         :key="idx"
         class="d-flex justify-center px-4 py-4"
       >
-          <v-card height="100%" width="100%" router-link :to="{name: 'Community', params: {groupPk:group.groupPk}}">
+          <v-card height="100%" width="100%" >
             <v-img
               src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
               class="white--text align-end"
@@ -20,9 +20,12 @@
             <span v-for="(tag,idx) in group.tags" :key="idx" class="mx-1" ># {{tag}}</span>
             </v-img>
             <v-card-actions  class="card-text">
-              <v-card-text class="d-flex justify-space-around py-1">
-                <v-btn plain class="btn">그룹으로 이동</v-btn>
-                <v-btn plain class="btn">가입신청</v-btn>
+              <v-card-text v-if="token"  class="d-flex justify-space-around py-1">
+                <v-btn plain class="btn" router-link :to="{name: 'Community', params: {groupPk:group.groupPk}}">상세보기</v-btn>
+                <!-- <v-btn plain class="btn">가입신청</v-btn> -->
+              </v-card-text>
+              <v-card-text v-else class="d-flex justify-space-around py-1">
+                <span>로그인을 하면 더 자세한 정보를 확인 하실수 있습니다.</span>
               </v-card-text>
             </v-card-actions>
 
@@ -60,6 +63,7 @@ export default {
               "page":this.page,
               "size":1,
               "tag":this.word,
+              "token": ""
             },
             (res) =>{
               if (res.status){
@@ -75,6 +79,7 @@ export default {
       }
     },
     created() {
+      this.token = this.$store.state.account.accessToken
       searchGroup(
         {
           "direction":"ASC",
