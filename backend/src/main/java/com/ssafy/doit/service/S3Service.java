@@ -7,7 +7,11 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.ssafy.doit.model.Product;
+import com.ssafy.doit.model.request.RequestProduct;
+import com.ssafy.doit.repository.ProductRepository;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @NoArgsConstructor
@@ -35,6 +41,9 @@ public class S3Service {
 
     @Value("${cloud.aws.region.static}")
     private String region;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @PostConstruct
     public void setS3Client() {
@@ -76,4 +85,27 @@ public class S3Service {
         System.out.println(s3Client.getUrl(bucket, fileName).toString());
         return fileName;
     }
+//  마일리지 상점 이미지 사진 불러오기
+    public List<RequestProduct> getList() {
+        List<Product> productEntityList = productRepository.findAll();
+        List<RequestProduct> productList = new ArrayList<>();
+
+        for (Product product : productEntityList) {
+            productList.add(convertEntityToDto(product));
+        }
+
+        return productList;
+    }
+    private RequestProduct convertEntityToDto(Product product) {
+        return RequestProduct.builder()
+                .id(product.getId())
+                .category((product.getCategory()))
+                .title(product.getTitle())
+                .content((product.getContent()))
+                .image(product.getImage())
+                .mileage(product.getMileage())
+                .build();
+    }
+    //  feed 이미지 사진 불러오기
+
 }
