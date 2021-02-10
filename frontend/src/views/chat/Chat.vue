@@ -38,28 +38,26 @@ export default {
   },
   created(){
     this.id = this.$store.state.account.userpk;
-    console.log('userid', this.id);
+
     http.get(`/chat/room/${this.roomid}`)
     .then(res => {
         console.log('res', res);
         this.msg = res.data.object.messages;
         this.room = res.data.object.room;
+        this.connect();
     })
-    this.connect();
   },
   methods:{
     sendMessage(){
-    console.log(this.content);
+    // console.log(this.content);
      if(this.content.trim() !='' && this.stompClient!=null) {
         let chatMessage = {
           'message': this.content,
           'roomPk' : this.roomid,
-          'userPk' : this.$store.state.account.userpk,
-          'nickname' : this.nickname
         }
-        this.stompClient.send("/publish/chat", JSON.stringify(chatMessage),{})
-   
+        this.stompClient.send("/publish/chat", JSON.stringify(chatMessage),{"accessToken": this.$store.getters.getAccessToken})
         this.content=''
+
     }
     },
     connect() {
@@ -67,8 +65,12 @@ export default {
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+
+      var headers = {
+        'accessToken': this.$store.getters.getAccessToken
+        };
        this.stompClient.connect(
-        {},
+        headers,
         frame => {
           // 소켓 연결 성공
           this.connected = true;
@@ -76,8 +78,9 @@ export default {
           // console.log(this.roomid)
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
-          this.stompClient.subscribe("/subscribe/chat/room"+this.roomid , res => {
-            console.log(JSON.parse(res.body));
+          this.stompClient.subscribe("/subscribe/chat/room/"+ this.roomid , res => {
+            console.log(res)
+            console.log('메시지',JSON.parse(res.body));
             this.msg.push(JSON.parse(res.body));
           });
         },

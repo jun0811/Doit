@@ -1,10 +1,12 @@
 package com.ssafy.doit.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.doit.model.chat.ChatRoom;
 import com.ssafy.doit.model.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,4 +33,8 @@ public class Product {
     @JoinColumn(name = "user_pk")
     @JsonIgnore
     private User user;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ChatRoom> chatRooms;
 }

@@ -45,11 +45,13 @@ public class S3Service {
     }
 
     public String upload(MultipartFile file) throws Exception {
-        String fileName = file.getOriginalFilename();
+//        String fileName = file.getOriginalFilename();
+        SimpleDateFormat date = new SimpleDateFormat("yyyymmddHHmmss");
+        String fileName = file.getOriginalFilename() + "-" + date.format(new Date());
 
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-        return s3Client.getUrl(bucket, fileName).toString();
+        return fileName;
     }
 
     public String upload(String currentFilePath, MultipartFile file) throws Exception {

@@ -20,21 +20,7 @@
               <router-link :to="{name: 'GroupList', params: {word: tag}}" style="display:inline-block">
                 <p class="ma-0 mr-1" > #{{tag}}</p>
               </router-link>
-              <button  @click="remove(tag)"                       
-                v-if="loginUser==leader"
-                class="hashtag-del-btn mr-1"> 
-                <font-awesome-icon icon="times-circle"/>
-              </button>
             </div>
-            <!-- <div class="d-flex justify-start">
-              <p class="ma-0 mr-1" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  
-                <button  @click="remove(tag)"                       
-                  v-if="loginUser==leader"
-                  class="hashtag-del-btn mr-1"> 
-                  <font-awesome-icon icon="times-circle"/>
-                </button>
-              </p>
-            </div> -->
           </v-col>
           <v-col cols="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
             
@@ -259,13 +245,6 @@ export default {
         console.log(this.cards)
       })
     },
-    remove(val){
-      http.delete(`group/deleteHashTag?groupPk=${Number(this.groupPk)}&hashtag=${val}`)
-      .then(()=>{
-        const delIdx = this.tags.indexOf(val)
-        this.tags.splice(delIdx,1)
-      })
-    }
   },
   created(){
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
@@ -288,7 +267,6 @@ export default {
     .then((res)=>{
         console.log(res)
     })
-
   }
 }
 </script>

@@ -53,7 +53,7 @@
                         v-model="maxNum"
                         hide-details=""
                         color="orange"
-                        min="4"
+                        min="3"
                         max="16"
                         thumb-label
                       ></v-slider>
@@ -133,6 +133,7 @@ export default {
     },
     data(vm){
       return{
+      submit: false,
       menu: false,
       date: new Date().toISOString().substr(0,10),
       minLength : false,
@@ -157,6 +158,20 @@ export default {
       }
     },
     watch: {
+      endDate(){
+        let END = new Date(this.endDate)
+        console.log(END)
+        const TODAY = new Date()
+        let check = Math.ceil((END.getTime() - TODAY.getTime())/(1000*3600*24));
+        if (check<7){
+          alert('최소 일주일 이후 날짜를 선택해주세요.')
+          // this.endDate = `${}`
+          this.endDate =""
+          this.submit = false
+        }else if(check>=7){
+          this.submit = true
+        } 
+      },
       date(){
         this.endDate = this.formatDate(this.date)
       },
@@ -173,8 +188,7 @@ export default {
       formatDate (date){
         if(!date) return null
         const [year,month, day] = date.split('-')
-        console.log(year, month,day)
-        return `${month}/${day}/${year}`
+        return `${year}-${month}-${day}`
       },
       parseDate (date) {
         if (!date) return null
@@ -195,7 +209,7 @@ export default {
       },
       
       create(){
-        if (this.minLength && this.name){
+        if (this.minLength && this.name &&this.submit){
           http.post('/group/createGroup',
           {
             "name": this.name,
@@ -211,6 +225,7 @@ export default {
           })
         }else{
           if(this.name.length<1) alert('그룹명을 입력해주세요')
+          else if(this.submit===false) alert('만료 날짜를 선택해주세요')
           else {alert(`그룹 소개글을 20자 이상 작성해주세요 ` )}
         }
       }

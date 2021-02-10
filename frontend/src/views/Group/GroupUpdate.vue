@@ -53,7 +53,7 @@
                         v-model="maxNum"
                         hide-details=""
                         color="orange"
-                        min="4"
+                        min="3"
                         max="16"
                         thumb-label
                       ></v-slider>
@@ -81,6 +81,7 @@
                   </v-col>
                 </v-row>
                 <v-row >
+                  <!-- 신규 태그 추가 -->
                   <v-col cols="12" class="d-flex justify-start">
                     <v-text-field 
                       v-model="word"
@@ -93,14 +94,14 @@
                       class ="mt-4 ml-3"
                     >추가</v-btn>
                   </v-col>
+                
                   <v-col cols="12" class="d-flex flex-wrap mb-5 py-0">
-                    <ul>
+                    <ul> 
                       <li v-for="(tag,idx) in hashtag" :key="idx" ># {{ tag }}
-                        <button @click="remove(idx)" class="hashtag-del-btn">                     
-                          <!-- |x| -->
+                        <button @click="remove(idx, tag)" class="hashtag-del-btn">                     
                           <font-awesome-icon icon="times-circle"/>
                         </button>  
-                      </li> 
+                      </li>
                     </ul>
                   </v-col>
                 </v-row>
@@ -110,9 +111,9 @@
             <v-col class="d-flex justify-center">
               <v-btn
                 outlined
-                @click="create"
+                @click="update"
                 class="group-create-btn"
-              >그룹 생성</v-btn>
+              >수정 완료</v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -126,7 +127,7 @@ import Footer from "@/components/common/Footer";
 import http from "../../http-common"
 
 export default {
-    name :"GroupCreate",
+    name :"GroupUpdate",
     components: {
         Header,
         Footer
@@ -138,16 +139,18 @@ export default {
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
       const user= res.data.object
-      console.log(user)
       this.name = user.name
       this.maxNum = user.maxNum
       this.content = user.content
       this.hashtag = user.tags
+      this.leader = user.leader
     })
     },
     data(vm){
       return{
+      leader: 0,
       menu: false,
+      submit: false,
       date: new Date().toISOString().substr(0,10),
       minLength : false,
       name: "",
@@ -171,6 +174,20 @@ export default {
       }
     },
     watch: {
+      endDate(){
+        let END = new Date(this.endDate)
+        console.log(END)
+        const TODAY = new Date()
+        let check = Math.ceil((END.getTime() - TODAY.getTime())/(1000*3600*24));
+        if (check<7){
+          alert('최소 일주일 이후 날짜를 선택해주세요.')
+          // this.endDate = `${}`
+          this.endDate =""
+          this.submit = false
+        }else if(check>=7){
+          this.submit = true
+        } 
+      },
       date(){
         this.endDate = this.formatDate(this.date)
       },
@@ -188,7 +205,7 @@ export default {
         if(!date) return null
         const [year,month, day] = date.split('-')
         console.log(year, month,day)
-        return `${month}/${day}/${year}`
+        return `${year}-${month}-${day}`
       },
       parseDate (date) {
         if (!date) return null
@@ -199,32 +216,39 @@ export default {
       add(){
         if (this.word){
           this.hashtag.push(this.word)
+          http.put(`group/updateHashTag?groupPk=${this.groupPk}&hashtag=${this.word}`)
           this.word=""
         }else{
           alert('단어를 입력!')
         }
       },
-      remove(idx){
-        this.hashtag.splice(idx,1)
+      remove(idx, word){
+        http.delete(`group/deleteHashTag?groupPk=${Number(this.groupPk)}&hashtag=${word}`)
+        .then(()=>{
+          this.hashtag.splice(idx,1)
+        })
       },
-      
-      create(){
-        if (this.minLength && this.name){
-          http.post('/group/createGroup',
+      update(){
+        if (this.minLength && this.name &&this.submit && this.category.length>0){
+          http.put('/group/updateGroup',
           {
             "name": this.name,
             "maxNum": this.maxNum,
             "endDate": this.date,
             "content":this.content,
-            "hashtags": this.hashtag,
-            "category": this.category
+            "category": this.category,
+            "groupPk": Number(this.groupPk),
+            "leader": this.leader
           })
           .then((res) =>{
             console.log(res)
-            alert('생성완료')
+            alert('수정완료')
+            this.$router.go(-1)
           })
         }else{
           if(this.name.length<1) alert('그룹명을 입력해주세요')
+          else if(this.submit ===false) alert('만료 날짜를 선택해주세요')
+          else if(this.category.length==0) alert('카테고리를 골라주세요')
           else {alert(`그룹 소개글을 20자 이상 작성해주세요 ` )}
         }
       }
