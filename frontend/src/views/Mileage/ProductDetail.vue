@@ -21,8 +21,10 @@
             {{product.nickname}}
           </span>
         </v-row>
-        <hr class="mb-4 line">
-        <v-row class="d-flex flex-column align-start ml-2">
+        <v-row class="d-flex justify-center mt-2">
+          <hr class="mb-4 line">
+        </v-row>
+        <v-row class="d-flex flex-column align-start mx-0 mx-sm-1">
           <v-row class="prd-title pb-0">
             <!-- <v-col cols="6"> -->
               {{product.title}}
@@ -35,13 +37,16 @@
           <v-row class="prd-mileage">{{product.mileage}} 마일리지</v-row>
           <v-row class="prd-content py-5">{{product.content}}</v-row>
         </v-row>
-        <hr class="mt-4 line">
+        <v-row class="d-flex justify-center">
+          <hr class="mt-4 line">
+        </v-row>
         <v-row class="d-flex justify-center">
           <v-col class="d-flex justify-center">
             <v-btn 
               class="deal-btn" 
               large
               text
+              @click="chatting"
               >
               채팅으로 거래하기
             </v-btn>
@@ -84,6 +89,11 @@ export default {
     })
   },
   computed: {
+  },
+  methods: {
+    chatting() {
+      this.$router.push("/chat")
+    }
   }
 };
 </script>
@@ -96,7 +106,7 @@ margin-top: 50px;
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
     .container-width {
-      width: 320px;
+      width: 370px;
     }
 }
 
@@ -107,8 +117,8 @@ margin-top: 50px;
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .img-wrapper {
-    width:300px;
-    height:200px;
+    width:370px;
+    height:270px;
   }
 }
 
@@ -118,7 +128,7 @@ margin-top: 50px;
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .line {
-    width:300px;
+    width:340px;
   }
 }
 
@@ -143,7 +153,7 @@ margin-top: 50px;
   font-weight:bold;
   padding:12px;
   margin:6px;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .prd-category {
@@ -165,6 +175,7 @@ margin-top: 50px;
 .prd-content {
   font-size : 15px;
   padding-left: 12px;
+  padding-right: 12px;
   margin:6px;
 }
 
