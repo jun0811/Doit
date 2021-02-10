@@ -1,10 +1,13 @@
 <template>
-  <v-container >
+  <v-container class="pa-0 px-md-16">
     <v-row
-      class="my-6 px-6 d-flex align-center flex-wrap justify-start"
+      class="d-flex align-center flex-wrap justify-start"
     > 
       <v-col
-        cols="4"
+        xs="12"
+        sm="4"
+        md="4"
+        lg="4"
         v-for="(group, idx) in groups" 
         :key="idx"
         class="d-flex justify-center px-4 py-4"
@@ -17,7 +20,7 @@
               height="200px"
             >
             <v-card-title v-text="group.name" class="py-1"></v-card-title>
-            <span v-for="(tag,idx) in group.tags" :key="idx" class="mx-1" ># {{tag}}</span>
+            <div class="mx-2 py-1"><span style="word-break:keep-all;" v-for="(tag,idx) in group.tags" :key="idx" class="mx-1" >#{{tag}}</span></div>
             </v-img>
             <v-card-actions  class="card-text">
               <v-card-text v-if="token"  class="d-flex justify-space-around py-1">

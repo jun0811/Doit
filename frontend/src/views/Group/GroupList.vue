@@ -1,7 +1,7 @@
 <template>
   <div>
       <Header></Header>
-      <v-container class="pa-3 pa-sm-16">
+      <v-container class="pa-0 pa-md-3">
         <SearchBar></SearchBar>
         <br>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->

@@ -17,10 +17,11 @@ new Vue({
         const email = sessionStorage.getItem("email");
         const name = sessionStorage.getItem("name");
         const userpk = sessionStorage.getItem("userpk");
+        const mileage = sessionStorage.getItem("mileage");
 
         console.log(accessToken);
         if (accessToken) {
-            this.$store.commit("SET_ACCESSTOKEN", { accessToken, email, name, userpk});
+            this.$store.commit("SET_ACCESSTOKEN", { accessToken, email, name, userpk, mileage});
         }
     }
 }).$mount('#app');
