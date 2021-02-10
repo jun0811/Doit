@@ -44,4 +44,15 @@ public class Product {
     private void createAt(){
         this.createDate = LocalDateTime.now();
     }
+
+    @Builder
+    public Product(Long id, String category, String title, String content,String image, int mileage,boolean status) {
+        this.id = id;
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.image = image;
+        this.mileage = mileage;
+        this.status = true;
+    }
 }

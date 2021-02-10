@@ -1,14 +1,14 @@
 package com.ssafy.doit.model.request;
 
 import jdk.nashorn.internal.runtime.Debug;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
+@Setter
+@ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class RequestProduct {
 
     private Long id;
@@ -21,6 +21,15 @@ public class RequestProduct {
     private int mileage;
     private boolean status;
 
+    public RequestProduct toEntity(){
+        RequestProduct build = RequestProduct.builder()
+                .id(id)
+                .category(category)
+                .title(title)
+                .content(content)
+                .image(image).build();
+        return build;
+    }
     @Builder
     public RequestProduct(Long id, String category, String title, String content,String image, int mileage,boolean status) {
         this.id = id;
