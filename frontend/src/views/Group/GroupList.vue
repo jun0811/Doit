@@ -6,6 +6,12 @@
         <br>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
         <GroupCard :page="page" :word="word"></GroupCard>
+        <v-pagination
+          color="orange"
+          v-model="page"
+          :length="pageCount"
+          :total-visible="7"
+        ></v-pagination>
         <div v-if="!results" class="d-flex align-center flex-column">
           <h3>'검색키워드'와(과) 일치하는 검색결과가 없습니다.</h3>
           <br>
@@ -42,24 +48,27 @@ export default {
   props:{
     word:{ type: String, default: ""}
   },
-  // created() {
-  //   http.get(`/group/searchGroup?tag=${this.word}`)
-  //   .then((res)=>{
-  //     this.results = res.data.object
-  //   })
-  // },
+    data() {
+        return {
+          results: {},
+          page:1,
+          pageCount:0,
+          groups:[],
+        }
+    },
   created() {
     searchGroup(
       {
         "direction":"ASC",
         "page":this.page,
-        "size":10,
+        "size":9,
         "tag":this.word,
       },
       (res) =>{
         if (res.status){
         console.log(res)
-        this.results = res.data.object.content
+        this.groups = res.data.object.content
+        this.pageCount = parseInt(res.data.object.totalPages)
         }
       },
       (err) =>{
@@ -73,12 +82,6 @@ export default {
       Footer, 
       SearchBar, 
       GroupCard 
-  },
-  data() {
-      return {
-        results: {},
-        page:1,
-      }
   },
   methods: {
     createGroup(){
