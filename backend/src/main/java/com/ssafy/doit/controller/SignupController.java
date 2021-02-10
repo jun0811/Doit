@@ -85,6 +85,7 @@ public class SignupController {
             mileageRepository.save(Mileage.builder()
                     .content("회원가입 축하 마일리지 지급")
                     .date(LocalDate.now())
+                    .mileage("+1,000")
                     .user(user).build());
 
             result.status = true;

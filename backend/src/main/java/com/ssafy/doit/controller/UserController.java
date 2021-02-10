@@ -86,6 +86,7 @@ public class UserController {
                         mileageRepository.save(Mileage.builder()
                                 .content("로그인 마일리지 지급")
                                 .date(LocalDate.now())
+                                .mileage("+50")
                                 .user(user).build());
                     }
                     result = new ResponseBasic(true, "success", user);
