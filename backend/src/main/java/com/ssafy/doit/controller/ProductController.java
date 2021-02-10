@@ -171,6 +171,7 @@ public class ProductController {
             mileageRepository.save(Mileage.builder()
                     .content("마일리지 상점 물품 판매")
                     .date(LocalDateTime.now())
+                    .mileage("+" + product.getMileage())
                     .user(host).build());
 
             consumer.setMileage(consumer.getMileage() - product.getMileage());
@@ -178,6 +179,7 @@ public class ProductController {
             mileageRepository.save(Mileage.builder()
                     .content("마일리지 상점 물품 판매")
                     .date(LocalDateTime.now())
+                    .mileage("-" + product.getMileage())
                     .user(consumer).build());
 
             product.setStatus(false);
