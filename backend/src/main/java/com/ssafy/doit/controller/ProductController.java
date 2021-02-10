@@ -2,6 +2,7 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.Mileage;
 import com.ssafy.doit.model.Product;
+import com.ssafy.doit.model.request.RequestPage;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseProduct;
 import com.ssafy.doit.model.user.User;
@@ -11,16 +12,23 @@ import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
+    private static final String DEFAULT_CURRENT_PAGE = "1";
+    private static final String DEFAULT_PER_PAGE = "9";
+    private static final String DEFAULT_DIRECTION = "DESC";
+
     @Autowired
     private UserService userService;
 
@@ -116,12 +124,24 @@ public class ProductController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "모든 물품 조회")
-    @GetMapping("/getAll")
-    public Object getAll(){
+    @ApiOperation(value = "물품 목록 조회")
+    @GetMapping("/search")
+    public Object search(@RequestParam(defaultValue = DEFAULT_CURRENT_PAGE) int pg,
+                         @RequestParam(defaultValue = DEFAULT_DIRECTION) String direction,
+                         @RequestParam(required = false) String option, @RequestParam(required = false) String keyword) {
         ResponseBasic result = null;
         try{
-            List<ResponseProduct> products = productRepository.findAllBy();
+            RequestPage page = new RequestPage();
+            page.setPage(pg);
+            page.setSize(Integer.parseInt(DEFAULT_PER_PAGE));
+            page.setDirection(direction.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC);
+
+            Page<ResponseProduct> products;
+            if("user".equals(option)) products = productRepository.findAllByUserNicknameContaining(keyword, page.of());
+            else if("category".equals(option)) products = productRepository.findAllByCategory(keyword, page.of());
+            else if("title".equals(option)) products = productRepository.findAllByTitleContaining(keyword, page.of());
+            else products = productRepository.findAllBy(page.of());
+
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
@@ -131,54 +151,7 @@ public class ProductController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
-    @ApiOperation(value = "글제목 검색에 의한 물품 조회")
-    @GetMapping("/searchTitle")
-    public Object searchProduct(@RequestParam String title){
-        ResponseBasic result = null;
-        try{
-            List<ResponseProduct> products = productRepository.findAllByTitleContaining(title);
-            result = new ResponseBasic(true, "success", products);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            result = new ResponseBasic(false, e.getMessage(), null);
-        }
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "유저 검색에 의한 물품 조회")
-    @GetMapping("/searchUser")
-    public Object searchUser(@RequestParam String nickname){
-        ResponseBasic result = null;
-        try{
-            List<ResponseProduct> products = productRepository.findAllByUserNicknameContaining(nickname);
-            result = new ResponseBasic(true, "success", products);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            result = new ResponseBasic(false, e.getMessage(), null);
-        }
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "카테고리 검색을 통한 물품 조회")
-    @GetMapping("/searchCategory")
-    public Object searchCategory(@RequestParam String category){
-        ResponseBasic result = null;
-        try{
-            List<ResponseProduct> products = productRepository.findAllByCategory(category);
-            result = new ResponseBasic(true, "success", products);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            result = new ResponseBasic(false, e.getMessage(), null);
-        }
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+    
 
     @ApiOperation(value = "물품 판매")
     @GetMapping("/sell")
@@ -206,7 +179,7 @@ public class ProductController {
                     .date(LocalDate.now())
                     .user(consumer).build());
 
-            product.setStatus(true);
+            product.setStatus(false);
             productRepository.save(product);
             result = new ResponseBasic(true, "판매 완료", null);
         }
