@@ -7,9 +7,11 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Product;
 import com.ssafy.doit.model.request.RequestFeed;
 import com.ssafy.doit.model.request.RequestProduct;
+import com.ssafy.doit.repository.FeedRepository;
 import com.ssafy.doit.repository.ProductRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,8 @@ public class S3Service {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private FeedRepository feedRepository;
 
     @PostConstruct
     public void setS3Client() {
@@ -108,5 +112,25 @@ public class S3Service {
                 .build();
     }
     //  feed 이미지 사진 불러오기
+    public List<RequestFeed> getFeedList() {
+        List<Feed> feedEntityList = feedRepository.findAll();
+        List<RequestFeed> productList = new ArrayList<>();
 
+        for (Feed feed : feedEntityList) {
+            productList.add(convertEntityToDto(feed));
+        }
+
+        return productList;
+    }
+    private RequestFeed convertEntityToDto(Feed feed) {
+        return RequestFeed.builder()
+                .feedPk(feed.getFeedPk())
+                .media(feed.getMedia())
+                .content(feed.getContent())
+                .feedType(feed.getFeedType())
+                .createDate(feed.getCreateDate())
+                .groupPk(feed.getGroupPk())
+                .writer(feed.getWriter())
+                .build();
+    }
 }
