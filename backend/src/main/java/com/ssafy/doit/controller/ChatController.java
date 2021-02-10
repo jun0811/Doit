@@ -67,15 +67,21 @@ public class ChatController {
     public Object joinRoom(@PathVariable Long roomPk){
         ResponseBasic result = null;
         try{
-            Long uid = userService.currentUser();
-            Optional<ChatRoomJoin> opt = chatService.checkByRoom(uid, roomPk);
+            Long currentUser = userService.currentUser();
+            Optional<ChatRoomJoin> opt = chatService.checkByRoom(currentUser, roomPk);
 
             if(!opt.isPresent()) throw new Exception("유저 불일치");
 
+            ChatRoom chatRoom = chatService.getRoom(roomPk);
+            List<ChatRoomJoin> chatRoomJoins = chatRoom.getChatRoomJoins();
+
+            Long other = chatRoomJoins.get(0).getUser().getId() == currentUser ? chatRoomJoins.get(1).getUser().getId() : chatRoomJoins.get(0).getUser().getId();
+
             Map<String, Object> res = new HashMap<>();
-            res.put("room", chatService.getRoom(roomPk));
+            res.put("room", chatRoom);
             res.put("messages", chatMessageRepository.findAllByRoomPk(roomPk));
-            System.out.println(chatMessageRepository.findAllByRoomPk(roomPk));
+            res.put("currentUser", userService.detailUser(currentUser));
+            res.put("other", userService.detailUser(other));
             result = new ResponseBasic(true, "success", res);
         } catch (Exception e){
             e.printStackTrace();
