@@ -23,7 +23,7 @@
         </v-row>
         <hr class="mb-4 line">
         <v-row class="d-flex flex-column align-start ml-2">
-          <v-row class="prd-title">
+          <v-row class="prd-title pb-0">
             <!-- <v-col cols="6"> -->
               {{product.title}}
             <!-- </v-col> -->
@@ -31,19 +31,21 @@
               가격: {{product.mileage}} 마일리지
             </v-col> -->
           </v-row>
-          <v-row class="prd-category py-1">카테고리: {{product.category}}</v-row>
+          <v-row class="prd-category">카테고리: {{product.category}}</v-row>
           <v-row class="prd-mileage">{{product.mileage}} 마일리지</v-row>
           <v-row class="prd-content py-5">{{product.content}}</v-row>
         </v-row>
         <hr class="mt-4 line">
         <v-row class="d-flex justify-center">
-          <v-btn 
-            class="deal-btn" 
-            large
-            text
-            >
-            채팅으로 거래하기
-          </v-btn>
+          <v-col class="d-flex justify-center">
+            <v-btn 
+              class="deal-btn" 
+              large
+              text
+              >
+              채팅으로 거래하기
+            </v-btn>
+          </v-col>
         </v-row>
     </v-container>
   <Footer></Footer>
@@ -147,14 +149,17 @@ margin-top: 50px;
 .prd-category {
   font-size: 13px;
   padding: 12px;
+  /* margin-bottom: 6px; */
   margin-left: 6px;
   color: grey;
 }
 
 .prd-mileage {
-  font-size : 15px;
+  font-size : 13px;
   padding-left:12px;
   margin:6px;
+  height: 100%;
+  line-height: 44px;
 }
 
 .prd-content {
