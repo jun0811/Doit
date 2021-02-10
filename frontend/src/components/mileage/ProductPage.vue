@@ -9,9 +9,10 @@
         md="4"
         v-for="(product, idx) in products"
         :key="idx"
-        class="d-flex justify-center px-4 py-4"
+        class="d-flex justify-center "
       >
-          <v-card router-link :to="{name: 'ProductDetail', params: {product_id: product.id}}">
+          <v-card 
+          router-link :to="{name: 'ProductDetail', params: {product_id: product.id}}">
             <v-img
               src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
               class="white--text align-end product-image"

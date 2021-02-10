@@ -1,17 +1,28 @@
 <template>
   <div>
     <Header></Header>
-    <v-container class="pa-3 pa-sm-16 d-flex flex-column justify-center">
-      <v-row class="py-3">
-        <v-col class="mx-3 mx-sm-16"> 
-          <h1>마일리지 Shop</h1>
+    <v-container class="d-flex flex-column justify-center pa-0 ">
+      <v-row class="d-flex flex-wrap py-3">
+        <v-col class="" xs="12" sm="12" md="8"> 
+          <h1 style="display:inline-block; word-break: keep-all;">마일리지 Shop</h1>
+        </v-col>
+        <v-col class="d-flex align-center" xs="12" sm="12" md="2" > 
+          <span style="word-break: keep-all;">나의 마일리지</span>
+          <span class="mileage mx-1">{{mileage}}</span>
+        </v-col>
+        <v-col class="" xs="12" sm="12" md="2"> 
+          <v-btn 
+            outlined 
+            class="write-btn"
+            router-link :to="{name: 'ProductWrite'}"
+            >물품 등록하기</v-btn>
         </v-col>
       </v-row >
       <!--카테고리 클릭시 페이지 1로 초기화 하고 프로덕트 리스트도 다시 바꿔주기 -->
       <v-row class="py-3 mx-3 mx-sm-16 d-flex justify-space-between">
         <v-btn 
           depressed
-          class="d-flex justify-center"
+          class="d-flex justify-center ma-1"
           v-for="(category, idx) in categories"
           :key="idx"
           value ="category"
@@ -58,9 +69,12 @@ export default {
       direction:'DESC',
       keyword:'',
       option:'',
+      mileage:90,
     }
   },
   created() {
+    this.mileage = this.$store.getters.getMileage
+    console.log(this.mileage)
     this.getProducts()
   },
   methods: {
@@ -84,5 +98,19 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.write-btn {
+  border : 2px solid grey;
+  border-radius: 15px;
+}
+
+.write-btn:hover {
+  border: 2px solid #F9802D;
+  color: orange;
+}
+
+.mileage {
+  color :  #F9802D;
+
+}
 </style>
