@@ -8,5 +8,5 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public interface MileageRepository extends JpaRepository<Mileage,Long> {
-    Optional<Mileage> findByDateAndUser(LocalDate now, User user);
+    Optional<Mileage> findByContentAndDateAndUser(String content, LocalDate now, User user);
 }
