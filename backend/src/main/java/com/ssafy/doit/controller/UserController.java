@@ -34,12 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.Optional;
 
-//@MultipartConfig(
-//        fileSizeThreshold    = 1024,
-//        maxFileSize       = -1,
-//        maxRequestSize      = -1
-//)
-//@CrossOrigin("*")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -138,7 +132,6 @@ public class UserController {
     @PutMapping("/updateInfo")
     public Object updateInfo(@RequestBody User userReq) {
         ResponseBasic result = null;
-        System.out.println("hello");
         try {
             Long userPk = userService.currentUser();
             Optional<User> user = userRepository.findById(userPk);
@@ -155,8 +148,7 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-
-    @ApiOperation(value = "마이페이지 - 프로필사진 변경")
+    @ApiOperation(value = "회원정보(프로필) 수정")
     @PostMapping("/updateImg")
     public Object updateImg(@RequestParam MultipartFile file) {
         ResponseBasic result = null;
@@ -171,7 +163,7 @@ public class UserController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "프로필 사진 변경 실패", null);
+            result = new ResponseBasic(false, "프로필 사진 변경 fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -195,7 +187,7 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-        // 회원 탈퇴
+    // 회원 탈퇴
     @ApiOperation(value = "회원 탈퇴")
     @PutMapping("/deleteUser")
     public Object deleteUser() {
@@ -233,7 +225,7 @@ public class UserController {
             result.status = true;
             result.data = "공개/비공개 설정정 success";
         }
-       catch (Exception e){
+        catch (Exception e){
             e.printStackTrace();
             result.status = false;
             result.data = "error";
