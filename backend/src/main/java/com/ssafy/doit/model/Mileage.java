@@ -21,6 +21,7 @@ public class Mileage {
     private Long id;
 
     private String content;
+    private String mileage;
     private LocalDate date;
 
     @ManyToOne

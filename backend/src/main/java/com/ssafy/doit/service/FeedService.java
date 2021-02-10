@@ -69,6 +69,7 @@ public class FeedService {
             mileageRepository.save(Mileage.builder()
                     .content("인증피드 등록 마일리지 지급")
                     .date(LocalDate.now())
+                    .mileage("+100")
                     .user(user).build());
         }else if(feedReq.getFeedType().equals("false")){
             user.setMileage(user.getMileage() + 100);
@@ -76,6 +77,7 @@ public class FeedService {
             mileageRepository.save(Mileage.builder()
                     .content("공유피드 등록 마일리지 지급")
                     .date(LocalDate.now())
+                    .mileage("+100")
                     .user(user).build());
         }
         return 1;
@@ -203,11 +205,13 @@ public class FeedService {
         mileageRepository.save(Mileage.builder()
                 .content("인증피드 확인 마일리지 지급")
                 .date(LocalDate.now())
+                .mileage("+50")
                 .user(user).build());
 
         Long groupPk = feed.getGroupPk();
         Long writerPk = feed.getWriter();
         User writer = userRepository.findById(writerPk).get();
+        LocalDate date = feed.getCreateDate().toLocalDate();
         int cnt = feed.getAuthCnt();
         int total = groupRepository.findById(groupPk).get().getTotalNum();
         if (cnt >= Math.round(total * 0.7)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
@@ -220,28 +224,29 @@ public class FeedService {
             mileageRepository.save(Mileage.builder()
                     .content("인증피드 인증 완료 마일리지 지급")
                     .date(LocalDate.now())
+                    .mileage("+100")
                     .user(writer).build());
 
-            Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(writerPk, LocalDate.now());
+            Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(writerPk, date);
             if(optCU.isPresent()){
                 CommitUser cu = optCU.get();
                 cu.setCnt(cu.getCnt() + 1);
                 commitUserRepository.save(cu);
             }else{
                 commitUserRepository.save(CommitUser.builder()
-                        .date(LocalDate.now())
+                        .date(date)
                         .userPk(writerPk)
                         .cnt(1).build());
             }
 
-            Optional<CommitGroup> optCG = commitGroupRepository.findByGroupPkAndDate(groupPk, LocalDate.now());
+            Optional<CommitGroup> optCG = commitGroupRepository.findByGroupPkAndDate(groupPk, date);
             if(optCG.isPresent()){
                 CommitGroup cg = optCG.get();
                 cg.setCnt(cg.getCnt() + 1);
                 commitGroupRepository.save(cg);
             }else{
                 commitGroupRepository.save(CommitGroup.builder()
-                        .date(LocalDate.now())
+                        .date(date)
                         .groupPk(groupPk)
                         .cnt(1).build());
             }
