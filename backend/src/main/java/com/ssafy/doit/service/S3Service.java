@@ -20,6 +20,8 @@ import java.util.Date;
 @Service
 @NoArgsConstructor
 public class S3Service {
+    public static final String CLOUD_FRONT_DOMAIN_NAME = "ssafydoit.s3.ap-northeast-2.amazonaws.com";
+
     private AmazonS3 s3Client;
 
     @Value("${cloud.aws.credentials.accessKey}")
@@ -71,7 +73,7 @@ public class S3Service {
         // 파일 업로드
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-
+        System.out.println(s3Client.getUrl(bucket, fileName).toString());
         return fileName;
     }
 }
