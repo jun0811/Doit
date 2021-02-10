@@ -3,14 +3,10 @@ package com.ssafy.doit.service;
 import com.ssafy.doit.model.*;
 import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseFeed;
-import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -68,7 +64,7 @@ public class FeedService {
             userRepository.save(user);
             mileageRepository.save(Mileage.builder()
                     .content("인증피드 등록 마일리지 지급")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
                     .mileage("+100")
                     .user(user).build());
         }else if(feedReq.getFeedType().equals("false")){
@@ -76,7 +72,7 @@ public class FeedService {
             userRepository.save(user);
             mileageRepository.save(Mileage.builder()
                     .content("공유피드 등록 마일리지 지급")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
                     .mileage("+100")
                     .user(user).build());
         }
@@ -204,7 +200,7 @@ public class FeedService {
         userRepository.save(user);
         mileageRepository.save(Mileage.builder()
                 .content("인증피드 확인 마일리지 지급")
-                .date(LocalDate.now())
+                .date(LocalDateTime.now())
                 .mileage("+50")
                 .user(user).build());
 
@@ -223,7 +219,7 @@ public class FeedService {
             userRepository.save(writer);
             mileageRepository.save(Mileage.builder()
                     .content("인증피드 인증 완료 마일리지 지급")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
                     .mileage("+100")
                     .user(writer).build());
 

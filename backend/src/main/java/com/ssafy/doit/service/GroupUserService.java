@@ -2,7 +2,6 @@ package com.ssafy.doit.service;
 
 import com.ssafy.doit.model.*;
 import com.ssafy.doit.model.response.ResGroupList;
-import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.repository.GroupRepository;
@@ -11,12 +10,10 @@ import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +66,7 @@ public class GroupUserService {
 
             mileageRepository.save(Mileage.builder()
                     .content("그룹가입 축하 마일리지 지급")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
                     .mileage("+100")
                     .user(user).build());
         }else throw new Exception("이미 가입된 그륩입니다.");
@@ -94,7 +91,7 @@ public class GroupUserService {
 
             mileageRepository.save(Mileage.builder()
                     .content("그룹탈퇴 마일리지 차감")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
                     .mileage("-1,500")
                     .user(user).build());
         }else throw new Exception("가입되어 있지 않은 그룹원입니다.");
@@ -117,7 +114,7 @@ public class GroupUserService {
 
             mileageRepository.save(Mileage.builder()
                     .content("그룹강퇴 마일리지 차감")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
                     .mileage("-1,000")
                     .user(user).build());
         }else throw new Exception("그룹장이 아닙니다.");

@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -84,7 +85,7 @@ public class SignupController {
 
             mileageRepository.save(Mileage.builder()
                     .content("회원가입 축하 마일리지 지급")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
                     .mileage("+1,000")
                     .user(user).build());
 
