@@ -1,16 +1,16 @@
 <template>
   <div>
     <Header></Header>
-    <v-container class="d-flex flex-column justify-center pa-0 ">
-      <v-row class="d-flex flex-wrap py-3">
-        <v-col class="" xs="12" sm="12" md="8"> 
+    <v-container class="d-flex flex-column justify-center pa-0 pa-md-3">
+      <v-row class="d-flex flex-wrap px-md-16">
+        <v-col class="" xs="12" sm="8" md="8"> 
           <h1 style="display:inline-block; word-break: keep-all;">마일리지 Shop</h1>
         </v-col>
-        <v-col class="d-flex align-center" xs="12" sm="12" md="2" > 
-          <span style="word-break: keep-all;">나의 마일리지</span>
+        <v-col class="d-flex align-center" xs="12" sm="2" md="2" > 
+          <span v-if="joined" style="word-break: keep-all;">나의 마일리지</span>
           <span class="mileage mx-1">{{mileage}}</span>
         </v-col>
-        <v-col class="" xs="12" sm="12" md="2"> 
+        <v-col class="" xs="12" sm="2" md="2"> 
           <v-btn 
             outlined 
             class="write-btn"
@@ -61,7 +61,7 @@ export default {
   data() {
     return {
       categories:[
-        '전체','음식', '카테고리2', '카테고리3', '카테고리4', '카테고리5', '카테고리6', 
+        '전체','음식', '책', '운동', '카테고리4', '카테고리5', '카테고리6', 
       ],
       page:1,
       pageCount :1,
@@ -70,6 +70,7 @@ export default {
       keyword:'',
       option:'',
       mileage:90,
+      joind:false,
     }
   },
   created() {
@@ -94,7 +95,12 @@ export default {
         this.option = 'keyword'
       }
     }
-  }
+  },
+  computed : {
+    joined () {
+      return this.$store.getters.isAuthenticated
+    }
+  },
 };
 </script>
 

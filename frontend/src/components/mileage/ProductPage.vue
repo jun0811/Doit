@@ -1,15 +1,15 @@
 <template>
-  <v-container class="">
+  <v-container class="px-0 px-md-16">
     <v-row
-      class="d-flex align-center flex-wrap justify-start"
+      class="d-flex align-center flex-wrap justify-center"
     > 
       <v-col
         xs="12"
-        sm="12"
+        sm="4"
         md="4"
         v-for="(product, idx) in products"
         :key="idx"
-        class="d-flex justify-center "
+        class="d-flex justify-center pa-4"
       >
           <v-card 
           router-link :to="{name: 'ProductDetail', params: {product_id: product.id}}">
