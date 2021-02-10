@@ -84,7 +84,8 @@ public class UserController {
                     result = new ResponseBasic(false, "잘못된 비밀번호입니다.", null);
                     return new ResponseEntity<>(result, HttpStatus.OK);
                 }else {
-                    Optional<Mileage> opt = mileageRepository.findByDateAndUser(LocalDate.now(), user);
+                    String content = "로그인 마일리지 지급";
+                    Optional<Mileage> opt = mileageRepository.findByContentAndDateAndUser(content, LocalDate.now(), user);
                     if(!opt.isPresent()){
                         user.setMileage(user.getMileage() + 50);
                         userRepository.save(user);
