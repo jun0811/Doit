@@ -206,7 +206,7 @@ public class ProductController {
                     .date(LocalDate.now())
                     .user(consumer).build());
 
-            product.setStatus(true);
+            product.setStatus(false);
             productRepository.save(product);
             result = new ResponseBasic(true, "판매 완료", null);
         }
