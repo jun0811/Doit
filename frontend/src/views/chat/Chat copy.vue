@@ -1,40 +1,30 @@
 <template>
-  <div>
-    <Header></Header>
-    <NavBar></NavBar>
-    <v-container class="my-3 px-6" style="570px;">
-      <h1>title</h1>
-      <hr>
+  <div class="room">
+    <h1>title</h1>
+    <hr>
 
-      <div v-for="(m, idx) in msg" :key="idx">
-        <div v-bind:class="m.style">
-        <h5 style="margin:3px">
-          {{m.userPk}}
-          </h5>
-        {{m.message}}
-        </div>
+    <div v-for="(m, idx) in msg" :key="idx">
+      <div v-bind:class="m.style">
+      <h5 style="margin:3px">
+        {{m.userPk}}
+        </h5>
+      {{m.message}}
       </div>
-      <hr />
-      <input type="text" v-model="content" placeholder="보낼 메세지" size="100" />
-      <button @click="sendMessage()"> SEND</button>
-    </v-container>
+    </div>
+    <hr />
+    <input type="text" v-model="content" placeholder="보낼 메세지" size="100" />
+    <button @click="sendMessage()"> SEND</button>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import NavBar from "@/components/common/NavBar.vue";
 import http from '../../http-common'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
 export default {
   name: "Chat",
-  components: {
-    Header,
-    NavBar,
-  },
-  data: () => {
+    data: () => {
     return {
       roomid : 14,
       id : 84,

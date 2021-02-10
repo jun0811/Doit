@@ -1,13 +1,15 @@
 <template>
 <div>
   <Header></Header>
-    <v-container class="d-flex flex-column justify-center align-center">
+  <NavBar></NavBar>
+    <!-- <v-container class="d-flex flex-column justify-center align-center"> -->
+    <v-container class="container-width">
         <v-row>
           <v-col class="img-wrapper">
             <img class="product-img" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80" alt="product image">
           </v-col>
         </v-row>
-        <v-row class="content-wrapper my-3 px-6 d-flex align-center">
+        <v-row class="my-3 px-6 d-flex align-center">
           <span class="profile-wrapper pa-0 d-flex ">
             <img
             class="profile-img" 
@@ -19,19 +21,30 @@
             {{product.nickname}}
           </span>
         </v-row>
-        <hr style="width:570px;" class="mb-4">
-        <v-row class="d-flex flex-column content-wrapper ml-8">
-          <v-col class="prd-title">{{product.title}}</v-col>
-          <v-col class="prd-category">{{product.category}} 카테고리</v-col>
-          <v-col class="prd-mileage">{{product.mileage}} 마일리지</v-col>
-          <v-col class="prd-content">{{product.content}}</v-col>
+        <hr class="mb-4 line">
+        <v-row class="d-flex flex-column align-start ml-2">
+          <v-row class="prd-title">
+            <!-- <v-col cols="6"> -->
+              {{product.title}}
+            <!-- </v-col> -->
+            <!-- <v-col cols="6" class="prd-mileage">
+              가격: {{product.mileage}} 마일리지
+            </v-col> -->
+          </v-row>
+          <v-row class="prd-category py-1">카테고리: {{product.category}}</v-row>
+          <v-row class="prd-mileage">{{product.mileage}} 마일리지</v-row>
+          <v-row class="prd-content py-5">{{product.content}}</v-row>
         </v-row>
-        <hr style="width:570px;" class="mt-4">
-        <v-btn class="deal-btn" 
-          large
-          >
-          채팅으로 거래하기
-        </v-btn>
+        <hr class="mt-4 line">
+        <v-row class="d-flex justify-center">
+          <v-btn 
+            class="deal-btn" 
+            large
+            text
+            >
+            채팅으로 거래하기
+          </v-btn>
+        </v-row>
     </v-container>
   <Footer></Footer>
 
@@ -41,6 +54,7 @@
 <script>
 import "@/assets/css/profile.css";
 import Header from "@/components/common/Header.vue";
+import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
 import http from "../../http-common";
 
@@ -48,6 +62,7 @@ export default {
   name: "ProductDetail",
   components: {
     Header,
+    NavBar,
     Footer,
   },
   data() {
@@ -72,15 +87,37 @@ export default {
 </script>
 
 <style scoped>
-
-.content-wrapper {
-  width:600px;
+.container-width {
+width: 600px; 
+margin-top: 50px;
 }
 
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+    .container-width {
+      width: 320px;
+    }
+}
 
 .img-wrapper {
   width:600px;
   height:400px;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .img-wrapper {
+    width:300px;
+    height:200px;
+  }
+}
+
+.line {
+  width:570px;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .line {
+    width:300px;
+  }
 }
 
 .product-img {
@@ -102,26 +139,28 @@ export default {
 .prd-title {
   font-size: 20px;
   font-weight:bold;
-  padding:0;
+  padding:12px;
   margin:6px;
+  width: 100%;
 }
 
 .prd-category {
-  font-size: 18px;
-  padding:0;
-  margin:6px;
+  font-size: 13px;
+  padding: 12px;
+  margin-left: 6px;
+  color: grey;
 }
 
 .prd-mileage {
-  font-size : 18px;
-  padding:0;
+  font-size : 15px;
+  padding-left:12px;
   margin:6px;
 }
 
 .prd-content {
   font-size : 15px;
-  padding:0;
-  margin:15px;
+  padding-left: 12px;
+  margin:6px;
 }
 
 
