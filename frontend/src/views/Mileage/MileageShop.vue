@@ -15,14 +15,19 @@
           v-for="(category, idx) in categories"
           :key="idx"
           value ="category"
-          @click="selectCategory"
+          @click="keywordSearch"
         >
           {{category}}
         </v-btn>
       </v-row>
 
-        <ProductPage :page="page" :pageCount="pageCount" :selectedCategory="selectedCategory">{{page}}</ProductPage>
-
+      <ProductPage :page="page" :keyword="keyword" :option="option"></ProductPage>
+      <v-pagination
+        color="orange"
+        v-model="page"
+        :length="pageCount"
+        :total-visible="7"
+      ></v-pagination>
     </v-container>
     <Footer></Footer>
   </div>
@@ -44,34 +49,36 @@ export default {
   },
   data() {
     return {
-      selectedCategory : '전체',
       categories:[
         '전체','음식', '카테고리2', '카테고리3', '카테고리4', '카테고리5', '카테고리6', 
       ],
-      products:[],
       page:1,
+      pageCount :1,
+      products:[],
+      direction:'DESC',
+      keyword:'',
+      option:'',
     }
   },
   created() {
-    http.get('/product/getAll')
-    .then((res)=>{
-      // console.log(res.data.object)
-      this.products = res.data.object
-    })
-  },
-  computed: {
-    pageCount () {
-      let listLeng = this.products.length,
-        listSize = 9,
-        page = Math.floor(listLeng / listSize);
-      if (listLeng % listSize > 0) page += 1;
-      return page;
-    },
+    this.getProducts()
   },
   methods: {
-    selectCategory (e) {
-      console.log(e.target.innerText)
-      this.selectedCategory = e.target.innerText
+    getProducts() {
+      http.get(`/product/search?direction=${this.direction}&keyword=${this.keyword}&option=${this.option}&pg=${this.page}`)
+      .then((res)=>{
+        this.products = res.data.object.content
+      })
+    },
+    keywordSearch(e) {
+      const selectedKeyword = e.target.innerText
+      if (selectedKeyword ==="전체") {
+        this.keyword = ""
+        this.option = ""
+      } else {
+        this.keyword = e.target.innerText
+        this.option = 'keyword'
+      }
     }
   }
 };
