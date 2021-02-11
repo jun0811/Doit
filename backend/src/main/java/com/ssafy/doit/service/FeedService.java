@@ -178,12 +178,15 @@ public class FeedService {
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(feed.getGroupPk()).get();
 
-        if(!feed.getFeedType().equals("true"))
-            throw new Exception("인증피드가 아닙니다.");
-
         Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
         if(!optGU.isPresent())
             throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
+
+        if(feed.getAuthCheck().equals("true"))
+            throw new Exception("인증완료된 피드입니다.");
+
+        if(!feed.getFeedType().equals("true"))
+            throw new Exception("인증피드가 아닙니다.");
 
         if(userPk == feed.getWriter())
             throw new Exception("자신이 올린 피드에는 인증할 수 없습니다.");
@@ -210,7 +213,7 @@ public class FeedService {
         LocalDate date = feed.getCreateDate().toLocalDate();
         int cnt = feed.getAuthCnt();
         int total = groupRepository.findById(groupPk).get().getTotalNum();
-        if (cnt >= Math.round(total * 0.7)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
+        if (cnt >= Math.round(total * 0.1)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
             feed.setAuthDate(LocalDateTime.now().toString());
             // 인증완료되었다는 알림보내기
