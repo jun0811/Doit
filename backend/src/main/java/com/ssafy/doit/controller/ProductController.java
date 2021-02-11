@@ -1,23 +1,35 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.Mileage;
 import com.ssafy.doit.model.Product;
+import com.ssafy.doit.model.request.RequestPage;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseProduct;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
+    private static final String DEFAULT_CURRENT_PAGE = "1";
+    private static final String DEFAULT_PER_PAGE = "9";
+    private static final String DEFAULT_DIRECTION = "DESC";
+
     @Autowired
     private UserService userService;
 
@@ -26,6 +38,9 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private MileageRepository mileageRepository;
 
     @ApiOperation(value = "물품 등록")
     @PostMapping("/createProduct")
@@ -39,12 +54,11 @@ public class ProductController {
             if(groupCount < 2) throw new Exception("그룹 수 부족");
 
             product.setUser(currentUser);
-            System.out.println("왜 안돼! : " + product.getUser().getId());
             productRepository.save(product);
-            result = new ResponseBasic(true, "success", null);
+            result = new ResponseBasic(true, "success", product);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -68,7 +82,7 @@ public class ProductController {
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -88,7 +102,7 @@ public class ProductController {
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -105,71 +119,76 @@ public class ProductController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "모든 물품 조회")
-    @GetMapping("/getAll")
-    public Object getAll(){
+    @ApiOperation(value = "물품 목록 조회")
+    @GetMapping("/search")
+    public Object search(@RequestParam(defaultValue = DEFAULT_CURRENT_PAGE) int pg,
+                         @RequestParam(defaultValue = DEFAULT_DIRECTION) String direction,
+                         @RequestParam(required = false) String option, @RequestParam(required = false) String keyword) {
         ResponseBasic result = null;
         try{
-            List<ResponseProduct> products = productRepository.findAllBy();
+            RequestPage page = new RequestPage();
+            page.setPage(pg);
+            page.setSize(Integer.parseInt(DEFAULT_PER_PAGE));
+            page.setDirection(direction.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC);
+
+            Page<ResponseProduct> products;
+            if("user".equals(option)) products = productRepository.findAllByUserNicknameContaining(keyword, page.of());
+            else if("category".equals(option)) products = productRepository.findAllByCategory(keyword, page.of());
+            else if("title".equals(option)) products = productRepository.findAllByTitleContaining(keyword, page.of());
+            else products = productRepository.findAllBy(page.of());
+
             result = new ResponseBasic(true, "success", products);
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
 
-    @ApiOperation(value = "글제목 검색에 의한 물품 조회")
-    @GetMapping("/searchTitle")
-    public Object searchProduct(@RequestParam String title){
+    @ApiOperation(value = "물품 판매")
+    @GetMapping("/sell")
+    public Object sell(@RequestParam Long pid, @RequestParam Long uid){
         ResponseBasic result = null;
         try{
-            List<ResponseProduct> products = productRepository.findAllByTitleContaining(title);
-            result = new ResponseBasic(true, "success", products);
+            User host = userRepository.findById(userService.currentUser()).get();
+            User consumer = userRepository.findById(uid).get();
+            Product product = productRepository.findById(pid).get();
+
+            if(host.getId() != product.getUser().getId()) throw new Exception("유저 불일치");
+            if(consumer.getMileage() < product.getMileage()) throw new Exception("마일리지 부족");
+
+            host.setMileage(host.getMileage() + product.getMileage());
+            userRepository.save(host);
+            mileageRepository.save(Mileage.builder()
+                    .content("마일리지 상점 물품 판매")
+                    .date(LocalDateTime.now())
+                    .mileage("+" + product.getMileage())
+                    .user(host).build());
+
+            consumer.setMileage(consumer.getMileage() - product.getMileage());
+            userRepository.save(consumer);
+            mileageRepository.save(Mileage.builder()
+                    .content("마일리지 상점 물품 판매")
+                    .date(LocalDateTime.now())
+                    .mileage("-" + product.getMileage())
+                    .user(consumer).build());
+
+            product.setStatus(false);
+            productRepository.save(product);
+            result = new ResponseBasic(true, "판매 완료", null);
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
-        }
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "유저 검색에 의한 물품 조회")
-    @GetMapping("/searchUser")
-    public Object searchUser(@RequestParam String nickname){
-        ResponseBasic result = null;
-        try{
-            List<ResponseProduct> products = productRepository.findAllByUserNicknameContaining(nickname);
-            result = new ResponseBasic(true, "success", products);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
-        }
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "카테고리 검색을 통한 물품 조회")
-    @GetMapping("/searchCategory")
-    public Object searchCategory(@RequestParam String category){
-        ResponseBasic result = null;
-        try{
-            List<ResponseProduct> products = productRepository.findAllByCategory(category);
-            result = new ResponseBasic(true, "success", products);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);

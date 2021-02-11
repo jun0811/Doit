@@ -16,13 +16,17 @@
             <h3>{{user_info.name}}</h3>
             <p class="ma-0"> 멤버 : {{user_num}}/{{user_info.maxNum}}</p>
             <p class="ma-0"> {{user_info.startDate}} ~ {{user_info.endDate}}</p>
-            <div class="d-flex justify-start">
-              <p class="ma-0" v-for="(tag,idx) in user_info.tags" :key="idx"> #{{tag}}  </p>
+            <div class="" style="display:inline-block" v-for="(tag,idx) in user_info.tags" :key="idx">
+              <router-link :to="{name: 'GroupList', params: {word: tag}}" style="display:inline-block">
+                <p class="ma-0 mr-1" > #{{tag}}</p>
+              </router-link>
             </div>
           </v-col>
           <v-col cols="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
+            
+            <v-btn class="group" outlined width="75" v-if="loginUser==leader" @click="updateGroup">그룹 수정</v-btn>
             <v-btn class="group" outlined width="75" v-if="!joined" @click="joinGroup">가입하기</v-btn>
-            <v-btn class="group" outlined width="75" v-else @click="withdrawGroup">탈퇴하기</v-btn>
+            <v-btn class="group" outlined width="75" v-if="joined && loginUser != leader" @click="withdrawGroup">탈퇴하기</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -97,15 +101,18 @@
             ></v-date-picker>
           </v-menu>
           <!-- 날짜 선택 끝 -->
-          <v-btn @click="feedRead" text class="ma-4"> 검색 </v-btn >
+          <v-btn @click="feedRead" text class="ma-4 search-btn" outlined> 검색 </v-btn >
         </v-col>
         <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16">
-          <div class="temp d-flex align-center flex-column">
+          <div v-if="cards.length" class="d-flex align-center flex-column">
             <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card"></FeedCard>
           </div>
+          <div v-else> 
+            <h2>해당 기간에는 작성된 피드가 없어요🤷‍♂️</h2>
+          </div>
         </v-col>
-        <v-col v-if="users" cols="9" class="d-flex justify-center mx-sm-16 ">
-          <GroupMember></GroupMember>
+        <v-col v-if="users" cols="9" class="d-flex justify-center mx-sm-16">
+          <GroupMember :groupPk="groupPk"></GroupMember>
           <!-- <div class="temp">
             asdasdasd
           </div> -->
@@ -147,7 +154,10 @@ export default {
       month: date.getMonth()+1,
       day :date.getDate(),
       submit: false,
-      cards: []
+      cards: [],
+      leader:'',
+      loginUser:'',
+      tags:[],
     }
   },
   watch: {
@@ -195,6 +205,9 @@ export default {
   }
   ,
   methods: {
+    updateGroup(){
+      this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
+    },
     FeedList(){
       this.feed = true
       this.users = false
@@ -234,13 +247,16 @@ export default {
         this.cards = res.data.object
         console.log(this.cards)
       })
-    }
+    },
   },
   created(){
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
-      this.user_info= res.data.object
-      this.user_num = this.user_info.users.length
+        this.user_info= res.data.object
+        this.user_num = this.user_info.users.length
+        this.leader = res.data.object.leader
+        this.tags = res.data.object.tags
+        this.loginUser = this.$store.state.account.userpk
     }),
     http.get('group/currentUserGroup')
       .then((res)=>{
@@ -252,9 +268,8 @@ export default {
       }),
     http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.start}`)
     .then((res)=>{
-        console.log(res)
+      this.cards = res.data.object
     })
-
   }
 }
 </script>
@@ -270,16 +285,24 @@ export default {
   .text-h5 {
     color: #E0E0E0
   }
-  .temp {
+  /* .temp {
     border: 1px solid;
     width: 100%;
-  }
+  } */
   .selected{
     color:#F9802D
   }
   .group{
     border: 1px solid #F9802D;
     color: #F9802D
+  }
+  .hashtag-del-btn {
+    color:#FFE0B2;
+    outline: transparent;
+  }
+
+  .search-btn {
+    border : 1ps solid grey;
   }
 
 </style>

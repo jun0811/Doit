@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Getter
@@ -23,11 +23,11 @@ public class ChatRoom {
     @Column(name = "room_pk")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_pk")
     private Product product;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
-    private List<ChatMessage> messages = new ArrayList<>();
+    @JsonIgnore
+    private List<ChatRoomJoin> chatRoomJoins;
 }

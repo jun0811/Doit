@@ -8,16 +8,31 @@
             <v-col cols="12" sm="3">
               <div class="text-center">
                 <img
-                  src="@/assets/img/profile_temp.png"
+                  :src="uploadImg"
                   alt="profile-img"
                   class="profile-img"
                 />
 
+                <!-- 사진변경 버튼 시작 -->
                 <div class="pt-3 text-center">
-                  <v-btn @click="changhPhoto" outlined text rounded
-                    >사진 변경</v-btn
+                  <v-btn
+                    outlined
+                    text
+                    depressed
+                    :loading="isSelecting"
+                    @click="onButtonClick"
+                  >
+                    {{ buttonText }}
+                  </v-btn>
+                  <input
+                    ref="uploader"
+                    class="d-none"
+                    type="file"
+                    accept="image/*"
+                    @change="onFileChanged"
                   >
                 </div>
+                <!-- 사진변경 버튼 끝 -->
               </div>
             </v-col>
 
@@ -31,10 +46,7 @@
                     v-model="name"
                     required
                     clearable
-                    :error-messages="nameErrors"
                     :counter="8"
-                    @input="$v.name.$touch()"
-                    @blur="$v.name.$touch()"
                     class="mt-0 pt-1"
                   ></v-text-field>
                 </v-col>
@@ -117,6 +129,8 @@
 import http from "../../http-common";
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
+import defaultImg from "@/assets/img/profile_temp.png"
+
 export default {
   name: "Update",
   components: {
@@ -128,7 +142,16 @@ export default {
       name: "",
       email: "",
       c_Nick: false,
+      defaultButtonText: '사진변경',
+      selectedFile: null,
+      isSelecting: false,
+      uploadImg: ''
     };
+  },
+  computed: {
+    buttonText() {
+      return this.selectedFile ? this.selectedFile.name : this.defaultButtonText
+    }
   },
   watch: {
     name() {
@@ -138,6 +161,7 @@ export default {
   created() {
     this.name = this.$store.getters.getName;
     this.email = this.$store.getters.getEmail;
+    this.uploadImg = defaultImg
     // http.get('/user/detailUser')
     // .then((res)=> {
     //     this.name = res.data.object.nickname;
@@ -151,8 +175,7 @@ export default {
     },
     save() {
       if (this.c_Nick) {
-        http
-          .put(`/user/updateInfo?email=${this.email}&name=${this.name}`)
+        http.put(`/user/updateInfo?email=${this.email}&name=${this.name}`)
           .then((res) => {
             if (res.data.status) {
               alert("회원정보가 변경되었습니다");
@@ -179,6 +202,18 @@ export default {
     },
     deleteUser() {
       this.$router.push("/user/delete")
+    },
+    onButtonClick() {
+      this.isSelecting = true
+      window.addEventListener('focus', () => {
+        this.isSelecting = false
+      }, { once: true })
+
+      this.$refs.uploader.click()
+    },
+    onFileChanged(e) {
+      this.selectedFile = e.target.files[0]
+      this.uploadImg = URL.createObjectURL(this.selectedFile)
     }
   },
 };

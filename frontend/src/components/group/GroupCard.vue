@@ -1,63 +1,43 @@
 <template>
-  <v-container >
-    <div v-for="(group, idx) in paginatedData" :key="idx">
-      <v-expansion-panels class="px-2 py-2 px-sm-16">
-        <v-expansion-panel class="panel">
-          <v-expansion-panel-header>
-            <template v-slot>
-              <v-row no-gutters>
-                <v-col cols="2">
-                  <div class="group-image">
-                    <img src="" alt="">
-                  </div>
-                </v-col>
-                <v-col
-                  cols="8"
-                  class="text--secondary ml-sm-0 ml-11"
-                >
-                  <p class="my-6">{{group.name}}</p>
-                  <span v-for="(tag,idx) in group.tags" :key="idx" class="mr-2"># {{tag}}</span>
-                </v-col>
-              </v-row>
-            </template>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-row no-gutters>
-              <v-col class= "mx-auto" cols="10">
-                <p class="my-5"> 그룹 목표 및 소개</p>
-                <div class="group-intro">
-                  {{group.content}}
-                </div>
-              </v-col>
-            </v-row>
-            <v-card-actions class= "pr-16">
-              <v-spacer></v-spacer>
-              <v-btn
-                text
-                color="secondary"
-                @click="moveCommunity(idx)"
-              >
-                그룹으로 이동
-              </v-btn>
-              <v-btn
-                text
-                color="primary"
-              >
-                가입신청
-              </v-btn>
+  <v-container class="pa-0 px-md-16">
+    <v-row
+      class="d-flex align-center flex-wrap justify-start"
+    > 
+      <v-col
+        xs="12"
+        sm="4"
+        md="4"
+        lg="4"
+        v-for="(group, idx) in groups" 
+        :key="idx"
+        class="d-flex justify-center px-4 py-4"
+      >
+          <v-card height="100%" width="100%" >
+            <v-img
+              src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
+              class="white--text align-end"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="200px"
+            >
+            <v-card-title v-text="group.name" class="py-1"></v-card-title>
+            <div class="mx-2 py-1"><span style="word-break:keep-all;" v-for="(tag,idx) in group.tags" :key="idx" class="mx-1" >#{{tag}}</span></div>
+            </v-img>
+            <v-card-actions  class="card-text">
+              <v-card-text v-if="token"  class="d-flex justify-space-around py-1">
+                <v-btn plain class="btn" router-link :to="{name: 'Community', params: {groupPk:group.groupPk}}">상세보기</v-btn>
+                <!-- <v-btn plain class="btn">가입신청</v-btn> -->
+              </v-card-text>
+              <v-card-text v-else class="d-flex justify-space-around py-1">
+                <span>로그인을 하면 더 자세한 정보를 확인 하실수 있습니다.</span>
+              </v-card-text>
             </v-card-actions>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </div>
-     <v-pagination
-        color="orange"
-        v-model="page"
-        :length="pageCount"
-        :total-visible="7"
-      ></v-pagination>
-  </v-container>
- 
+          </v-card>
+      </v-col>
+    </v-row>
+
+                  <!-- <span v-for="(tag,idx) in group.tags" :key="idx" class="mr-2"># {{tag}}</span> -->
+   
+  </v-container >
 </template>
 
 <script>
@@ -67,39 +47,51 @@ export default {
       page: Number,
       word: String,
     },
-    // created(){
-    //   console.log(this.group)  
-    // },
     data: () => ({
       date: null,
       trip: {
         name: '',
       },
       groups: [],
-      pageCount:'',
+      pageCount:0,
     }),
-    methods: {
-      moveCommunity(idx){
-        console.log(this.groups[idx])
-        this.$router.push({name:"Community",params:{groupPk:this.groups[idx].groupPk}})
-      }  
+    watch: {
+      page:{
+        handler: function () {
+           searchGroup(
+            {
+              "direction":"ASC",
+              "page":this.page,
+              "size":1,
+              "tag":this.word,
+              "token": ""
+            },
+            (res) =>{
+              if (res.status){
+              this.groups = res.data.object.content // 배열로 집어넣기
+              }
+            },
+            (err) =>{
+              console.log(err)
+              alert("검색 결과 가져오기 실패")
+            }
+          )
+        }
+      }
     },
     created() {
+      this.token = this.$store.state.account.accessToken
       searchGroup(
         {
           "direction":"ASC",
           "page":this.page,
-          "size":10,
+          "size":9,
           "tag":this.word,
         },
         (res) =>{
+          console.log(res)
           if (res.status){
-          console.log('getgroup',res.data.object.content[0])
           this.groups = res.data.object.content // 배열로 집어넣기
-          let listLeng = this.groups.length,
-            listSize = 10;
-          this.pageCount = Math.floor(listLeng / listSize);
-          if (listLeng % listSize > 0) this.pageCount += 1;
           }
         },
         (err) =>{
@@ -108,28 +100,30 @@ export default {
         }
       )
     },
-    computed: {
-      paginatedData () {
-        const listSize = 10
-        const start = (this.page -1) * listSize,
-              end = start + listSize;
-        return this.groups.slice(start, end);
-      }
-    },
 }
 </script>
 
 <style scoped>
-    .group-image {
-        width: 90px;
-        height: 90px;
-        border-radius: 70%;
-        overflow: hidden;
-        background-color: #ffffbb
-    }
-    .group-intro {
-      width : 100%;
-      height : 250px;
-      border: 1px solid orange;
-    }
+.group-image {
+    width: 90px;
+    height: 90px;
+    border-radius: 70%;
+    overflow: hidden;
+    background-color: #ffffbb
+}
+.group-intro {
+  width : 100%;
+  height : 250px;
+  border: 1px solid orange;
+}
+
+.btn {
+  border-radius: 15px;
+
+  color: grey;
+}
+
+.btn:hover {
+  color: orange;
+}
 </style>

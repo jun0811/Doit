@@ -2,15 +2,15 @@ package com.ssafy.doit.repository;
 
 import com.ssafy.doit.model.Product;
 import com.ssafy.doit.model.response.ResponseProduct;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<ResponseProduct> findAllByTitleContaining(String title);
-    List<ResponseProduct> findAllBy();
-    List<ResponseProduct> findAllByUserNicknameContaining(String nickname);
-    List<ResponseProduct> findAllByCategory(String Category);
+    Page<ResponseProduct> findAllByTitleContaining(String title, Pageable pageable);
+    Page<ResponseProduct> findAllBy(Pageable pageable);
+    Page<ResponseProduct> findAllByUserNicknameContaining(String nickname, Pageable pageable);
+    Page<ResponseProduct> findAllByCategory(String Category, Pageable pageable);
     ResponseProduct getById(Long id);
 
 }

@@ -81,6 +81,7 @@
                   </v-col>
                 </v-row>
                 <v-row >
+                  <!-- 신규 태그 추가 -->
                   <v-col cols="12" class="d-flex justify-start">
                     <v-text-field 
                       v-model="word"
@@ -93,14 +94,14 @@
                       class ="mt-4 ml-3"
                     >추가</v-btn>
                   </v-col>
+                
                   <v-col cols="12" class="d-flex flex-wrap mb-5 py-0">
-                    <ul>
+                    <ul> 
                       <li v-for="(tag,idx) in hashtag" :key="idx" ># {{ tag }}
-                        <button @click="remove(idx)" class="hashtag-del-btn">                     
-                          <!-- |x| -->
+                        <button @click="remove(idx, tag)" class="hashtag-del-btn">                     
                           <font-awesome-icon icon="times-circle"/>
                         </button>  
-                      </li> 
+                      </li>
                     </ul>
                   </v-col>
                 </v-row>
@@ -110,9 +111,9 @@
             <v-col class="d-flex justify-center">
               <v-btn
                 outlined
-                @click="create"
+                @click="update"
                 class="group-create-btn"
-              >그룹 생성</v-btn>
+              >수정 완료</v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -123,18 +124,33 @@
 <script>
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-// import { createGroup } from "@/api/group/index.js"
 import http from "../../http-common"
+
 export default {
-    name :"GroupCreate",
+    name :"GroupUpdate",
     components: {
         Header,
         Footer
     },
+    props: {
+      groupPk: {type:String}
+    },
+    created(){
+    http.get(`group/detailGroup?groupPk=${this.groupPk}`)
+    .then((res)=>{
+      const user= res.data.object
+      this.name = user.name
+      this.maxNum = user.maxNum
+      this.content = user.content
+      this.hashtag = user.tags
+      this.leader = user.leader
+    })
+    },
     data(vm){
       return{
-      submit: false,
+      leader: 0,
       menu: false,
+      submit: false,
       date: new Date().toISOString().substr(0,10),
       minLength : false,
       name: "",
@@ -188,6 +204,7 @@ export default {
       formatDate (date){
         if(!date) return null
         const [year,month, day] = date.split('-')
+        console.log(year, month,day)
         return `${year}-${month}-${day}`
       },
       parseDate (date) {
@@ -199,33 +216,39 @@ export default {
       add(){
         if (this.word){
           this.hashtag.push(this.word)
+          http.put(`group/updateHashTag?groupPk=${this.groupPk}&hashtag=${this.word}`)
           this.word=""
         }else{
           alert('단어를 입력!')
         }
       },
-      remove(idx){
-        this.hashtag.splice(idx,1)
+      remove(idx, word){
+        http.delete(`group/deleteHashTag?groupPk=${Number(this.groupPk)}&hashtag=${word}`)
+        .then(()=>{
+          this.hashtag.splice(idx,1)
+        })
       },
-      
-      create(){
-        if (this.minLength && this.name &&this.submit){
-          http.post('/group/createGroup',
+      update(){
+        if (this.minLength && this.name &&this.submit && this.category.length>0){
+          http.put('/group/updateGroup',
           {
             "name": this.name,
             "maxNum": this.maxNum,
             "endDate": this.date,
             "content":this.content,
-            "hashtags": this.hashtag,
-            "category": this.category
+            "category": this.category,
+            "groupPk": Number(this.groupPk),
+            "leader": this.leader
           })
           .then((res) =>{
             console.log(res)
-            alert('생성완료')
+            alert('수정완료')
+            this.$router.go(-1)
           })
         }else{
           if(this.name.length<1) alert('그룹명을 입력해주세요')
-          else if(this.submit===false) alert('만료 날짜를 선택해주세요')
+          else if(this.submit ===false) alert('만료 날짜를 선택해주세요')
+          else if(this.category.length==0) alert('카테고리를 골라주세요')
           else {alert(`그룹 소개글을 20자 이상 작성해주세요 ` )}
         }
       }

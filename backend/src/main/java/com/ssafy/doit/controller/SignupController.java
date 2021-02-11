@@ -1,9 +1,11 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.Mileage;
 import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.model.user.UserRole;
+import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.EmailSendService;
 
@@ -16,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,6 +31,8 @@ public class SignupController {
     private UserRepository userRepository;
     @Autowired
     private EmailSendService emailSendService;
+    @Autowired
+    private MileageRepository mileageRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 닉네임 중복 확인
@@ -68,13 +74,20 @@ public class SignupController {
         ResponseBasic result = new ResponseBasic();
         try {
             String authKey = emailSendService.sendSignupMail(request.getEmail());
-            userRepository.save(User.builder()
+            User user = userRepository.save(User.builder()
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .nickname(request.getNickname())
-                    .userRole(UserRole.GUEST) // 최초 가입시 인증 받기 전에는 GUEST
+                    .createDate(LocalDate.now())
+                    .userRole(UserRole.GUEST)
                     .authKey(authKey)
-                    .build()).getId();
+                    .build());
+
+            mileageRepository.save(Mileage.builder()
+                    .content("회원가입 축하 마일리지 지급")
+                    .date(LocalDateTime.now())
+                    .mileage("+1,000")
+                    .user(user).build());
 
             result.status = true;
             result.data = "success";
@@ -109,6 +122,12 @@ public class SignupController {
             selectUser.setUserRole(UserRole.USER);
             userRepository.save(selectUser);
         });
+
+//        mileageRepository.save(Mileage.builder()
+//                .content("회원가입 축하 마일리지 지급")
+//                .date(LocalDate.now())
+//                .user(user.get()).build());
+
         ResponseBasic result = new ResponseBasic();
         result.status = true;
         result.data = "success";

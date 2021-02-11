@@ -22,7 +22,7 @@ function createGroup(params,success,fail){
   .catch(fail);
 }
  
-//?direction=ASC&page=1&size=10&tag=%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
+
 
 function searchGroup(query, success, fail) {
   http

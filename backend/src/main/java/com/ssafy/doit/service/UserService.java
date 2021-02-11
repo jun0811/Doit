@@ -41,26 +41,19 @@ public class UserService {
 
     // 회원정보 수정
     public void updateUser(Long userPk, User userReq, MultipartFile file){
-        System.out.println("ㅅㅄㅂ");
-        Optional<User> user = userRepository.findById(userPk);
-
-        user.ifPresent(selectUser->{
-            String imgPath = null;
-
-
-                try {
-                    System.out.println("tryㅅㅄㅂ");
-                    imgPath = s3Service.upload(userReq.getImage(),file);
-                } catch (Exception e) {
-                    System.out.println("catchㅅㅄㅂ");
-                    e.printStackTrace();
-                }
-                selectUser.setImage(imgPath);
-
-
-            selectUser.setNickname(userReq.getNickname());
-            userRepository.save(selectUser);
-        });
+//        Optional<User> user = userRepository.findById(userPk);
+//        user.ifPresent(selectUser->{
+//            String imgPath = null;
+//                try {
+//                    imgPath = s3Service.upload(userReq.getImage(),file);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                selectUser.setImage(imgPath);
+//
+//            selectUser.setNickname(userReq.getNickname());
+//            userRepository.save(selectUser);
+//        });
     }
 
 
