@@ -25,31 +25,49 @@
       </v-row>
       <hr class="mb-3">
       <div v-for="(m, idx) in msg" :key="idx">
-        <!-- <v-row class="ml-3 mb-3"> -->
-          <v-row class="ml-3 mb-3">
-            {{m.userPk}}
+        <div v-if="m.userPk==user1['userPk']" class="d-flex flex-column align-end">
+          <v-row class="mb-3 mr-3">
+            {{user1['userNick']}}
           </v-row>
-          <v-row class="ml-3 mb-6 message-box">
+          <v-row class="mb-6 mr-3 my-message-box">
             {{m.message}}
           </v-row>
-          <!-- <div v-bind:class="m.style"> -->
-          <!-- <h5 style="margin:3px">
-            </h5> -->
-          <!-- </div> -->
-        <!-- </v-row> -->
+        </div>
+        <div v-else class="d-flex flex-column align-start">
+          <v-row class="ml-3 mb-3">
+            {{user2['userNick']}}
+          </v-row>
+          <v-row class="ml-3 mb-6 other-message-box">
+            {{m.message}}
+          </v-row>
+        </div>
+
       </div>
         <hr class="mt-3">
       <!-- </v-virtual-scroll> -->
-      <v-row>
-        <v-col cols="8">
-          <input 
+      <v-row class="mt-3">
+        <v-col cols="10">
+          <v-text-field
+            label="메세지를 입력하세요."
+            v-model="content" 
+            single-line
+            outlined
+            @keyup.enter="sendMessage()"
+          ></v-text-field>
+          <!-- <input 
             type="text" 
             v-model="content" 
             placeholder="메세지를 입력하세요."
-          >
+          > -->
         </v-col>
-        <v-col cols="2">
-          <button @click="sendMessage()">SEND</button>
+        <v-col cols="2" class="d-flex justify-start">
+          <div class="send-icon">
+            <font-awesome-icon 
+              icon="paper-plane" 
+              @click="sendMessage()"
+            /> 
+          </div>
+          <!-- <button @click="sendMessage()">SEND</button> -->
         </v-col>
       </v-row>
     </v-container>
@@ -84,7 +102,9 @@ export default {
       stompClient:null,
       product: '',
       productName: '',
-      productPrice: ''
+      productPrice: '',
+      user1: {'userPk' : 0, 'userNick' : ''},
+      user2: {'userPk' : 0, 'userNick' : ''},
     }
   },
   created(){
@@ -99,6 +119,10 @@ export default {
         this.productPrice = this.product.mileage
         this.msg = res.data.object.messages;
         this.room = res.data.object.room;
+        this.user1['userPk'] = res.data.object.currentUser.userPk
+        this.user1['userNick'] = res.data.object.currentUser.nickname
+        this.user2['userPk'] = res.data.object.other.userPk
+        this.user2['userNick'] = res.data.object.other.nickname
         this.connect();
     })
   },
@@ -184,11 +208,29 @@ color : gray;
   font-size: 80%;
 }
 
-.message-box {
-  border: 1px solid grey;
+.other-message-box {
+  /* border: 1px solid grey; */
+  background-color: #EEEEEE;
   border-radius: 20px;
-  width: 100px;
+  max-width: 40%;
   font-size: 110%;
   padding: 10px;
+  word-break: break-all;
+}
+
+.my-message-box {
+  /* border: 1px solid grey; */
+  background-color: #F9802D;
+  border-radius: 20px;
+  max-width: 40%;
+  font-size: 110%;
+  padding: 10px;
+  color: white;
+  word-break: break-all;
+}
+
+.send-icon {
+  font-size: 40px;
+  cursor: pointer;
 }
 </style>
