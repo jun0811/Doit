@@ -233,4 +233,12 @@ color : gray;
   font-size: 40px;
   cursor: pointer;
 }
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .send-icon {
+    font-size: 30px;
+    cursor: pointer;
+    padding-top: 8px;
+  }
+}
 </style>
