@@ -28,9 +28,7 @@
                 <span>로그인을 하면 더 자세한 정보를 확인 하실수 있습니다.</span>
               </v-card-text>
             </v-card-actions>
-
           </v-card>
-
       </v-col>
     </v-row>
 

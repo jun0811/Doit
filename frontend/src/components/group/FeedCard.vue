@@ -22,7 +22,13 @@
     <v-card-text>
       <div>{{this.card.writer}}</div>
       <div>작성날짜: {{this.card.createDate.slice(0,10)}}</div>
-      <v-btn class="my-3" @click="accept">{{message}}</v-btn>
+      <v-btn v-if="this.card.writer == this.$store.getters.getName" class="my-3" >피드 수정</v-btn> 
+      <!-- 본인이면 피드 수정 -->
+      <div v-else>
+        <v-btn class="my-3" v-if="!auth" @click="accept">미인증</v-btn>
+        <v-btn class="my-3" v-else>인증</v-btn>
+        <!-- 다른 유저면 인증/미인증으로 구분 -->
+      </div>
     </v-card-text>
 
     <v-divider class="mx-4"></v-divider>
@@ -30,6 +36,8 @@
 </template>
 
 <script>
+import http from '../../http-common'
+
   export default {
     props: {
       card: Object
@@ -38,10 +46,30 @@
       loading: false,
       selection: 1,
       message: "미인증",
+      auth: false, // 인증 피드 확인 변수
+      writer: false // 본인 여부 판단 변수
     }),
+    created(){
+      // 본인 여부
+      if(this.card.userPk === sessionStorage.getItem("userPk")) this.writer = true
+      // 인증 확인 여부
+      this.auth = this.card.authUsers.some((res)=>{
+        if(sessionStorage.getItem("userpk") == res.userPk){
+          console.log("인증")
+          return true
+        }
+      })
+    },
     methods: {
       accept(){
-        if(this.card.writer == this.$store.getters.getName) console.log("동일인물")
+        console.log(this.card)
+        if(this.card.writer == this.$store.getters.getName) console.log(this.card.feedPk)
+        else{
+          http.get(`feed/authCheckFeed?feedPk=${this.card.feedPk}`)
+          .then(()=>
+            this.auth= true
+          )
+        }
       }  
     }
   }

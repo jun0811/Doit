@@ -245,14 +245,13 @@ export default {
       .then((res)=>{
         // console.log(res.data.object)
         this.cards = res.data.object
-        // console.log(this.cards)
+        console.log(this.cards)
       })
     },
   },
   created(){
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
-      
         this.user_info= res.data.object
         this.user_num = this.user_info.users.length
         this.leader = res.data.object.leader
