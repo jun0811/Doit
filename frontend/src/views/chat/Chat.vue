@@ -6,6 +6,8 @@
       <!-- <v-virtual-scroll
         height="300"
       > -->
+
+      <!-- 상단 이미지/상품 이름/가격 표시 영역 시작 -->
       <v-row>
         <v-col cols="2">
           <img 
@@ -23,8 +25,11 @@
           </v-row>
         </v-col>
       </v-row>
+      <!-- 상단 이미지/상품 이름/가격 표시 영역 끝 -->
+
       <hr class="mb-3">
       <div v-for="(m, idx) in msg" :key="idx">
+        <!-- 메세지 보낸 사람이 현재 유저일 경우(user1일 경우) user1의 닉네임 표시 -->
         <div v-if="m.userPk==user1['userPk']" class="d-flex flex-column align-end">
           <v-row class="mb-3 mr-3">
             {{user1['userNick']}}
@@ -33,6 +38,7 @@
             {{m.message}}
           </v-row>
         </div>
+        <!-- 메세지 보낸 사람이 상대방일 경우(user2일 경우) user2의 닉네임 표시 -->
         <div v-else class="d-flex flex-column align-start">
           <v-row class="ml-3 mb-3">
             {{user2['userNick']}}
@@ -45,6 +51,8 @@
       </div>
         <hr class="mt-3">
       <!-- </v-virtual-scroll> -->
+
+      <!-- 채팅 입력칸, 보내기 버튼 표시 영역 시작 -->
       <v-row class="mt-3">
         <v-col cols="10">
           <v-text-field
@@ -54,11 +62,6 @@
             outlined
             @keyup.enter="sendMessage()"
           ></v-text-field>
-          <!-- <input 
-            type="text" 
-            v-model="content" 
-            placeholder="메세지를 입력하세요."
-          > -->
         </v-col>
         <v-col cols="2" class="d-flex justify-start">
           <div class="send-icon">
@@ -70,6 +73,7 @@
           <!-- <button @click="sendMessage()">SEND</button> -->
         </v-col>
       </v-row>
+      <!-- 채팅 입력칸, 보내기 버튼 표시 영역 끝 -->
     </v-container>
     <Footer></Footer>
   </div>
@@ -94,7 +98,7 @@ export default {
     return {
       roomid : 14,
       id : 84,
-      productImg: 'https://png.pngtree.com/element_our/20190602/ourlarge/pngtree-yellow-cookie-illustration-image_1413662.jpg',
+      productImg: '',
       idx:0,
       msg:[],
       room: '',
@@ -219,7 +223,6 @@ color : gray;
 }
 
 .other-message-box {
-  /* border: 1px solid grey; */
   background-color: #EEEEEE;
   border-radius: 20px;
   max-width: 40%;
@@ -229,7 +232,6 @@ color : gray;
 }
 
 .my-message-box {
-  /* border: 1px solid grey; */
   background-color: #F9802D;
   border-radius: 20px;
   max-width: 40%;
