@@ -10,11 +10,11 @@
         <v-col cols="2">
           <img 
             :src="productImg" 
-            alt=""
+            alt="product-img"
             class="prd-img"
           >
         </v-col>
-        <v-col cols="10">
+        <v-col cols="10" class="name-price-style d-flex flex-column justify-center">
           <v-row class="mb-3">
             {{ productName }}
           </v-row>
@@ -94,7 +94,7 @@ export default {
     return {
       roomid : 14,
       id : 84,
-      productImg: '',
+      productImg: 'https://png.pngtree.com/element_our/20190602/ourlarge/pngtree-yellow-cookie-illustration-image_1413662.jpg',
       idx:0,
       msg:[],
       room: '',
@@ -200,9 +200,19 @@ color : gray;
 }
 
 .prd-img {
-  /* width: ; */
+  width: 80%;
 }
 
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .prd-img {
+    width: 100%;
+  }
+}
+
+.name-price-style {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
 .price-style {
   color: grey;
   font-size: 80%;
