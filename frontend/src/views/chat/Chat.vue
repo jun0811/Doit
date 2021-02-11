@@ -2,28 +2,65 @@
   <div>
     <Header></Header>
     <NavBar></NavBar>
-    <v-container class="my-3 px-6" style="570px;">
-      <h1>title</h1>
-      <hr>
-
+    <v-container class="container-width container-style">
+      <!-- <v-virtual-scroll
+        height="300"
+      > -->
+      <v-row>
+        <v-col cols="2">
+          <img 
+            :src="productImg" 
+            alt=""
+            class="prd-img"
+          >
+        </v-col>
+        <v-col cols="10">
+          <v-row class="mb-3">
+            {{ productName }}
+          </v-row>
+          <v-row class="mb-1 price-style">
+            {{ productPrice }} 마일리지
+          </v-row>
+        </v-col>
+      </v-row>
+      <hr class="mb-3">
       <div v-for="(m, idx) in msg" :key="idx">
-        <div v-bind:class="m.style">
-        <h5 style="margin:3px">
-          {{m.userPk}}
-          </h5>
-        {{m.message}}
-        </div>
+        <!-- <v-row class="ml-3 mb-3"> -->
+          <v-row class="ml-3 mb-3">
+            {{m.userPk}}
+          </v-row>
+          <v-row class="ml-3 mb-6 message-box">
+            {{m.message}}
+          </v-row>
+          <!-- <div v-bind:class="m.style"> -->
+          <!-- <h5 style="margin:3px">
+            </h5> -->
+          <!-- </div> -->
+        <!-- </v-row> -->
       </div>
-      <hr />
-      <input type="text" v-model="content" placeholder="보낼 메세지" size="100" />
-      <button @click="sendMessage()"> SEND</button>
+        <hr class="mt-3">
+      <!-- </v-virtual-scroll> -->
+      <v-row>
+        <v-col cols="8">
+          <input 
+            type="text" 
+            v-model="content" 
+            placeholder="메세지를 입력하세요."
+          >
+        </v-col>
+        <v-col cols="2">
+          <button @click="sendMessage()">SEND</button>
+        </v-col>
+      </v-row>
     </v-container>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import Header from "@/components/common/Header.vue";
 import NavBar from "@/components/common/NavBar.vue";
+import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
@@ -33,17 +70,21 @@ export default {
   components: {
     Header,
     NavBar,
+    Footer,
   },
   data: () => {
     return {
       roomid : 14,
       id : 84,
-      nickname: '소정소정',
+      productImg: '',
       idx:0,
       msg:[],
       room: '',
       content:'',
-      stompClient:null
+      stompClient:null,
+      product: '',
+      productName: '',
+      productPrice: ''
     }
   },
   created(){
@@ -52,6 +93,10 @@ export default {
     http.get(`/chat/room/${this.roomid}`)
     .then(res => {
         console.log('res', res);
+        this.productImg = res.data.object.room.product.image
+        this.product = res.data.object.room.product
+        this.productName = this.product.title
+        this.productPrice = this.product.mileage
         this.msg = res.data.object.messages;
         this.room = res.data.object.room;
         this.connect();
@@ -105,11 +150,45 @@ export default {
 };
 </script>
 <style scoped>
+.container-width {
+width: 600px; 
+/* height: 400px; */
+margin-top: 50px;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+    .container-width {
+      width: 370px;
+    }
+}
+
+.container-style {
+  /* background-color: #DCDCDC; */
+  border: 1px solid grey;
+  border-radius: 15px;
+}
 .myMsg{
 text-align: right;
 color : gray;
 }
 .otherMsg{
   text-align: left;
+}
+
+.prd-img {
+  /* width: ; */
+}
+
+.price-style {
+  color: grey;
+  font-size: 80%;
+}
+
+.message-box {
+  border: 1px solid grey;
+  border-radius: 20px;
+  width: 100px;
+  font-size: 110%;
+  padding: 10px;
 }
 </style>

@@ -2,7 +2,6 @@
 <div>
   <Header></Header>
   <NavBar></NavBar>
-    <!-- <v-container class="d-flex flex-column justify-center align-center"> -->
     <v-container class="container-width">
         <v-row>
           <v-col class="img-wrapper">
@@ -26,12 +25,7 @@
         </v-row>
         <v-row class="d-flex flex-column align-start mx-0 mx-sm-1">
           <v-row class="prd-title pb-0">
-            <!-- <v-col cols="6"> -->
               {{product.title}}
-            <!-- </v-col> -->
-            <!-- <v-col cols="6" class="prd-mileage">
-              가격: {{product.mileage}} 마일리지
-            </v-col> -->
           </v-row>
           <v-row class="prd-category">카테고리: {{product.category}}</v-row>
           <v-row class="prd-mileage">{{product.mileage}} 마일리지</v-row>
