@@ -28,8 +28,8 @@
         </template>
         <template v-slot:default="dialog">
           <v-card>
-              <v-btn text width="100%">피드 수정 </v-btn>
-              <v-btn text width="100%">피드 삭제 </v-btn>              
+              <v-btn class="green--text" text width="100%">피드 수정 </v-btn>
+              <v-btn class="red--text" @click="feedDelete" text width="100%">피드 삭제 </v-btn>              
             <v-card-actions class="justify-end">
               <v-btn
                 text
@@ -105,6 +105,14 @@ import http from '../../http-common'
             this.auth= true
           )
         }
+      },
+      feedDelete(){
+        http.delete(`feed/deleteFeed?feedPk=${this.card.feedPk}`)
+        .then(()=>{
+          this.$router.go()
+          alert("삭제되었습니다.")
+          }
+        )
       }  
     }
   }
