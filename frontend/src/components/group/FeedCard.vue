@@ -28,7 +28,7 @@
           </v-btn>
         </template>
         <v-list>
-          <v-btn class="green--text" text width="100%">피드 수정 </v-btn>
+          <v-btn class="green--text" @click="feedUpdate" text width="100%">피드 수정 </v-btn>
           <v-btn class="red--text" @click="feedDelete" text width="100%">피드 삭제 </v-btn>    
         </v-list>
       </v-menu>
@@ -52,13 +52,11 @@
       </v-row>
       <!-- 본인이면 피드 수정 --> 
       <div v-if="!writer">
-        <v-btn class="my-3" v-if="!auth" @click="accept">인증해주시겠나요</v-btn>
+        <v-btn outlined class="my-3 btn" v-if="!auth" @click="accept" >인증</v-btn>
         <span class="my-3" v-else >인증을 해주셨습니다.</span>
         <!-- 다른 유저면 인증/미인증으로 구분 -->
       </div>
-      
     </v-card-text>
-
     <v-divider class="mx-4"></v-divider>
   </v-card>
 </template>
@@ -80,7 +78,6 @@ import http from '../../http-common'
     }),
     created(){
       this.check= (this.card.authCheck ==='true' ? true:false) 
-      console.log(this.check)
       // 본인 여부
       if(this.card.userPk == sessionStorage.getItem("userpk")) {
         this.writer = true
@@ -104,13 +101,15 @@ import http from '../../http-common'
       },
       feedDelete(){
         http.delete(`feed/deleteFeed?feedPk=${this.card.feedPk}`)
-        .then((res)=>{
+        .then(()=>{
           this.$router.go()
-          console.log(res)
           alert("삭제되었습니다.")
           }
         )
       },
+      feedUpdate(){
+        this.$router.push({name:"FeedUpdate",params:{feedPk:Number(this.card.feedPk),"content":this.card.content, "writer":this.card.writer}})
+      }
     }
   }
 </script>
@@ -119,8 +118,12 @@ import http from '../../http-common'
  .stamp{
    width: 50px;
  }
-span{
+  span{
   color: #F9802D
-}
+  }
+  .btn{
+    border: 1px solid #F9802D;
+    color: #F9802D
+  }
 
 </style>
