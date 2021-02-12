@@ -86,7 +86,10 @@
                     </v-row>   
                   </v-container>               
                   </v-toolbar>
-                  <v-card-text style="padding-top: 100px; padding-bottom: 90px; min-height:900px;">
+                  <v-card-text 
+                    style="padding-top: 100px; padding-bottom: 90px; min-height:900px;"
+                    class="scroll"
+                  >
                     <div v-for="(m, idx) in msg" :key="idx">
                       <!-- 메세지 보낸 사람이 현재 유저일 경우(user1일 경우) user1의 닉네임 표시 -->
                       <div v-if="m.userPk==user1['userPk']" class="d-flex flex-column align-end">
@@ -110,7 +113,7 @@
                   </v-card-text>
                   <!-- <div > -->
                     <v-container class="input-style">
-                      <v-row class="mt-3 mb-3">
+                      <v-row class="mt-3 mb-3 input-style2">
                         <v-col cols="8" sm="10">
                           <v-text-field
                             label="메세지를 입력하세요."
@@ -167,7 +170,7 @@ export default {
     return {
       product:'',
       user : 'nickname',
-      roomid : 16,
+      roomid : 0,
       id : 84,
       productImg: '',
       idx:0,
@@ -179,6 +182,7 @@ export default {
       productPrice: '',
       user1: {'userPk' : 0, 'userNick' : ''},
       user2: {'userPk' : 0, 'userNick' : ''},
+      roomCheck: false
     }
   },
   props:{
@@ -190,6 +194,8 @@ export default {
       console.log(res.data.object)
       this.product = res.data.object
     })   
+    // var objDiv = document.getElementById("scroll"); 
+    // objDiv.scrollTop = objDiv.scrollHeight;
   },
   computed: {
   },
@@ -239,23 +245,47 @@ export default {
         }
       );
     },
+    enterRoom(v) {
+      http.get(`/chat/room/${v}`)
+      .then(res => {
+          // console.log('res', res);
+          this.productImg = res.data.object.room.product.image
+          this.productName = res.data.object.room.product.title
+          this.productPrice = res.data.object.room.product.mileage
+          this.msg = res.data.object.messages;
+          this.room = res.data.object.room;
+          this.user1['userPk'] = res.data.object.currentUser.userPk
+          this.user1['userNick'] = res.data.object.currentUser.nickname
+          this.user2['userPk'] = res.data.object.other.userPk
+          this.user2['userNick'] = res.data.object.other.nickname
+          this.connect();
+      })       
+    },
     chatting() {
-    this.id = this.$store.state.account.userpk;
+      this.id = this.$store.state.account.userpk;
 
-    http.get(`/chat/room/${this.roomid}`)
-    .then(res => {
-        console.log('res', res);
-        this.productImg = res.data.object.room.product.image
-        this.productName = res.data.object.room.product.title
-        this.productPrice = res.data.object.room.product.mileage
-        this.msg = res.data.object.messages;
-        this.room = res.data.object.room;
-        this.user1['userPk'] = res.data.object.currentUser.userPk
-        this.user1['userNick'] = res.data.object.currentUser.nickname
-        this.user2['userPk'] = res.data.object.other.userPk
-        this.user2['userNick'] = res.data.object.other.nickname
-        this.connect();
-    }) 
+      http.get('chat/getList')
+      .then(res => {
+        this.roomCheck = res.data.object.some((res) => {
+          if(this.product.id == res.product.id) {
+            this.roomid = res.id
+            return true}
+        })
+      })
+      console.log(this.roomCheck)
+      if(this.roomCheck == true) {
+        this.enterRoom(this.roomid)
+      }
+      else {
+        http.post(`chat/createRoom?product_pk=${this.product.id}`)
+        .then((res) => {
+          console.log(res)
+          const val = res.data.object.id
+          this.enterRoom(val)
+        })
+      }
+
+
     }
   }
 };
@@ -424,8 +454,9 @@ margin-top: 50px;
 
 .input-style {
  position: fixed; 
- bottom: 0;
+ bottom: 75px;
  max-width: 600px;
+ max-height: 80px;
  /* background-color: white; */
 }
 </style>
