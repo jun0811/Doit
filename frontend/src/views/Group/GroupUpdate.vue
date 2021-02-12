@@ -25,6 +25,7 @@
                             min-width="auto"
                             hide-details=""
                           >
+                          <!--  -->
                             <template v-slot:activator="{ on, attrs }">
                               <v-text-field
                                 v-model="endDate"
@@ -63,7 +64,7 @@
                         hide-details=""
                         :items="items"
                         label="카테고리"
-                        v-model="tmp"
+                        v-model="category"
                       ></v-select>
                     </v-col>
                   </v-row>
@@ -144,7 +145,9 @@ export default {
       this.content = user.content
       this.hashtag = user.tags
       this.leader = user.leader
-    })
+      this.category = user.category
+      this.date = user.endDate
+      })
     },
     data(vm){
       return{
@@ -156,21 +159,12 @@ export default {
       name: "",
       maxNum : 0,
       endDate: vm.formatDate(new Date().toISOString().substr(0,10)),
+      end:'',
       content :"",
       word:"",
       hashtag : [],
-      tmp: "",
       category : "",
       items: ['운동', '공부', '다이어트', '취미', '독서', '라이프', '그 외'],
-      change :{
-        "운동" : "exercise",
-        "공부" : "study",
-        "다이어트" : "diet",
-        "취미" : "hobby",
-        "독서" : "book",
-        "라이프" : "life",
-        "그 외" : "etc"
-      }
       }
     },
     watch: {
@@ -190,15 +184,13 @@ export default {
       },
       date(){
         this.endDate = this.formatDate(this.date)
+        console.log('date', this.endDate)
       },
       content(){
         if (this.content.length>=20){
           this.minLength = true;
         }else this.minLength = false;
       },
-      tmp(){
-        this.category = this.change[this.tmp]
-      }
     },
     methods: {
       formatDate (date){
@@ -211,6 +203,7 @@ export default {
         if (!date) return null
 
         const [month, day, year] = date.split('-')
+        console.log('parseDate', `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`)
         return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
       },
       add(){
