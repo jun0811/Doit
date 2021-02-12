@@ -8,7 +8,7 @@ function createFeed(params, success, fail) {
 } 
 function updateFeed(params, success, fail) {
   http
-  .put(`feed/createFeed`,params)
+  .put(`feed/updateFeed`,params)
   .then(success)
   .catch(fail);
 } 

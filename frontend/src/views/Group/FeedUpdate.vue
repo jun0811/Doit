@@ -20,7 +20,7 @@
                         </v-col>
                         <v-col cols="9" sm="10" class="pa-0 my-auto">
                             <div>
-                                {{name}}
+                               {{nick}}
                             </div>
                         </v-col>
                     </v-row>
@@ -28,7 +28,7 @@
                         <v-container fluid class="py-5">
                             <v-textarea
                                 label="인증 내용 입력"
-                                v-model="content"
+                                v-model="new_content"
                                 auto-grow
                                 outlined
                                 rows="3"
@@ -74,16 +74,27 @@ import Footer from "@/components/common/Footer";
 import { updateFeed } from "@/api/feed/index.js"
 
 export default {
-    name :"FeedWrite",
+    name :"FeedUpdate",
     components: {
         Header,
         Footer
     },
+    props:{
+        feedPk: Number,
+        content: String,
+        writer: String,
+    },
+    created() {
+        this.feed= this.feedPk;
+        this.nick = this.writer;
+        this.new_content = this.content;
+    },
     data() {
         return {
-            name: 'Nickname',
+            feed: 0,
+            nick: "",
+            new_content: "",
             selected : '',
-            content :'', // 기존피드가 가지고있던 컨텐트로 엮어주기
             items : [
                 '인증',
                 '정보 공유'
@@ -92,9 +103,7 @@ export default {
             authCnt: 0,
             authDate: '',
             createDate: new Date(), // 변경X
-            feedPk:'',
             feedType: true,
-            groupPk: '5', // 변경필요!
             media: "",
             status: true,
             updateDate: new Date(), // 이게 업데이트 후 변경! 
@@ -114,29 +123,19 @@ export default {
         update() {
             updateFeed( //if 백엔드 URL 완성되면 그 이름에 맞춰서 변경예정
                 {
-                    "authCheck": this.authCheck,
-                    "authCnt": this.authCnt,
-                    "authDate": this.authDate,
-                    "content": this.content,
-                    "createDate": this.createDate,
-                    "feedPk": this.feedPk,
+                    "content": this.new_content,
+                    "feedPk": this.feed,
                     "feedType": this.feedType,
-                    "groupPk": this.groupPk,
-                    "media": this.media,
-                    "status": this.status,
-                    "updateDate": this.updateDate,
-                    "userPk": this.$store.state.userpk,
                 },
                 (res) =>{
                     if (res.status){
                     alert("피드가 수정되었습니다.")
                     console.log(res)
-                    this.$router.push('/') // 어디로 보낼지 정하고 변경!
+                    this.$router.go(-1) // 어디로 보낼지 정하고 변경!
                     }
                 },
                 (err) =>{
                     console.log(err)
-                    console.log(this.createDate)
                     alert("수정 실패")
                 }
             )
