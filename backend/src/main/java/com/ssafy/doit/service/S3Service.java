@@ -90,47 +90,5 @@ public class S3Service {
         System.out.println(s3Client.getUrl(bucket, fileName).toString());
         return fileName;
     }
-//  마일리지 상점 이미지 사진 불러오기
-    public List<RequestProduct> getList() {
-        List<Product> productEntityList = productRepository.findAll();
-        List<RequestProduct> productList = new ArrayList<>();
 
-        for (Product product : productEntityList) {
-            productList.add(convertEntityToDto(product));
-        }
-
-        return productList;
-    }
-    private RequestProduct convertEntityToDto(Product product) {
-        return RequestProduct.builder()
-                .id(product.getId())
-                .category((product.getCategory()))
-                .title(product.getTitle())
-                .content((product.getContent()))
-                .image(product.getImage())
-                .mileage(product.getMileage())
-                .build();
-    }
-    //  feed 이미지 사진 불러오기
-    public List<RequestFeed> getFeedList() {
-        List<Feed> feedEntityList = feedRepository.findAll();
-        List<RequestFeed> productList = new ArrayList<>();
-
-        for (Feed feed : feedEntityList) {
-            productList.add(convertEntityToDto(feed));
-        }
-
-        return productList;
-    }
-    private RequestFeed convertEntityToDto(Feed feed) {
-        return RequestFeed.builder()
-                .feedPk(feed.getFeedPk())
-                .media(feed.getMedia())
-                .content(feed.getContent())
-                .feedType(feed.getFeedType())
-                .createDate(feed.getCreateDate())
-                .groupPk(feed.getGroupPk())
-                .writer(feed.getWriter())
-                .build();
-    }
 }
