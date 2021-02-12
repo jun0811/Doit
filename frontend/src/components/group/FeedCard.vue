@@ -12,34 +12,27 @@
       ></v-progress-linear>
     </template>
     <!-- 모달 : 수정 삭제 -->
-    <div class="d-flex justify-end" v-if="writer">
-      <v-dialog
-        width="350"
-        transition="dialog-bottom-transition"
-        max-width="600"
+    <v-card-title v-if="writer">
+      <v-spacer></v-spacer>
+      <v-menu
+        bottom
+        left
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
-            text
+            text-dark
+            icon
             v-bind="attrs"
             v-on="on"
-          ><font-awesome-icon icon="ellipsis-h"/> </v-btn>
+          ><v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
         </template>
-        <template v-slot:default="dialog">
-          <v-card>
-              <v-btn class="green--text"  text width="100%">피드 수정 </v-btn>
-              <v-btn class="red--text" @click="feedDelete" text width="100%">피드 삭제 </v-btn>              
-            <v-card-actions class="justify-end">
-              <v-btn
-                text
-                @click="dialog.value = false"
-              >Close</v-btn>
-            </v-card-actions>
-          </v-card>
-        </template>
-      </v-dialog>
-      
-    </div>
+        <v-list>
+          <v-btn class="green--text" text width="100%">피드 수정 </v-btn>
+          <v-btn class="red--text" @click="feedDelete" text width="100%">피드 삭제 </v-btn>    
+        </v-list>
+      </v-menu>
+    </v-card-title>
     <v-img
       height="250"
       src="https://wonderfulmind.co.kr/wp-content/uploads/2018/05/knitting.jpg"
@@ -112,8 +105,9 @@ import http from '../../http-common'
       },
       feedDelete(){
         http.delete(`feed/deleteFeed?feedPk=${this.card.feedPk}`)
-        .then(()=>{
+        .then((res)=>{
           this.$router.go()
+          console.log(res)
           alert("삭제되었습니다.")
           }
         )
