@@ -120,7 +120,7 @@ public class GroupUserService {
         }else throw new Exception("그룹장이 아닙니다.");
     }
 
-    // 회원 랄퇴(강퇴), 가입된 모든 그룹에서 delete
+    // 회원 탈퇴(강퇴), 가입된 모든 그룹에서 delete
     @Transactional
     public void deleteGroupByUser(Long userPk) throws Exception {
         User user = userRepository.findById(userPk).get();
