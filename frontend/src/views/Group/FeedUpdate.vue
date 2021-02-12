@@ -1,28 +1,7 @@
 <template>
     <div>
         <Header></Header>
-
         <!-- 그룹 간략 소개 시작 -->
-
-        <hr>
-        <v-container>
-            <v-row class="d-flex justify-center">
-            <v-col cols="4">
-                <h3># Group 1</h3>
-                <p class="ma-0"> 멤버 : 6/10</p>
-                <p class="ma-0"> 2020.01.29 ~ 2021.01.29</p>
-                <p class="ma-0"> #홈트 #운동 #의지</p>
-            </v-col>
-            <v-col cols="4" sm-cols="2" class="d-flex align-center justify-space-around">
-                <div class="group-image">
-                    <img src="" alt="">
-                </div>
-            </v-col>
-            </v-row>
-        </v-container>
-        <hr>
-        <!-- 그룹 소개 끝 -->
-
         <v-container class="pa-3 pa-sm-16">
             <v-card  class="d-flex align-center flex-column my-15 mx-sm-auto px-5 col-sm-10" width=100%>
                 <h3 class="mt-5 mb-3">피드 수정</h3>
@@ -92,7 +71,7 @@
 <script>
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import { createFeed } from "@/api/feed/index.js"
+import { updateFeed } from "@/api/feed/index.js"
 
 export default {
     name :"FeedWrite",
@@ -133,7 +112,7 @@ export default {
     },
     methods: {
         update() {
-            createFeed( //if 백엔드 URL 완성되면 그 이름에 맞춰서 변경예정
+            updateFeed( //if 백엔드 URL 완성되면 그 이름에 맞춰서 변경예정
                 {
                     "authCheck": this.authCheck,
                     "authCnt": this.authCnt,
