@@ -77,7 +77,7 @@ export default {
     }
   },
   created() {
-    this.mileage = this.$store.getters.getMileage
+    this.getMileage()
     this.getProducts()
   },
   methods: {
@@ -107,7 +107,13 @@ export default {
         this.option = 'category'
         this.getProducts()
       }
-    }
+    },
+    getMileage() {
+      http.get(`/user/detailUser`)
+      .then((res)=>{
+        this.mileage = res.data.object.mileage
+      })
+    },
   },
 
   computed : {

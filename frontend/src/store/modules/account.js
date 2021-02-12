@@ -5,7 +5,7 @@ const state = {
   name: null,
   email: null,
   userpk: null,
-  mileage: null,
+
 };
 
 const getters = {
@@ -21,18 +21,15 @@ const getters = {
   getName(state){
     return state.name;
   },
-  getMileage(state) {
-    return state.mileage;
-  }
+
 };
 
 const mutations = {
-  SET_ACCESSTOKEN(state, { accessToken, email, name, userpk, mileage }) {
+  SET_ACCESSTOKEN(state, { accessToken, email, name, userpk }) {
     state.accessToken = accessToken;
     state.email = email;
     state.name = name;
     state.userpk = userpk;
-    state.mileage = mileage;
   },
   SET_NAME(state, { name }){
     state.name = name;
@@ -44,26 +41,23 @@ const mutations = {
     state.name = data.object.nickname;
     state.email = data.object.email;
     state.userpk = data.object.id;
-    state.mileage = data.object.mileage;
 
     sessionStorage.accessToken = headers.accesstoken;
     sessionStorage.name = data.object.nickname;
     sessionStorage.email = data.object.email;
     sessionStorage.userpk = data.object.id;
-    sessionStorage.mileage = data.object.mileage;
   },
   LOGOUT(state) {
     state.accessToken = null;
     state.name = null;
     state.email = null;
     state.userpk = null;
-    state.mileage = null;
 
     sessionStorage.removeItem("accessToken");
     sessionStorage.removeItem("name");
     sessionStorage.removeItem("email");
     sessionStorage.removeItem("userpk");
-    sessionStorage.removeItem("mileage");
+
   },
 };
 
