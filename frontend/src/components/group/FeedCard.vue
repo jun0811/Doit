@@ -50,17 +50,17 @@
     <v-card-text>
       <v-row>
        <v-col class="col-8">
-         <span>{{this.card.writer}}</span>
-          <div>작성날짜: {{this.card.createDate.slice(0,10)}}</div>
+          작성자:<span> {{this.card.writer}}</span>
+         <div> 작성날짜: {{this.card.createDate.slice(0,10)}}</div>
         </v-col>
-        <v-col  v-if="check" class="col-4 d-flex justify-end">
-          <img src="@/assets/img/stamp.png" class="stamp">
+        <v-col  class="col-4 d-flex justify-end">
+          <img v-if="check" src="@/assets/img/stamp.png" class="stamp">
         </v-col>
       </v-row>
-      <!-- 본인이면 피드 수정 -->
+      <!-- 본인이면 피드 수정 --> 
       <div v-if="!writer">
-        <v-btn class="my-3" v-if="!auth" @click="accept">미인증</v-btn>
-        <v-btn class="my-3" v-else>인증</v-btn>
+        <v-btn class="my-3" v-if="!auth" @click="accept">인증해주시겠나요</v-btn>
+        <span class="my-3" v-else >인증을 해주셨습니다.</span>
         <!-- 다른 유저면 인증/미인증으로 구분 -->
       </div>
       
@@ -86,16 +86,15 @@ import http from '../../http-common'
       check: false
     }),
     created(){
-      this.check=this.card.authCheck 
+      this.check= (this.card.authCheck ==='true' ? true:false) 
+      console.log(this.check)
       // 본인 여부
       if(this.card.userPk == sessionStorage.getItem("userpk")) {
         this.writer = true
-        console.log("111")
       }
       // 인증 확인 여부
       this.auth = this.card.authUsers.some((res)=>{
         if(sessionStorage.getItem("userpk") == res.userPk){
-          console.log("인증")
           return true
         }
       })
@@ -126,5 +125,8 @@ import http from '../../http-common'
  .stamp{
    width: 50px;
  }
+span{
+  color: #F9802D
+}
 
 </style>
