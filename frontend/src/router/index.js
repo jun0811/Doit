@@ -114,9 +114,10 @@ const routes = [
     props: true,
   },
   {
-    path: "/group/feedupdate",
+    path: "/group/feedupdate/:feedPk",
     name: "FeedUpdate",
     component: FeedUpdate,
+    props: true,
   },
   {
     path: "/mileageshop/product/:product_id",

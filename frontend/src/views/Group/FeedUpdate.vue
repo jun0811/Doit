@@ -1,28 +1,7 @@
 <template>
     <div>
         <Header></Header>
-
         <!-- 그룹 간략 소개 시작 -->
-
-        <hr>
-        <v-container>
-            <v-row class="d-flex justify-center">
-            <v-col cols="4">
-                <h3># Group 1</h3>
-                <p class="ma-0"> 멤버 : 6/10</p>
-                <p class="ma-0"> 2020.01.29 ~ 2021.01.29</p>
-                <p class="ma-0"> #홈트 #운동 #의지</p>
-            </v-col>
-            <v-col cols="4" sm-cols="2" class="d-flex align-center justify-space-around">
-                <div class="group-image">
-                    <img src="" alt="">
-                </div>
-            </v-col>
-            </v-row>
-        </v-container>
-        <hr>
-        <!-- 그룹 소개 끝 -->
-
         <v-container class="pa-3 pa-sm-16">
             <v-card  class="d-flex align-center flex-column my-15 mx-sm-auto px-5 col-sm-10" width=100%>
                 <h3 class="mt-5 mb-3">피드 수정</h3>
@@ -41,7 +20,7 @@
                         </v-col>
                         <v-col cols="9" sm="10" class="pa-0 my-auto">
                             <div>
-                                {{name}}
+                               {{nick}}
                             </div>
                         </v-col>
                     </v-row>
@@ -49,7 +28,7 @@
                         <v-container fluid class="py-5">
                             <v-textarea
                                 label="인증 내용 입력"
-                                v-model="content"
+                                v-model="new_content"
                                 auto-grow
                                 outlined
                                 rows="3"
@@ -92,19 +71,30 @@
 <script>
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import { createFeed } from "@/api/feed/index.js"
+import { updateFeed } from "@/api/feed/index.js"
 
 export default {
-    name :"FeedWrite",
+    name :"FeedUpdate",
     components: {
         Header,
         Footer
     },
+    props:{
+        feedPk: Number,
+        content: String,
+        writer: String,
+    },
+    created() {
+        this.feed= this.feedPk;
+        this.nick = this.writer;
+        this.new_content = this.content;
+    },
     data() {
         return {
-            name: 'Nickname',
+            feed: 0,
+            nick: "",
+            new_content: "",
             selected : '',
-            content :'', // 기존피드가 가지고있던 컨텐트로 엮어주기
             items : [
                 '인증',
                 '정보 공유'
@@ -113,9 +103,7 @@ export default {
             authCnt: 0,
             authDate: '',
             createDate: new Date(), // 변경X
-            feedPk:'',
             feedType: true,
-            groupPk: '5', // 변경필요!
             media: "",
             status: true,
             updateDate: new Date(), // 이게 업데이트 후 변경! 
@@ -133,31 +121,21 @@ export default {
     },
     methods: {
         update() {
-            createFeed( //if 백엔드 URL 완성되면 그 이름에 맞춰서 변경예정
+            updateFeed( //if 백엔드 URL 완성되면 그 이름에 맞춰서 변경예정
                 {
-                    "authCheck": this.authCheck,
-                    "authCnt": this.authCnt,
-                    "authDate": this.authDate,
-                    "content": this.content,
-                    "createDate": this.createDate,
-                    "feedPk": this.feedPk,
+                    "content": this.new_content,
+                    "feedPk": this.feed,
                     "feedType": this.feedType,
-                    "groupPk": this.groupPk,
-                    "media": this.media,
-                    "status": this.status,
-                    "updateDate": this.updateDate,
-                    "userPk": this.$store.state.userpk,
                 },
                 (res) =>{
                     if (res.status){
                     alert("피드가 수정되었습니다.")
                     console.log(res)
-                    this.$router.push('/') // 어디로 보낼지 정하고 변경!
+                    this.$router.go(-1) // 어디로 보낼지 정하고 변경!
                     }
                 },
                 (err) =>{
                     console.log(err)
-                    console.log(this.createDate)
                     alert("수정 실패")
                 }
             )

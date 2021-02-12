@@ -2,11 +2,9 @@
   <div>
     <Header></Header>
     <!-- 그룹 간략 소개 시작 -->
-
     <hr>
       <v-container>
         <v-row class="d-flex justify-start">
-       
           <v-col cols="3" sm-cols="2" class="d-flex align-center  justify-end ml-10">
             <div class="group-image">
                 <img src="" alt="">
@@ -104,8 +102,8 @@
           <v-btn @click="feedRead" text class="ma-4 search-btn" outlined> 검색 </v-btn >
         </v-col>
         <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16">
-          <div v-if="cards.length" class="d-flex align-center flex-column">
-            <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card"></FeedCard>
+          <div v-if="cards.length" class="d-flex align-center flex-column card">
+            <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card" ></FeedCard>
           </div>
           <div v-else> 
             <h2>해당 기간에는 작성된 피드가 없어요🤷‍♂️</h2>
@@ -304,5 +302,7 @@ export default {
   .search-btn {
     border : 1ps solid grey;
   }
-
+  .card{
+    width: 120%;
+  }
 </style>

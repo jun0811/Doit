@@ -2,27 +2,6 @@
     <div>
         <Header></Header>
 
-        <!-- 그룹 간략 소개 시작 -->
-
-  
-        <!-- <v-container>
-            <v-row class="d-flex justify-center">
-            <v-col cols="4">
-                <h3># Group 1</h3>
-                <p class="ma-0"> 멤버 : 6/10</p>
-                <p class="ma-0"> 2020.01.29 ~ 2021.01.29</p>
-                <p class="ma-0"> #홈트 #운동 #의지</p>
-            </v-col>
-            <v-col cols="4" sm-cols="2" class="d-flex align-center justify-space-around">
-                <div class="group-image">
-                    <img src="" alt="">
-                </div>
-            </v-col>
-            </v-row>
-        </v-container> -->
-
-        <!-- 그룹 소개 끝 -->
-
         <v-container class="pa-3 pa-sm-16">
             <v-card  class="d-flex align-center flex-column mb-15 mx-sm-auto px-5 col-sm-10" width=100% max-width="600">
                 <h3 class="my-4" style="width:100%">피드 작성</h3>

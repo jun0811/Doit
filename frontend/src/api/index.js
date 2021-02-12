@@ -17,7 +17,9 @@ const api = {
 
   onUnauthorized() {
     store.commit("LOGOUT");
+    console.log
     alert("로그인 만료");
+    
   },
 
   onFobbiden() {
