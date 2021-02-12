@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <v-row class="d-flex jusity-center">
 
     <v-card
-      class="mx-auto my-12 d-flex flex-column align-center member-card"
-      width="600"
+      class=" my-12 d-flex flex-column align-center justify-center member-card"
+      max-width="600"
+      xs="12"
     >
         <div class="mx-6 my-4 align-self-end">
           <span class="mx-1">팀 스코어 : </span>
@@ -12,8 +13,8 @@
           <span class="team-info">{{totalNum}}</span>
         </div>
         <v-card
-        width="80%"
-        height="200"
+        width="85%"
+        min-height="200"
         class="pa-5"
         >
           {{content}}
@@ -21,7 +22,7 @@
         <v-carousel :show-arrows="false"
         hide-delimiter-background
         light
-        height="250">
+        height="100%">
           <v-carousel-item
             v-for="(page,i) in pageCount"
             :key="i"
@@ -30,7 +31,7 @@
           </v-carousel-item>
         </v-carousel>
     </v-card>
-  </div>
+  </v-row>
 </template>
 
 <script>

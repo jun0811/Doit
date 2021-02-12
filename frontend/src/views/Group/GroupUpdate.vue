@@ -63,8 +63,8 @@
                       <v-select
                         hide-details=""
                         :items="items"
-                        label="카테고리"
-                        v-model="category"
+                        :label="categoryLabel"
+                        v-model="tmp"
                       ></v-select>
                     </v-col>
                   </v-row>
@@ -146,6 +146,12 @@ export default {
       this.hashtag = user.tags
       this.leader = user.leader
       this.category = user.category
+      for (var cate in this.change) {
+        if (this.change[cate] === this.category) {
+          this.categoryLabel = cate
+          console.log(cate)
+          }
+        }
       this.date = user.endDate
       })
     },
@@ -162,9 +168,20 @@ export default {
       end:'',
       content :"",
       word:"",
+      tmp:'',
       hashtag : [],
+      cotegoryLabel:'',
       category : "",
       items: ['운동', '공부', '다이어트', '취미', '독서', '라이프', '그 외'],
+      change :{
+        "운동" : "exercise",
+        "공부" : "study",
+        "다이어트" : "diet",
+        "취미" : "hobby",
+        "독서" : "book",
+        "라이프" : "life",
+        "그 외" : "etc"
+        }
       }
     },
     watch: {
@@ -191,6 +208,9 @@ export default {
           this.minLength = true;
         }else this.minLength = false;
       },
+      tmp(){
+        this.category = this.change[this.tmp]
+      }
     },
     methods: {
       formatDate (date){
