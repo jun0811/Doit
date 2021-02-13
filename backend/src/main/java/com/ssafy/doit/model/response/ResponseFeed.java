@@ -16,7 +16,7 @@ import java.util.List;
 public class ResponseFeed {
     private Long feedPk;
 
-    //private String media;
+    private String media;
     private String content;
     private Long userPk;
     private String writer;
@@ -40,6 +40,7 @@ public class ResponseFeed {
         this.authDate = feed.getAuthDate();
         this.createDate = feed.getCreateDate().toString();
         this.updateDate = feed.getUpdateDate();
+        this.media = feed.getMedia();
         this.authUsers = this.getAuthUsers(feed);
     }
     public List<ResponseUser> getAuthUsers(Feed feed){

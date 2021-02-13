@@ -8,6 +8,7 @@ import com.ssafy.doit.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -20,6 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FeedService {
 
+    @Autowired
+    private S3Service s3Service;
     @Autowired
     private final GroupRepository groupRepository;
     @Autowired
@@ -41,7 +44,7 @@ public class FeedService {
 
     // 그룹 내 피드 생성
     @Transactional
-    public int createFeed(Long userPk, Feed feedReq) throws Exception {
+    public Long createFeed(Long userPk, Feed feedReq) throws Exception {
         Group group = groupRepository.findById(feedReq.getGroupPk()).get();
         User user = userRepository.findById(userPk).get();
 
@@ -49,15 +52,14 @@ public class FeedService {
         if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
 
 //        Optional<Feed> optFeed = feedRepository.findByWriterAndCreateDate(userPk, LocalDate.now().toString());
-//        if(optFeed.isPresent()) return 0;
+//        if(optFeed.isPresent()) throw new Exception("오늘 이미 인증피드를 작성하였습니다.");
 
-        feedRepository.save(Feed.builder()
-            //.media(feedReq.getMedia())
-            .content(feedReq.getContent())
-            .feedType(feedReq.getFeedType())
-            .createDate(LocalDateTime.now())
-            .groupPk(feedReq.getGroupPk())
-            .writer(userPk).build());
+        Feed feed = feedRepository.save(Feed.builder()
+                .content(feedReq.getContent())
+                .feedType(feedReq.getFeedType())
+                .createDate(LocalDateTime.now())
+                .groupPk(feedReq.getGroupPk())
+                .writer(userPk).build());
 
         if(feedReq.getFeedType().equals("true")){
             user.setMileage(user.getMileage() + 100);
@@ -76,7 +78,16 @@ public class FeedService {
                     .mileage("+100")
                     .user(user).build());
         }
-        return 1;
+        return feed.getFeedPk();
+    }
+
+    // 피드 파일 등록/수정
+    @Transactional
+    public void updateImg(Long feedPk, MultipartFile file) throws Exception {
+        Feed feed = feedRepository.findById(feedPk).get();
+        String mediaPath = s3Service.upload(feed.getMedia(),file);
+        feed.setMedia(mediaPath);
+        feedRepository.save(feed);
     }
 
     // 그룹 내 피드 리스트
@@ -118,7 +129,6 @@ public class FeedService {
             feed.ifPresent(selectFeed -> {
                 selectFeed.setContent(feedReq.getContent());
                 selectFeed.setFeedType(feedReq.getFeedType());
-                //selectFeed.setMedia(feedReq.getMedia());
                 selectFeed.setUpdateDate(LocalDateTime.now().toString());
                 feedRepository.save(selectFeed);
             });

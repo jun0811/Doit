@@ -8,10 +8,12 @@ public class ResGroupList {
     private Long groupPk;
     private String name;
     private int score;
+    private String image;
 
     public ResGroupList(Group group){
         this.groupPk = group.getGroupPk();
         this.name = group.getName();
         this.score = group.getScore();
+        this.image = group.getImage();
     }
 }
