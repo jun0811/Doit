@@ -146,10 +146,10 @@ public class UserController {
                 selectUser.setNickname(userReq.getNickname());
                 userRepository.save(selectUser);
             });
-            result = new ResponseBasic(true, "success", null);
+            result = new ResponseBasic(true, "회원정보 수정 success", null);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, "회원정보 수정 fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -165,7 +165,7 @@ public class UserController {
 
             currentUser.setImage(imgPath);
             userRepository.save(currentUser);
-            result = new ResponseBasic(true, "success", null);
+            result = new ResponseBasic(true, "프로필 사진 변경 success", null);
         }
         catch (Exception e){
             e.printStackTrace();
