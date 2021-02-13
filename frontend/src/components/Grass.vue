@@ -1,38 +1,57 @@
 <template>
   <v-container>
     <v-row d-flex>
-      <v-col v-for="(a,idx) in size" :key="idx"  cols="1" class="pa-0">
-        <div class="box"></div>
+      <v-col v-for="(cnt,idx) in size" :key="idx"  cols="1" class="pa-0 mr-2 mb-2">
+        <div class="box" :class="{ color1: check1(cnt), color2: check2(cnt), color3: check3(cnt) }"></div>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-var array = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-// cnt  0 1 2 3 
+import http from "../http-common"
+
 
 export default {
   data: () =>({
-    size: array
-
-  })
+    size: [],
+  }),
+  created () {
+    http.get(`data/grass?userPk=${sessionStorage.getItem("userpk")}`)
+    .then((res)=> {
+      this.size = res.data.object
+    })
+  },
+  methods:{
+    check1 (cnt){
+      if (cnt==1) return true
+      return false
+    },
+    check2 (cnt){
+      if (cnt==2) return true
+      return false
+    },
+    check3 (cnt){
+      if (cnt>=3) return true
+      return false
+    }
+  }
 }
 </script>
 
 <style scoped>
   .color1{
-    /* #FFE0B2 */
+    
+    background: #FFE0B2
   }
-  .color2{
-    /* #FFB74D */
+  .color2{ 
+    background:#FFB74D
   }
   .color3{
-    /* #FB8C00 */
+    background: #FB8C00
   }
   .box{
     border: 1px solid;
-    background:  #FB8C00;
     padding-bottom:100%;
   }
 </style>

@@ -29,7 +29,7 @@
         </v-col>
       </v-row>
       <v-row class="py-3">
-        <v-col class="grass mx-3 mx-sm-16"> 
+        <v-col class="mx-3 mx-sm-16"> 
           <Grass></Grass>
         </v-col>
       </v-row >
@@ -37,12 +37,13 @@
         <v-col 
           cols="defined"
           sm="7"
+          md="6"
           class="ml-3 ml-sm-16 mr-3 mr-sm-0 pa-0"
         > 
         <div class="mb-2">
           내가 작성한 피드
         </div>
-        <FeedList></FeedList>
+          <FeedList></FeedList>
         </v-col>
         <v-col 
           cols="defined"
