@@ -3,6 +3,7 @@ package com.ssafy.doit.controller;
 import com.ssafy.doit.model.chat.ChatRoom;
 import com.ssafy.doit.model.chat.ChatRoomJoin;
 import com.ssafy.doit.model.response.ResponseBasic;
+import com.ssafy.doit.model.response.ResponseChatRoom;
 import com.ssafy.doit.repository.chat.ChatMessageRepository;
 import com.ssafy.doit.service.ChatService;
 import com.ssafy.doit.service.UserService;
@@ -52,7 +53,8 @@ public class ChatController {
         ResponseBasic result = null;
         try{
             Long uid = userService.currentUser();
-            List<ChatRoom> chatRooms = chatService.getList(uid);
+            List<ResponseChatRoom> chatRooms = chatService.getList(uid);
+            System.out.println(chatRooms);
             result = new ResponseBasic(true, "success", chatRooms);
         }catch (Exception e){
             e.printStackTrace();
