@@ -99,8 +99,8 @@ public class FeedService {
 
     // 개인 피드 리스트
     @Transactional
-    public List<ResMyFeed> userFeedList(Long userPk, String start, String end){
-        List<Feed> list = feedRepository.findAllByWriterAndStatusAndCreateDateBetween(userPk, "true", start, end);
+    public List<ResMyFeed> userFeedList(Long userPk){
+        List<Feed> list = feedRepository.findAllByWriterAndStatus(userPk, "true");
         List<ResMyFeed> resList = new ArrayList<>();
         for(Feed feed : list){
             String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
