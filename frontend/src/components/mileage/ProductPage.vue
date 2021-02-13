@@ -9,7 +9,7 @@
         :key="idx"
         class="d-flex justify-center px-4 py-4"
       >
-          <v-card height="100%" width="100%" router-link :to="{name: 'ProductDetail', params: {product_id: item.id}}">
+          <v-card height="100%" width="100%" router-link :to="{name: 'ProductDetail', params: {product_id: String(item.id)}}">
             <v-img
               src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
               class="white--text align-end"

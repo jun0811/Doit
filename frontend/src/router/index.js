@@ -17,6 +17,7 @@ import Delete from "../views/User/Delete.vue";
 import DeleteComplete from "../views/User/DeleteComplete.vue";
 import MileageShop from "../views/Mileage/MileageShop.vue";
 import ProductDetail from "../views/Mileage/ProductDetail.vue";
+import ChatList from "../views/Mileage/ChatList.vue";
 import ProductWrite from "../views/Mileage/ProductWrite.vue";
 import PasswordFind from "../views/User/PasswordFind.vue";
 import Chat from "../views/chat/Chat.vue";
@@ -127,6 +128,11 @@ const routes = [
     path: "/chat",
     name: "Chat",
     component: Chat,
+  },
+  {
+    path: "/chatlist",
+    name: "ChatList",
+    component: ChatList,
   },
 ];
 
