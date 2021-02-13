@@ -15,7 +15,9 @@
         valueKey="value"
         :color="myColors"
         :showTooltip="false"
+        font="NanumSquareRound"
         :rotate="{from: 0, to: 90, numOfOrientation: 0 }"
+        :margin="{top: 0, right: 0, bottom: 0, left: 0 }"
         :wordClick="wordClickHandler"
         class="word word-cloud-img"
         >
