@@ -13,7 +13,7 @@ import java.util.List;
 public class ResMyFeed {
     private Long feedPk;
 
-    //private String media;
+    private String media;
     private String content;
     private Long userPk;
     private String writer;
@@ -39,5 +39,6 @@ public class ResMyFeed {
         this.groupName = groupName;
         this.createDate = feed.getCreateDate().toString();
         this.updateDate = feed.getUpdateDate();
+        this.media = feed.getMedia();
     }
 }

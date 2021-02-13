@@ -17,6 +17,7 @@ public class ResponseGroup {
     private Long leader;
     private String createDate;
     private String endDate;
+    private String image;
     private int score;
     private int totalNum;
     private int maxNum;
@@ -34,6 +35,7 @@ public class ResponseGroup {
         this.score = group.getScore();
         this.totalNum = group.getTotalNum();
         this.maxNum = group.getMaxNum();
+        this.image = group.getImage();
         this.tags = this.getTags(group);
     }
     public List<String> getTags(Group group){

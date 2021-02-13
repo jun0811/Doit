@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,14 +42,27 @@ public class FeedController {
         ResponseBasic result = null;
         try{
             Long userPk = userService.currentUser();
-            int res = feedService.createFeed(userPk,feedReq);
-            if(res == 1)
-                result = new ResponseBasic(true, "success", null);
-            else if(res == 0)
-                result = new ResponseBasic(false, "오늘 이미 인증피드를 작성하였습니다.", null);
+            Long feedPk = feedService.createFeed(userPk,feedReq);
+            result = new ResponseBasic(true, "success", feedPk);
         }catch (Exception e) {
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 피드 이미지 등록/수정
+    @ApiOperation(value = "피드 이미지 등록/수정")
+    @PostMapping("/updateImg")
+    public Object updateImg(@RequestParam Long feedPk, @RequestParam MultipartFile file) {
+        ResponseBasic result = null;
+        try {
+            feedService.updateImg(feedPk, file);
+            result = new ResponseBasic(true, "success", null);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

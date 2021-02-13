@@ -7,6 +7,7 @@ import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.response.ResGroupDetail;
 import com.ssafy.doit.model.response.ResponseGroup;
+import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.service.FeedService;
 import com.ssafy.doit.service.GroupHashTagService;
 import com.ssafy.doit.service.GroupUserService;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -93,7 +95,7 @@ public class GroupController {
             Long userPk = userService.currentUser();
             Long groupPk = groupHashTagService.create( userPk, groupReq);
             groupUserService.join(userPk, groupPk);
-            result = new ResponseBasic(true,"success",null);
+            result = new ResponseBasic(true,"success", groupPk);
         }catch (Exception e){
             e.printStackTrace();
             result = new ResponseBasic(false, "fail", null);
@@ -113,6 +115,22 @@ public class GroupController {
         }catch (Exception e) {
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 그룹 이미지 등록/수정
+    @ApiOperation(value = "그룹 이미지 등록/수정")
+    @PostMapping("/updateImg")
+    public Object updateImg(@RequestParam Long groupPk, @RequestParam MultipartFile file) {
+        ResponseBasic result = null;
+        try {
+            groupHashTagService.updateImg(groupPk, file);
+            result = new ResponseBasic(true, "success", null);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
