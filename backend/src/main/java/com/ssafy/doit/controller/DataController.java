@@ -5,6 +5,7 @@ import com.ssafy.doit.model.CommitUser;
 import com.ssafy.doit.model.HashTag;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.repository.CommitGroupRepository;
 import com.ssafy.doit.repository.CommitUserRepository;
 import com.ssafy.doit.repository.HashTagRepository;
 import com.ssafy.doit.repository.UserRepository;
@@ -33,6 +34,8 @@ public class DataController {
     private HashTagRepository hashTagRepository;
     @Autowired
     private CommitUserRepository commitUserRepository;
+    @Autowired
+    private CommitGroupRepository commitGroupRepository;
 
     // 해시태그 가장 많이 사용된 순서대로 데이터 제공
     @ApiOperation(value = "WordCloud 해시태그 데이터")
@@ -72,9 +75,8 @@ public class DataController {
     public Object grass(Long userPk){
         ResponseBasic result = null;
         try {
-            //Long userPk = userService.currentUser();
             LocalDate today = LocalDate.now();
-            LocalDate before = today.minusDays(30); //60
+            LocalDate before = today.minusDays(29); //59
             List<CommitUser> list = commitUserRepository.findByUserPkAndDateBetweenOrderByDate(userPk,before,today);
             List<Integer> resGrass = new ArrayList<>();
             for(CommitUser cu : list){
@@ -87,4 +89,24 @@ public class DataController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    // 일간 그룹 순위 => 메인 화면에 노출되는 api
+    @ApiOperation(value = "일간 그룹 순위 => 메인 화면에 노출")
+    @GetMapping("/rankingGroup")
+    public Object rankingGroup(){
+        ResponseBasic result = null;
+        try {
+            // 아직 구현 중
+            result = new ResponseBasic(true,"success",null);
+        }catch(Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false,"fail", null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 주간 그룹 순위 => 그룹점수와 개인 마일리지 점수를 제공하는 function
+    // 매주 월요일마다 그 전주(7일)동안 각 그룹의 인증수 비율을 합한 수대로 순위를 매겨
+    // 1~5위부터 그룹 점수 제공하며 각 그룹에 속해 있는 그룹원들에게 마일리지 점수 제공
+    // ((group table에는 그 동안(주간 그룹 순위) 받은 누적 그룹 점수로 명예의 전당으로 활용 가능))
 }
