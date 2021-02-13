@@ -5,6 +5,7 @@ const state = {
   name: null,
   email: null,
   userpk: null,
+
 };
 
 const getters = {
@@ -19,7 +20,8 @@ const getters = {
   },
   getName(state){
     return state.name;
-  }
+  },
+
 };
 
 const mutations = {
@@ -55,6 +57,7 @@ const mutations = {
     sessionStorage.removeItem("name");
     sessionStorage.removeItem("email");
     sessionStorage.removeItem("userpk");
+
   },
 };
 

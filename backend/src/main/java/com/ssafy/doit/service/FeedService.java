@@ -3,14 +3,10 @@ package com.ssafy.doit.service;
 import com.ssafy.doit.model.*;
 import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseFeed;
-import com.ssafy.doit.model.response.ResponseGroup;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -68,14 +64,16 @@ public class FeedService {
             userRepository.save(user);
             mileageRepository.save(Mileage.builder()
                     .content("인증피드 등록 마일리지 지급")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
+                    .mileage("+100")
                     .user(user).build());
         }else if(feedReq.getFeedType().equals("false")){
             user.setMileage(user.getMileage() + 100);
             userRepository.save(user);
             mileageRepository.save(Mileage.builder()
                     .content("공유피드 등록 마일리지 지급")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
+                    .mileage("+100")
                     .user(user).build());
         }
         return 1;
@@ -101,8 +99,8 @@ public class FeedService {
 
     // 개인 피드 리스트
     @Transactional
-    public List<ResMyFeed> userFeedList(Long userPk, String start, String end){
-        List<Feed> list = feedRepository.findAllByWriterAndStatusAndCreateDateBetween(userPk, "true", start, end);
+    public List<ResMyFeed> userFeedList(Long userPk){
+        List<Feed> list = feedRepository.findAllByWriterAndStatus(userPk, "true");
         List<ResMyFeed> resList = new ArrayList<>();
         for(Feed feed : list){
             String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
@@ -180,12 +178,15 @@ public class FeedService {
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(feed.getGroupPk()).get();
 
-        if(!feed.getFeedType().equals("true"))
-            throw new Exception("인증피드가 아닙니다.");
-
         Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
         if(!optGU.isPresent())
             throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
+
+        if(feed.getAuthCheck().equals("true"))
+            throw new Exception("인증완료된 피드입니다.");
+
+        if(!feed.getFeedType().equals("true"))
+            throw new Exception("인증피드가 아닙니다.");
 
         if(userPk == feed.getWriter())
             throw new Exception("자신이 올린 피드에는 인증할 수 없습니다.");
@@ -202,15 +203,18 @@ public class FeedService {
         userRepository.save(user);
         mileageRepository.save(Mileage.builder()
                 .content("인증피드 확인 마일리지 지급")
-                .date(LocalDate.now())
+                .date(LocalDateTime.now())
+                .mileage("+50")
                 .user(user).build());
 
+        int groupTotal = group.getTotalNum();
         Long groupPk = feed.getGroupPk();
         Long writerPk = feed.getWriter();
         User writer = userRepository.findById(writerPk).get();
+        LocalDate date = feed.getCreateDate().toLocalDate();
         int cnt = feed.getAuthCnt();
         int total = groupRepository.findById(groupPk).get().getTotalNum();
-        if (cnt >= Math.round(total * 0.7)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
+        if (cnt >= Math.round(total * 0.1)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
             feed.setAuthDate(LocalDateTime.now().toString());
             // 인증완료되었다는 알림보내기
@@ -219,30 +223,33 @@ public class FeedService {
             userRepository.save(writer);
             mileageRepository.save(Mileage.builder()
                     .content("인증피드 인증 완료 마일리지 지급")
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
+                    .mileage("+100")
                     .user(writer).build());
 
-            Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(writerPk, LocalDate.now());
+            Optional<CommitUser> optCU = commitUserRepository.findByUserPkAndDate(writerPk, date);
             if(optCU.isPresent()){
                 CommitUser cu = optCU.get();
                 cu.setCnt(cu.getCnt() + 1);
                 commitUserRepository.save(cu);
             }else{
                 commitUserRepository.save(CommitUser.builder()
-                        .date(LocalDate.now())
+                        .date(date)
                         .userPk(writerPk)
                         .cnt(1).build());
             }
 
-            Optional<CommitGroup> optCG = commitGroupRepository.findByGroupPkAndDate(groupPk, LocalDate.now());
+            Optional<CommitGroup> optCG = commitGroupRepository.findByGroupPkAndDate(groupPk, date);
             if(optCG.isPresent()){
                 CommitGroup cg = optCG.get();
+                if(cg.getTotal() != groupTotal) cg.setTotal(groupTotal);
                 cg.setCnt(cg.getCnt() + 1);
                 commitGroupRepository.save(cg);
             }else{
                 commitGroupRepository.save(CommitGroup.builder()
-                        .date(LocalDate.now())
+                        .date(date)
                         .groupPk(groupPk)
+                        .total(groupTotal)
                         .cnt(1).build());
             }
         }

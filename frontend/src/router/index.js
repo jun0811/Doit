@@ -20,6 +20,7 @@ import ProductDetail from "../views/Mileage/ProductDetail.vue";
 import ChatList from "../views/Mileage/ChatList.vue";
 import ProductWrite from "../views/Mileage/ProductWrite.vue";
 import PasswordFind from "../views/User/PasswordFind.vue";
+import MileageHistory from "../views/Mileage/MileageHistory.vue";
 import Chat from "../views/chat/Chat.vue";
 
 Vue.use(VueRouter);
@@ -75,6 +76,11 @@ const routes = [
     component: DeleteComplete,
   },
   {
+    path: "/user/mileagehistory",
+    name: "MileageHistory",
+    component: MileageHistory,
+  },
+  {
     path: "/mileageshop",
     name: "MileageShop",
     component: MileageShop,
@@ -109,9 +115,10 @@ const routes = [
     props: true,
   },
   {
-    path: "/group/feedupdate",
+    path: "/group/feedupdate/:feedPk",
     name: "FeedUpdate",
     component: FeedUpdate,
+    props: true,
   },
   {
     path: "/mileageshop/product/:product_id",

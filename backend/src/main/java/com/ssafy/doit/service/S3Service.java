@@ -7,7 +7,14 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.ssafy.doit.model.Feed;
+import com.ssafy.doit.model.Product;
+import com.ssafy.doit.model.request.RequestFeed;
+import com.ssafy.doit.model.request.RequestProduct;
+import com.ssafy.doit.repository.FeedRepository;
+import com.ssafy.doit.repository.ProductRepository;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,11 +22,15 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @NoArgsConstructor
 public class S3Service {
+    public static final String CLOUD_FRONT_DOMAIN_NAME = "ssafydoit.s3.ap-northeast-2.amazonaws.com";
+
     private AmazonS3 s3Client;
 
     @Value("${cloud.aws.credentials.accessKey}")
@@ -33,6 +44,11 @@ public class S3Service {
 
     @Value("${cloud.aws.region.static}")
     private String region;
+
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private FeedRepository feedRepository;
 
     @PostConstruct
     public void setS3Client() {
@@ -71,7 +87,8 @@ public class S3Service {
         // 파일 업로드
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-
+        System.out.println(s3Client.getUrl(bucket, fileName).toString());
         return fileName;
     }
+
 }

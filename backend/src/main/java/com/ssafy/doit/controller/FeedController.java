@@ -73,10 +73,10 @@ public class FeedController {
     // 개인 피드 리스트 (+ 다른유저 피드리스트)
     @ApiOperation(value = "개인 피드 리스트 (+ 다른유저 피드리스트)")
     @GetMapping("/userFeed")
-    public Object userFeed(@RequestParam Long userPk, @RequestParam String start, @RequestParam String end){
+    public Object userFeed(@RequestParam Long userPk){
         ResponseBasic result = null;
         try {
-            List<ResMyFeed> list = feedService.userFeedList(userPk, start, end);
+            List<ResMyFeed> list = feedService.userFeedList(userPk);
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();

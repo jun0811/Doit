@@ -6,5 +6,11 @@ function createFeed(params, success, fail) {
   .then(success)
   .catch(fail);
 } 
+function updateFeed(params, success, fail) {
+  http
+  .put(`feed/updateFeed`,params)
+  .then(success)
+  .catch(fail);
+} 
 
-export { createFeed }
+export { createFeed, updateFeed }

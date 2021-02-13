@@ -3,6 +3,8 @@ package com.ssafy.doit.model.response;
 import com.ssafy.doit.model.user.User;
 import lombok.Getter;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter
 public class ResponseUser {
     private Long userPk;

@@ -1,7 +1,10 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Mileage;
 import com.ssafy.doit.model.request.RequestChangePw;
+import com.ssafy.doit.model.response.ResponseFeed;
+import com.ssafy.doit.model.response.ResponseMileage;
 import com.ssafy.doit.model.response.ResponseUser;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.model.response.ResponseBasic;
@@ -18,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,18 +30,14 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-//@MultipartConfig(
-//        fileSizeThreshold    = 1024,
-//        maxFileSize       = -1,
-//        maxRequestSize      = -1
-//)
-//@CrossOrigin("*")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -85,13 +83,15 @@ public class UserController {
                     return new ResponseEntity<>(result, HttpStatus.OK);
                 }else {
                     String content = "로그인 마일리지 지급";
-                    Optional<Mileage> opt = mileageRepository.findByContentAndDateAndUser(content, LocalDate.now(), user);
+                    String today = LocalDate.now().toString();
+                    Optional<Mileage> opt = mileageRepository.findByContentAndDateAndUser(content, today, user);
                     if(!opt.isPresent()){
                         user.setMileage(user.getMileage() + 50);
                         userRepository.save(user);
                         mileageRepository.save(Mileage.builder()
                                 .content("로그인 마일리지 지급")
-                                .date(LocalDate.now())
+                                .date(LocalDateTime.now())
+                                .mileage("+50")
                                 .user(user).build());
                     }
                     result = new ResponseBasic(true, "success", user);
@@ -138,7 +138,6 @@ public class UserController {
     @PutMapping("/updateInfo")
     public Object updateInfo(@RequestBody User userReq) {
         ResponseBasic result = null;
-        System.out.println("hello");
         try {
             Long userPk = userService.currentUser();
             Optional<User> user = userRepository.findById(userPk);
@@ -155,8 +154,7 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-
-    @ApiOperation(value = "마이페이지 - 프로필사진 변경")
+    @ApiOperation(value = "회원정보(프로필) 수정")
     @PostMapping("/updateImg")
     public Object updateImg(@RequestParam MultipartFile file) {
         ResponseBasic result = null;
@@ -171,7 +169,7 @@ public class UserController {
         }
         catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "프로필 사진 변경 실패", null);
+            result = new ResponseBasic(false, "프로필 사진 변경 fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -195,7 +193,7 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-        // 회원 탈퇴
+    // 회원 탈퇴
     @ApiOperation(value = "회원 탈퇴")
     @PutMapping("/deleteUser")
     public Object deleteUser() {
@@ -233,11 +231,33 @@ public class UserController {
             result.status = true;
             result.data = "공개/비공개 설정정 success";
         }
-       catch (Exception e){
+        catch (Exception e){
             e.printStackTrace();
             result.status = false;
             result.data = "error";
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @ApiOperation(value = "마일리지 내역 리스트")
+    @GetMapping("/mileageList")
+    public Object mileageList(@RequestParam Long userPk){
+        ResponseBasic result = null;
+        try {
+            Long loginPk = userService.currentUser();
+            if(loginPk == userPk){
+                User user = userRepository.findById(loginPk).get();
+                List<Mileage> mileageList = mileageRepository.findAllByUser(user);
+                List<ResponseMileage> resList = new ArrayList<>();
+                for(Mileage mileage : mileageList){
+                    resList.add(new ResponseMileage(mileage));
+                }
+                result = new ResponseBasic( true, "success", resList);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, "fail", null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

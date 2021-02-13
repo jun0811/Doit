@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface CommitUserRepository extends JpaRepository<CommitUser, Long> {
     Optional<CommitUser> findByUserPkAndDate(Long userPk, LocalDate now);
-    List<CommitUser> findByUserPk(Long userPk);
+    List<CommitUser> findByUserPkAndDateBetweenOrderByDate(Long userPk, LocalDate before, LocalDate today);
 }
