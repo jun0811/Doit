@@ -30,26 +30,9 @@
       </v-row>
       <v-row class="py-3">
         <v-col class="grass mx-3 mx-sm-16"> 
-          잔디🌱🌱🌱
+          <Grass></Grass>
         </v-col>
       </v-row >
-      <!-- <v-row class="pt-10">
-        <v-col 
-          cols="defined"
-          sm="7"          
-          class="ml-3 ml-sm-16 pl-1"
-        >
-          내가 작성한 피드
-        </v-col>
-        <v-col
-          class="mr-3 mr-sm-16 ml-3 ml-sm-13 pl-1"
-          cols="defined"
-          sm="3"
-
-        >
-          내가 가입한 그룹
-        </v-col>
-      </v-row> -->
       <v-row class="py-16">
         <v-col 
           cols="defined"
@@ -84,6 +67,7 @@ import Footer from "@/components/common/Footer.vue";
 import FeedList from "@/components/group/FeedList.vue";
 import JoinedGroupList from "@/components/group/JoinedGroupList.vue";
 import http from "../../http-common";
+import Grass from '../../components/Grass.vue';
 
 export default {
   name: "Profile",
@@ -92,6 +76,7 @@ export default {
     Footer,
     FeedList,
     JoinedGroupList,
+    Grass,
   },data() {
     return {
       user: "",
