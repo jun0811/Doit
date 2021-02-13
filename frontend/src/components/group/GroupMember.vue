@@ -22,6 +22,7 @@
         <v-carousel :show-arrows="false"
         hide-delimiter-background
         light
+        width="100%"
         height="100%">
           <v-carousel-item
             v-for="(page,i) in pageCount"

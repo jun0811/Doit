@@ -75,6 +75,7 @@ export default {
   cursor: pointer;
 }
 
+
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .word-cloud-img {
     width: 100%;
