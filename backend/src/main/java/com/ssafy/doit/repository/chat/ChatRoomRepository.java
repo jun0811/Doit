@@ -8,6 +8,5 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
-    @Query("select j.chatRoom from ChatRoomJoin j where j.user.id = :uid")
-    List<ChatRoom> findAllByUser(Long uid);
+    List<ChatRoom> findAllByChatRoomJoins_User_Id(Long uid);
 }

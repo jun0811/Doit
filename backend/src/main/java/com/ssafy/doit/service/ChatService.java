@@ -3,6 +3,7 @@ package com.ssafy.doit.service;
 import com.ssafy.doit.model.Product;
 import com.ssafy.doit.model.chat.ChatRoom;
 import com.ssafy.doit.model.chat.ChatRoomJoin;
+import com.ssafy.doit.model.response.ResponseChatRoom;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +30,7 @@ public class ChatService {
     private final ProductRepository productRepository;
 
     public ChatRoom checkByProduct(Long uid, Long pid) throws Exception {
-        Optional<ChatRoomJoin> opt = chatRoomJoinRepository.findChatRoomJoinByUserAndProduct(uid, pid);
+        Optional<ChatRoomJoin> opt = chatRoomJoinRepository.findChatRoomJoinByUser_IdAndChatRoom_Product_Id(uid, pid);
         if(opt.isPresent())
             return opt.get().getChatRoom();
 
@@ -36,7 +38,7 @@ public class ChatService {
     }
 
     public Optional<ChatRoomJoin> checkByRoom(Long uid, Long rid) throws Exception{
-        return chatRoomJoinRepository.findChatRoomJoinByUserAndChatRoom(uid, rid);
+        return chatRoomJoinRepository.findChatRoomJoinByUser_IdAndChatRoom_Id(uid, rid);
     }
 
     public ChatRoom createRoom(Long uid, Long pid) throws Exception{
@@ -67,8 +69,14 @@ public class ChatService {
         chatRoomJoinRepository.save(chatRoomJoin);
     }
 
-    public List<ChatRoom> getList(Long uid) throws Exception{
-        return chatRoomRepository.findAllByUser(uid);
+    public List<ResponseChatRoom> getList(Long uid) throws Exception{
+        List<ResponseChatRoom> result = new ArrayList<>();
+        List<ChatRoom> chatRooms = chatRoomRepository.findAllByChatRoomJoins_User_Id(uid);
+
+        for(ChatRoom c : chatRooms)
+            result.add(new ResponseChatRoom(c, uid));
+
+        return result;
     }
 
     public ChatRoom getRoom(Long rid) throws Exception{

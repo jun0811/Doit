@@ -1,39 +1,114 @@
 <template>
-  <div class="room">
-    <h1>title</h1>
-    <hr>
+  <div>
+    <Header></Header>
+    <NavBar></NavBar>
+    <v-container class="container-width container-style">
+      <!-- <v-virtual-scroll
+        height="300"
+      > -->
 
-    <div v-for="(m, idx) in msg" :key="idx">
-      <div v-bind:class="m.style">
-      <h5 style="margin:3px">
-        {{m.userPk}}
-        </h5>
-      {{m.message}}
+      <!-- 상단 이미지/상품 이름/가격 표시 영역 시작 -->
+      <v-row>
+        <v-col cols="2">
+          <img 
+            :src="productImg" 
+            alt="product-img"
+            class="prd-img"
+          >
+        </v-col>
+        <v-col cols="10" class="name-price-style d-flex flex-column justify-center">
+          <v-row class="mb-3">
+            {{ productName }}
+          </v-row>
+          <v-row class="mb-1 price-style">
+            {{ productPrice }} 마일리지
+          </v-row>
+        </v-col>
+      </v-row>
+      <!-- 상단 이미지/상품 이름/가격 표시 영역 끝 -->
+
+      <hr class="mb-3">
+      <div v-for="(m, idx) in msg" :key="idx">
+        <!-- 메세지 보낸 사람이 현재 유저일 경우(user1일 경우) user1의 닉네임 표시 -->
+        <div v-if="m.userPk==user1['userPk']" class="d-flex flex-column align-end">
+          <v-row class="mb-3 mr-3">
+            {{user1['userNick']}}
+          </v-row>
+          <v-row class="mb-6 mr-3 my-message-box">
+            {{m.message}}
+          </v-row>
+        </div>
+        <!-- 메세지 보낸 사람이 상대방일 경우(user2일 경우) user2의 닉네임 표시 -->
+        <div v-else class="d-flex flex-column align-start">
+          <v-row class="ml-3 mb-3">
+            {{user2['userNick']}}
+          </v-row>
+          <v-row class="ml-3 mb-6 other-message-box">
+            {{m.message}}
+          </v-row>
+        </div>
+
       </div>
-    </div>
-    <hr />
-    <input type="text" v-model="content" placeholder="보낼 메세지" size="100" />
-    <button @click="sendMessage()"> SEND</button>
+        <hr class="mt-3">
+      <!-- </v-virtual-scroll> -->
+
+      <!-- 채팅 입력칸, 보내기 버튼 표시 영역 시작 -->
+      <v-row class="mt-3">
+        <v-col cols="10">
+          <v-text-field
+            label="메세지를 입력하세요."
+            v-model="content" 
+            single-line
+            outlined
+            @keyup.enter="sendMessage()"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="2" class="d-flex justify-start">
+          <div class="send-icon">
+            <font-awesome-icon 
+              icon="paper-plane" 
+              @click="sendMessage()"
+            /> 
+          </div>
+          <!-- <button @click="sendMessage()">SEND</button> -->
+        </v-col>
+      </v-row>
+      <!-- 채팅 입력칸, 보내기 버튼 표시 영역 끝 -->
+    </v-container>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
+import Header from "@/components/common/Header.vue";
+import NavBar from "@/components/common/NavBar.vue";
+import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
 export default {
   name: "Chat",
-    data: () => {
+  components: {
+    Header,
+    NavBar,
+    Footer,
+  },
+  data: () => {
     return {
-      roomid : 13,
-      id : 105,
-      nickname: '버징가',
+      roomid : 14,
+      id : 84,
+      productImg: '',
       idx:0,
       msg:[],
       room: '',
       content:'',
-      stompClient:null
+      stompClient:null,
+      product: '',
+      productName: '',
+      productPrice: '',
+      user1: {'userPk' : 0, 'userNick' : ''},
+      user2: {'userPk' : 0, 'userNick' : ''},
     }
   },
   created(){
@@ -42,8 +117,16 @@ export default {
     http.get(`/chat/room/${this.roomid}`)
     .then(res => {
         console.log('res', res);
+        this.productImg = res.data.object.room.product.image
+        this.product = res.data.object.room.product
+        this.productName = this.product.title
+        this.productPrice = this.product.mileage
         this.msg = res.data.object.messages;
         this.room = res.data.object.room;
+        this.user1['userPk'] = res.data.object.currentUser.userPk
+        this.user1['userNick'] = res.data.object.currentUser.nickname
+        this.user2['userPk'] = res.data.object.other.userPk
+        this.user2['userNick'] = res.data.object.other.nickname
         this.connect();
     })
   },
@@ -95,11 +178,79 @@ export default {
 };
 </script>
 <style scoped>
+.container-width {
+width: 600px; 
+/* height: 400px; */
+margin-top: 50px;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+    .container-width {
+      width: 370px;
+    }
+}
+
+.container-style {
+  /* background-color: #DCDCDC; */
+  border: 1px solid grey;
+  border-radius: 15px;
+}
 .myMsg{
 text-align: right;
 color : gray;
 }
 .otherMsg{
   text-align: left;
+}
+
+.prd-img {
+  width: 80%;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .prd-img {
+    width: 100%;
+  }
+}
+
+.name-price-style {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+.price-style {
+  color: grey;
+  font-size: 80%;
+}
+
+.other-message-box {
+  background-color: #EEEEEE;
+  border-radius: 20px;
+  max-width: 40%;
+  font-size: 110%;
+  padding: 10px;
+  word-break: break-all;
+}
+
+.my-message-box {
+  background-color: #F9802D;
+  border-radius: 20px;
+  max-width: 40%;
+  font-size: 110%;
+  padding: 10px;
+  color: white;
+  word-break: break-all;
+}
+
+.send-icon {
+  font-size: 40px;
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .send-icon {
+    font-size: 30px;
+    cursor: pointer;
+    padding-top: 8px;
+  }
 }
 </style>

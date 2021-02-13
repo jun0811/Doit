@@ -2,41 +2,29 @@
 <div>
   <Header></Header>
   <NavBar></NavBar>
-    <v-container class="container-width">
-        <v-row>
-          <v-col class="img-wrapper">
-            <img class="product-img" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80" alt="product image">
+  <v-container class="container-width">
+    <v-card>
+      <v-row>
+        <v-col cols="11" class="ml-3">
+          <h3>나의 채팅 목록</h3>
+        </v-col>
+      </v-row>
+      <div v-for="(chatting, idx) in chattings" :key="idx">
+        <v-row class="ma-3">
+          <v-col cols="2" class="pl-6">
+            <img src="" alt="other-profile">
           </v-col>
-        </v-row>
-        <v-row class="my-3 px-6 d-flex align-center">
-          <span class="profile-wrapper pa-0 d-flex ">
-            <img
-            class="profile-img" 
-            src="https://images.unsplash.com/photo-1529092419721-e78fb7bddfb2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=964&q=80" 
-            alt="글쓴이 이미지"
+          <v-col cols="5">
+            상대방 닉네임
+          </v-col>
+          <v-col cols="2" class="pr-6">
+            <img 
+              :src="chatting.product.image" 
+              alt="product-img"
+              class="list-prd-img"
             >
-          </span>
-          <span class="pl-4">
-            {{product.nickname}}
-          </span>
-        </v-row>
-        <v-row class="d-flex justify-center mt-2">
-          <hr class="mb-4 line">
-        </v-row>
-        <v-row class="d-flex flex-column align-start mx-0 mx-sm-1">
-          <v-row class="prd-title pb-0">
-              {{product.title}}
-          </v-row>
-          <v-row class="prd-category">카테고리: {{product.category}}</v-row>
-          <v-row class="prd-mileage">{{product.mileage}} 마일리지</v-row>
-          <v-row class="prd-content py-5">{{product.content}}</v-row>
-        </v-row>
-        <v-row class="d-flex justify-center">
-          <hr class="mt-4 line">
-        </v-row>
-        <v-row class="d-flex justify-center">
-          <v-col class="d-flex justify-center">
-            <!-- <ChatRoom :product_id="product_id"></ChatRoom> -->
+          </v-col>
+          <v-col cols="3">
             <v-dialog
               transition="dialog-bottom-transition"
               max-width="600"
@@ -46,11 +34,10 @@
                 <v-btn
                   class="deal-btn"
                   text
-                  large
                   v-bind="attrs"
                   v-on="on"
-                  @click="chatting"
-                >채팅으로 거래하기</v-btn>
+                  @click="enterRoom(chatting.id)"
+                >채팅방 들어가기</v-btn>
               </template>
               <template v-slot:default="dialog">
                 <v-card>
@@ -143,32 +130,34 @@
             </v-dialog>
           </v-col>
         </v-row>
-    </v-container>
+     
+        
+      </div>
+    </v-card>
+  </v-container>
   <Footer></Footer>
-
 </div>
+  
 </template>
 
 <script>
-import "@/assets/css/profile.css";
 import Header from "@/components/common/Header.vue";
 import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
-// import ChatRoom from "@/components/mileage/ChatRoom.vue";
-import http from "../../http-common";
+import http from '../../http-common'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
 export default {
-  name: "ProductDetail",
+  name: "ChatList",
   components: {
     Header,
     NavBar,
     Footer,
-    // ChatRoom,
   },
   data() {
     return {
+      chattings: [], 
       product: '',
       user : 'nickname',
       seller: '',
@@ -187,21 +176,12 @@ export default {
       roomCheck: false
     }
   },
-  props:{
-    product_id: String,
-  },
   created() {
-    this.id = this.$store.state.account.userpk;
-
-    http.get(`/product/${this.product_id}`)
-    .then((res)=>{
-      this.product = res.data.object
-      this.seller = this.product.user_pk
-    })   
-    // var objDiv = document.getElementById("scroll"); 
-    // objDiv.scrollTop = objDiv.scrollHeight;
-  },
-  computed: {
+    http.get('/chat/getList')
+    .then(res => {
+      this.chattings = res.data.object
+      // console.log(this.chattings)
+    })
   },
   methods: {
     sendMessage(){
@@ -213,6 +193,21 @@ export default {
         this.stompClient.send("/publish/chat", JSON.stringify(chatMessage),{"accessToken": this.$store.getters.getAccessToken})
         this.content=''
     }
+    },    
+    enterRoom(v) {
+      http.get(`/chat/room/${v}`)
+      .then(res => {
+          this.productImg = res.data.object.room.product.image
+          this.productName = res.data.object.room.product.title
+          this.productPrice = res.data.object.room.product.mileage
+          this.msg = res.data.object.messages;
+          this.room = res.data.object.room;
+          this.user1['userPk'] = res.data.object.currentUser.userPk
+          this.user1['userNick'] = res.data.object.currentUser.nickname
+          this.user2['userPk'] = res.data.object.other.userPk
+          this.user2['userNick'] = res.data.object.other.nickname
+          this.connect();
+      }) 
     },
     connect() {
       const serverURL = "http://localhost:8080/ws";
@@ -245,141 +240,18 @@ export default {
         }
       );
     },
-    enterRoom(v) {
-      http.get(`/chat/room/${v}`)
-      .then(res => {
-          this.productImg = res.data.object.room.product.image
-          this.productName = res.data.object.room.product.title
-          this.productPrice = res.data.object.room.product.mileage
-          this.msg = res.data.object.messages;
-          this.room = res.data.object.room;
-          this.user1['userPk'] = res.data.object.currentUser.userPk
-          this.user1['userNick'] = res.data.object.currentUser.nickname
-          this.user2['userPk'] = res.data.object.other.userPk
-          this.user2['userNick'] = res.data.object.other.nickname
-          this.connect();
-      })       
-    },
-    chatting() {
-      http.get('chat/getList')
-      .then(res => {
-        this.roomCheck = res.data.object.some((res) => {
-          if(this.product.id == res.product.id) {
-            this.roomid = res.id
-            return true
-          }
-        })
-      })
-      // console.log(this.roomCheck)
-
-      if(this.roomCheck == true) {
-        this.enterRoom(this.roomid)
-      }
-      else {
-        // console.log(this.seller, Number(this.id))
-        if (this.seller !== Number(this.id)) {    // 02월 13일 이 부분부터 해야함(판매자와 유저가 같을 경우 어떻게 처리할 것인지!)
-          http.post(`chat/createRoom?product_pk=${this.product.id}`)
-          .then((res) => {
-            console.log(this.product.id)
-            const val = res.data.object.id
-            this.enterRoom(val)
-          })
-        }
-        else {
-          this.$router.push('/chatlist')
-        }
-      }
-
-
-    }
   }
-};
+
+}
 </script>
 
 <style scoped>
-.container-width {
-width: 600px; 
-margin-top: 50px;
+.list-prd-img {
+  width: 70%;
+  height: 60%;
 }
-
-@media only screen and (min-width: 300px) and (max-width: 599px) {
-    .container-width {
-      width: 370px;
-    }
-}
-
-.img-wrapper {
-  width:600px;
-  height:400px;
-}
-
-@media only screen and (min-width: 300px) and (max-width: 599px) {
-  .img-wrapper {
-    width:370px;
-    height:270px;
-  }
-}
-
-.line {
-  width:570px;
-}
-
-@media only screen and (min-width: 300px) and (max-width: 599px) {
-  .line {
-    width:340px;
-  }
-}
-
-.product-img {
-  width: 100%;
-  height:100%;
-  overflow: hidden;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.profile-img {
-  width: 50px;
-  height: 50px;
-  object-fit:cover;
-  border-radius: 50%;
-  border : 3px solid orange;
-}
-
-.prd-title {
-  font-size: 20px;
-  font-weight:bold;
-  padding:12px;
-  margin:6px;
-  /* width: 100%; */
-}
-
-.prd-category {
-  font-size: 13px;
-  padding: 12px;
-  /* margin-bottom: 6px; */
-  margin-left: 6px;
-  color: grey;
-}
-
-.prd-mileage {
-  font-size : 13px;
-  padding-left:12px;
-  margin:6px;
-  height: 100%;
-  line-height: 44px;
-}
-
-.prd-content {
-  font-size : 15px;
-  padding-left: 12px;
-  padding-right: 12px;
-  margin:6px;
-}
-
-
 .deal-btn {
-  margin:30px;
+  /* margin:30px; */
   border: 2px solid orange;
   border-radius: 15px;
   background-color:white;
