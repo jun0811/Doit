@@ -21,12 +21,14 @@ public class CommitGroup {
     private int total;
     private LocalDate date;
     private int cnt;
+    private double calc;
 
     @Builder
-    public CommitGroup(LocalDate date, Long groupPk, int total, int cnt){
+    public CommitGroup(LocalDate date, Long groupPk, int total, int cnt, double calc){
         this.date = date;
         this.groupPk = groupPk;
         this.total = total;
         this.cnt = cnt;
+        this.calc = calc;
     }
 }
