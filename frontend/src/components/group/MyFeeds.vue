@@ -2,7 +2,7 @@
   <v-card
     :loading="loading"
     class="mx-auto my-12"
-    width="550"
+    width="95%"
   >
     <template slot="progress">
       <v-progress-linear
@@ -72,7 +72,7 @@ import http from '../../http-common'
       check: false
     }),
     created(){
-      console.log(this.card)
+      // console.log(this.card)
       this.check = this.card.authCheck
     },
     methods: {
