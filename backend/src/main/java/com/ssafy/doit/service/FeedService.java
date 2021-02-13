@@ -207,13 +207,12 @@ public class FeedService {
                 .mileage("+50")
                 .user(user).build());
 
-        int groupTotal = group.getTotalNum();
         Long groupPk = feed.getGroupPk();
         Long writerPk = feed.getWriter();
         User writer = userRepository.findById(writerPk).get();
         LocalDate date = feed.getCreateDate().toLocalDate();
         int cnt = feed.getAuthCnt();
-        int total = groupRepository.findById(groupPk).get().getTotalNum();
+        int total = group.getTotalNum();
         if (cnt >= Math.round(total * 0.1)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
             feed.setAuthDate(LocalDateTime.now().toString());
@@ -239,17 +238,34 @@ public class FeedService {
                         .cnt(1).build());
             }
 
+            int groupTotal = group.getTotalNum();
             Optional<CommitGroup> optCG = commitGroupRepository.findByGroupPkAndDate(groupPk, date);
             if(optCG.isPresent()){
                 CommitGroup cg = optCG.get();
                 if(cg.getTotal() != groupTotal) cg.setTotal(groupTotal);
-                cg.setCnt(cg.getCnt() + 1);
+                int authCnt = cg.getCnt() + 1;
+                
+                double calc = 0;
+                if(groupTotal > 9){
+                    calc = authCnt/(double)groupTotal*100.0;
+                    calc += calc * 1.05 * 2;
+                }else if(groupTotal > 4){
+                    calc = authCnt/(double)groupTotal*100.0;
+                    calc += calc * 1.05;
+                }else{
+                    calc = authCnt/(double)groupTotal*100.0;
+                }
+
+                cg.setCnt(authCnt);
+                cg.setCalc(Math.round(calc*10)/10.0);
                 commitGroupRepository.save(cg);
             }else{
+                double calc = 1.0/(double)groupTotal*100.0;
                 commitGroupRepository.save(CommitGroup.builder()
                         .date(date)
                         .groupPk(groupPk)
                         .total(groupTotal)
+                        .calc(Math.round(calc*10)/10.0)
                         .cnt(1).build());
             }
         }
