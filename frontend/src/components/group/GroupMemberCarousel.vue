@@ -1,8 +1,8 @@
 <template>
   <v-row
-    class="my-6 mx-12 d-flex align-center flex-wrap justify-space-between"
+    class="mt-6 mb-12 mx-sm-12 d-flex align-center flex-wrap justify-space-between"
   >
-    <v-col cols="5" class="profile-card d-flex align-center" v-for="(item, idx) in paginatedData" :key="idx">
+    <v-col cols="12" sm="5" md="5" lg="5" class="profile-card d-flex align-center mx-xm-6" v-for="(item, idx) in paginatedData" :key="idx">
       <img class="profile-image">
       <span class="mx-2">{{item.nickname}}</span>
       <v-btn v-if="loginUser==leader && item.userPk != leader" normal x-small class="px-0" @click="kickout(item.userPk)">강퇴</v-btn>

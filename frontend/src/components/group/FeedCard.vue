@@ -12,34 +12,27 @@
       ></v-progress-linear>
     </template>
     <!-- 모달 : 수정 삭제 -->
-    <div class="d-flex justify-end" v-if="writer">
-      <v-dialog
-        width="350"
-        transition="dialog-bottom-transition"
-        max-width="600"
+    <v-card-title v-if="writer">
+      <v-spacer></v-spacer>
+      <v-menu
+        bottom
+        left
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
-            text
+            text-dark
+            icon
             v-bind="attrs"
             v-on="on"
-          ><font-awesome-icon icon="ellipsis-h"/> </v-btn>
+          ><v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
         </template>
-        <template v-slot:default="dialog">
-          <v-card>
-              <v-btn class="green--text"  text width="100%">피드 수정 </v-btn>
-              <v-btn class="red--text" @click="feedDelete" text width="100%">피드 삭제 </v-btn>              
-            <v-card-actions class="justify-end">
-              <v-btn
-                text
-                @click="dialog.value = false"
-              >Close</v-btn>
-            </v-card-actions>
-          </v-card>
-        </template>
-      </v-dialog>
-      
-    </div>
+        <v-list>
+          <v-btn class="green--text" @click="feedUpdate" text width="100%">피드 수정 </v-btn>
+          <v-btn class="red--text" @click="feedDelete" text width="100%">피드 삭제 </v-btn>    
+        </v-list>
+      </v-menu>
+    </v-card-title>
     <v-img
       height="250"
       src="https://wonderfulmind.co.kr/wp-content/uploads/2018/05/knitting.jpg"
@@ -50,22 +43,20 @@
     <v-card-text>
       <v-row>
        <v-col class="col-8">
-         <span>{{this.card.writer}}</span>
-          <div>작성날짜: {{this.card.createDate.slice(0,10)}}</div>
+          작성자:<span> {{this.card.writer}}</span>
+         <div> 작성날짜: {{this.card.createDate.slice(0,10)}}</div>
         </v-col>
-        <v-col  v-if="check" class="col-4 d-flex justify-end">
-          <img src="@/assets/img/stamp.png" class="stamp">
+        <v-col  class="col-4 d-flex justify-end">
+          <img v-if="check" src="@/assets/img/stamp.png" class="stamp">
         </v-col>
       </v-row>
-      <!-- 본인이면 피드 수정 -->
+      <!-- 본인이면 피드 수정 --> 
       <div v-if="!writer">
-        <v-btn class="my-3" v-if="!auth" @click="accept">미인증</v-btn>
-        <v-btn class="my-3" v-else>인증</v-btn>
+        <v-btn outlined class="my-3 btn" v-if="!auth" @click="accept" >인증</v-btn>
+        <span class="my-3" v-else >인증을 해주셨습니다.</span>
         <!-- 다른 유저면 인증/미인증으로 구분 -->
       </div>
-      
     </v-card-text>
-
     <v-divider class="mx-4"></v-divider>
   </v-card>
 </template>
@@ -86,16 +77,14 @@ import http from '../../http-common'
       check: false
     }),
     created(){
-      this.check=this.card.authCheck 
+      this.check= (this.card.authCheck ==='true' ? true:false) 
       // 본인 여부
       if(this.card.userPk == sessionStorage.getItem("userpk")) {
         this.writer = true
-        console.log("111")
       }
       // 인증 확인 여부
       this.auth = this.card.authUsers.some((res)=>{
         if(sessionStorage.getItem("userpk") == res.userPk){
-          console.log("인증")
           return true
         }
       })
@@ -118,6 +107,9 @@ import http from '../../http-common'
           }
         )
       },
+      feedUpdate(){
+        this.$router.push({name:"FeedUpdate",params:{feedPk:Number(this.card.feedPk),"content":this.card.content, "writer":this.card.writer}})
+      }
     }
   }
 </script>
@@ -126,5 +118,12 @@ import http from '../../http-common'
  .stamp{
    width: 50px;
  }
+  span{
+  color: #F9802D
+  }
+  .btn{
+    border: 1px solid #F9802D;
+    color: #F9802D
+  }
 
 </style>

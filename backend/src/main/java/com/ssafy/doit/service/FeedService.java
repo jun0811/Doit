@@ -207,6 +207,7 @@ public class FeedService {
                 .mileage("+50")
                 .user(user).build());
 
+        int groupTotal = group.getTotalNum();
         Long groupPk = feed.getGroupPk();
         Long writerPk = feed.getWriter();
         User writer = userRepository.findById(writerPk).get();
@@ -241,12 +242,14 @@ public class FeedService {
             Optional<CommitGroup> optCG = commitGroupRepository.findByGroupPkAndDate(groupPk, date);
             if(optCG.isPresent()){
                 CommitGroup cg = optCG.get();
+                if(cg.getTotal() != groupTotal) cg.setTotal(groupTotal);
                 cg.setCnt(cg.getCnt() + 1);
                 commitGroupRepository.save(cg);
             }else{
                 commitGroupRepository.save(CommitGroup.builder()
                         .date(date)
                         .groupPk(groupPk)
+                        .total(groupTotal)
                         .cnt(1).build());
             }
         }

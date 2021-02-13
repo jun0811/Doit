@@ -16,14 +16,17 @@ public class CommitGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date;
     private Long groupPk;
+    @Column(name="`group_total`")
+    private int total;
+    private LocalDate date;
     private int cnt;
 
     @Builder
-    public CommitGroup(LocalDate date, Long groupPk, int cnt){
+    public CommitGroup(LocalDate date, Long groupPk, int total, int cnt){
         this.date = date;
         this.groupPk = groupPk;
+        this.total = total;
         this.cnt = cnt;
     }
 }

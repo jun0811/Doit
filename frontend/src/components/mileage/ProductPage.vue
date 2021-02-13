@@ -1,7 +1,7 @@
 <template>
   <v-container class="px-0 px-md-16">
     <v-row
-      class="d-flex align-center flex-wrap justify-center"
+      class="d-flex align-center flex-wrap justify-start"
     > 
       <v-col
         xs="12"
@@ -60,7 +60,7 @@ import http from "../../http-common";
       }
     },
     watch: {
-      option: function () {
+      keyword: function () {
         this.getProducts()
       }
     }
