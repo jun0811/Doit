@@ -28,7 +28,7 @@ public class ChatService {
     private final ProductRepository productRepository;
 
     public ChatRoom checkByProduct(Long uid, Long pid) throws Exception {
-        Optional<ChatRoomJoin> opt = chatRoomJoinRepository.findChatRoomJoinByUserAndProduct(uid, pid);
+        Optional<ChatRoomJoin> opt = chatRoomJoinRepository.findChatRoomJoinByUser_IdAndChatRoom_Product_Id(uid, pid);
         if(opt.isPresent())
             return opt.get().getChatRoom();
 
@@ -36,7 +36,7 @@ public class ChatService {
     }
 
     public Optional<ChatRoomJoin> checkByRoom(Long uid, Long rid) throws Exception{
-        return chatRoomJoinRepository.findChatRoomJoinByUserAndChatRoom(uid, rid);
+        return chatRoomJoinRepository.findChatRoomJoinByUser_IdAndChatRoom_Id(uid, rid);
     }
 
     public ChatRoom createRoom(Long uid, Long pid) throws Exception{
