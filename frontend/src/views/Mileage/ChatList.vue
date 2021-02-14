@@ -5,30 +5,33 @@
   <v-container class="container-width">
     <v-card>
       <v-row>
-        <v-col cols="11" class="ml-3">
-          <h3>나의 채팅 목록</h3>
+        <v-col cols="11" class="pl-10">
+          <h2>나의 채팅 목록</h2>
         </v-col>
       </v-row>
       <div v-for="(chatting, idx) in chattings" :key="idx">
-        <v-row class="ma-3">
-          <v-col cols="2" class="pl-6">
-            <img src="" alt="other-profile">
+        <v-row class="ma-3 d-flex align-center">
+          <v-col cols="3" sm="2" class="pl-6">
+            <img 
+              :src="chatting.otherUser.image" 
+              alt="other-profile"
+              class="other-user-img"
+            >
           </v-col>
-          <v-col cols="5">
-            상대방 닉네임
+          <v-col cols="6" sm="5">
+            {{ chatting.otherUser.nickname }}
           </v-col>
-          <v-col cols="2" class="pr-6">
+          <v-col cols="3" sm="2" class="pr-6">
             <img 
               :src="chatting.product.image" 
               alt="product-img"
               class="list-prd-img"
             >
           </v-col>
-          <v-col cols="3">
+          <v-col cols="12" sm="3" class="d-flex justify-center">
             <v-dialog
-              transition="dialog-bottom-transition"
-              max-width="600"
-              hide-overlay
+              scrollable
+              max-width="600px"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -40,71 +43,66 @@
                 >채팅방 들어가기</v-btn>
               </template>
               <template v-slot:default="dialog">
-                <v-card>
-                  <!-- 채팅 상단부: 상품 이름/가격, 닫기 버튼 표시 시작-->
-                  <v-toolbar
-                    class="toolbar"
-                    elevation="0"
-                    style="height: 65px;"
-                  >
+              <v-card>
+                <v-card-title>
                   <v-container>
-                    <v-row class="py-5">
-                      <v-col cols="2" class="mt-1">
+                    <v-row>
+                      <v-col cols="3" sm="2" class="mt-1">
                         <img 
                           :src="productImg" 
                           alt="product-img"
                           class="prd-img"
-                        >
+                        >    
                       </v-col>
-                      <v-col cols="7" class="name-price-style d-flex flex-column justify-center mt-10">
-                        <v-row class="mb-3">
-                          {{ productName }}
+                      <v-col cols="6" sm="8" class="d-flex flex-column justify-center">
+                        <v-row class="prd-name">
+                          <v-col class="">
+                            {{ productName }}  
+                          </v-col>
                         </v-row>
-                        <v-row class="mb-1 price-style">
+                        <v-row class="prd-mileage">
+                          <v-col class="">
                           {{ productPrice }} 마일리지
+                          </v-col>
                         </v-row>
                       </v-col>
-                      <v-col cols="3" class="mt-5">
-                        <v-card-actions class="justify-end">
-                          <v-btn
-                            text
-                            @click="dialog.value = false"
-                          >닫기</v-btn>
-                        </v-card-actions>                        
+                      <v-col cols="3" sm="2" class="d-flex flex-column justify-center">
+                        <v-btn
+                          text
+                          @click="dialog.value = false"
+                        >닫기</v-btn>                          
                       </v-col>
-                    </v-row>   
-                  </v-container>  
-                  </v-toolbar>
-                  <!-- 채팅 상단부: 상품 이름/가격, 닫기 버튼 표시 끝-->             
-                  <v-card-text 
-                    style="padding-top: 100px; padding-bottom: 90px; min-height:900px;"
-                    class="scroll"
-                  >
-                    <div v-for="(m, idx) in msg" :key="idx">
-                      <!-- 메세지 보낸 사람이 현재 유저일 경우(user1일 경우) user1의 닉네임 표시 -->
-                      <div v-if="m.userPk==user1['userPk']" class="d-flex flex-column align-end">
-                        <v-row class="mb-3 mr-3">
-                          {{user1['userNick']}}
-                        </v-row>
-                        <v-row class="mb-6 mr-3 my-message-box">
-                          {{m.message}}
-                        </v-row>
-                      </div>
-                      <!-- 메세지 보낸 사람이 상대방일 경우(user2일 경우) user2의 닉네임 표시 -->
-                      <div v-else class="d-flex flex-column align-start">
-                        <v-row class="ml-3 mb-3">
-                          {{user2['userNick']}}
-                        </v-row>
-                        <v-row class="ml-3 mb-6 other-message-box">
-                          {{m.message}}
-                        </v-row>
-                      </div>
+                    </v-row>
+                  </v-container>
+                </v-card-title>
+                <v-divider></v-divider>
+                <v-card-text class="card-style" style="padding-top: 24px;" id="app_chat_list">
+                  <div v-for="(m, idx) in msg" :key="idx">
+                    <!-- 메세지 보낸 사람이 현재 유저일 경우(user1일 경우) user1의 닉네임 표시 -->
+                    <div v-if="m.userPk==user1['userPk']" class="d-flex flex-column align-end">
+                      <v-row class="mb-3 mr-3">
+                        {{user1['userNick']}}
+                      </v-row>
+                      <v-row class="mb-6 mr-3 my-message-box">
+                        {{m.message}}
+                      </v-row>
                     </div>
-                  </v-card-text>
-                  <!-- 메세지 입력칸, send 아이콘 표시 시작 -->
-                  <v-container class="input-style">
-                    <v-row class="mt-3 mb-3 input-style2">
-                      <v-col cols="8" sm="10">
+                    <!-- 메세지 보낸 사람이 상대방일 경우(user2일 경우) user2의 닉네임 표시 -->
+                    <div v-else class="d-flex flex-column align-start">
+                      <v-row class="ml-3 mb-3">
+                        {{user2['userNick']}}
+                      </v-row>
+                      <v-row class="ml-3 mb-6 other-message-box">
+                        {{m.message}}
+                      </v-row>
+                    </div>
+                  </div>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-container>
+                    <v-row class="">
+                      <v-col cols="10">
                         <v-text-field
                           label="메세지를 입력하세요."
                           v-model="content" 
@@ -112,26 +110,29 @@
                           outlined
                           @keyup.enter="sendMessage()"
                           background-color="white"
-                        ></v-text-field>
+                        ></v-text-field>                        
                       </v-col>
-                      <v-col cols="2" class="d-flex justify-start">
+                      <v-col cols="2" class="d-flex justify-center">
                         <div class="send-icon">
                           <font-awesome-icon 
                             :icon="['far', 'paper-plane']"
                             @click="sendMessage()"                         
                           /> 
-                        </div>
+                        </div>                        
                       </v-col>
-                    </v-row> 
-                  </v-container>    
-                  <!-- 메세지 입력칸, send 아이콘 표시 끝 -->             
-                </v-card>
+                    </v-row>
+                  </v-container>
+                </v-card-actions>
+              </v-card>
               </template>
-            </v-dialog>
+            </v-dialog>            
           </v-col>
         </v-row>
-     
-        
+        <v-row>
+          <v-col>
+            <v-divider></v-divider>
+          </v-col>
+        </v-row>
       </div>
     </v-card>
   </v-container>
@@ -173,15 +174,27 @@ export default {
       productPrice: '',
       user1: {'userPk' : 0, 'userNick' : ''},
       user2: {'userPk' : 0, 'userNick' : ''},
-      roomCheck: false
+      roomCheck: false,
+      bottom_flag: true,
     }
   },
   created() {
     http.get('/chat/getList')
     .then(res => {
       this.chattings = res.data.object
-      // console.log(this.chattings)
+      console.log(this.chattings)
     })
+  },
+  watch: {
+      // app_chat_list 의 변화가 발생할때마다 수행되는 영역
+    msg(){
+      var objDiv = document.getElementById("app_chat_list");
+      if(this.bottom_flag){
+        // 채팅창 스크롤 바닥 유지
+          objDiv.scrollTop = objDiv.scrollHeight;
+
+      }
+    }
   },
   methods: {
     sendMessage(){
@@ -241,15 +254,34 @@ export default {
       );
     },
   }
-
 }
 </script>
 
 <style scoped>
 .list-prd-img {
-  width: 70%;
-  height: 60%;
+  width: 50%;
+  height: auto;
 }
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+.list-prd-img {
+  width: 100%;
+  height: auto;
+}
+}
+
+.other-user-img {
+  width: 50%;
+  height: auto;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+.other-user-img {
+  width: 100%;
+  height: auto;
+}
+}
+
 .deal-btn {
   /* margin:30px; */
   border: 2px solid orange;
@@ -257,44 +289,24 @@ export default {
   background-color:white;
 }
 
-.toolbar {
-  position: fixed;
-  color: black;
-  width: 600px;
-  /* height: 55px; */
-  border-bottom: 1px solid grey;
-}
-
-@media only screen and (min-width: 300px) and (max-width: 599px) {
-.toolbar {
-  position: fixed;
-  color: black;
-  width: 330px;
-  /* height: 55px; */
-  border-bottom: 1px solid grey;
-}
-}
-
 .prd-img {
-  margin-top: 24px;
-  width: 80%;
+  /* margin-top: 24px; */
+  width: 90%;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .prd-img {
-    width: 100%;
-  margin-top: 24px;
+    width:100%;
+  /* margin-top: 24px; */
 
   }
 }
-
-.name-price-style {
-  margin-top: 24px;
-  margin-bottom: 12px;
+.prd-name {
+  font-size: 90%;
 }
-.price-style {
+.prd-mileage {
   color: grey;
-  font-size: 80%;
+  font-size: 70%;
 }
 .other-message-box {
   background-color: #EEEEEE;
@@ -329,11 +341,7 @@ export default {
   }
 }
 
-.input-style {
- position: fixed; 
- bottom: 75px;
- max-width: 600px;
- max-height: 80px;
- /* background-color: white; */
+.card-style {
+  height: 900px;
 }
 </style>

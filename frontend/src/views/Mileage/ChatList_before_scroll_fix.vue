@@ -2,41 +2,33 @@
 <div>
   <Header></Header>
   <NavBar></NavBar>
-    <v-container class="container-width">
-        <v-row>
-          <v-col class="img-wrapper">
-            <img class="product-img" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80" alt="product image">
-          </v-col>
-        </v-row>
-        <v-row class="my-3 px-6 d-flex align-center">
-          <span class="profile-wrapper pa-0 d-flex ">
-            <img
-            class="profile-img" 
-            src="https://images.unsplash.com/photo-1529092419721-e78fb7bddfb2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=964&q=80" 
-            alt="글쓴이 이미지"
+  <v-container class="container-width">
+    <v-card>
+      <v-row>
+        <v-col cols="11" class="pl-10">
+          <h2>나의 채팅 목록</h2>
+        </v-col>
+      </v-row>
+      <div v-for="(chatting, idx) in chattings" :key="idx">
+        <v-row class="ma-3 d-flex align-center">
+          <v-col cols="3" sm="2" class="pl-6">
+            <img 
+              :src="chatting.otherUser.image" 
+              alt="other-profile"
+              class="other-user-img"
             >
-          </span>
-          <span class="pl-4">
-            {{product.nickname}}
-          </span>
-        </v-row>
-        <v-row class="d-flex justify-center mt-2">
-          <hr class="mb-4 line">
-        </v-row>
-        <v-row class="d-flex flex-column align-start mx-0 mx-sm-1">
-          <v-row class="prd-title pb-0">
-              {{product.title}}
-          </v-row>
-          <v-row class="prd-category">카테고리: {{product.category}}</v-row>
-          <v-row class="prd-mileage">{{product.mileage}} 마일리지</v-row>
-          <v-row class="prd-content py-5">{{product.content}}</v-row>
-        </v-row>
-        <v-row class="d-flex justify-center">
-          <hr class="mt-4 line">
-        </v-row>
-        <v-row class="d-flex justify-center">
-          <v-col class="d-flex justify-center">
-            <!-- <ChatRoom :product_id="product_id"></ChatRoom> -->
+          </v-col>
+          <v-col cols="6" sm="5">
+            {{ chatting.otherUser.nickname }}
+          </v-col>
+          <v-col cols="3" sm="2" class="pr-6">
+            <img 
+              :src="chatting.product.image" 
+              alt="product-img"
+              class="list-prd-img"
+            >
+          </v-col>
+          <v-col cols="12" sm="3" class="d-flex justify-center">
             <v-dialog
               scrollable
               max-width="600px"
@@ -47,7 +39,7 @@
                   text
                   v-bind="attrs"
                   v-on="on"
-                  @click="chatting()"
+                  @click="enterRoom(chatting.id)"
                 >채팅방 들어가기</v-btn>
               </template>
               <template v-slot:default="dialog">
@@ -68,7 +60,7 @@
                             {{ productName }}  
                           </v-col>
                         </v-row>
-                        <v-row class="chat-prd-mileage">
+                        <v-row class="prd-mileage">
                           <v-col class="">
                           {{ productPrice }} 마일리지
                           </v-col>
@@ -84,7 +76,7 @@
                   </v-container>
                 </v-card-title>
                 <v-divider></v-divider>
-                <v-card-text class="card-style" style="padding-top: 24px;" id="app_chat_list">
+                <v-card-text class="card-style" style="padding-top: 24px;">
                   <div v-for="(m, idx) in msg" :key="idx">
                     <!-- 메세지 보낸 사람이 현재 유저일 경우(user1일 경우) user1의 닉네임 표시 -->
                     <div v-if="m.userPk==user1['userPk']" class="d-flex flex-column align-end">
@@ -130,38 +122,49 @@
                       </v-col>
                     </v-row>
                   </v-container>
+                  <!-- <v-btn
+                    color="blue darken-1"
+                    text
+                  >
+                    Save
+                  </v-btn> -->
                 </v-card-actions>
               </v-card>
               </template>
-            </v-dialog>     
+            </v-dialog>            
           </v-col>
         </v-row>
-    </v-container>
+        <v-row>
+          <v-col>
+            <v-divider></v-divider>
+          </v-col>
+        </v-row>
+      </div>
+    </v-card>
+  </v-container>
   <Footer></Footer>
-
 </div>
+  
 </template>
 
 <script>
-import "@/assets/css/profile.css";
 import Header from "@/components/common/Header.vue";
 import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
-// import ChatRoom from "@/components/mileage/ChatRoom.vue";
-import http from "../../http-common";
+import http from '../../http-common'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
 export default {
-  name: "ProductDetail",
+  name: "ChatList",
   components: {
     Header,
     NavBar,
     Footer,
-    // ChatRoom,
   },
   data() {
     return {
+      chattings: [], 
       product: '',
       user : 'nickname',
       seller: '',
@@ -177,34 +180,15 @@ export default {
       productPrice: '',
       user1: {'userPk' : 0, 'userNick' : ''},
       user2: {'userPk' : 0, 'userNick' : ''},
-      roomCheck: false,
-      bottom_flag: true,
+      roomCheck: false
     }
-  },
-  props:{
-    product_id: String,
   },
   created() {
-    this.id = this.$store.state.account.userpk;
-
-    http.get(`/product/${this.product_id}`)
-    .then((res)=>{
-      this.product = res.data.object
-      this.seller = this.product.user_pk
-    })   
-    // var objDiv = document.getElementById("scroll"); 
-    // objDiv.scrollTop = objDiv.scrollHeight;
-  },
-  watch: {
-      // app_chat_list 의 변화가 발생할때마다 수행되는 영역
-    msg(){
-      var objDiv = document.getElementById("app_chat_list");
-      if(this.bottom_flag){
-        // 채팅창 스크롤 바닥 유지
-          objDiv.scrollTop = objDiv.scrollHeight;
-
-      }
-    }
+    http.get('/chat/getList')
+    .then(res => {
+      this.chattings = res.data.object
+      console.log(this.chattings)
+    })
   },
   methods: {
     sendMessage(){
@@ -216,6 +200,21 @@ export default {
         this.stompClient.send("/publish/chat", JSON.stringify(chatMessage),{"accessToken": this.$store.getters.getAccessToken})
         this.content=''
     }
+    },    
+    enterRoom(v) {
+      http.get(`/chat/room/${v}`)
+      .then(res => {
+          this.productImg = res.data.object.room.product.image
+          this.productName = res.data.object.room.product.title
+          this.productPrice = res.data.object.room.product.mileage
+          this.msg = res.data.object.messages;
+          this.room = res.data.object.room;
+          this.user1['userPk'] = res.data.object.currentUser.userPk
+          this.user1['userNick'] = res.data.object.currentUser.nickname
+          this.user2['userPk'] = res.data.object.other.userPk
+          this.user2['userNick'] = res.data.object.other.nickname
+          this.connect();
+      }) 
     },
     connect() {
       const serverURL = "http://localhost:8080/ws";
@@ -248,144 +247,61 @@ export default {
         }
       );
     },
-    enterRoom(v) {
-      http.get(`/chat/room/${v}`)
-      .then(res => {
-          this.productImg = res.data.object.room.product.image
-          this.productName = res.data.object.room.product.title
-          this.productPrice = res.data.object.room.product.mileage
-          this.msg = res.data.object.messages;
-          this.room = res.data.object.room;
-          this.user1['userPk'] = res.data.object.currentUser.userPk
-          this.user1['userNick'] = res.data.object.currentUser.nickname
-          this.user2['userPk'] = res.data.object.other.userPk
-          this.user2['userNick'] = res.data.object.other.nickname
-          this.connect();
-      })       
-    },
-    chatting() {
-      http.get('chat/getList')
-      .then(res => {
-        this.roomCheck = res.data.object.some((res) => {
-          if(this.product.id == res.product.id) {
-            this.roomid = res.id
-            return true
-          }
-        })
-      })
-      // console.log(this.roomCheck)
-
-      if(this.roomCheck == true) {
-        this.enterRoom(this.roomid)
-      }
-      else {
-        // console.log(this.seller, Number(this.id))
-        if (this.seller !== Number(this.id)) {    // 02월 13일 이 부분부터 해야함(판매자와 유저가 같을 경우 어떻게 처리할 것인지!)
-          http.post(`chat/createRoom?product_pk=${this.product.id}`)
-          .then((res) => {
-            console.log(this.product.id)
-            const val = res.data.object.id
-            this.enterRoom(val)
-          })
-        }
-        else {
-          this.$router.push('/chatlist')
-        }
-      }
-
-
-    }
   }
-};
+
+}
+
+
 </script>
 
 <style scoped>
-.container-width {
-width: 600px; 
-margin-top: 50px;
+.list-prd-img {
+  width: 50%;
+  height: auto;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
-    .container-width {
-      width: 370px;
-    }
-}
-
-.img-wrapper {
-  width:600px;
-  height:400px;
-}
-
-@media only screen and (min-width: 300px) and (max-width: 599px) {
-  .img-wrapper {
-    width:370px;
-    height:270px;
-  }
-}
-
-.line {
-  width:570px;
-}
-
-@media only screen and (min-width: 300px) and (max-width: 599px) {
-  .line {
-    width:340px;
-  }
-}
-
-.product-img {
+.list-prd-img {
   width: 100%;
-  height:100%;
-  overflow: hidden;
-  object-fit: cover;
-  border-radius: 5px;
+  height: auto;
+}
 }
 
-.profile-img {
-  width: 50px;
-  height: 50px;
-  object-fit:cover;
-  border-radius: 50%;
-  border : 3px solid orange;
+.other-user-img {
+  width: 50%;
+  height: auto;
 }
 
-.prd-title {
-  font-size: 20px;
-  font-weight:bold;
-  padding:12px;
-  margin:6px;
-  /* width: 100%; */
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+.other-user-img {
+  width: 100%;
+  height: auto;
 }
-
-.prd-category {
-  font-size: 13px;
-  padding: 12px;
-  /* margin-bottom: 6px; */
-  margin-left: 6px;
-  color: grey;
 }
-
-.prd-mileage {
-  font-size : 13px;
-  padding-left:12px;
-  margin:6px;
-  height: 100%;
-  line-height: 44px;
-}
-
-.prd-content {
-  font-size : 15px;
-  padding-left: 12px;
-  padding-right: 12px;
-  margin:6px;
-}
-
 
 .deal-btn {
-  margin:30px;
+  /* margin:30px; */
   border: 2px solid orange;
   border-radius: 15px;
   background-color:white;
+}
+
+.toolbar {
+  position: fixed;
+  color: black;
+  width: 600px;
+  /* height: 55px; */
+  border-bottom: 1px solid grey;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+.toolbar {
+  position: fixed;
+  color: black;
+  width: 330px;
+  /* height: 55px; */
+  border-bottom: 1px solid grey;
+}
 }
 
 .prd-img {
@@ -395,7 +311,7 @@ margin-top: 50px;
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .prd-img {
-    width: 100%;
+    width:100%;
   /* margin-top: 24px; */
 
   }
@@ -403,7 +319,7 @@ margin-top: 50px;
 .prd-name {
   font-size: 90%;
 }
-.chat-prd-mileage {
+.prd-mileage {
   color: grey;
   font-size: 70%;
 }
