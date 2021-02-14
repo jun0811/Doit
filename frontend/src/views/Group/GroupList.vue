@@ -56,6 +56,27 @@ export default {
           groups:[],
         }
     },
+  // updated(){
+  //   searchGroup(
+  //     {
+  //       "direction":"ASC",
+  //       "page":this.page,
+  //       "size":9,
+  //       "tag":this.word,
+  //     },
+  //     (res) =>{
+  //       if (res.status){
+  //       console.log(res)
+  //       this.groups = res.data.object.content
+  //       this.pageCount = parseInt(res.data.object.totalPages)
+  //       }
+  //     },
+  //     (err) =>{
+  //       console.log(err)
+  //       alert("검색 결과 가져오기 실패")
+  //     }
+  //   )
+  // },
   created() {
     searchGroup(
       {

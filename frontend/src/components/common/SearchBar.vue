@@ -29,7 +29,7 @@ export default {
       submit(){
         // console.log(this.word)
         this.$router.push({name: "GroupList",params: {word: this.word}})
-        this.$router.go()
+        // this.$router.go()
       }}
   }
 </script>
