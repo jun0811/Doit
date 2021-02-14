@@ -47,66 +47,66 @@
             <v-btn text class="text-h6" @click="feedWrite"> 글작성 </v-btn>
           </div>
         </v-col>
-        <v-col  cols="9" class="d-flex justify-space-around mx-16"> 
-          <!-- 날짜 선택 시작 -->
-          <!-- start day -->
-          <v-menu
-            v-model="menu1"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
+        <v-col v-if="feed" cols="9" class="d-flex flex-column justify-space-around mx-sm-16">
+          <v-col  cols="9" class="d-flex justify-space-around mx-16"> 
+            <!-- 날짜 선택 시작 -->
+            <!-- start day -->
+            <v-menu
+              v-model="menu1"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="start"
+                  label="시작일"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
                 v-model="start"
-                label="시작일"
-                prepend-icon="mdi-calendar"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              v-model="start"
-              @input="menu1 = false"
-            ></v-date-picker>
-          </v-menu>
-          <h2 class="ma-4"> ~ </h2>
-          <!-- end day -->
-          <v-menu
-            v-model="menu2"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
+                @input="menu1 = false"
+              ></v-date-picker>
+            </v-menu>
+            <h2 class="ma-4"> ~ </h2>
+            <!-- end day -->
+            <v-menu
+              v-model="menu2"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="end"
+                  label="종료일"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
                 v-model="end"
-                label="종료일"
-                prepend-icon="mdi-calendar"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              v-model="end"
-              @input="menu2 = false"
-            ></v-date-picker>
-          </v-menu>
-          <!-- 날짜 선택 끝 -->
-          <v-btn @click="feedRead" text class="ma-4 search-btn" outlined> 검색 </v-btn >
-        </v-col>
-        <v-col v-if="feed" cols="9" class="d-flex justify-space-around mx-sm-16">
+                @input="menu2 = false"
+              ></v-date-picker>
+            </v-menu>
+            <!-- 날짜 선택 끝 -->
+            <v-btn @click="feedRead" text class="ma-4 search-btn" outlined> 검색 </v-btn >
+          </v-col>
           <div v-if="cards.length" class="d-flex justify-center align-center flex-column card">
             <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card" ></FeedCard>
           </div>
           <div v-else> 
-            <h2>해당 기간에는 작성된 피드가 없어요🤷‍♂️</h2>
+            <h2 style="text-align:center;">해당 기간에는 작성된 피드가 없어요🤷‍♂️</h2>
           </div>
         </v-col>
         <v-col v-if="users" cols="10" class="d-flex justify-center flex-column align-center mx-sm-16">
