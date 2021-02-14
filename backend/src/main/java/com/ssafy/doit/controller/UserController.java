@@ -155,7 +155,7 @@ public class UserController {
     }
 
     // 닉네임 중복 확인
-    @ApiOperation(value = "닉네임 중복 확인")
+    @ApiOperation(value = "프로필 닉네임 중복 확인")
     @PostMapping("/profile/checkNick")
     public Object checkNickname(@RequestBody String nickname){
         ResponseBasic result = new ResponseBasic();
