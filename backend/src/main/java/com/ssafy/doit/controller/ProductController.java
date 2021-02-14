@@ -9,6 +9,7 @@ import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
+import com.ssafy.doit.service.S3Service;
 import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,18 +44,25 @@ public class ProductController {
     @Autowired
     private MileageRepository mileageRepository;
 
+    @Autowired
+    private S3Service s3Service;
+
     @ApiOperation(value = "물품 등록")
     @PostMapping("/createProduct")
-    public Object createProduct(@RequestBody Product product){
+    public Object createProduct(@RequestBody Product product, @RequestParam(required = false) MultipartFile file){
         ResponseBasic result = null;
         try{
             long userPk = userService.currentUser();
             User currentUser = userRepository.findById(userPk).get();
             int groupCount = currentUser.getGroupList().size();
 
-            if(groupCount < 2) throw new Exception("그룹 수 부족");
-
+            if(groupCount < 2) throw new Exception("가입 그룹 수 부족");
             product.setUser(currentUser);
+
+            if(file != null) {
+                String imgPath = s3Service.upload(product.getImage(), file);
+                product.setImage(imgPath);
+            }
             productRepository.save(product);
             result = new ResponseBasic(true, "success", product);
         }catch (Exception e){
@@ -66,7 +75,7 @@ public class ProductController {
 
     @ApiOperation(value = "물품 수정")
     @PutMapping("/{id}")
-    public Object modifyProduct(@PathVariable Long id, @RequestBody Product product){
+    public Object modifyProduct(@PathVariable Long id, @RequestBody Product product, @RequestParam(required = false) MultipartFile file){
         ResponseBasic result = null;
         try{
             long currentUser = userService.currentUser();
@@ -78,6 +87,12 @@ public class ProductController {
             origin.setContent(product.getContent());
             origin.setImage(product.getImage());
             origin.setCategory(product.getCategory());
+
+            if(file != null){
+                String imgPath = s3Service.upload(origin.getImage(), file);
+                origin.setImage(imgPath);
+            } else origin.setImage(null);
+
             productRepository.save(origin);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
