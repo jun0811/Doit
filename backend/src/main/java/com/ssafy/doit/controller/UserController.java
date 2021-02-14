@@ -154,6 +154,32 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // 닉네임 중복 확인
+    @ApiOperation(value = "닉네임 중복 확인")
+    @PostMapping("/profile/checkNick")
+    public Object checkNickname(@RequestBody String nickname){
+        ResponseBasic result = new ResponseBasic();
+        System.out.println(UserRole.USER);
+        Long userPk = userService.currentUser();
+        System.out.println("userPk           " + userPk);
+
+        Optional<User> user = userRepository.findById(userPk);
+        Optional<User> optGuest = userRepository.findByNicknameAndUserRole(nickname, UserRole.GUEST);
+        Optional<User> optUser = userRepository.findByNickname(nickname);
+
+        if(optUser.isPresent()) {
+            if((userPk == optUser.get().getId()) && (user.get().getNickname().equals(nickname))){
+                result = new ResponseBasic( true, "success", null);
+            }else{
+                result = new ResponseBasic(false, "중복된 닉네임입니다.", null);
+            }
+        }else if(optGuest.isPresent()){
+            result = new ResponseBasic(false, "중복된 닉네임입니다.", null);
+        }else{
+            result = new ResponseBasic( true, "success", null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
     @ApiOperation(value = "회원정보(프로필) 수정")
     @PostMapping("/updateImg")
     public Object updateImg(@RequestParam MultipartFile file) {
