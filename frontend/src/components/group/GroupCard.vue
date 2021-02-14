@@ -24,7 +24,7 @@
             </v-img>
             <v-card-actions  class="card-text">
               <v-card-text v-if="token"  class="d-flex justify-space-around py-1">
-                <v-btn plain class="btn" router-link :to="{name: 'Community', params: {groupPk:group.groupPk}}">상세보기</v-btn>
+                <v-btn plain class="btn" router-link :to="{name: 'Community', params: {groupPk:Number(group.groupPk)}}">상세보기</v-btn>
                 <!-- <v-btn plain class="btn">가입신청</v-btn> -->
               </v-card-text>
               <v-card-text v-else class="d-flex justify-space-around py-1">

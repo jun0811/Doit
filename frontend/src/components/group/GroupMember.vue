@@ -3,7 +3,6 @@
 
     <v-card
       class=" my-12 d-flex flex-column align-center justify-center member-card"
-      max-width="600"
       xs="12"
     >
         <div class="mx-6 my-4 align-self-end">
@@ -28,7 +27,7 @@
             v-for="(page,i) in pageCount"
             :key="i"
           >
-            <GroupMemberCarousel :page="page" :groupPk="groupPk"></GroupMemberCarousel>
+            <GroupMemberCarousel :page="page" :groupPk="Number(groupPk)"></GroupMemberCarousel>
           </v-carousel-item>
         </v-carousel>
     </v-card>
@@ -56,7 +55,7 @@ import http from "../../http-common";
       GroupMemberCarousel,
     },
     props: {
-      groupPk: String,
+      groupPk: Number,
     }, 
     computed: {
       pageCount () {
@@ -86,10 +85,16 @@ import http from "../../http-common";
 </script>
 
 <style scoped>
+  @media (min-width:800px){
+    .member-card {
+      width: 680px;
+    }
+  }
 
 
 .member-card {
   border-radius: 20px;
+
 }
 
 .team-info {

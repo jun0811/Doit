@@ -32,7 +32,7 @@ import http from "../../http-common";
     }),
     props: {
       page:Number,
-      groupPk:String,
+      groupPk:Number,
     }, 
     created() {
       http.get(`/group/detailGroup?groupPk=${this.groupPk}`)
