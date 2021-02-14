@@ -35,11 +35,11 @@
 
     <v-container class="pa-3 px-sm-16 py-sm-6 px-0" >
       <v-row class="d-flex justify-center">
-        <v-col  cols="9" class="d-flex justify-space-around mx-16">
+        <v-col  cols="9" class="d-flex justify-space-around mx-16" v-if="joined">
           <div>
             <span class="text-h6"></span>
           </div>
-          <div>
+          <div >
             <v-btn text v-bind:class="{selected: feed}" class="text-h5" :model="feed" @click="FeedList"> <font-awesome-icon icon="rss-square"/>FEED</v-btn>
             <v-btn text v-bind:class="{selected: users}" class="text-h5" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn>
           </div>
@@ -47,7 +47,7 @@
             <v-btn text class="text-h6" @click="feedWrite"> 글작성 </v-btn>
           </div>
         </v-col>
-        <v-col v-if="feed" cols="9" class="d-flex flex-column justify-space-around mx-sm-16">
+        <v-col v-if="feed && joined" cols="9" class="d-flex flex-column justify-space-around mx-sm-16">
           <v-col  cols="9" class="d-flex justify-space-around mx-16"> 
             <!-- 날짜 선택 시작 -->
             <!-- start day -->
@@ -135,7 +135,7 @@ const date=new Date()
 export default {
   components: { Header, Footer, GroupMember,FeedCard },
   props: {
-    groupPk: {type:Number}
+    groupPk: {type:String}
   },
   data() {
     return {
@@ -248,6 +248,7 @@ export default {
     },
   },
   created(){
+    
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
         this.user_info= res.data.object
@@ -263,6 +264,9 @@ export default {
             return true
           }
         })
+        if (!this.joined) {
+          this.users = true;
+        }
       }),
     http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.start}`)
     .then((res)=>{
