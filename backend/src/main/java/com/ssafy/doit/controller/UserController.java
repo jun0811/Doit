@@ -12,6 +12,7 @@ import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.UserRepository;
+import com.ssafy.doit.service.FeedService;
 import com.ssafy.doit.service.GroupUserService;
 import com.ssafy.doit.service.S3Service;
 import com.ssafy.doit.service.UserService;
@@ -55,6 +56,9 @@ public class UserController {
     private S3Service s3Service;
     @Autowired
     private MileageRepository mileageRepository;
+    @Autowired
+    private final FeedService feedService;
+
     private final PasswordEncoder passwordEncoder;
 
 
@@ -227,6 +231,7 @@ public class UserController {
         try {
             Long userPk = userService.currentUser();
             groupUserService.deleteGroupByUser(userPk);
+            feedService.deleteFeedByUser(userPk);
             result = new ResponseBasic(true, "success", null);
         }
         catch (Exception e){
