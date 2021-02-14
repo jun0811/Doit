@@ -158,23 +158,22 @@ export default {
   },
   data() {
     return {
+      // product: '',
+      // user : 'nickname',
+      // seller: '',
+      // id : 84,
+      // idx:0,
+      // roomCheck: false,
       chattings: [], 
-      product: '',
-      user : 'nickname',
-      seller: '',
-      roomid : 0,
-      id : 84,
       productImg: '',
-      idx:0,
-      msg:[],
-      room: '',
-      content:'',
-      stompClient:null,
       productName: '',
       productPrice: '',
+      msg:[],
+      room: '', // 서버에서 {}타입으로 받음, id, product가 담김
+      content:'',
+      stompClient:null,
       user1: {'userPk' : 0, 'userNick' : ''},
       user2: {'userPk' : 0, 'userNick' : ''},
-      roomCheck: false,
       bottom_flag: true,
     }
   },
@@ -182,7 +181,7 @@ export default {
     http.get('/chat/getList')
     .then(res => {
       this.chattings = res.data.object
-      console.log(this.chattings)
+      // console.log(this.chattings)
     })
   },
   watch: {
@@ -192,7 +191,6 @@ export default {
       if(this.bottom_flag){
         // 채팅창 스크롤 바닥 유지
           objDiv.scrollTop = objDiv.scrollHeight;
-
       }
     }
   },
@@ -201,7 +199,7 @@ export default {
      if(this.content.trim() !='' && this.stompClient!=null) {
         let chatMessage = {
           'message': this.content,
-          'roomPk' : this.roomid,
+          'roomPk' : this.room.id,
         }
         this.stompClient.send("/publish/chat", JSON.stringify(chatMessage),{"accessToken": this.$store.getters.getAccessToken})
         this.content=''
@@ -237,12 +235,10 @@ export default {
           // 소켓 연결 성공
           this.connected = true;
           console.log('소켓 연결 성공', frame);
-          // console.log(this.roomid)
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
-          this.stompClient.subscribe("/subscribe/chat/room/"+ this.roomid , res => {
-            // console.log(res)
-            console.log('메시지',JSON.parse(res.body));
+          this.stompClient.subscribe("/subscribe/chat/room/"+ this.room.id , res => {
+            // console.log('메시지',JSON.parse(res.body));
             this.msg.push(JSON.parse(res.body));
           });
         },
