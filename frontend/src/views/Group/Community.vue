@@ -199,12 +199,36 @@ export default {
       }else{
         this.submit = true
       }
+    },
+    groupPk(){
+      this.start = new Date().toISOString().substr(0,10);
+      this.end = new Date().toISOString().substr(0,10);
+      http.get(`group/detailGroup?groupPk=${this.groupPk}`)
+      .then((res)=>{
+          this.user_info= res.data.object
+          this.user_num = this.user_info.users.length
+          this.leader = res.data.object.leader
+          this.tags = res.data.object.tags
+          this.loginUser = this.$store.state.account.userpk
+      }),
+      http.get('group/currentUserGroup')
+        .then((res)=>{
+          this.joined = res.data.object.some((group)=>{
+            if(this.groupPk == group.groupPk){
+              return true
+            }
+          })
+        }),
+      http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.start}`)
+      .then((res)=>{
+        this.cards = res.data.object
+      })
     }
   }
   ,
   methods: {
     updateGroup(){
-      this.$router.push({name:"GroupUpdate",params:{groupPk:Number(this.groupPk)}})
+      this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
     },
     FeedList(){
       this.feed = true
