@@ -135,7 +135,7 @@ const date=new Date()
 export default {
   components: { Header, Footer, GroupMember,FeedCard },
   props: {
-    groupPk: {type:String}
+    groupPk: {type:Number}
   },
   data() {
     return {
@@ -204,7 +204,7 @@ export default {
   ,
   methods: {
     updateGroup(){
-      this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
+      this.$router.push({name:"GroupUpdate",params:{groupPk:Number(this.groupPk)}})
     },
     FeedList(){
       this.feed = true

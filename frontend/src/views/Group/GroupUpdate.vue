@@ -63,7 +63,6 @@
                       <v-select
                         hide-details=""
                         :items="items"
-                        :label="categoryLabel"
                         v-model="tmp"
                       ></v-select>
                     </v-col>
@@ -134,7 +133,7 @@ export default {
         Footer
     },
     props: {
-      groupPk: {type:String}
+      groupPk: {type:Number}
     },
     created(){
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
