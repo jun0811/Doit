@@ -225,7 +225,7 @@ public class FeedService {
         int total = group.getTotalNum();
         if (cnt >= Math.round(total * 0.1)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
-            feed.setAuthDate(LocalDateTime.now().toString());
+            feedRepository.save(feed);
             // 인증완료되었다는 알림보내기
 
             writer.setMileage(writer.getMileage() + 100); // 인증피드 인증 완료 마일리지 지금 + 100
