@@ -55,7 +55,7 @@ import http from "../../http-common";
       GroupMemberCarousel,
     },
     props: {
-      groupPk: Number,
+      groupPk: String,
     }, 
     computed: {
       pageCount () {
