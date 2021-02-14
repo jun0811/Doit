@@ -1,15 +1,17 @@
 package com.ssafy.doit.controller;
 
+import com.ssafy.doit.model.chat.ChatMessage;
 import com.ssafy.doit.model.chat.ChatRoom;
 import com.ssafy.doit.model.chat.ChatRoomJoin;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseChatRoom;
-import com.ssafy.doit.repository.chat.ChatMessageRepository;
 import com.ssafy.doit.service.ChatService;
 import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +31,9 @@ public class ChatController {
     @Autowired
     private final ChatService chatService;
     @Autowired
-    private final ChatMessageRepository chatMessageRepository;
+    private final RedisTemplate<String, ChatMessage> redisTemplate;
+
+    private final String MESSAGE_KEY = "Room_idx:";
 
     @ApiOperation(value = "채팅방 생성")
     @PostMapping("/createRoom")
@@ -76,14 +80,17 @@ public class ChatController {
 
             ChatRoom chatRoom = chatService.getRoom(roomPk);
             List<ChatRoomJoin> chatRoomJoins = chatRoom.getChatRoomJoins();
-
             Long other = chatRoomJoins.get(0).getUser().getId() == currentUser ? chatRoomJoins.get(1).getUser().getId() : chatRoomJoins.get(0).getUser().getId();
+
+            ListOperations<String, ChatMessage> listOperations = redisTemplate.opsForList();
+            List<ChatMessage> messages = listOperations.range(MESSAGE_KEY + roomPk, 0, -1);
 
             Map<String, Object> res = new HashMap<>();
             res.put("room", chatRoom);
-            res.put("messages", chatMessageRepository.findAllByRoomPk(roomPk));
+            res.put("messages", messages);
             res.put("currentUser", userService.detailUser(currentUser));
             res.put("other", userService.detailUser(other));
+            System.out.println(messages);
             result = new ResponseBasic(true, "success", res);
         } catch (Exception e){
             e.printStackTrace();
