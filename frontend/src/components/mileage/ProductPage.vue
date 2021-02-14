@@ -1,7 +1,7 @@
 <template>
   <v-container class="px-0 px-md-16">
     <v-row
-      class="d-flex align-center flex-wrap justify-start"
+      class="d-flex align-center flex-wrap justify-center justify-sm-start justify-md-start justify-lg-start justify-xl-start"
     > 
       <v-col
         xs="12"
