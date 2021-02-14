@@ -5,26 +5,30 @@
   <v-container class="container-width">
     <v-card>
       <v-row>
-        <v-col cols="11" class="ml-3">
-          <h3>나의 채팅 목록</h3>
+        <v-col cols="11" class="pl-10">
+          <h2>나의 채팅 목록</h2>
         </v-col>
       </v-row>
       <div v-for="(chatting, idx) in chattings" :key="idx">
-        <v-row class="ma-3">
-          <v-col cols="2" class="pl-6">
-            <img src="" alt="other-profile">
+        <v-row class="ma-3 d-flex align-center">
+          <v-col cols="3" sm="2" class="pl-6">
+            <img 
+              :src="chatting.otherUser.image" 
+              alt="other-profile"
+              class="other-user-img"
+            >
           </v-col>
-          <v-col cols="5">
-            상대방 닉네임
+          <v-col cols="6" sm="5">
+            {{ chatting.otherUser.nickname }}
           </v-col>
-          <v-col cols="2" class="pr-6">
+          <v-col cols="3" sm="2" class="pr-6">
             <img 
               :src="chatting.product.image" 
               alt="product-img"
               class="list-prd-img"
             >
           </v-col>
-          <v-col cols="3">
+          <v-col cols="12" sm="3" class="d-flex justify-center">
             <v-dialog
               transition="dialog-bottom-transition"
               max-width="600"
@@ -130,8 +134,11 @@
             </v-dialog>
           </v-col>
         </v-row>
-     
-        
+        <v-row>
+          <v-col>
+            <v-divider></v-divider>
+          </v-col>
+        </v-row>
       </div>
     </v-card>
   </v-container>
@@ -180,7 +187,7 @@ export default {
     http.get('/chat/getList')
     .then(res => {
       this.chattings = res.data.object
-      // console.log(this.chattings)
+      console.log(this.chattings)
     })
   },
   methods: {
@@ -247,9 +254,29 @@ export default {
 
 <style scoped>
 .list-prd-img {
-  width: 70%;
-  height: 60%;
+  width: 50%;
+  height: auto;
 }
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+.list-prd-img {
+  width: 100%;
+  height: auto;
+}
+}
+
+.other-user-img {
+  width: 50%;
+  height: auto;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+.other-user-img {
+  width: 100%;
+  height: auto;
+}
+}
+
 .deal-btn {
   /* margin:30px; */
   border: 2px solid orange;
@@ -336,4 +363,6 @@ export default {
  max-height: 80px;
  /* background-color: white; */
 }
+
+
 </style>
