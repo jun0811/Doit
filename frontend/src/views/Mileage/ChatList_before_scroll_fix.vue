@@ -76,7 +76,7 @@
                   </v-container>
                 </v-card-title>
                 <v-divider></v-divider>
-                <v-card-text class="card-style" style="padding-top: 24px;" id="app_chat_list">
+                <v-card-text class="card-style" style="padding-top: 24px;">
                   <div v-for="(m, idx) in msg" :key="idx">
                     <!-- 메세지 보낸 사람이 현재 유저일 경우(user1일 경우) user1의 닉네임 표시 -->
                     <div v-if="m.userPk==user1['userPk']" class="d-flex flex-column align-end">
@@ -122,6 +122,12 @@
                       </v-col>
                     </v-row>
                   </v-container>
+                  <!-- <v-btn
+                    color="blue darken-1"
+                    text
+                  >
+                    Save
+                  </v-btn> -->
                 </v-card-actions>
               </v-card>
               </template>
@@ -174,8 +180,7 @@ export default {
       productPrice: '',
       user1: {'userPk' : 0, 'userNick' : ''},
       user2: {'userPk' : 0, 'userNick' : ''},
-      roomCheck: false,
-      bottom_flag: true,
+      roomCheck: false
     }
   },
   created() {
@@ -184,17 +189,6 @@ export default {
       this.chattings = res.data.object
       console.log(this.chattings)
     })
-  },
-  watch: {
-      // app_chat_list 의 변화가 발생할때마다 수행되는 영역
-    msg(){
-      var objDiv = document.getElementById("app_chat_list");
-      if(this.bottom_flag){
-        // 채팅창 스크롤 바닥 유지
-          objDiv.scrollTop = objDiv.scrollHeight;
-
-      }
-    }
   },
   methods: {
     sendMessage(){
@@ -254,7 +248,10 @@ export default {
       );
     },
   }
+
 }
+
+
 </script>
 
 <style scoped>
