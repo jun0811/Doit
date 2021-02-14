@@ -289,24 +289,6 @@ export default {
   background-color:white;
 }
 
-.toolbar {
-  position: fixed;
-  color: black;
-  width: 600px;
-  /* height: 55px; */
-  border-bottom: 1px solid grey;
-}
-
-@media only screen and (min-width: 300px) and (max-width: 599px) {
-.toolbar {
-  position: fixed;
-  color: black;
-  width: 330px;
-  /* height: 55px; */
-  border-bottom: 1px solid grey;
-}
-}
-
 .prd-img {
   /* margin-top: 24px; */
   width: 90%;
