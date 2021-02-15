@@ -23,8 +23,6 @@ public class ResponseFeed {
     private String feedType;
 
     private String authCheck;
-    private String authDate;
-
     private String createDate;
     private String updateDate;
 
@@ -37,7 +35,6 @@ public class ResponseFeed {
         this.content = feed.getContent();
         this.feedType = feed.getFeedType();
         this.authCheck = feed.getAuthCheck();
-        this.authDate = feed.getAuthDate();
         this.createDate = feed.getCreateDate().toString();
         this.updateDate = feed.getUpdateDate();
         this.media = feed.getMedia();

@@ -24,7 +24,6 @@ public class Feed{
     private String feedType; // 인증피드 : true, 자유피드 : false
 
     private int authCnt;
-    private String authDate;
     private String authCheck;
 
     private LocalDateTime createDate;
@@ -48,9 +47,7 @@ public class Feed{
         this.groupPk = groupPk;
         this.writer = writer;
         this.createDate = createDate;
-
         this.updateDate = "0-0-0 0:0:0";
-        this.authDate = "0-0-0 0:0:0";
         this.authCheck = "false";
         this.status = "true";
     }
