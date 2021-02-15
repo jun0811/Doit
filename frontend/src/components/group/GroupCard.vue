@@ -41,11 +41,12 @@
 </template>
 
 <script>
-import { searchGroup } from "@/api/group/index.js"
+import { searchGroup, categoryGroup } from "@/api/group/index.js"
 export default {
     props:{
       page: Number,
       word: String,
+      category: String,
     },
     data: () => ({
       date: null,
@@ -58,24 +59,26 @@ export default {
     watch: {
       page:{
         handler: function () {
-           searchGroup(
-            {
-              "direction":"ASC",
-              "page":this.page,
-              "size":1,
-              "tag":this.word,
-              "token": ""
-            },
-            (res) =>{
-              if (res.status){
-              this.groups = res.data.object.content // 배열로 집어넣기
+          if (this.category==null) {
+            searchGroup(
+              {
+                "direction":"ASC",
+                "page":this.page,
+                "size":1,
+                "tag":this.word,
+                "token": ""
+              },
+              (res) =>{
+                if (res.status){
+                this.groups = res.data.object.content // 배열로 집어넣기
+                }
+              },
+              (err) =>{
+                console.log(err)
+                alert("검색 결과 가져오기 실패")
               }
-            },
-            (err) =>{
-              console.log(err)
-              alert("검색 결과 가져오기 실패")
-            }
-          )
+            )
+          }
         }
       },
       word:{
@@ -102,24 +105,47 @@ export default {
     },
     created() {
       this.token = this.$store.state.account.accessToken
-      searchGroup(
-        {
-          "direction":"ASC",
-          "page":this.page,
-          "size":9,
-          "tag":this.word,
-        },
-        (res) =>{
-          console.log(res)
-          if (res.status){
-          this.groups = res.data.object.content // 배열로 집어넣기
+      // console.log(this.category);
+      if (this.category==undefined) {
+        searchGroup(
+          {
+            "direction":"ASC",
+            "page":this.page,
+            "size":9,
+            "tag":this.word,
+          },
+          (res) =>{
+            console.log(res)
+            if (res.status){
+            this.groups = res.data.object.content // 배열로 집어넣기
+            }
+          },
+          (err) =>{
+            console.log(err)
+            alert("검색 결과 가져오기 실패")
           }
-        },
-        (err) =>{
-          console.log(err)
-          alert("검색 결과 가져오기 실패")
-        }
-      )
+        )
+      }
+      else if (this.category!==undefined) {
+        categoryGroup(
+          {
+            "category":this.category,
+            "direction":"ASC",
+            "page":this.page,
+            "size":9,
+          },
+          (res) =>{
+            console.log(res)
+            if (res.status){
+            this.groups = res.data.object.content // 배열로 집어넣기
+            }
+          },
+          (err) =>{
+            console.log(err)
+            alert("검색 결과 가져오기 실패")
+          }
+        )
+      }
     },
 }
 </script>
