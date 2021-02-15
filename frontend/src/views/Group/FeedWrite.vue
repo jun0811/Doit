@@ -79,6 +79,8 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { createFeed } from "@/api/feed/index.js"
+import http from "../../http-common";
+
 // import http from "../../http-common";
 
 export default {
@@ -117,20 +119,24 @@ export default {
     methods: {
       write() {
         const formData = new FormData()
-        formData.append(this.file)
+        formData.append("file",this.file)
         createFeed(
           {
             "content": this.content,
             "feedType": this.feedType,
             "groupPk": this.groupPk,
-            "media": formData,
             // "status": this.status,
           },
           (res) =>{
               if (res.data.status){
               alert("피드가 생성되었습니다.")
-              console.log(res)
-              this.$router.go(-1)
+              const feedPk = (res.data.object)
+              http.post(`feed/updateImg?feedPk=${feedPk}`,formData)
+              .then((res)=>{
+                console.log(res);
+                this.$router.go(-1)
+              })
+              
             }
           },
           (err) =>{

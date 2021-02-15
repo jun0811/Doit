@@ -34,10 +34,11 @@
       </v-menu>
     </v-card-title> -->
     <v-img
+      v-if="null_image==image"
       height="250"
       src="https://wonderfulmind.co.kr/wp-content/uploads/2018/05/knitting.jpg"
     ></v-img>
-
+    <v-img v-else :src="image"></v-img>
     <v-card-title>{{this.card.content}}</v-card-title>
 
     <v-card-text>
@@ -99,8 +100,12 @@ import http from '../../http-common'
       writer: false, // 본인 여부 판단 변수
       check: false,
       show:false,
+      null_image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/null",
+      image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/" 
     }),
     created(){
+      this.image = this.image + this.card.media
+      console.log(this.image)
       this.check= (this.card.authCheck ==='true' ? true:false) 
       // 본인 여부
       if(this.card.userPk == sessionStorage.getItem("userpk")) {
