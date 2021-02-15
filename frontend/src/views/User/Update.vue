@@ -6,12 +6,12 @@
         <v-col cols="12">
           <v-row justify="center">
             <v-col cols="12" sm="3">
-              <div class="text-center">
-                <v-img src="http:\\ssafydoit.s3.ap-northeast-2.amazonaws.com/캡처.jpg"></v-img>
-                <v-img v-if="imageUrl" :src="imageUrl"></v-img>
+              <div class="text-center d-flex align-center flex-column" >
+                <v-img v-if="imageUrl" :src="imageUrl" class="profile-img"></v-img>
+                <v-img v-else src="@/assets/img/profile_temp.png" class="profile-img"> </v-img>
                 <!-- 사진변경 버튼 시작 -->
                 <div class="pt-3 text-center">
-                    <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
+                  <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
                   <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">업로드</v-btn>
                   <input
                     ref="uploader"
@@ -20,7 +20,7 @@
                     accept="image/*"
                     @change="onFileChanged"
                   >
-                  <v-btn v-if="imageUrl" @click="saveImg">저장</v-btn>
+                  <!-- <v-btn class="mt-4" v-if="imageUrl" outlined @click="saveImg">저장</v-btn> -->
                 </div>
                 <!-- 사진변경 버튼 끝 -->
               </div>
@@ -137,7 +137,8 @@ export default {
       defaultButtonText: '사진변경',
       selectedFile: null,
       isSelecting: false,
-      uploadImg: ''
+      uploadImg: "",
+      image: ""
     };
   },
   computed: {
@@ -166,8 +167,13 @@ export default {
       this.$router.push("/user/pwchange");
     },
     save() {
-      if (this.c_Nick) {
-        http.put(`/user/updateInfo?email=${this.email}&name=${this.name}`)
+      // 이미지를 담아서 저장 -> 성공하면 -> 
+      const formData = new FormData()
+      formData.append('file',this.file)
+      http.post('user/updateImg',formData)
+      .then(()=>{
+        if (this.c_Nick) {
+        http.put(`/user/updateInfo`, {nickname:this.name})
           .then((res) => {
             if (res.data.status) {
               alert("회원정보가 변경되었습니다");
@@ -175,10 +181,12 @@ export default {
               this.$store.commit("SET_NAME", { name });
               this.$router.push("/user/profile");
             }
-          });
-      } else {
+          })
+      }
+      else {
         alert("중복체크를 하지 않았습니다.🤦‍♂️");
       }
+     })
     },
     checkNick() {
       http.post("/user/profile/checkNick", this.name).then((res) => {
@@ -218,8 +226,6 @@ export default {
       saveImg(){
         const formData = new FormData()
         formData.append('file',this.file)
-        console.log(formData);
-        console.log(this.file)
         http.post('user/updateImg',formData)
         .then((res)=>console.log(res))
       }
@@ -242,5 +248,9 @@ export default {
 }
 .save-btn-style {
   width: 100%;
+}
+.profile-img{
+  width:150px;
+  height:150px;
 }
 </style>
