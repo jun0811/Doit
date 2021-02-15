@@ -145,15 +145,15 @@ export default {
       hashtag : [],
       tmp: "",
       category : "",
-      items: ['운동', '공부', '다이어트', '취미', '독서', '라이프', '그 외'],
+      items: ['운동', '공부', '다이어트', '취미', '독서', '생활습관', '기타'],
       change :{
         "운동" : "exercise",
         "공부" : "study",
         "다이어트" : "diet",
         "취미" : "hobby",
         "독서" : "book",
-        "라이프" : "life",
-        "그 외" : "etc"
+        "생활습관" : "life",
+        "기타" : "etc"
       }
       }
     },
