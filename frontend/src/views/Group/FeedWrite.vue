@@ -51,7 +51,7 @@
                         <!-- 이미지 첨부 -->
                         <v-col cols="12" sm="6" class="mb-5 d-flex justify-end" >
                             <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
-                            <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">업로드</v-btn>
+                            <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">인증 이미지 </v-btn>
                         </v-col>
                     </v-row>
                     <v-row>

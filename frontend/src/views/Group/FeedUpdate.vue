@@ -37,7 +37,7 @@
                         </v-container>
                     </v-row>
                     <v-row class="d-flex mt-5">
-                        <v-col cols="12" sm="4" class="my-auto">
+                        <v-col cols="12" sm="6" class="my-auto">
                         <v-select
                             :items="items"
                             label="피드 종류 선택"
@@ -47,17 +47,26 @@
                         ></v-select><!-- 기존피드값으로 기본값 설정하기-->                            
                         </v-col>                        
                         <!-- 이미지 첨부 -->
-                        <v-col cols="12" sm="6" class="mb-5 d-flex justify-end" >
+                        <v-col cols="12" sm="6" class="mb-5 d-flex align-center justify-end " >
                             <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
-                            <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">업로드</v-btn>
+                            <v-btn outlined type="button"
+                            @click="onClickImageUpload">인증 이미지 </v-btn>
+
                         </v-col>
-                        <v-col cols="12" sm="2" class="ml-auto">
-                            <v-btn
-                            @click="update"
-                            outlined
-                            class="complete-btn text-size"
-                            >수정 완료</v-btn>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                          <v-img v-if="imageUrl" :src="imageUrl"></v-img>
                         </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" sm="2" class="ml-auto">
+                           <v-btn
+                          @click="update"
+                          outlined
+                          class="complete-btn text-size"
+                          >수정 완료</v-btn>
+                      </v-col>
                     </v-row>
                 </v-col>
             </v-card>
