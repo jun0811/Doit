@@ -21,8 +21,6 @@ function createGroup(params,success,fail){
   .then(success)
   .catch(fail);
 }
- 
-
 
 function searchGroup(query, success, fail) {
   http
@@ -31,5 +29,12 @@ function searchGroup(query, success, fail) {
   .catch(fail);
 } 
 
+function categoryGroup(query, success, fail) {
+  http
+  .get(`group/categoryGroup?category=${query.category}&direction=${query.direction}&page=${query.page}&size=${query.size}`)
+  .then(success)
+  .catch(fail);
+} 
 
-export { createGroup, searchGroup }
+
+export { createGroup, searchGroup, categoryGroup }
