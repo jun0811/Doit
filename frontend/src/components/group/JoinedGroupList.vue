@@ -11,7 +11,7 @@
       item-height="64"
     >
       <template v-slot="{ item }">
-        <v-list-item :key="item">
+        <v-list-item :key="item" @click="group(item.groupPk)">
           <v-list-item-action>
             <v-btn
               fab
@@ -51,7 +51,7 @@ export default {
         http.get('/group/currentUserGroup')
           .then((res)=>{
           this.items = res.data.object;
-          console.log(res)
+          console.log(res.data.object)
       })
     }    
   },

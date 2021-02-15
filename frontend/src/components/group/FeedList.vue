@@ -4,10 +4,7 @@
       height="600"
     >
       <div class="pa-0 ma-0 d-flex flex-nowrap flex-column justify-start align-center scrollBar">
-
-
           <MyFeeds v-for="(card,idx) in cards" :key="idx" :card="card"></MyFeeds>
-
       </div>        
     </v-card>
 </template>
@@ -22,8 +19,8 @@ import http from "../../http-common";
       MyFeeds,
     },
     created(){
-      http.get(`feed/userFeed?end=60&start=0&userPk=${sessionStorage.getItem("userpk")}`)
-      // http.get(`feed/userFeed?&userPk=${sessionStorage.getItem("userpk")}`)
+      // http.get(`feed/userFeed?end=60&start=0&userPk=${sessionStorage.getItem("userpk")}`)
+      http.get(`feed/userFeed?&userPk=${sessionStorage.getItem("userpk")}`)
       .then((res)=>{
         this.cards = res.data.object
         console.log('card', this.cards)
@@ -38,7 +35,7 @@ import http from "../../http-common";
 
 <style scoped>
   .scrollBar{
-    overflow: scroll;
+    overflow-y: scroll;
     width: 100%;
     height:100%;
     padding: 20px;
