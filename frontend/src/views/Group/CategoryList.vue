@@ -5,10 +5,10 @@
       <v-container class="pa-0 pa-md-3">
         <br>
         <v-row class="mb-3">
-          <v-col cols="12" sm="5" class="d-flex flex-column justify-center">
+          <v-col cols="12" sm="6" class="d-flex flex-column justify-center">
             <h3 class="pl-1 pl-sm-16"><span class="orange-color">{{ category_k }}</span> 카테고리</h3>
           </v-col>
-          <v-col cols="12" sm="7">
+          <v-col cols="12" sm="6">
             <v-btn text outlined @click="clickCategory('공부')">공부</v-btn>
             <v-btn text outlined @click="clickCategory('다이어트')">다이어트</v-btn>
             <v-btn text outlined @click="clickCategory('운동')">운동</v-btn>
