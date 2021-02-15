@@ -10,63 +10,63 @@
             src="@/assets/icon/study.png" 
             alt="study-icon" 
             class="category-icon"
-            @click="clickCategory('study')"
+            @click="clickCategory('공부')"
           >
-          <div class="group-name mt-2" id="study">공부</div>
+          <div class="group-name mt-2">공부</div>
         </v-col>
         <v-col cols="4" sm="1" class="d-flex flex-column align-center category-icon-effect px-0">
           <img 
             src="@/assets/icon/diet.png" 
             alt="diet-icon" 
             class="category-icon"
-            @click="clickCategory('diet')"
+            @click="clickCategory('다이어트')"
           >
-          <div class="group-name mt-2" id="diet">다이어트</div>
+          <div class="group-name mt-2">다이어트</div>
         </v-col>
         <v-col cols="4" sm="1" class="d-flex flex-column align-center category-icon-effect px-0">
           <img 
             src="@/assets/icon/exercise.png" 
             alt="exercise-icon" 
             class="category-icon"
-            @click="clickCategory('exercise')"
+            @click="clickCategory('운동')"
           >
-          <div class="group-name mt-2" id="exercise">운동</div>
+          <div class="group-name mt-2">운동</div>
         </v-col>
         <v-col cols="3" sm="1" class="d-flex flex-column align-center category-icon-effect px-0">
           <img 
             src="@/assets/icon/book.png" 
             alt="book-icon" 
             class="category-icon"
-            @click="clickCategory('book')"
+            @click="clickCategory('책')"
           >
-          <div class="group-name mt-2" id="book">책</div>
+          <div class="group-name mt-2">책</div>
         </v-col>
         <v-col cols="3" sm="1" class="d-flex flex-column align-center category-icon-effect px-0">
           <img 
             src="@/assets/icon/life.png" 
             alt="life-icon" 
             class="category-icon"
-            @click="clickCategory('life')"
+            @click="clickCategory('생활습관')"
           >
-          <div class="group-name mt-2" id="life">생활습관</div>
+          <div class="group-name mt-2">생활습관</div>
         </v-col>
         <v-col cols="3" sm="1" class="d-flex flex-column align-center category-icon-effect px-0">
           <img 
             src="@/assets/icon/hobby.png" 
             alt="hobby-icon" 
             class="category-icon"
-            @click="clickCategory('hobby')"
+            @click="clickCategory('취미')"
           >
-          <div class="group-name mt-2" id="hobby">취미</div>
+          <div class="group-name mt-2">취미</div>
         </v-col>
         <v-col cols="3" sm="1" class="d-flex flex-column align-center category-icon-effect px-0">
           <img 
             src="@/assets/icon/more.png" 
             alt="etc-icon" 
             class="category-icon"
-            @click="clickCategory('etc')"
+            @click="clickCategory('기타')"
           >
-          <div class="group-name mt-2" id="etc">기타</div>
+          <div class="group-name mt-2">기타</div>
         </v-col>
       </v-row>
     </v-card>
@@ -88,9 +88,9 @@ export default {
   },
   methods: {
     clickCategory(v) {
-      var category = document.getElementById(v).innerHTML;
+      // var category = document.getElementById(v).innerHTML;
       // console.log(String(this.categories[category]))  
-      this.$router.push({name: 'CategoryList', params: {category_e: this.categories[category], category_k: category}})
+      this.$router.push({name: 'CategoryList', params: {category_e: this.categories[v], category_k: v}})
     }
   }
 }
