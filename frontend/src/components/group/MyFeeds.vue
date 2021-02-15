@@ -1,7 +1,7 @@
 <template>
   <v-card
     :loading="loading"
-    class="mx-auto my-12"
+    class="mx-auto my-8"
     width="95%"
   >
     <template slot="progress">
@@ -28,8 +28,8 @@
           </v-btn>
         </template>
         <v-list>
-          <v-btn class="green--text" @click="feedUpdate" text width="100%">피드 수정 </v-btn>
-          <v-btn class="red--text" @click="feedDelete" text width="100%">피드 삭제 </v-btn>    
+          <v-btn class="green--text modal-btn" @click="feedUpdate" text width="100%">피드 수정 </v-btn>
+          <v-btn class="red--text modal-btn" @click="feedDelete" text width="100%">피드 삭제 </v-btn>    
         </v-list>
       </v-menu>
     </v-card-title>
@@ -103,4 +103,7 @@ import http from '../../http-common'
     color: #F9802D
   }
 
+  .modal-btn {
+    text-align: center;
+  }
 </style>
