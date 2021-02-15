@@ -1,10 +1,9 @@
 package com.ssafy.doit.model.response;
 
-import com.ssafy.doit.model.Group;
-import com.ssafy.doit.model.GroupHashTag;
+import com.ssafy.doit.model.group.Group;
+import com.ssafy.doit.model.group.GroupHashTag;
 import lombok.Getter;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 

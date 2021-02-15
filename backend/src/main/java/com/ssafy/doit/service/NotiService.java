@@ -2,9 +2,9 @@ package com.ssafy.doit.service;
 
 import com.ssafy.doit.model.notification.NotiType;
 import com.ssafy.doit.model.notification.Notification;
-import com.ssafy.doit.repository.GroupRepository;
+import com.ssafy.doit.repository.group.GroupRepository;
 import com.ssafy.doit.repository.NotiRepository;
-import com.ssafy.doit.repository.chat.ChatRoomRepository;
+import com.ssafy.doit.repository.store.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

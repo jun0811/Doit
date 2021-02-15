@@ -1,14 +1,10 @@
 package com.ssafy.doit.model.response;
 
-import com.ssafy.doit.model.Product;
-import com.ssafy.doit.model.chat.ChatRoom;
-import com.ssafy.doit.model.chat.ChatRoomJoin;
-import lombok.AllArgsConstructor;
+import com.ssafy.doit.model.store.Product;
+import com.ssafy.doit.model.store.ChatRoom;
+import com.ssafy.doit.model.store.ChatRoomJoin;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter

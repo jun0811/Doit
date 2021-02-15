@@ -1,16 +1,24 @@
 package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.*;
+import com.ssafy.doit.model.feed.CommitGroup;
+import com.ssafy.doit.model.feed.CommitUser;
+import com.ssafy.doit.model.group.Group;
+import com.ssafy.doit.model.group.GroupUser;
+import com.ssafy.doit.model.group.HashTag;
 import com.ssafy.doit.model.response.ResRanking;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
+import com.ssafy.doit.repository.feed.CommitGroupRepository;
+import com.ssafy.doit.repository.feed.CommitUserRepository;
+import com.ssafy.doit.repository.group.GroupRepository;
+import com.ssafy.doit.repository.group.HashTagRepository;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

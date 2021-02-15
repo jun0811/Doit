@@ -1,12 +1,18 @@
 package com.ssafy.doit.service;
 
-import com.ssafy.doit.model.Comment;
-import com.ssafy.doit.model.Feed;
-import com.ssafy.doit.model.Group;
-import com.ssafy.doit.model.GroupUser;
-import com.ssafy.doit.model.response.ResponseFeed;
+
+import com.ssafy.doit.model.feed.Comment;
+import com.ssafy.doit.model.feed.Feed;
+import com.ssafy.doit.model.group.Group;
+import com.ssafy.doit.model.group.GroupUser;
+import com.ssafy.doit.model.response.ResComment;
+
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
+import com.ssafy.doit.repository.feed.CommentRepository;
+import com.ssafy.doit.repository.feed.FeedRepository;
+import com.ssafy.doit.repository.group.GroupRepository;
+import com.ssafy.doit.repository.group.GroupUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,9 +57,18 @@ public class CommentService {
             .createDate(LocalDateTime.now()).build());
     }
 
-    public List<Comment> commentList(Long feedPk) {
+    @Transactional
+    public List<ResComment> commentList(Long feedPk) {
         List<Comment> list = commentRepository.findByFeedPk(feedPk);
-        return list;
+        List<ResComment> resList = new ArrayList<>();
+
+        for(Comment comment : list){
+            String nickname = userRepository.findById(comment.getUserPk()).get().getNickname();
+            String userImg = userRepository.findById(comment.getUserPk()).get().getImage();
+            Long userPk = userRepository.findById(comment.getUserPk()).get().getId();
+            resList.add(new ResComment(comment, nickname, userImg,userPk));
+        }
+        return resList;
     }
 
     @Transactional

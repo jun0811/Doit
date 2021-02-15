@@ -1,17 +1,21 @@
 <template>
   <v-container fluid fixed-header class="nav-style">
     <v-row class="d-flex justify-center">
-      <v-col cols="6" sm="2" class="d-flex justify-center">
+      <v-col cols="5" sm="2" class="d-flex justify-center">
         <v-btn text large>
           Doit을 소개합니다
         </v-btn>
       </v-col>
       <v-col cols="4" sm="2" class="d-flex justify-center">
-        <v-btn text large>
+        <v-btn 
+          text 
+          large
+          @click="goToCategory"
+        >
           그룹 둘러보기
         </v-btn>
       </v-col>
-      <v-col cols="2" sm="2" class="d-flex justify-center">
+      <v-col cols="3" sm="2" class="d-flex justify-center">
         <v-btn 
           text 
           large
@@ -33,6 +37,9 @@ export default {
   methods: {
     goToShop() {
       this.$router.push("/mileageshop")
+    },
+    goToCategory() {
+      this.$router.push({name: 'CategoryList', params: {category: 'study'}})
     }
   }
 }

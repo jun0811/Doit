@@ -7,7 +7,7 @@ import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.UserRepository;
-import com.ssafy.doit.service.EmailSendService;
+import com.ssafy.doit.service.mail.EmailSendService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

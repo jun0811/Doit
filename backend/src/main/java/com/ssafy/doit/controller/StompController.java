@@ -1,11 +1,11 @@
 package com.ssafy.doit.controller;
 
-import com.ssafy.doit.model.Group;
-import com.ssafy.doit.model.GroupUser;
-import com.ssafy.doit.model.chat.ChatMessage;
+import com.ssafy.doit.model.group.Group;
+import com.ssafy.doit.model.group.GroupUser;
+import com.ssafy.doit.model.store.ChatMessage;
 import com.ssafy.doit.model.notification.NotiType;
 import com.ssafy.doit.model.notification.Notification;
-import com.ssafy.doit.repository.GroupRepository;
+import com.ssafy.doit.repository.group.GroupRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.NotiService;
 import com.ssafy.doit.service.jwt.JwtUtil;
@@ -72,7 +72,7 @@ public class StompController {
                 noti.setTargetId(notification.getTargetId());
                 noti.setTarget(group);
                 notiService.save(noti);
-                template.convertAndSend("/subscribe/noti/user/" + notification.getUserPk(), noti);
+                template.convertAndSend("/subscribe/noti/user/" + noti.getUserPk(), noti);
             }
         }
     }

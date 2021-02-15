@@ -1,6 +1,5 @@
 package com.ssafy.doit.model.response;
 
-import com.ssafy.doit.model.CommitGroup;
 import lombok.Getter;
 
 @Getter
