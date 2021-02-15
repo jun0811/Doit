@@ -128,7 +128,7 @@ export default {
             // "status": this.status,
           },
           (res) =>{
-              if (res.data.status){
+            if (res.data.status){
               alert("피드가 생성되었습니다.")
               const feedPk = (res.data.object)
               http.post(`feed/updateImg?feedPk=${feedPk}`,formData)
@@ -136,7 +136,6 @@ export default {
                 console.log(res);
                 this.$router.go(-1)
               })
-              
             }
           },
           (err) =>{

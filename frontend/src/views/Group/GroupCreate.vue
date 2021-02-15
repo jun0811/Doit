@@ -54,13 +54,11 @@
                               prepend-icon="mdi-calendar"
                               v-bind="attrs"
                               autocomplete="off"
-                              @blur="date = parseDate(endDate)"
                               v-on="on"
                             ></v-text-field>
                           </template>
                           <v-date-picker
-                            v-model="date"
-                            no-title
+                            v-model="endDate"
                             @input="menu = false"
                           ></v-date-picker>
                         </v-menu>
@@ -145,16 +143,17 @@
 <script>
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-// import { createGroup } from "@/api/group/index.js"
 import http from "../../http-common"
+const date=new Date()
 export default {
     name :"GroupCreate",
     components: {
         Header,
         Footer
     },
-    data(vm){
+    data(){
       return{
+      file: {},
       image: "",
       submit: false,
       imageUrl: null,
@@ -163,12 +162,15 @@ export default {
       minLength : false,
       name: "",
       maxNum : 0,
-      endDate: vm.formatDate(new Date().toISOString().substr(0,10)),
+      endDate: new Date().toISOString().substr(0,10),
       content :"",
       word:"",
       hashtag : [],
       tmp: "",
       category : "",
+      year: date.getFullYear(),
+      month: date.getMonth()+1,
+      day :date.getDate(),
       items: ['운동', '공부', '다이어트', '취미', '독서', '생활습관', '기타'],
       change :{
         "운동" : "exercise",
@@ -184,20 +186,16 @@ export default {
     watch: {
       endDate(){
         let END = new Date(this.endDate)
-        console.log(END)
         const TODAY = new Date()
         let check = Math.ceil((END.getTime() - TODAY.getTime())/(1000*3600*24));
         if (check<7){
           alert('최소 일주일 이후 날짜를 선택해주세요.')
           // this.endDate = `${}`
-          this.endDate =""
+          this.endDate =`${this.year}-${String(this.month).padStart(2, "0")}-${String(this.day).padStart(2, "0")}`
           this.submit = false
         }else if(check>=7){
           this.submit = true
         } 
-      },
-      date(){
-        this.endDate = this.formatDate(this.date)
       },
       content(){
         if (this.content.length>=20){
@@ -246,12 +244,14 @@ export default {
       // 이미지 관련 메서드 끝
 
       create(){
+        const formData = new FormData()
+        formData.append("file",this.file)
         if (this.minLength && this.name &&this.submit){
           http.post('/group/createGroup',
           {
             "name": this.name,
             "maxNum": this.maxNum,
-            "endDate": this.date,
+            "endDate": this.endDate,
             "content":this.content,
             "hashtags": this.hashtag,
             "category": this.category
@@ -259,10 +259,15 @@ export default {
           .then((res) =>{
             console.log(res)
             alert('생성완료')
+            http.post(`/group/updateImg?groupPk=${res.data.object}`,formData)
+            .then((res)=>{
+            console.log(res);
+            this.$router.go(-1)
+            })
           })
         }else{
           if(this.name.length<1) alert('그룹명을 입력해주세요')
-          else if(this.submit===false) alert('만료 날짜를 선택해주세요')
+          else if(this.submit===false) alert('만료 날짜 일주일 이후를 선택해주세요')
           else {alert(`그룹 소개글을 20자 이상 작성해주세요 ` )}
         }
       }
