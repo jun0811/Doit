@@ -1,16 +1,20 @@
 <template>
   <div>
       <Header></Header>
+      <NavBar></NavBar>
       <v-container class="pa-0 pa-md-3">
         <SearchBar></SearchBar>
         <br>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
+        <div v-if="!empty" class="pl-sm-16">
+          총 <span style="color: #F9802D">{{ length }}</span> 개의 검색 결과가 있습니다.
+        </div>
         <GroupCard :page="page" :word="word"></GroupCard>
         <div v-if="empty" class="d-flex align-center flex-column">
-          <h3>'검색키워드'와(과) 일치하는 검색결과가 없습니다.</h3>
+          <h3>'{{ word }}'와(과) 일치하는 검색결과가 없습니다.</h3>
           <br>
           <br>
-          <h4>'검색키워드' 관련 그룹을 만들고 싶으시다면?</h4>
+          <h4>'{{ word }}' 관련 그룹을 만들고 싶으시다면?</h4>
           <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
             그룹 만들기
           </v-btn>
@@ -23,7 +27,7 @@
             :length="pageCount"
             :total-visible="7"
           ></v-pagination>
-          <h4 class="mt-6">'검색키워드' 관련 그룹을 만들고 싶으시다면?</h4>
+          <h4 class="mt-6">'{{ word }}' 관련 그룹을 만들고 싶으시다면?</h4>
           <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
             그룹 만들기
           </v-btn>
@@ -36,6 +40,7 @@
 
 <script>
 import Header from "@/components/common/Header";
+import NavBar from "@/components/common/NavBar.vue";
 import SearchBar from "@/components/common/SearchBar";
 import Footer from "@/components/common/Footer";
 import GroupCard from "@/components/group/GroupCard.vue";
@@ -55,6 +60,7 @@ export default {
           pageCount:0,
           groups:[],
           empty: '',
+          length: 0,
         }
     },
   updated(){
@@ -71,6 +77,7 @@ export default {
         this.groups = res.data.object.content
         this.pageCount = parseInt(res.data.object.totalPages)
         this.empty = res.data.object.empty
+        this.length = res.data.object.content.length
         }
       },
       (err) =>{
@@ -93,6 +100,7 @@ export default {
         this.groups = res.data.object.content
         this.pageCount = parseInt(res.data.object.totalPages)
         this.empty = res.data.object.empty
+        this.length = res.data.object.content.length
         }
       },
       (err) =>{
@@ -103,6 +111,7 @@ export default {
   },
   components: { 
       Header, 
+      NavBar,
       Footer, 
       SearchBar, 
       GroupCard 
