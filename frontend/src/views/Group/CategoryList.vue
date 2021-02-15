@@ -119,6 +119,7 @@ export default {
         this.pageCount = parseInt(res.data.object.totalPages)
         this.empty = res.data.object.empty
         this.length = res.data.object.content.length
+        this.category_k = this.categories2[this.category]
         }
       },
       (err) =>{
