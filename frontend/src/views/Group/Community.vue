@@ -268,7 +268,7 @@ export default {
       .then((res)=>{
         // console.log(res.data.object)
         this.cards = res.data.object
-        console.log(this.cards)
+        // console.log(this.cards)
       })
     },
   },

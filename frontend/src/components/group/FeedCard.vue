@@ -72,7 +72,7 @@
       <div v-show="show">
         <v-divider></v-divider>
         <v-card-text>
-          <Comment></Comment>
+          <Comment :card="card"></Comment>
         </v-card-text>
       </div>
     </v-expand-transition>
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import Comment from '../../components/group/CommentList.vue'
+import Comment from '../../components/group/Comment.vue'
 import http from '../../http-common'
 
   export default {

@@ -7,18 +7,19 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title >{{user}}</v-list-item-title>
+          <v-list-item-title >{{user.nickname}}</v-list-item-title>
           <v-list-item-subtitle> 
             <v-textarea
               filled
+              color="orange"
               auto-grow
               label="댓글입력"
               rows="2"
               row-height="20"
               ref="input"
               v-model="comment.content"
-              color="orange"
               hide-details=""
+              class="comment-input"
               @focus="buttonActivate()"
             ></v-textarea>
           </v-list-item-subtitle>
@@ -106,33 +107,44 @@ export default {
       feedPk: 44,
       userPk: 8, 
     },
-    user :'',
+    user :{}, //nickname, userPk, image가 들어있음
     btnActive:false,
   }),
   props : {
-
+    card: Object,
   },
   created() {
     this.user = this.$store.getters.getName
+    this.getComment()
+    this.getUser()
+    // console.log(this.card)
   }, 
   methods: {
     createComment() {
       const params = {
         "content" : this.comment.content,
         "feedPk" : this.comment.feedPk,
-        "userPk" : this.comment.userPk
+        "userPk" : this.user.userPk
       }
       http.post(`comment/createComment`, params)
         .then((res)=>{
           if(res.data.status){
-            console.log('createComment', res)
+            console.log(res.data.object)
           }
         }).catch((err) => {
           console.log(err)
         })
-      }, 
+    }, 
+    getUser() {
+      http.get(`user/detailUser`)
+        .then((res)=>{
+          if(res.data.status){
+            this.user = res.data.object
+          }
+      })
+    },
     getComment() {
-      http.get(`comment/commentList?feedPk=${this.feedPk}`)
+      http.get(`comment/commentList?feedPk=${this.card.feedPk}`)
         .then((res)=>{
           if(res.data.status){
             console.log('getComment', res.data.object)
@@ -154,5 +166,7 @@ export default {
 .cancel-btn {
   width: 70px;
 }
+
+
 
 </style>
