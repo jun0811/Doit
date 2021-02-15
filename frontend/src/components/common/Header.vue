@@ -270,6 +270,19 @@ export default {
         !this.$v.password.required && errors.push('비밀번호는 필수입니다')
         return errors
       },
+      getConnected(){
+        return this.$store.getters.getConnected;
+      }
+    },
+    watch: {
+      getConnected(val){
+        if(val == true){
+          this.$store.getters.getStompClient.subscribe('/subscribe/noti/user/' + this.$store.state.account.userpk, res => {
+            // notification 받기
+            console.log(JSON.parse(res.body));
+          })
+        }
+      }
     },
     created(){
       console.log(this.$store.state.account.accessToken)
@@ -281,11 +294,16 @@ export default {
             .then((res)=>{
             this.items[0].items = res.data.object;
         })
+        // 소켓 연결
+        this.socketConnect();
       }
     },
     methods: {
-      ...mapActions(['LOGIN', 'LOGOUT']),
+      ...mapActions(['LOGIN', 'LOGOUT', 'CONNECT', 'DISCONNECT']),
 
+      socketConnect() {
+        this.CONNECT(this.$store.getters.getAccessToken)
+      },
       signup() {
         this.$router.push("/user/join")
       },
@@ -318,6 +336,7 @@ export default {
         .then((response) => {
           alert("로그아웃 되었습니다😒");
           console.log(response)
+          this.DISCONNECT();
           this.$router.push('/')
           this.$router.go()
         })
