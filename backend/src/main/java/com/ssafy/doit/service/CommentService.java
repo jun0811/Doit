@@ -1,9 +1,12 @@
 package com.ssafy.doit.service;
 
+
 import com.ssafy.doit.model.feed.Comment;
 import com.ssafy.doit.model.feed.Feed;
 import com.ssafy.doit.model.group.Group;
 import com.ssafy.doit.model.group.GroupUser;
+import com.ssafy.doit.model.response.ResComment;
+
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
 import com.ssafy.doit.repository.feed.CommentRepository;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,9 +57,17 @@ public class CommentService {
             .createDate(LocalDateTime.now()).build());
     }
 
-    public List<Comment> commentList(Long feedPk) {
+    @Transactional
+    public List<ResComment> commentList(Long feedPk) {
         List<Comment> list = commentRepository.findByFeedPk(feedPk);
-        return list;
+        List<ResComment> resList = new ArrayList<>();
+
+        for(Comment comment : list){
+            Long user = userRepository.findById(comment.getUserPk()).get().getId();
+            String userImg = userRepository.findById(comment.getUserPk()).get().getImage();
+            resList.add(new ResComment(comment, user, userImg));
+        }
+        return resList;
     }
 
     @Transactional
