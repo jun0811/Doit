@@ -20,14 +20,14 @@
               v-model="commentWrite.content"
               hide-details=""
               class="comment-input"
-              @focus="buttonActivate()"
+              @focus="createBtnActive = !createBtnActive"
             ></v-textarea>
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-row v-if="btnActive" class="d-flex justify-end mr-5">
-        <v-btn @click="$refs.input.reset(); buttonDeactivate();" class="cancel-btn">취소</v-btn>
-        <v-btn @click="createComment(); buttonDeactivate();" class="comment-btn">댓글</v-btn>
+      <v-row v-if="createBtnActive" class="d-flex justify-end mr-5">
+        <v-btn @click="$refs.input.reset(); createBtnActive= !createBtnActive;" class="cancel-btn">취소</v-btn>
+        <v-btn @click="createComment(); createBtnActive != createBtnActive;" class="comment-btn">댓글</v-btn>
       </v-row>
     </v-list>
     <v-list three-line>
@@ -54,14 +54,30 @@
 
           <v-list-item-content>
             <v-list-item-title v-html="comment.writerName"></v-list-item-title>
-            <v-list-item-subtitle v-html="comment.content"></v-list-item-subtitle>
+            <v-list-item-subtitle v-if="!comment.updateActive" v-html="comment.content"></v-list-item-subtitle>
+             <v-list-item-subtitle v-if="comment.updateActive">  
+              <v-textarea
+                filled
+                color="orange"
+                auto-grow
+                label="댓글수정"
+                rows="2"
+                row-height="20"
+                ref="input"
+                v-model="comment.content"
+                hide-details=""
+              ></v-textarea>
+             </v-list-item-subtitle> 
+            <v-list-item-title v-if="comment.updateActive" class="d-flex justify-end mr-1">
+              <v-btn @click="comment.updateActive = !comment.updateActive; " class="cancel-btn">취소</v-btn>
+              <v-btn @click="updateComment(comment)" class="comment-btn">수정</v-btn>
+            </v-list-item-title>
           </v-list-item-content>
           <v-list-item-icon class="mx-0 my-auto d-flex justify-end">
             <v-menu
               bottom
-              right
+              rightcomment.updateActive =!comment.updateActive
               :nudge-width="100"
-              :close-on-content-click="false"
               transition="slide-y-transition"
             >
               <template v-slot:activator="{ on, attrs }">
@@ -75,7 +91,7 @@
               </template>
 
               <v-list>
-                <v-list-item >
+                <v-list-item @click="comment.updateActive =!comment.updateActive">
                   <v-list-item-title style="text-align:center;">수정</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="deleteComment(comment.commentPk)" >
@@ -112,14 +128,7 @@ export default {
       userPk:'',
       image:'',
     },
-    btnActive:false,
-
-    items: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
-      ],
+    createBtnActive: false,
 
   }),
   props : {
@@ -157,6 +166,23 @@ export default {
           console.log(err)
         })
     },
+    updateComment(comment) {
+      const params = {
+        "commentPk" : comment.commentPk,
+        "content" : comment.content,
+        "feedPk" : comment.feedPk,
+        "userPk" : comment.userPk,
+      }
+      http.put(`comment/updateComment`, params)
+        .then((res)=>{
+          if(res.data.status){
+            comment.updateActive = false;
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      
+    },
     getComment() {
       http.get(`comment/commentList?feedPk=${this.card.feedPk}`)
         .then((res)=>{
@@ -179,6 +205,7 @@ export default {
                   "content": comment.content,
                   "profileImg" : this.baseImg + comment.image,
                   "writerName": comment.nickname,
+                  "updateActive": false,
                   }
                 ]
               } else {
@@ -191,6 +218,7 @@ export default {
                   "content": comment.content,
                   "profileImg" : this.baseImg + comment.image,
                   "writerName": comment.nickname,
+                  "updateActive": false,
                   }
                 ]
               }
@@ -208,12 +236,6 @@ export default {
           }
       })
     },
-    buttonActivate() {
-      this.btnActive = true;
-    },
-    buttonDeactivate() {
-      this.btnActive = false;
-    }
   }
 }
 </script>
