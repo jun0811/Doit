@@ -223,12 +223,6 @@ export default {
       onClickImageUpload() {
         this.$refs.imageInput.click();
       },
-      saveImg(){
-        const formData = new FormData()
-        formData.append('file',this.file)
-        http.post('user/updateImg',formData)
-        .then((res)=>console.log(res))
-      }
   },
 };
 </script>

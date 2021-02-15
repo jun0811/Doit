@@ -3,9 +3,30 @@
         <Header></Header>
         <v-container class="pa-3 pa-sm-16" >
             <v-card  class="d-flex align-center flex-column mb-12 mx-sm-auto px-5 col-sm-10" width=100% max-width=600>
-                <h3 class="my-4" style="width:100%">그룹 만들기</h3>
-                <v-divider style="width:100%;"></v-divider>
-                <v-container class="d-flex flex-column">
+              <h3 class="my-4" style="width:100%">그룹 만들기</h3>
+              <v-divider style="width:100%;"></v-divider>
+              <v-container class="d-flex flex-column">
+                <v-row >
+                  <v-col cols="4">
+                    <!-- 이미지 뛰우기 -->
+                    <v-img v-if="imageUrl" :src="imageUrl" class="profile-img"></v-img>
+                    <!-- <v-img v-else src="@/assets/img/logo.png" class="profile-img"> </v-img> -->
+                  </v-col>
+                  <v-col cols="4" class="d-flex align-end">
+                    <!-- 이미지 첨부 버튼 -->
+                    <div class="pt-3 ">
+                      <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
+                      <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">그룹 이미지</v-btn>
+                      <input
+                        ref="uploader"
+                        class="d-none"
+                        type="file"
+                        accept="image/*"
+                        @change="onFileChanged"
+                      >
+                    </div>
+                  </v-col>
+                </v-row>
                   <v-row class="mb-5">
                     <v-col cols="12" sm="12" md="6" class="text-left">
                       <v-text-field 
@@ -16,33 +37,33 @@
                     <!-- 달력 시작-->
                     <v-col cols="12" md="6" sm="12">
                       <!-- <span class="mr-3">|마감|</span> -->
-                          <v-menu
-                            v-model="menu"
-                            :close-on-content-click="false"
-                            transition="scale-transition"
-                            offset-y
-                            max-width="290px"
-                            min-width="auto"
-                            hide-details=""
-                          >
-                            <template v-slot:activator="{ on, attrs }">
-                              <v-text-field
-                                v-model="endDate"
-                                hide-details=""
-                                label="만료 날짜"
-                                prepend-icon="mdi-calendar"
-                                v-bind="attrs"
-                                autocomplete="off"
-                                @blur="date = parseDate(endDate)"
-                                v-on="on"
-                              ></v-text-field>
-                            </template>
-                            <v-date-picker
-                              v-model="date"
-                              no-title
-                              @input="menu = false"
-                            ></v-date-picker>
-                          </v-menu>
+                        <v-menu
+                          v-model="menu"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          max-width="290px"
+                          min-width="auto"
+                          hide-details=""
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="endDate"
+                              hide-details=""
+                              label="만료 날짜"
+                              prepend-icon="mdi-calendar"
+                              v-bind="attrs"
+                              autocomplete="off"
+                              @blur="date = parseDate(endDate)"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="date"
+                            no-title
+                            @input="menu = false"
+                          ></v-date-picker>
+                        </v-menu>
                       <!-- 달력 끝 -->
                     </v-col>
                   </v-row>
@@ -104,6 +125,7 @@
                     </ul>
                   </v-col>
                 </v-row>
+                
               </v-container>
             </v-card>
           <v-row>
@@ -133,7 +155,9 @@ export default {
     },
     data(vm){
       return{
+      image: "",
       submit: false,
+      imageUrl: null,
       menu: false,
       date: new Date().toISOString().substr(0,10),
       minLength : false,
@@ -207,7 +231,20 @@ export default {
       remove(idx){
         this.hashtag.splice(idx,1)
       },
-      
+      // 이미지 관련 메서드 시작
+      onFileChanged(e) {
+        this.selectedFile = e.target.files[0]
+        this.uploadImg = URL.createObjectURL(this.selectedFile)
+       },
+       onImages(e) {
+        this.file = e.target.files[0];
+        this.imageUrl = URL.createObjectURL(this.file)
+      },
+      onClickImageUpload() {
+        this.$refs.imageInput.click();
+      },
+      // 이미지 관련 메서드 끝
+
       create(){
         if (this.minLength && this.name &&this.submit){
           http.post('/group/createGroup',
@@ -269,6 +306,10 @@ ul li {
   border: 2px solid #F9802D;
   color: #F9802D;
   border-radius: 15px;
+}
+.profile-img{
+  width:150px;
+  height:150px;
 }
 
 </style>
