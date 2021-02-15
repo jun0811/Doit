@@ -18,8 +18,8 @@
               @blur="$v.email.$touch()"
             ></v-text-field>
           </v-col>
-            <v-btn text @click="checkEmail"  v-bind:class="{check : c_Email }" class="mt-4"> 
-                <font-awesome-icon icon="check-circle"/> 
+            <v-btn text @click="checkEmail"  v-bind:class="{check : c_Email }" class="mt-4">
+                <font-awesome-icon icon="check-circle"/>
             </v-btn>
         </v-row>
       </v-container>
@@ -114,10 +114,10 @@ export default {
     ,
 
     checkEmail(){
-        http.post("/user/checkEmail", this.email)
+        http.post("/user/confirmEmail", this.email)
         .then((res)=>{
           console.log(res);
-          if(!res.data.status) this.c_Email = true
+          if(res.data.status) this.c_Email = true
           else
             alert("가입하지 않은 이메일입니다.")
         })

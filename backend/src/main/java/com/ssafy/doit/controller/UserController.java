@@ -163,7 +163,7 @@ public class UserController {
     @PostMapping("/profile/checkNick")
     public Object checkNickname(@RequestBody String nickname){
         ResponseBasic result = new ResponseBasic();
-        System.out.println(UserRole.USER);
+//        System.out.println(UserRole.USER);
         Long userPk = userService.currentUser();
 
         Optional<User> user = userRepository.findById(userPk); //로그인한 회원
