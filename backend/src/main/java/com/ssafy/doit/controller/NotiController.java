@@ -4,15 +4,14 @@ import com.ssafy.doit.model.notification.Notification;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.repository.NotiRepository;
+import com.ssafy.doit.service.NotiService;
 import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class NotiController {
     @Autowired
     private final UserService userService;
     @Autowired
-    private final GroupRepository groupRepository;
+    private final NotiService notiService;
     @Autowired
     private final NotiRepository notiRepository;
 
@@ -34,8 +33,24 @@ public class NotiController {
         ResponseBasic result = null;
         try{
             Long uid = userService.currentUser();
-            List<Notification> notifications = notiRepository.findAllByUserPkAndStatusIsTrue(uid);
-            System.out.println(notifications);
+            List<Notification> notifications = notiService.getList(uid);
+            result = new ResponseBasic(true, "success", notifications);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "알림 확인")
+    @GetMapping("/confirm/{id}")
+    public Object confirm(@PathVariable Long id){
+        ResponseBasic result = null;
+        try{
+            Long currentUser = userService.currentUser();
+            notiService.setStatus(id, currentUser);
+            List<Notification> notifications = notiService.getList(currentUser);
             result = new ResponseBasic(true, "success", notifications);
         }catch (Exception e){
             e.printStackTrace();

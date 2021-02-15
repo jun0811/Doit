@@ -1,6 +1,7 @@
 package com.ssafy.doit.model.notification;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +24,13 @@ public class Notification {
     private Long targetId;
     private boolean status;
     private LocalDateTime notiDate;
-    private String desc;
+
+    @Transient
+    private Object target;
 
     @PrePersist
-    private void createAt(){
+    private void init(){
+        this.status = true;
         this.notiDate = LocalDateTime.now();
     }
 }
