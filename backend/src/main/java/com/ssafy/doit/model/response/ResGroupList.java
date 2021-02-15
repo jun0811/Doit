@@ -1,6 +1,6 @@
 package com.ssafy.doit.model.response;
 
-import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.group.Group;
 import lombok.Getter;
 
 @Getter

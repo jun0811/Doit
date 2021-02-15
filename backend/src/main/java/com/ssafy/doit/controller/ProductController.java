@@ -1,16 +1,16 @@
 package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.Mileage;
-import com.ssafy.doit.model.Product;
+import com.ssafy.doit.model.store.Product;
 import com.ssafy.doit.model.request.RequestPage;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseProduct;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.MileageRepository;
-import com.ssafy.doit.repository.ProductRepository;
+import com.ssafy.doit.repository.store.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.S3Service;
-import com.ssafy.doit.service.UserService;
+import com.ssafy.doit.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,10 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/product")

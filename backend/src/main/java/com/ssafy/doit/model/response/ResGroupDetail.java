@@ -1,12 +1,10 @@
 package com.ssafy.doit.model.response;
 
-import com.ssafy.doit.model.Group;
-import com.ssafy.doit.model.GroupHashTag;
-import com.ssafy.doit.model.GroupUser;
-import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.model.group.Group;
+import com.ssafy.doit.model.group.GroupHashTag;
+import com.ssafy.doit.model.group.GroupUser;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

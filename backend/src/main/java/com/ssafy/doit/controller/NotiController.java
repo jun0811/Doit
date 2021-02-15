@@ -2,10 +2,9 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.notification.Notification;
 import com.ssafy.doit.model.response.ResponseBasic;
-import com.ssafy.doit.repository.GroupRepository;
 import com.ssafy.doit.repository.NotiRepository;
 import com.ssafy.doit.service.NotiService;
-import com.ssafy.doit.service.UserService;
+import com.ssafy.doit.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
