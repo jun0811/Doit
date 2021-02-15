@@ -7,23 +7,12 @@
           <v-row justify="center">
             <v-col cols="12" sm="3">
               <div class="text-center">
-                <img
-                  :src="uploadImg"
-                  alt="profile-img"
-                  class="profile-img"
-                />
-
+                <v-img src="http:\\ssafydoit.s3.ap-northeast-2.amazonaws.com/캡처.jpg"></v-img>
+                <v-img v-if="imageUrl" :src="imageUrl"></v-img>
                 <!-- 사진변경 버튼 시작 -->
                 <div class="pt-3 text-center">
-                  <v-btn
-                    outlined
-                    text
-                    depressed
-                    :loading="isSelecting"
-                    @click="onButtonClick"
-                  >
-                    {{ buttonText }}
-                  </v-btn>
+                    <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
+                  <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">업로드</v-btn>
                   <input
                     ref="uploader"
                     class="d-none"
@@ -31,6 +20,7 @@
                     accept="image/*"
                     @change="onFileChanged"
                   >
+                  <v-btn v-if="imageUrl" @click="saveImg">저장</v-btn>
                 </div>
                 <!-- 사진변경 버튼 끝 -->
               </div>
@@ -139,6 +129,8 @@ export default {
   },
   data() {
     return {
+      file: "",
+      imageUrl: null,
       name: "",
       email: "",
       c_Nick: false,
@@ -214,7 +206,23 @@ export default {
     onFileChanged(e) {
       this.selectedFile = e.target.files[0]
       this.uploadImg = URL.createObjectURL(this.selectedFile)
-    }
+    },
+     onImages(e) {
+        this.file = e.target.files[0];
+        this.imageUrl = URL.createObjectURL(this.file)
+        
+      },
+      onClickImageUpload() {
+        this.$refs.imageInput.click();
+      },
+      saveImg(){
+        const formData = new FormData()
+        formData.append('file',this.file)
+        console.log(formData);
+        console.log(this.file)
+        http.post('user/updateImg',formData)
+        .then((res)=>console.log(res))
+      }
   },
 };
 </script>

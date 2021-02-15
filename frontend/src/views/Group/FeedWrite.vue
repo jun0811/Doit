@@ -47,14 +47,16 @@
                             outlined
                             v-model="selected"
                         ></v-select>                            
-                        </v-col>                        
-                        <v-col cols="12" sm="6" class="mb-5">
-                            <v-file-input
-                                class="py-0"
-                                hide-details=""
-                                truncate-length="50"
-                                label="첨부파일 선택"
-                            ></v-file-input>
+                        </v-col>    
+                        <!-- 이미지 첨부 -->
+                        <v-col cols="12" sm="6" class="mb-5 d-flex justify-end" >
+                            <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
+                            <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">업로드</v-btn>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-img v-if="imageUrl" :src="imageUrl"></v-img>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -90,6 +92,7 @@ export default {
     },
     data() {
         return {
+            imageUrl: null,
             selected : '',
             content :'',
             items : [
@@ -98,44 +101,55 @@ export default {
             ], 
             feedPk:'',
             feedType: true,
-            media: "",
+            file: {},
             status: true,
         }
     },
     watch: {
-        selected: function() {
-            if (this.selected == "인증") {
-                this.feedType = true
-            } else {
-                this.feedType = false
-            }
+      selected: function() {
+        if (this.selected == "인증") {
+            this.feedType = true
+        } else {
+            this.feedType = false
         }
+      }
     },
     methods: {
-        write() {
-            createFeed(
-                {
-                    "content": this.content,
-                    "feedType": this.feedType,
-                    "groupPk": this.groupPk,
-                    // "media": this.media,
-                    // "status": this.status,
-                },
-                (res) =>{
-                    if (res.data.status){
-                    alert("피드가 생성되었습니다.")
-                    console.log(res)
-                    this.$router.go(-1)
-
-                    }
-                },
-                (err) =>{
-                    console.log(err)
-                    console.log(this.createDate)
-                    alert("생성 실패")
-                }
-            )
-        },
+      write() {
+        const formData = new FormData()
+        formData.append(this.file)
+        createFeed(
+          {
+            "content": this.content,
+            "feedType": this.feedType,
+            "groupPk": this.groupPk,
+            "media": formData,
+            // "status": this.status,
+          },
+          (res) =>{
+              if (res.data.status){
+              alert("피드가 생성되었습니다.")
+              console.log(res)
+              this.$router.go(-1)
+            }
+          },
+          (err) =>{
+            console.log(err)
+            console.log(this.createDate)
+            alert("생성 실패")
+          }
+        )
+      },
+      onImages(e) {
+        this.file = e.target.files[0];
+        console.log(this.file)
+        this.imageUrl = URL.createObjectURL(this.file)
+        
+      },
+      onClickImageUpload() {
+        console.log(this.$refs.imageInput)
+        this.$refs.imageInput.click();
+      },
     }
 }
 </script>
