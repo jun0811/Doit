@@ -4,6 +4,8 @@ import com.ssafy.doit.model.Comment;
 import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Group;
 import com.ssafy.doit.model.GroupUser;
+import com.ssafy.doit.model.response.ResComment;
+import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseFeed;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
@@ -50,10 +52,18 @@ public class CommentService {
             .userPk(userPk)
             .createDate(LocalDateTime.now()).build());
     }
-
-    public List<Comment> commentList(Long feedPk) {
+    @Transactional
+    public List<ResComment> commentList(Long feedPk) {
         List<Comment> list = commentRepository.findByFeedPk(feedPk);
-        return list;
+        //            유저 이미지랑 닉네임도 같이 넘겨주실수있나용?
+        List<ResComment> resList = new ArrayList<>();
+
+        for(Comment comment : list){
+            Long user = userRepository.findById(comment.getUserPk()).get().getId();
+            String userImg = userRepository.findById(comment.getUserPk()).get().getImage();
+            resList.add(new ResComment(comment, user, userImg));
+        }
+        return resList;
     }
 
     @Transactional

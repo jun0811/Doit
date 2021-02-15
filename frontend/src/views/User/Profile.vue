@@ -8,7 +8,7 @@
           class="d-flex justify-space-around"
         >
           <img
-            src="@/assets/img/profile_temp.png"
+            src="https://ssafydoit.s3.ap-northeast-2.amazonaws.com/han.jpg-20210414150436"
             alt="profile-img"
             class="profile-img"
           />

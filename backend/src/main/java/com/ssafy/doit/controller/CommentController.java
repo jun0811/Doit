@@ -1,9 +1,12 @@
 package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.Comment;
+import com.ssafy.doit.model.response.ResComment;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseFeed;
+import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.CommentRepository;
+import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.CommentService;
 import com.ssafy.doit.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -47,7 +51,8 @@ public class CommentController {
     public Object commentList(@RequestParam Long feedPk){
         ResponseBasic result = null;
         try {
-            List<Comment> list = commentService.commentList(feedPk);
+            List<ResComment> list = commentService.commentList(feedPk);
+
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
