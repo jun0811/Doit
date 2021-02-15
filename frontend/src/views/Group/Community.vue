@@ -47,7 +47,7 @@
             <v-btn text class="text-h6" @click="feedWrite"> 글작성 </v-btn>
           </div>
         </v-col>
-        <v-col v-if="feed && joined" cols="9" class="d-flex flex-column justify-space-around mx-sm-16">
+        <v-col v-if="feed && joined" cols="12" class="d-flex flex-column justify-space-around mx-sm-16">
           <v-col  cols="9" class="d-flex justify-space-around mx-16"> 
             <!-- 날짜 선택 시작 -->
             <!-- start day -->
@@ -102,14 +102,15 @@
             <!-- 날짜 선택 끝 -->
             <v-btn @click="feedRead" text class="ma-4 search-btn" outlined> 검색 </v-btn >
           </v-col>
-          <div v-if="cards.length" class="d-flex justify-center align-center flex-column card">
+          <v-col v-if="cards.length" class="d-flex justify-center align-center flex-column card">
             <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card" ></FeedCard>
-          </div>
+          </v-col>
           <div v-else> 
             <h2 style="text-align:center;">해당 기간에는 작성된 피드가 없어요🤷‍♂️</h2>
           </div>
+
         </v-col>
-        <v-col v-if="users" cols="10" class="d-flex justify-center flex-column align-center mx-sm-16">
+        <v-col v-if="users" cols="10" class="d-flex justify-center flex-column">
           <GroupMember :groupPk="groupPk"></GroupMember>
           <!-- <div class="temp">
             asdasdasd
