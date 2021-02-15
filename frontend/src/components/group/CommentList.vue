@@ -7,10 +7,27 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title >아이디를 여기에</v-list-item-title>
-          <v-list-item-subtitle> 인풋창을 여기에 </v-list-item-subtitle>
+          <v-list-item-title >{{user}}</v-list-item-title>
+          <v-list-item-subtitle> 
+            <v-textarea
+              filled
+              auto-grow
+              label="댓글입력"
+              rows="2"
+              row-height="20"
+              ref="input"
+              v-model="comment.content"
+              color="orange"
+              hide-details=""
+              @focus="buttonActivate()"
+            ></v-textarea>
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+      <v-row v-if="btnActive" class="d-flex justify-end mr-5">
+        <v-btn @click="$refs.input.reset(); buttonDeactivate();" class="cancel-btn">취소</v-btn>
+        <v-btn @click="createComment; buttonDeactivate();" class="comment-btn">댓글</v-btn>
+      </v-row>
     </v-list>
     <v-list three-line>
       <template v-for="(item, index) in items">
@@ -84,24 +101,58 @@ export default {
           subtitle: '<span class="text--primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
         },
       ],
+    comment : {
+      content:'',
+      feedPk: 44,
+      userPk: 8, 
+    },
+    user :'',
+    btnActive:false,
   }),
   props : {
 
   },
+  created() {
+    this.user = this.$store.getters.getName
+  }, 
   methods: {
+    createComment() {
+      const params = {
+        "content" : this.comment.content,
+        "feedPk" : this.comment.feedPk,
+        "userPk" : this.comment.userPk
+      }
+      http.post(`comment/createComment`, params)
+        .then((res)=>{
+          if(res.data.status){
+            console.log('createComment', res)
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }, 
     getComment() {
       http.get(`comment/commentList?feedPk=${this.feedPk}`)
         .then((res)=>{
           if(res.data.status){
-            console.log(res.data.object)
+            console.log('getComment', res.data.object)
+            this.comment.content =''
           }
       })
+    },
+    buttonActivate() {
+      this.btnActive = true;
+    },
+    buttonDeactivate() {
+      this.btnActive = false;
     }
   }
 }
 </script>
 
 <style scoped>
-
+.cancel-btn {
+  width: 70px;
+}
 
 </style>
