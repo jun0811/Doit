@@ -138,7 +138,9 @@ export default {
     created(){
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
+      
       const user= res.data.object
+      console.log(user)
       this.name = user.name
       this.maxNum = user.maxNum
       this.content = user.content

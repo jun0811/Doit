@@ -7,8 +7,9 @@
           cols="5" sm="3" md="3" lg="3" xl="3"
           class="d-flex justify-space-around"
         >
-          <img
-            src="@/assets/img/profile_temp.png"
+          <img v-if="image==null_image" src="@/assets/img/profile_temp.png" class="profile-img">
+          <img v-else
+            :src="image"
             alt="profile-img"
             class="profile-img"
           />
@@ -94,14 +95,18 @@ export default {
     Grass,
   },data() {
     return {
+      null_image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/null",
       user: "",
       feed: "",
+      image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/" 
     }
   },
   created() {
       http.get('/user/detailUser')
       .then((res)=>{
           this.user = res.data.object;
+          this.image = this.image + this.user.image
+          console.log(this.image)
       })
   },
   methods: {
@@ -124,6 +129,9 @@ export default {
   border : 2px solid #F9802D;
   border-radius: 15px;
 }
-
+.profile-img{
+  width:150px;
+  height:150px;
+}
 
 </style>

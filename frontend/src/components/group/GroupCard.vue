@@ -14,7 +14,7 @@
       >
           <v-card height="100%" width="100%" >
             <v-img
-              src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
+              :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + group.image"
               class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               height="200px"
@@ -55,6 +55,7 @@ export default {
       },
       groups: [],
       pageCount:0,
+      image: ""
     }),
     watch: {
       page:{
@@ -138,9 +139,9 @@ export default {
             "tag":this.word,
           },
           (res) =>{
-            console.log(res)
             if (res.status){
             this.groups = res.data.object.content // 배열로 집어넣기
+            console.log(this.groups)
             }
           },
           (err) =>{

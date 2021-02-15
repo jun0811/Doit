@@ -37,7 +37,7 @@
                         </v-container>
                     </v-row>
                     <v-row class="d-flex mt-5">
-                        <v-col cols="12" sm="4" class="my-auto">
+                        <v-col cols="12" sm="6" class="my-auto">
                         <v-select
                             :items="items"
                             label="피드 종류 선택"
@@ -46,20 +46,27 @@
                             v-model="selected"
                         ></v-select><!-- 기존피드값으로 기본값 설정하기-->                            
                         </v-col>                        
-                        <v-col cols="12" sm="5">
-                            <v-file-input
-                                class="py-0"
-                                truncate-length="50"
-                                label="첨부파일 선택"
-                            ></v-file-input>
+                        <!-- 이미지 첨부 -->
+                        <v-col cols="12" sm="6" class="mb-5 d-flex align-center justify-end " >
+                            <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
+                            <v-btn outlined type="button"
+                            @click="onClickImageUpload">인증 이미지 </v-btn>
+
                         </v-col>
-                        <v-col cols="12" sm="2" class="ml-auto">
-                            <v-btn
-                            @click="update"
-                            outlined
-                            class="complete-btn text-size"
-                            >수정 완료</v-btn>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                          <v-img v-if="imageUrl" :src="imageUrl"></v-img>
                         </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" sm="2" class="ml-auto">
+                           <v-btn
+                          @click="update"
+                          outlined
+                          class="complete-btn text-size"
+                          >수정 완료</v-btn>
+                      </v-col>
                     </v-row>
                 </v-col>
             </v-card>
@@ -72,6 +79,7 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { updateFeed } from "@/api/feed/index.js"
+import http from "../../http-common";
 
 export default {
     name :"FeedUpdate",
@@ -90,56 +98,73 @@ export default {
         this.new_content = this.content;
     },
     data() {
-        return {
-            feed: 0,
-            nick: "",
-            new_content: "",
-            selected : '',
-            items : [
-                '인증',
-                '정보 공유'
-            ], 
-            authCheck: false,
-            authCnt: 0,
-            authDate: '',
-            createDate: new Date(), // 변경X
-            feedType: true,
-            media: "",
-            status: true,
-            updateDate: new Date(), // 이게 업데이트 후 변경! 
-            userPk: '',
-        }
+      return {
+        imageUrl: null,
+        feed: 0,
+        nick: "",
+        new_content: "",
+        selected : '',
+        items : [
+            '인증',
+            '정보 공유'
+        ], 
+        authCheck: false,
+        authCnt: 0,
+        authDate: '',
+        createDate: new Date(), // 변경X
+        feedType: true,
+        media: "",
+        status: true,
+        updateDate: new Date(), // 이게 업데이트 후 변경! 
+        userPk: '',
+        file: {},
+      }
     },
     watch: {
-        selected: function() {
-            if (this.selected == "인증") {
-                this.feedType = true
-            } else {
-                this.feedType = false
-            }
+      selected: function() {
+        if (this.selected == "인증") {
+            this.feedType = true
+        } else {
+            this.feedType = false
         }
+      }
     },
     methods: {
-        update() {
-            updateFeed( //if 백엔드 URL 완성되면 그 이름에 맞춰서 변경예정
-                {
-                    "content": this.new_content,
-                    "feedPk": this.feed,
-                    "feedType": this.feedType,
-                },
-                (res) =>{
-                    if (res.status){
-                    alert("피드가 수정되었습니다.")
-                    console.log(res)
-                    this.$router.go(-1) // 어디로 보낼지 정하고 변경!
-                    }
-                },
-                (err) =>{
-                    console.log(err)
-                    alert("수정 실패")
-                }
-            )
-        },
+      onImages(e) {
+      this.file = e.target.files[0];
+      console.log(this.file)
+      this.imageUrl = URL.createObjectURL(this.file)
+      
+      },
+      onClickImageUpload() {
+      console.log(this.$refs.imageInput)
+      this.$refs.imageInput.click();
+      },
+      update() {
+        const formData = new FormData()
+        formData.append("file",this.file)
+        updateFeed( //if 백엔드 URL 완성되면 그 이름에 맞춰서 변경예정
+          {
+            "content": this.new_content,
+            "feedPk": this.feed,
+            "feedType": this.feedType,
+          },
+          (res) =>{
+            if (res.status){
+              alert("피드가 수정되었습니다.")
+              http.post(`feed/updateImg?feedPk=${this.feed}`,formData)
+              .then((res)=>{
+                console.log(res);
+                this.$router.go(-1)
+              })
+            }
+          },
+          (err) =>{
+            console.log(err)
+            alert("수정 실패")
+          }
+        )
+      },
     }
 }
 </script>
