@@ -41,7 +41,6 @@ export default {
 
 <style scoped>
   .color1{
-    
     background: #FFE0B2
   }
   .color2{ 
@@ -51,7 +50,7 @@ export default {
     background: #FB8C00
   }
   .box{
-    border: 1px solid;
+    border: 1px solid rgb(2, 2, 2, 0.3);
     padding-bottom:100%;
   }
 </style>

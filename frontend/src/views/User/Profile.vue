@@ -42,8 +42,8 @@
         > 
         <div class="mb-2">
           내가 작성한 피드
-        </div>
           <FeedList></FeedList>
+        </div>  
         </v-col>
         <v-col 
           cols="defined"
