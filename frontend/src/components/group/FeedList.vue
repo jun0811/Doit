@@ -1,46 +1,48 @@
 <template>
-  <div>
     <v-card
       class="mx-auto"
+      height="600"
     >
-      <v-virtual-scroll
-        :bench="benched"
-        :items="items"
-        height="600"
-        item-height="400"
-      >
-        <template v-slot:default="{ item }">
-          <v-list-item :key="item" class="pa-0">
-            <FeedCard></FeedCard>
-          </v-list-item>
-        </template>
-        
-      </v-virtual-scroll>
+      <div class="pa-0 ma-0 d-flex flex-nowrap flex-column justify-start align-center scrollBar">
+
+
+          <MyFeeds v-for="(card,idx) in cards" :key="idx" :card="card"></MyFeeds>
+
+      </div>        
     </v-card>
-  </div>
 </template>
 
 <script>
-import FeedCard from '@/components/group/FeedCard.vue'
+import MyFeeds from '@/components/group/MyFeeds.vue'
+import http from "../../http-common";
+
 
   export default {
     components: {
-      FeedCard,
+      MyFeeds,
     },
+    created(){
+      http.get(`feed/userFeed?end=60&start=0&userPk=${sessionStorage.getItem("userpk")}`)
+      // http.get(`feed/userFeed?&userPk=${sessionStorage.getItem("userpk")}`)
+      .then((res)=>{
+        this.cards = res.data.object
+        console.log('card', this.cards)
+      })
+    }
+    ,
     data: () => ({
-      benched: 0,
+      cards:[]
     }),
-    computed: {
-      items () {
-        return Array.from({ length: this.length }, (k, v) => v + 1)
-      },
-      length () {
-        return 5
-      },
-    },
   }
 </script>
 
-<style>
+<style scoped>
+  .scrollBar{
+    overflow: scroll;
+    width: 100%;
+    height:100%;
+    padding: 20px;
+  }
+
 
 </style>
