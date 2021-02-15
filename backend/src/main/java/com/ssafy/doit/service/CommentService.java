@@ -63,9 +63,10 @@ public class CommentService {
         List<ResComment> resList = new ArrayList<>();
 
         for(Comment comment : list){
-            Long user = userRepository.findById(comment.getUserPk()).get().getId();
+            String nickname = userRepository.findById(comment.getUserPk()).get().getNickname();
             String userImg = userRepository.findById(comment.getUserPk()).get().getImage();
-            resList.add(new ResComment(comment, user, userImg));
+            Long userPk = userRepository.findById(comment.getUserPk()).get().getId();
+            resList.add(new ResComment(comment, nickname, userImg,userPk));
         }
         return resList;
     }
