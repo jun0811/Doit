@@ -34,7 +34,7 @@
         <v-btn text @click="createComment(); createBtnActive = false;" class="comment-btn">댓글</v-btn>
       </v-row>
     </v-list>
-    <v-list three-line>
+    <v-list three-line v-if="commentCount > 0">
       <v-subheader
         v-text="listHeader"
       ></v-subheader>
@@ -104,7 +104,7 @@
         </v-list-item>
       </template>
     </v-list>
-    <v-pagination
+    <v-pagination v-if="pageCount >2"
       v-model="page"
       circle
       color="orange"
@@ -112,6 +112,12 @@
       :total-visible="5"
       class="pagination-btn"
     ></v-pagination>
+     <v-row v-if="commentCount ==0"
+      class="ma-4 d=flex flex-column align-center zero-comment">
+        <font-awesome-icon class="mt-6 fa-2x" icon="comment-dots"/>
+        <div class="my-2" >댓글이 없어요</div>
+        <div class="mb-6" >첫번째 댓글을 남겨주세요.</div>
+      </v-row>
   </div>
 </template>
 
@@ -286,5 +292,10 @@ export default {
   color:white;
 }
 
+.zero-comment {
+  color:#F9802D;
+  border: 1px solid #fad6bc;
+  border-radius: 5px;
+}
 
 </style>
