@@ -46,7 +46,7 @@
 
         <v-list-item
           v-else
-          :key="comment.commentPk"
+          :key="comment.uniquePk"
         >
           <v-list-item-avatar>
             <v-img :src="comment.profileImg"></v-img>
@@ -56,10 +56,33 @@
             <v-list-item-title v-html="comment.writerName"></v-list-item-title>
             <v-list-item-subtitle v-html="comment.content"></v-list-item-subtitle>
           </v-list-item-content>
-          <v-list-item-icon 
-            v-if="comment.userPk===user.userPk"
-            class="mx-0 my-auto d-flex justify-end">
-            <font-awesome-icon icon="ellipsis-v"/>
+          <v-list-item-icon class="mx-0 my-auto d-flex justify-end">
+            <v-menu
+              bottom
+              right
+              :nudge-width="100"
+              :close-on-content-click="false"
+              transition="slide-y-transition"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+
+              <v-list>
+                <v-list-item >
+                  <v-list-item-title style="text-align:center;">수정</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="deleteComment(comment.commentPk)" >
+                  <v-list-item-title style="text-align:center;">삭제</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </v-list-item-icon>
         </v-list-item>
       </template>
@@ -76,24 +99,33 @@ export default {
   data: () => ({
     feedPk : 44,
     baseImg : 'https://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
+    //댓글 작성 파라미터
     commentWrite : {
       content : '',
-      feedPk : 44,
-    }, //작성자의 코멘트
+      feedPk : 0,
+    },
 
     comments :[],
+    //로그인 유저 정보
     user :{
       nickname:'',
       userPk:'',
       image:'',
-    }, //nickname, userPk, image가 들어있음
+    },
     btnActive:false,
+
+    items: [
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me 2' },
+      ],
+
   }),
   props : {
     card: Object,
   },
   created() {
-    console.log(this.card)
     this.commentWrite.feedPk = this.card.feedPk
     this.getComment()
     this.getUser()
@@ -114,7 +146,17 @@ export default {
         }).catch((err) => {
           console.log(err)
         })
-    }, 
+    },
+    deleteComment(commentPk){
+      http.delete(`comment/deleteComment?commentPk=${commentPk}`)
+        .then((res)=>{
+          if(res.data.status){
+            console.log(res.data)
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+    },
     getComment() {
       http.get(`comment/commentList?feedPk=${this.card.feedPk}`)
         .then((res)=>{
@@ -132,7 +174,8 @@ export default {
                   { "header": '댓글목록' },
                   {
                   "userPk" : comment.userPk,
-                  "commentPk": String(comment.feedPk) + '/' + String(comment.commentPk),
+                  "commentPk" : comment.commentPk,
+                  "uniquePk": String(comment.feedPk) + '/' + String(comment.commentPk),
                   "content": comment.content,
                   "profileImg" : this.baseImg + comment.image,
                   "writerName": comment.nickname,
@@ -143,7 +186,8 @@ export default {
                   { divider: true, inset: true },
                   {
                   "userPk" : comment.userPk,
-                  "commentPk": String(comment.feedPk) + '/' + String(comment.commentPk),
+                  "commentPk" : comment.commentPk,
+                  "uniquePk": String(comment.feedPk) + '/' + String(comment.commentPk),
                   "content": comment.content,
                   "profileImg" : this.baseImg + comment.image,
                   "writerName": comment.nickname,
