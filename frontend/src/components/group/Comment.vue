@@ -12,7 +12,7 @@
         <v-list-item-content>
           <v-list-item-title >{{user.nickname}}</v-list-item-title>
           <v-list-item-subtitle> 
-            <v-textarea
+            <v-textarea 
               filled
               color="orange"
               auto-grow
@@ -20,17 +20,18 @@
               rows="2"
               row-height="20"
               ref="input"
-              v-model="commentWrite.content"
+              maxlength="70"
+              v-model="newContent"
               hide-details=""
               class="comment-input"
-              @focus="createBtnActive = !createBtnActive"
+              @focus="createBtnActive = true"
             ></v-textarea>
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-row v-if="createBtnActive" class="d-flex justify-end mr-5">
-        <v-btn @click="$refs.input.reset(); createBtnActive= !createBtnActive;" class="cancel-btn">취소</v-btn>
-        <v-btn @click="createComment(); createBtnActive != createBtnActive;" class="comment-btn">댓글</v-btn>
+        <v-btn text @click="$refs.input.reset(); createBtnActive= false;" class="cancel-btn">취소</v-btn>
+        <v-btn text @click="createComment(); createBtnActive = false;" class="comment-btn">댓글</v-btn>
       </v-row>
     </v-list>
     <v-list three-line>
@@ -69,8 +70,8 @@
               ></v-textarea>
              </v-list-item-subtitle> 
             <v-list-item-title v-if="comment.updateActive" class="d-flex justify-end mr-1">
-              <v-btn @click="comment.updateActive = !comment.updateActive; " class="cancel-btn">취소</v-btn>
-              <v-btn @click="updateComment(comment)" class="comment-btn">수정</v-btn>
+              <v-btn text @click="comment.updateActive = !comment.updateActive; " class="cancel-btn">취소</v-btn>
+              <v-btn text @click="updateComment(comment)" class="comment-btn">수정</v-btn>
             </v-list-item-title>
           </v-list-item-content>
           <v-list-item-icon class="mx-0 my-auto d-flex justify-end">
@@ -92,10 +93,10 @@
 
               <v-list>
                 <v-list-item @click="comment.updateActive =!comment.updateActive">
-                  <v-list-item-title style="text-align:center;">수정</v-list-item-title>
+                  <v-list-item-title text style="text-align:center;">수정</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="deleteComment(comment.commentPk)" >
-                  <v-list-item-title style="text-align:center;">삭제</v-list-item-title>
+                  <v-list-item-title text style="text-align:center;">삭제</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -106,8 +107,10 @@
     <v-pagination
       v-model="page"
       circle
+      color="orange"
       :length="pageCount"
       :total-visible="5"
+      class="pagination-btn"
     ></v-pagination>
   </div>
 </template>
@@ -122,10 +125,10 @@ export default {
     feedPk : 44,
     baseImg : 'https://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
     //댓글 작성 파라미터
-    commentWrite : {
-      content : '',
-      feedPk : 0,
-    },
+
+    newContent : '',
+
+
     createHeader: '댓글작성',
     listHeader:'댓글목록',
 
@@ -146,10 +149,17 @@ export default {
     card: Object,
   },
   created() {
-    this.commentWrite.feedPk = this.card.feedPk
+    this.feedPk = this.card.feedPk
     this.getComment()
     this.getUser()
   },
+  watch: {
+    newContent: function () {
+      if (this.newContent.length >= 70) {
+        alert('댓글내용은 70자를 초과할수 없습니다.')
+      }
+    }
+  }, 
   computed: {
     pageCount () {
       let page = Math.floor(this.commentCount / this.listSize);
@@ -200,11 +210,11 @@ export default {
     createComment() {
       this.createBtnActive = false;
       const params = {
-        "content" : this.commentWrite.content,
-        "feedPk" : this.commentWrite.feedPk,
+        "content" : this.newContent,
+        "feedPk" : this.feedPk,
         "userPk" : this.user.userPk
       }
-      this.commentWrite.content =''
+      this.newContent =''
       http.post(`comment/createComment`, params)
         .then((res)=>{
           if(res.data.status){
@@ -256,10 +266,25 @@ export default {
 </script>
 
 <style scoped>
-.cancel-btn {
-  width: 70px;
+
+.cancel-btn{
+  border: 3px solid  #5dc9b6;
 }
 
+
+.cancel-btn:hover{
+  background-color: #5dc9b6;
+  color:white;
+}
+.comment-btn {
+  border: 3px solid  #F9802D;
+}
+
+
+.comment-btn:hover {
+  background-color:#F9802D;
+  color:white;
+}
 
 
 </style>
