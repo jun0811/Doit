@@ -6,13 +6,7 @@
         <br>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
         <GroupCard :page="page" :word="word"></GroupCard>
-        <v-pagination
-          color="orange"
-          v-model="page"
-          :length="pageCount"
-          :total-visible="7"
-        ></v-pagination>
-        <div v-if="!results" class="d-flex align-center flex-column">
+        <div v-if="empty" class="d-flex align-center flex-column">
           <h3>'검색키워드'와(과) 일치하는 검색결과가 없습니다.</h3>
           <br>
           <br>
@@ -23,6 +17,12 @@
         </div>
         <!-- </div> -->
         <div v-else class="d-flex align-center flex-column">
+          <v-pagination
+            color="orange"
+            v-model="page"
+            :length="pageCount"
+            :total-visible="7"
+          ></v-pagination>
           <h4 class="mt-6">'검색키워드' 관련 그룹을 만들고 싶으시다면?</h4>
           <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
             그룹 만들기
@@ -54,29 +54,31 @@ export default {
           page:1,
           pageCount:0,
           groups:[],
+          empty: '',
         }
     },
-  // updated(){
-  //   searchGroup(
-  //     {
-  //       "direction":"ASC",
-  //       "page":this.page,
-  //       "size":9,
-  //       "tag":this.word,
-  //     },
-  //     (res) =>{
-  //       if (res.status){
-  //       console.log(res)
-  //       this.groups = res.data.object.content
-  //       this.pageCount = parseInt(res.data.object.totalPages)
-  //       }
-  //     },
-  //     (err) =>{
-  //       console.log(err)
-  //       alert("검색 결과 가져오기 실패")
-  //     }
-  //   )
-  // },
+  updated(){
+    searchGroup(
+      {
+        "direction":"ASC",
+        "page":this.page,
+        "size":9,
+        "tag":this.word,
+      },
+      (res) =>{
+        if (res.status){
+        console.log(res)
+        this.groups = res.data.object.content
+        this.pageCount = parseInt(res.data.object.totalPages)
+        this.empty = res.data.object.empty
+        }
+      },
+      (err) =>{
+        console.log(err)
+        alert("검색 결과 가져오기 실패")
+      }
+    )
+  },
   created() {
     searchGroup(
       {
@@ -90,6 +92,7 @@ export default {
         console.log(res)
         this.groups = res.data.object.content
         this.pageCount = parseInt(res.data.object.totalPages)
+        this.empty = res.data.object.empty
         }
       },
       (err) =>{
