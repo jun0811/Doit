@@ -12,7 +12,7 @@
             <v-btn text outlined @click="clickCategory('공부')" v-bind:class="{keycolor: selected['study']}">공부</v-btn>
             <v-btn text outlined @click="clickCategory('다이어트')" v-bind:class="{keycolor: selected['diet']}">다이어트</v-btn>
             <v-btn text outlined @click="clickCategory('운동')" v-bind:class="{keycolor: selected['exercise']}">운동</v-btn>
-            <v-btn text outlined @click="clickCategory('책')" v-bind:class="{keycolor: selected['book']}">책</v-btn>
+            <v-btn text outlined @click="clickCategory('독서')" v-bind:class="{keycolor: selected['book']}">독서</v-btn>
             <v-btn text outlined @click="clickCategory('생활습관')" v-bind:class="{keycolor: selected['life']}">생활습관</v-btn>
             <v-btn text outlined @click="clickCategory('취미')" v-bind:class="{keycolor: selected['hobby']}">취미</v-btn>
             <v-btn text outlined @click="clickCategory('기타')" v-bind:class="{keycolor: selected['etc']}">기타</v-btn> 
@@ -23,7 +23,7 @@
         </div>
         <GroupCard :page="page" :category="category"></GroupCard>
         <div v-if="empty" class="d-flex align-center flex-column">
-          <h3 class="mt-16">'{{ category_k }}' 카테고리에는 아직 그룹이 생성되지 않았어요.</h3>
+          <h3 class="mt-16">'{{ category_k }}' 카테고리에 해당하는 그룹이 아직 없습니다.</h3>
           <br>
           <br>
           <h4>'{{ category_k }}' 관련 그룹을 만들고 싶으시다면?</h4>
@@ -74,8 +74,8 @@ export default {
       empty: '',
       length: 0,
       category_k: '',
-      categories: {'공부': 'study', '운동': 'exercise', '다이어트': 'diet', '취미': 'hobby', '책': 'book', '생활습관': 'life', '기타': 'etc'},
-      categories2: {'study':'공부', 'exercise':'운동', 'diet':'다이어트', 'hobby':'취미', 'book':'책', 'life':'생활습관', 'etc':'기타'},
+      categories: {'공부': 'study', '운동': 'exercise', '다이어트': 'diet', '취미': 'hobby', '독서': 'book', '생활습관': 'life', '기타': 'etc'},
+      categories2: {'study':'공부', 'exercise':'운동', 'diet':'다이어트', 'hobby':'취미', 'book':'독서', 'life':'생활습관', 'etc':'기타'},
       selected: {'study': false, 'exercise':false, 'diet':false, 'hobby':false, 'book':false, 'life':false, 'etc':false}
     }
   },
