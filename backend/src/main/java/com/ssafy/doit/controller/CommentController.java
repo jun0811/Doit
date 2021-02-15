@@ -1,6 +1,7 @@
 package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.feed.Comment;
+import com.ssafy.doit.model.response.ResComment;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.service.CommentService;
 import com.ssafy.doit.service.user.UserService;
@@ -44,7 +45,8 @@ public class CommentController {
     public Object commentList(@RequestParam Long feedPk){
         ResponseBasic result = null;
         try {
-            List<Comment> list = commentService.commentList(feedPk);
+            List<ResComment> list = commentService.commentList(feedPk);
+
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
