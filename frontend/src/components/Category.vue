@@ -78,7 +78,7 @@ export default {
   name: 'Category',
   data () {
     return {
-      categories: {'공부': 'study', '운동': 'exercise', '다이어트': 'diet', '취미': 'hobby', '독서': 'book', '생활습관': 'life', '기타': 'etc'},
+      categories: {'공부': 'study', '운동': 'exercise', '다이어트': 'diet', '취미': 'hobby', '책': 'book', '생활습관': 'life', '기타': 'etc'},
       // category: '',
     }
   },
