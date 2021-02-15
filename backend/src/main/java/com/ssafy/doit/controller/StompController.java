@@ -72,7 +72,7 @@ public class StompController {
                 noti.setTargetId(notification.getTargetId());
                 noti.setTarget(group);
                 notiService.save(noti);
-                template.convertAndSend("/subscribe/noti/user/" + notification.getUserPk(), noti);
+                template.convertAndSend("/subscribe/noti/user/" + noti.getUserPk(), noti);
             }
         }
     }
