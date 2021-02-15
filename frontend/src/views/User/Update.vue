@@ -189,7 +189,7 @@ export default {
       }
     },
     checkNick() {
-      http.post("/user/checkNick", this.name).then((res) => {
+      http.post("/user/profile/checkNick", this.name).then((res) => {
         console.log(res);
         if (res.data.status) this.c_Nick = true;
         else {

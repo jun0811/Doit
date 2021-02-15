@@ -76,7 +76,7 @@
                   </v-container>
                 </v-card-title>
                 <v-divider></v-divider>
-                <v-card-text class="card-style" style="padding-top: 24px;" id="app_chat_list">
+                <v-card-text class="card-style" style="padding-top: 24px;">
                   <div v-for="(m, idx) in msg" :key="idx">
                     <!-- 메세지 보낸 사람이 현재 유저일 경우(user1일 경우) user1의 닉네임 표시 -->
                     <div v-if="m.userPk==user1['userPk']" class="d-flex flex-column align-end">
@@ -122,6 +122,12 @@
                       </v-col>
                     </v-row>
                   </v-container>
+                  <!-- <v-btn
+                    color="blue darken-1"
+                    text
+                  >
+                    Save
+                  </v-btn> -->
                 </v-card-actions>
               </v-card>
               </template>
@@ -158,48 +164,38 @@ export default {
   },
   data() {
     return {
-      // product: '',
-      // user : 'nickname',
-      // seller: '',
-      // id : 84,
-      // idx:0,
-      // roomCheck: false,
       chattings: [], 
+      product: '',
+      user : 'nickname',
+      seller: '',
+      roomid : 0,
+      id : 84,
       productImg: '',
-      productName: '',
-      productPrice: '',
+      idx:0,
       msg:[],
-      room: '', // 서버에서 {}타입으로 받음, id, product가 담김
+      room: '',
       content:'',
       stompClient:null,
+      productName: '',
+      productPrice: '',
       user1: {'userPk' : 0, 'userNick' : ''},
       user2: {'userPk' : 0, 'userNick' : ''},
-      bottom_flag: true,
+      roomCheck: false
     }
   },
   created() {
     http.get('/chat/getList')
     .then(res => {
       this.chattings = res.data.object
-      // console.log(this.chattings)
+      console.log(this.chattings)
     })
-  },
-  watch: {
-      // app_chat_list 의 변화가 발생할때마다 수행되는 영역
-    msg(){
-      var objDiv = document.getElementById("app_chat_list");
-      if(this.bottom_flag){
-        // 채팅창 스크롤 바닥 유지
-          objDiv.scrollTop = objDiv.scrollHeight;
-      }
-    }
   },
   methods: {
     sendMessage(){
      if(this.content.trim() !='' && this.stompClient!=null) {
         let chatMessage = {
           'message': this.content,
-          'roomPk' : this.room.id,
+          'roomPk' : this.roomid,
         }
         this.stompClient.send("/publish/chat", JSON.stringify(chatMessage),{"accessToken": this.$store.getters.getAccessToken})
         this.content=''
@@ -235,10 +231,12 @@ export default {
           // 소켓 연결 성공
           this.connected = true;
           console.log('소켓 연결 성공', frame);
+          // console.log(this.roomid)
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
-          this.stompClient.subscribe("/subscribe/chat/room/"+ this.room.id , res => {
-            // console.log('메시지',JSON.parse(res.body));
+          this.stompClient.subscribe("/subscribe/chat/room/"+ this.roomid , res => {
+            // console.log(res)
+            console.log('메시지',JSON.parse(res.body));
             this.msg.push(JSON.parse(res.body));
           });
         },
@@ -250,7 +248,10 @@ export default {
       );
     },
   }
+
 }
+
+
 </script>
 
 <style scoped>
@@ -283,6 +284,24 @@ export default {
   border: 2px solid orange;
   border-radius: 15px;
   background-color:white;
+}
+
+.toolbar {
+  position: fixed;
+  color: black;
+  width: 600px;
+  /* height: 55px; */
+  border-bottom: 1px solid grey;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+.toolbar {
+  position: fixed;
+  color: black;
+  width: 330px;
+  /* height: 55px; */
+  border-bottom: 1px solid grey;
+}
 }
 
 .prd-img {

@@ -13,14 +13,13 @@ import java.util.List;
 public class ResMyFeed {
     private Long feedPk;
 
-    //private String media;
+    private String media;
     private String content;
     private Long userPk;
     private String writer;
     private String feedType;
 
     private String authCheck;
-    private String authDate;
 
     private Long groupPk;
     private String groupName;
@@ -34,10 +33,10 @@ public class ResMyFeed {
         this.content = feed.getContent();
         this.feedType = feed.getFeedType();
         this.authCheck = feed.getAuthCheck();
-        this.authDate = feed.getAuthDate();
         this.groupPk = feed.getGroupPk();
         this.groupName = groupName;
         this.createDate = feed.getCreateDate().toString();
         this.updateDate = feed.getUpdateDate();
+        this.media = feed.getMedia();
     }
 }

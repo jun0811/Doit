@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -23,13 +24,15 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class GroupHashTagService {
+
+    @Autowired
+    private S3Service s3Service;
     @Autowired
     private final GroupRepository groupRepository;
     @Autowired
     private final HashTagRepository hashTagRepository;
     @Autowired
     private final GroupHashTagRepository groupHashTagRepository;
-
 
     // 특정 해시태그 포함한 그룹 찾기
     @Transactional
@@ -94,6 +97,15 @@ public class GroupHashTagService {
                 groupRepository.save(selectGroup);
             });
         }else throw new Exception("그룹장이 아닙니다."); // 로그인한 유저가 그룹장이 아니면 수정불가
+    }
+
+    // 그룹 이미지 등록/수정
+    @Transactional
+    public void updateImg(Long groupPk, MultipartFile file) throws Exception {
+        Group group = groupRepository.findById(groupPk).get();
+        String imgPath = s3Service.upload(group.getImage(),file);
+        group.setImage(imgPath);
+        groupRepository.save(group);
     }
 
     // 그룹 해시태그 추가

@@ -7,10 +7,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.ssafy.doit.model.Feed;
-import com.ssafy.doit.model.Product;
-import com.ssafy.doit.model.request.RequestFeed;
-import com.ssafy.doit.model.request.RequestProduct;
 import com.ssafy.doit.repository.FeedRepository;
 import com.ssafy.doit.repository.ProductRepository;
 import lombok.NoArgsConstructor;
@@ -20,11 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Service
 @NoArgsConstructor

@@ -12,6 +12,7 @@ import com.ssafy.doit.model.request.RequestLoginUser;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.UserRepository;
+import com.ssafy.doit.service.FeedService;
 import com.ssafy.doit.service.GroupUserService;
 import com.ssafy.doit.service.S3Service;
 import com.ssafy.doit.service.UserService;
@@ -55,6 +56,9 @@ public class UserController {
     private S3Service s3Service;
     @Autowired
     private MileageRepository mileageRepository;
+    @Autowired
+    private final FeedService feedService;
+
     private final PasswordEncoder passwordEncoder;
 
 
@@ -146,14 +150,40 @@ public class UserController {
                 selectUser.setNickname(userReq.getNickname());
                 userRepository.save(selectUser);
             });
-            result = new ResponseBasic(true, "success", null);
+            result = new ResponseBasic(true, "회원정보 수정 success", null);
         }catch (Exception e){
             e.printStackTrace();
-            result = new ResponseBasic(false, "fail", null);
+            result = new ResponseBasic(false, "회원정보 수정 fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // 닉네임 중복 확인
+    @ApiOperation(value = "프로필 닉네임 중복 확인")
+    @PostMapping("/profile/checkNick")
+    public Object checkNickname(@RequestBody String nickname){
+        ResponseBasic result = new ResponseBasic();
+        System.out.println(UserRole.USER);
+        Long userPk = userService.currentUser();
+
+        Optional<User> user = userRepository.findById(userPk); //로그인한 회원
+        Optional<User> optGuest = userRepository.findByNicknameAndUserRole(nickname, UserRole.GUEST); //GUEST 권한의 회원
+        Optional<User> optUser = userRepository.findByNickname(nickname); //입력한 닉네임을 가진 회원
+
+        if(optUser.isPresent()) {
+            if((userPk == optUser.get().getId()) && (user.get().getNickname().equals(nickname))){
+                result = new ResponseBasic( true, "success", null);
+            }else{
+                result = new ResponseBasic(false, "중복된 닉네임입니다.", null);
+            }
+        }else if(optGuest.isPresent()){
+            result = new ResponseBasic(false, "중복된 닉네임입니다.", null);
+        }else{
+            result = new ResponseBasic( true, "success", null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
     @ApiOperation(value = "회원정보(프로필) 수정")
     @PostMapping("/updateImg")
     public Object updateImg(@RequestParam MultipartFile file) {
@@ -165,7 +195,7 @@ public class UserController {
 
             currentUser.setImage(imgPath);
             userRepository.save(currentUser);
-            result = new ResponseBasic(true, "success", null);
+            result = new ResponseBasic(true, "프로필 사진 변경 success", null);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -201,6 +231,7 @@ public class UserController {
         try {
             Long userPk = userService.currentUser();
             groupUserService.deleteGroupByUser(userPk);
+            feedService.deleteFeedByUser(userPk);
             result = new ResponseBasic(true, "success", null);
         }
         catch (Exception e){

@@ -24,7 +24,7 @@
             </v-img>
             <v-card-actions  class="card-text">
               <v-card-text v-if="token"  class="d-flex justify-space-around py-1">
-                <v-btn plain class="btn" router-link :to="{name: 'Community', params: {groupPk:group.groupPk}}">상세보기</v-btn>
+                <v-btn plain class="btn" router-link :to="{name: 'Community', params: {groupPk:Number(group.groupPk)}}">상세보기</v-btn>
                 <!-- <v-btn plain class="btn">가입신청</v-btn> -->
               </v-card-text>
               <v-card-text v-else class="d-flex justify-space-around py-1">
@@ -77,7 +77,28 @@ export default {
             }
           )
         }
-      }
+      },
+      word:{
+        handler: function () {
+          searchGroup(
+        {
+          "direction":"ASC",
+          "page":this.page,
+          "size":9,
+          "tag":this.word,
+        },
+        (res) =>{
+          console.log(res)
+          if (res.status){
+          this.groups = res.data.object.content // 배열로 집어넣기
+          }
+        },
+        (err) =>{
+          console.log(err)
+          alert("검색 결과 가져오기 실패")
+        }
+      )}
+    }
     },
     created() {
       this.token = this.$store.state.account.accessToken

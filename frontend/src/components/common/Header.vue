@@ -141,6 +141,14 @@
       >
         로그아웃
       </v-btn>
+      <v-btn
+        text
+        @click="alarm"
+        class="px-0"
+        v-if="this.$store.state.account.accessToken"
+      >
+        <font-awesome-icon :icon="['far', 'bell']" />
+      </v-btn>
 
       <!-- navigation drawer 시작-->
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>

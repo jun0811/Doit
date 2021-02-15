@@ -8,6 +8,7 @@ import com.ssafy.doit.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -20,6 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FeedService {
 
+    @Autowired
+    private S3Service s3Service;
     @Autowired
     private final GroupRepository groupRepository;
     @Autowired
@@ -41,7 +44,7 @@ public class FeedService {
 
     // 그룹 내 피드 생성
     @Transactional
-    public int createFeed(Long userPk, Feed feedReq) throws Exception {
+    public Long createFeed(Long userPk, Feed feedReq) throws Exception {
         Group group = groupRepository.findById(feedReq.getGroupPk()).get();
         User user = userRepository.findById(userPk).get();
 
@@ -49,15 +52,14 @@ public class FeedService {
         if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
 
 //        Optional<Feed> optFeed = feedRepository.findByWriterAndCreateDate(userPk, LocalDate.now().toString());
-//        if(optFeed.isPresent()) return 0;
+//        if(optFeed.isPresent()) throw new Exception("오늘 이미 인증피드를 작성하였습니다.");
 
-        feedRepository.save(Feed.builder()
-            //.media(feedReq.getMedia())
-            .content(feedReq.getContent())
-            .feedType(feedReq.getFeedType())
-            .createDate(LocalDateTime.now())
-            .groupPk(feedReq.getGroupPk())
-            .writer(userPk).build());
+        Feed feed = feedRepository.save(Feed.builder()
+                .content(feedReq.getContent())
+                .feedType(feedReq.getFeedType())
+                .createDate(LocalDateTime.now())
+                .groupPk(feedReq.getGroupPk())
+                .writer(userPk).build());
 
         if(feedReq.getFeedType().equals("true")){
             user.setMileage(user.getMileage() + 100);
@@ -76,7 +78,16 @@ public class FeedService {
                     .mileage("+100")
                     .user(user).build());
         }
-        return 1;
+        return feed.getFeedPk();
+    }
+
+    // 피드 파일 등록/수정
+    @Transactional
+    public void updateImg(Long feedPk, MultipartFile file) throws Exception {
+        Feed feed = feedRepository.findById(feedPk).get();
+        String mediaPath = s3Service.upload(feed.getMedia(),file);
+        feed.setMedia(mediaPath);
+        feedRepository.save(feed);
     }
 
     // 그룹 내 피드 리스트
@@ -118,7 +129,6 @@ public class FeedService {
             feed.ifPresent(selectFeed -> {
                 selectFeed.setContent(feedReq.getContent());
                 selectFeed.setFeedType(feedReq.getFeedType());
-                //selectFeed.setMedia(feedReq.getMedia());
                 selectFeed.setUpdateDate(LocalDateTime.now().toString());
                 feedRepository.save(selectFeed);
             });
@@ -207,16 +217,15 @@ public class FeedService {
                 .mileage("+50")
                 .user(user).build());
 
-        int groupTotal = group.getTotalNum();
         Long groupPk = feed.getGroupPk();
         Long writerPk = feed.getWriter();
         User writer = userRepository.findById(writerPk).get();
         LocalDate date = feed.getCreateDate().toLocalDate();
         int cnt = feed.getAuthCnt();
-        int total = groupRepository.findById(groupPk).get().getTotalNum();
+        int total = group.getTotalNum();
         if (cnt >= Math.round(total * 0.1)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
-            feed.setAuthDate(LocalDateTime.now().toString());
+            feedRepository.save(feed);
             // 인증완료되었다는 알림보내기
 
             writer.setMileage(writer.getMileage() + 100); // 인증피드 인증 완료 마일리지 지금 + 100
@@ -239,17 +248,34 @@ public class FeedService {
                         .cnt(1).build());
             }
 
+            int groupTotal = group.getTotalNum();
             Optional<CommitGroup> optCG = commitGroupRepository.findByGroupPkAndDate(groupPk, date);
             if(optCG.isPresent()){
                 CommitGroup cg = optCG.get();
                 if(cg.getTotal() != groupTotal) cg.setTotal(groupTotal);
-                cg.setCnt(cg.getCnt() + 1);
+                int authCnt = cg.getCnt() + 1;
+                
+                double calc = 0;
+                if(groupTotal > 9){
+                    calc = authCnt/(double)groupTotal*100.0;
+                    calc += calc * 1.05 * 2;
+                }else if(groupTotal > 4){
+                    calc = authCnt/(double)groupTotal*100.0;
+                    calc += calc * 1.05;
+                }else{
+                    calc = authCnt/(double)groupTotal*100.0;
+                }
+
+                cg.setCnt(authCnt);
+                cg.setCalc(Math.round(calc*10)/10.0);
                 commitGroupRepository.save(cg);
             }else{
+                double calc = 1.0/(double)groupTotal*100.0;
                 commitGroupRepository.save(CommitGroup.builder()
                         .date(date)
                         .groupPk(groupPk)
                         .total(groupTotal)
+                        .calc(Math.round(calc*10)/10.0)
                         .cnt(1).build());
             }
         }

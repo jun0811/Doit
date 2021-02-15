@@ -4,10 +4,7 @@ import com.ssafy.doit.model.*;
 import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.model.user.UserRole;
-import com.ssafy.doit.repository.GroupRepository;
-import com.ssafy.doit.repository.GroupUserRepository;
-import com.ssafy.doit.repository.MileageRepository;
-import com.ssafy.doit.repository.UserRepository;
+import com.ssafy.doit.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +29,8 @@ public class GroupUserService {
     private GroupRepository groupRepository;
     @Autowired
     private MileageRepository mileageRepository;
+    @Autowired
+    private CommitUserRepository commitUserRepository;
 
     // 가입 그룹 리스트
     @Transactional
@@ -141,6 +140,8 @@ public class GroupUserService {
             groupRepository.save(group);
             // 새로운 그룹장에게 알림 보내기
         }
+        commitUserRepository.deleteByUserPk(userPk);
+
         user.setUserRole(UserRole.WITHDRAW);
         userRepository.save(user);
     }
