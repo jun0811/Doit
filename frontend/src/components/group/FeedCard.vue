@@ -11,28 +11,6 @@
         indeterminate
       ></v-progress-linear>
     </template>
-    <!-- 모달 : 수정 삭제 -->
-    <!-- <v-card-title v-if="writer">
-      <v-spacer></v-spacer>
-      <v-menu
-        bottom
-        left
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            text-dark
-            icon
-            v-bind="attrs"
-            v-on="on"
-          ><v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-btn class="green--text" @click="feedUpdate" text width="100%">피드 수정 </v-btn>
-          <v-btn class="red--text" @click="feedDelete" text width="100%">피드 삭제 </v-btn>    
-        </v-list>
-      </v-menu>
-    </v-card-title> -->
     <v-img
       height="250"
       src="https://wonderfulmind.co.kr/wp-content/uploads/2018/05/knitting.jpg"
@@ -58,7 +36,7 @@
           <!-- 다른 유저면 인증/미인증으로 구분 -->
         </div>
         <div v-if="writer">
-          <v-btn outlined class="my-3 btn green-btn" @click="feedUpdate">피드 수정 </v-btn>
+          <v-btn outlined class="my-3 mr-5 btn green-btn" @click="feedUpdate">피드 수정 </v-btn>
           <v-btn outlined class="my-3 btn red-btn" @click="feedDelete">피드 삭제 </v-btn>    
         </div>
         <v-btn

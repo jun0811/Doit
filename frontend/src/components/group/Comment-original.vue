@@ -1,9 +1,6 @@
 <template>
   <div>
     <v-list>
-      <v-subheader
-        v-text="createHeader"
-      ></v-subheader>
       <v-list-item>
         <v-list-item-avatar>
           <v-img v-if="user.image" :src="user.image"></v-img>
@@ -12,7 +9,7 @@
         <v-list-item-content>
           <v-list-item-title >{{user.nickname}}</v-list-item-title>
           <v-list-item-subtitle> 
-            <v-textarea 
+            <v-textarea
               filled
               color="orange"
               auto-grow
@@ -20,28 +17,29 @@
               rows="2"
               row-height="20"
               ref="input"
-              maxlength="70"
-              v-model="newContent"
+              v-model="commentWrite.content"
               hide-details=""
               class="comment-input"
-              @focus="createBtnActive = true"
+              @focus="createBtnActive = !createBtnActive"
             ></v-textarea>
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-row v-if="createBtnActive" class="d-flex justify-end mr-5">
-        <v-btn text @click="$refs.input.reset(); createBtnActive= false;" class="cancel-btn">취소</v-btn>
-        <v-btn text @click="createComment(); createBtnActive = false;" class="comment-btn">댓글</v-btn>
+        <v-btn @click="$refs.input.reset(); createBtnActive= !createBtnActive;" class="cancel-btn">취소</v-btn>
+        <v-btn @click="createComment(); createBtnActive != createBtnActive;" class="comment-btn">댓글</v-btn>
       </v-row>
     </v-list>
     <v-list three-line>
-      <v-subheader
-        v-text="listHeader"
-      ></v-subheader>
-      <template v-for="(comment, index) in paginatedData">
+      <template v-for="(comment, index) in comments">
+        <v-subheader
+          v-if="comment.header"
+          :key="comment.header"
+          v-text="header"
+        ></v-subheader>
 
         <v-divider
-          v-if="comment.divider"
+          v-else-if="comment.divider"
           :key="index"
           :inset="comment.inset"
         ></v-divider>
@@ -70,8 +68,8 @@
               ></v-textarea>
              </v-list-item-subtitle> 
             <v-list-item-title v-if="comment.updateActive" class="d-flex justify-end mr-1">
-              <v-btn text @click="comment.updateActive = !comment.updateActive; " class="cancel-btn">취소</v-btn>
-              <v-btn text @click="updateComment(comment)" class="comment-btn">수정</v-btn>
+              <v-btn @click="comment.updateActive = !comment.updateActive; " class="cancel-btn">취소</v-btn>
+              <v-btn @click="updateComment(comment)" class="comment-btn">수정</v-btn>
             </v-list-item-title>
           </v-list-item-content>
           <v-list-item-icon class="mx-0 my-auto d-flex justify-end">
@@ -93,10 +91,10 @@
 
               <v-list>
                 <v-list-item @click="comment.updateActive =!comment.updateActive">
-                  <v-list-item-title text style="text-align:center;">수정</v-list-item-title>
+                  <v-list-item-title style="text-align:center;">수정</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="deleteComment(comment.commentPk)" >
-                  <v-list-item-title text style="text-align:center;">삭제</v-list-item-title>
+                  <v-list-item-title style="text-align:center;">삭제</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -104,14 +102,6 @@
         </v-list-item>
       </template>
     </v-list>
-    <v-pagination
-      v-model="page"
-      circle
-      color="orange"
-      :length="pageCount"
-      :total-visible="5"
-      class="pagination-btn"
-    ></v-pagination>
   </div>
 </template>
 
@@ -125,12 +115,12 @@ export default {
     feedPk : 44,
     baseImg : 'https://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
     //댓글 작성 파라미터
+    commentWrite : {
+      content : '',
+      feedPk : 0,
+    },
 
-    newContent : '',
-
-
-    createHeader: '댓글작성',
-    listHeader:'댓글목록',
+    header:'댓글목록',
 
     comments :[],
     //로그인 유저 정보
@@ -140,81 +130,24 @@ export default {
       image:'',
     },
     createBtnActive: false,
-    //페이지 네이션 변수
-    page:1,
-    commentCount :0,
-    listSize :5,
+
   }),
   props : {
     card: Object,
   },
   created() {
-    this.feedPk = this.card.feedPk
+    this.commentWrite.feedPk = this.card.feedPk
     this.getComment()
     this.getUser()
-  },
-  watch: {
-    newContent: function () {
-      if (this.newContent.length >= 70) {
-        alert('댓글내용은 70자를 초과할수 없습니다.')
-      }
-    }
   }, 
-  computed: {
-    pageCount () {
-      let page = Math.floor(this.commentCount / this.listSize);
-      if (this.commentCount % this.listSize > 0) page += 1;
-      return page;
-    },
-    paginatedData () {
-      const start = (this.page-1) * this.listSize *2,
-            end = start + this.listSize*2 -1;
-      console.log(this.comments.slice(start, end))
-      return this.comments.slice(start, end);
-    }
-  },
   methods: {
-    
-    getComment() {
-      let cnt = 1;
-      http.get(`comment/commentList?feedPk=${this.card.feedPk}`)
-        .then((res)=>{
-          if(res.data.status){
-            const response = res.data.object
-            this.commentCount = response.length
-            response.sort(function (a,b) {
-              return a.commentPk > b.commentPk ? -1 : 1;
-            })
-            this.comments = []
-            this.comments = response.flatMap(comment=> {
-              const commentData = {
-                "userPk" : comment.userPk,
-                "commentPk" : comment.commentPk,
-                "uniquePk": String(comment.feedPk) + '/' + String(comment.commentPk),
-                "content": comment.content,
-                "profileImg" : this.baseImg + comment.image,
-                "writerName": comment.nickname,
-                "updateActive": false,
-                }
-              const divi = { divider: true, inset: true }
-              if (cnt === 1) {
-                cnt++
-                return commentData
-              } else {
-                return [divi, commentData]
-              }
-            })
-          }
-      })
-    },
     createComment() {
-      this.createBtnActive = false;
       const params = {
-        "content" : this.newContent,
-        "feedPk" : this.feedPk,
+        "content" : this.commentWrite.content,
+        "feedPk" : this.commentWrite.feedPk,
         "userPk" : this.user.userPk
       }
-      this.newContent =''
+      this.commentWrite.content =''
       http.post(`comment/createComment`, params)
         .then((res)=>{
           if(res.data.status){
@@ -228,7 +161,7 @@ export default {
       http.delete(`comment/deleteComment?commentPk=${commentPk}`)
         .then((res)=>{
           if(res.data.status){
-            this.getComment()
+            console.log(res.data)
           }
         }).catch((err) => {
           console.log(err)
@@ -251,6 +184,49 @@ export default {
         })
       
     },
+    getComment() {
+      http.get(`comment/commentList?feedPk=${this.card.feedPk}`)
+        .then((res)=>{
+          if(res.data.status){
+            const response = res.data.object
+            response.sort(function (a,b) {
+              return a.commentPk > b.commentPk ? -1 : 1;
+            })
+            this.comments = []
+            let cnt = 0;
+            this.comments = response.flatMap(comment=> {
+              if (cnt === 0) {
+                cnt = cnt + 1
+                return [
+                  { "header": '댓글목록' },
+                  {
+                  "userPk" : comment.userPk,
+                  "commentPk" : comment.commentPk,
+                  "uniquePk": String(comment.feedPk) + '/' + String(comment.commentPk),
+                  "content": comment.content,
+                  "profileImg" : this.baseImg + comment.image,
+                  "writerName": comment.nickname,
+                  "updateActive": false,
+                  }
+                ]
+              } else {
+                return [
+                  { divider: true, inset: true },
+                  {
+                  "userPk" : comment.userPk,
+                  "commentPk" : comment.commentPk,
+                  "uniquePk": String(comment.feedPk) + '/' + String(comment.commentPk),
+                  "content": comment.content,
+                  "profileImg" : this.baseImg + comment.image,
+                  "writerName": comment.nickname,
+                  "updateActive": false,
+                  }
+                ]
+              }
+            })
+          }
+      })
+    },
     getUser() {
       http.get(`user/detailUser`)
         .then((res)=>{
@@ -266,25 +242,10 @@ export default {
 </script>
 
 <style scoped>
-
-.cancel-btn{
-  border: 3px solid  #5dc9b6;
+.cancel-btn {
+  width: 70px;
 }
 
-
-.cancel-btn:hover{
-  background-color: #5dc9b6;
-  color:white;
-}
-.comment-btn {
-  border: 3px solid  #F9802D;
-}
-
-
-.comment-btn:hover {
-  background-color:#F9802D;
-  color:white;
-}
 
 
 </style>
