@@ -56,7 +56,7 @@
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-img v-if="imageUrl" :src="imageUrl"></v-img>
+                          <v-img v-if="imageUrl" :src="imageUrl"></v-img>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -93,19 +93,19 @@ export default {
         Footer
     },
     data() {
-        return {
-            imageUrl: null,
-            selected : '',
-            content :'',
-            items : [
-                '인증',
-                '정보 공유'
-            ], 
-            feedPk:'',
-            feedType: true,
-            file: {},
-            status: true,
-        }
+      return {
+        imageUrl: null,
+        selected : '',
+        content :'',
+        items : [
+            '인증',
+            '정보 공유'
+        ], 
+        feedPk:'',
+        feedType: true,
+        file: {},
+        status: true,
+      }
     },
     watch: {
       selected: function() {
