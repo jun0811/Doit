@@ -2,22 +2,20 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseBasic;
-import com.ssafy.doit.model.Feed;
+import com.ssafy.doit.model.feed.Feed;
 import com.ssafy.doit.model.response.ResponseFeed;
 import com.ssafy.doit.service.FeedService;
-import com.ssafy.doit.service.UserService;
+import com.ssafy.doit.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = ResponseBasic.class),

@@ -1,18 +1,15 @@
 package com.ssafy.doit.service;
 
-import com.ssafy.doit.model.Feed;
-import com.ssafy.doit.model.Group;
-import com.ssafy.doit.model.GroupHashTag;
-import com.ssafy.doit.model.HashTag;
-import com.ssafy.doit.repository.FeedRepository;
-import com.ssafy.doit.repository.GroupHashTagRepository;
-import com.ssafy.doit.repository.GroupRepository;
-import com.ssafy.doit.repository.GroupUserRepository;
+import com.ssafy.doit.model.feed.Feed;
+import com.ssafy.doit.model.group.Group;
+import com.ssafy.doit.repository.feed.FeedRepository;
+import com.ssafy.doit.repository.group.GroupHashTagRepository;
+import com.ssafy.doit.repository.group.GroupRepository;
+import com.ssafy.doit.repository.group.GroupUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

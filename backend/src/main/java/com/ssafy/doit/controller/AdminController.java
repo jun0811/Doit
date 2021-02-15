@@ -1,14 +1,15 @@
 package com.ssafy.doit.controller;
 
-import com.ssafy.doit.model.Group;
+import com.ssafy.doit.model.group.Group;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.repository.*;
+import com.ssafy.doit.repository.group.GroupRepository;
 import com.ssafy.doit.service.AdminService;
 import com.ssafy.doit.service.FeedService;
-import com.ssafy.doit.service.GroupUserService;
-import com.ssafy.doit.service.UserService;
+import com.ssafy.doit.service.group.GroupUserService;
+import com.ssafy.doit.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

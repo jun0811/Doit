@@ -1,14 +1,14 @@
 package com.ssafy.doit.service;
 
-import com.ssafy.doit.model.Product;
-import com.ssafy.doit.model.chat.ChatRoom;
-import com.ssafy.doit.model.chat.ChatRoomJoin;
+import com.ssafy.doit.model.store.Product;
+import com.ssafy.doit.model.store.ChatRoom;
+import com.ssafy.doit.model.store.ChatRoomJoin;
 import com.ssafy.doit.model.response.ResponseChatRoom;
 import com.ssafy.doit.model.user.User;
-import com.ssafy.doit.repository.ProductRepository;
+import com.ssafy.doit.repository.store.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
-import com.ssafy.doit.repository.chat.ChatRoomJoinRepository;
-import com.ssafy.doit.repository.chat.ChatRoomRepository;
+import com.ssafy.doit.repository.store.ChatRoomJoinRepository;
+import com.ssafy.doit.repository.store.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

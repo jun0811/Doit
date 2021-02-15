@@ -2,7 +2,7 @@ package com.ssafy.doit.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ssafy.doit.model.GroupUser;
+import com.ssafy.doit.model.group.GroupUser;
 import lombok.*;
 
 import javax.persistence.*;

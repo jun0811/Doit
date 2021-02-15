@@ -1,6 +1,6 @@
 package com.ssafy.doit.config;
 
-import com.ssafy.doit.service.UserDetailsServiceImpl;
+import com.ssafy.doit.service.user.UserDetailsServiceImpl;
 import com.ssafy.doit.service.jwt.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

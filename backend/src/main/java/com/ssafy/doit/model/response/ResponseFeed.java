@@ -1,15 +1,10 @@
 package com.ssafy.doit.model.response;
 
-import com.ssafy.doit.model.Feed;
-import com.ssafy.doit.model.FeedUser;
+import com.ssafy.doit.model.feed.Feed;
+import com.ssafy.doit.model.feed.FeedUser;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Column;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
