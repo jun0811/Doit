@@ -67,8 +67,8 @@
                       ></v-select>
                     </v-col>
                   </v-row>
-                  <v-row class="mb-2">
-                    <v-col cols="12">
+                <v-row class="mb-2">
+                  <v-col cols="12">
                     <v-textarea
                       label="그룹 소개글"
                       v-model="content"
