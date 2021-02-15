@@ -21,7 +21,7 @@
         <div v-if="!empty" class="pl-1 pl-sm-16">
           총 <span class="orange-color">{{ length }}</span> 개의 그룹이 있습니다.
         </div>
-        <GroupCard :page="page" :category="category_e"></GroupCard>
+        <GroupCard :page="page" :category="category"></GroupCard>
         <div v-if="empty" class="d-flex align-center flex-column">
           <h3 class="mt-16">'{{ category_k }}' 카테고리에는 아직 그룹이 생성되지 않았어요.</h3>
           <br>
@@ -61,8 +61,9 @@ import { categoryGroup } from "@/api/group/index.js"
 export default {
   name: 'CategoryList',
   props:{
-    category_e:{ type: String, default: ""},
-    category_k:{ type: String, default: ""}
+    // category_e:{ type: String, default: ""},
+    // category_k:{ type: String, default: ""}
+    category: {type: String, default: ""}
   },
   data() {
     return {
@@ -72,15 +73,16 @@ export default {
       groups:[],
       empty: '',
       length: 0,
-      category: '',
+      category_k: '',
       categories: {'공부': 'study', '운동': 'exercise', '다이어트': 'diet', '취미': 'hobby', '독서': 'book', '생활습관': 'life', '기타': 'etc'},
+      categories2: {'study':'공부', 'exercise':'운동', 'diet':'다이어트', 'hobby':'취미', 'book':'독서', 'life':'생활습관', 'etc':'기타'},
     }
   },
   created() {
     // console.log(this.category);
     categoryGroup(
       {
-        "category":this.category_e,
+        "category":this.category,
         "direction":"ASC",
         "page":this.page,
         "size":9,
@@ -92,6 +94,8 @@ export default {
         this.pageCount = parseInt(res.data.object.totalPages)
         this.empty = res.data.object.empty
         this.length = res.data.object.content.length
+        this.category_k = this.categories2[this.category]
+        // console.log(this.category_k = this.categories2[this.category]);
         }
       },
       (err) =>{
@@ -103,7 +107,7 @@ export default {
   updated(){
     categoryGroup(
       {
-        "category":this.category_e,
+        "category":this.category,
         "direction":"ASC",
         "page":this.page,
         "size":9,
@@ -135,7 +139,7 @@ export default {
     },
     clickCategory(v) {
       console.log(v);
-      this.category_e = this.categories[v]
+      this.category = this.categories[v]
       this.category_k = v
     }
   }

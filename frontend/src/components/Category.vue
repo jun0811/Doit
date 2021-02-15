@@ -88,9 +88,8 @@ export default {
   },
   methods: {
     clickCategory(v) {
-      // var category = document.getElementById(v).innerHTML;
-      // console.log(String(this.categories[category]))  
-      this.$router.push({name: 'CategoryList', params: {category_e: this.categories[v], category_k: v}})
+      // this.$router.push({name: 'CategoryList', params: {category_e: this.categories[v], category_k: v}})
+      this.$router.push({name: 'CategoryList', params: {category: this.categories[v]}})
     }
   }
 }
