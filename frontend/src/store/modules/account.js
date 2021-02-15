@@ -1,4 +1,4 @@
-import { api } from '../../api/index'
+import { api } from '../../api/account/index'
 
 const state = {
   accessToken: null,

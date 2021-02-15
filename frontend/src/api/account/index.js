@@ -1,5 +1,5 @@
-import http from '../http-common';
-import store from '../store/index';
+import http from '../../http-common';
+import store from '../../store/index';
 
 const response = {
   UNAUTHORIZED : 401,
