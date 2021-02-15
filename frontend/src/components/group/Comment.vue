@@ -6,7 +6,10 @@
       ></v-subheader>
       <v-list-item>
         <v-list-item-avatar>
-          <v-img v-if="user.image" :src="user.image"></v-img>
+          <!-- 연결하면 유저 이미지로 사용 -->
+          <!-- <v-img v-if="user.image" :src="user.image"></v-img> -->
+          <!-- 이미지 연결 전 임시 프로필사진 -->
+          <v-img src="https://images.unsplash.com/photo-1589807407471-ed87e4ab940b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-content>
@@ -104,7 +107,7 @@
         </v-list-item>
       </template>
     </v-list>
-    <v-pagination v-if="pageCount >2"
+    <v-pagination v-if="pageCount >=2"
       v-model="page"
       circle
       color="orange"

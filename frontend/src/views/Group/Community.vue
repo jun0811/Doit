@@ -47,7 +47,7 @@
             <v-btn text class="text-h6" @click="feedWrite"> 글작성 </v-btn>
           </div>
         </v-col>
-        <v-col v-if="feed && joined" cols="12" class="d-flex flex-column justify-space-around mx-sm-16">
+        <v-col v-if="feed && joined" cols="12" class="d-flex flex-column justify-space-around align-center mx-sm-16">
           <v-col  cols="9" class="d-flex justify-space-around mx-16"> 
             <!-- 날짜 선택 시작 -->
             <!-- start day -->
@@ -61,6 +61,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
+                  class="date-input"
                   v-model="start"
                   label="시작일"
                   prepend-icon="mdi-calendar"
@@ -86,6 +87,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
+                  class="date-input"
                   v-model="end"
                   label="종료일"
                   prepend-icon="mdi-calendar"
@@ -110,7 +112,7 @@
           </div>
 
         </v-col>
-        <v-col v-if="users" cols="10" class="d-flex justify-center flex-column">
+        <v-col v-if="users" cols="10" class="d-flex justify-center align-center flex-column">
           <GroupMember :groupPk="groupPk"></GroupMember>
           <!-- <div class="temp">
             asdasdasd
@@ -333,5 +335,9 @@ export default {
   }
   .card{
     width: 120%;
+  }
+
+  .date-input >>> input {
+    text-align: center;
   }
 </style>
