@@ -66,7 +66,29 @@ public class SignupController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    // 로그인 전 비밀번호 찾기 이메일 확인
+    @ApiOperation(value = "비번 찾기 이메일 확인")
+    @PostMapping("/confirmEmail")
+    public Object confirmEmail(@RequestBody String email) {
+        ResponseBasic result = new ResponseBasic();
+        Optional<User> optWithdraw = userRepository.findByEmailAndUserRole(email, UserRole.WITHDRAW);
+        Optional<User> user =  userRepository.findByEmail(email);
 
+        if(user.isPresent()) {
+            if(optWithdraw.isPresent()){
+                result.status = false;
+                result.data = "해당 이메일이 존재하지 않습니다.";
+            }else{
+                result.status = true;
+                result.data = "success";
+            }
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }else {
+            result.status = false;
+            result.data = "해당 이메일이 존재하지 않습니다.";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
     // 회원가입
     @ApiOperation(value = "회원가입")
     @PostMapping("/signup")
