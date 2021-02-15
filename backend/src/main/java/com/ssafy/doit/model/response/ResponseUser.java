@@ -21,6 +21,7 @@ public class ResponseUser {
         this.nickname = user.getNickname();
         this.mileage = user.getMileage();
         this.role = user.getRoleKey();
+        this.image = user.getImage();
         this.createDate = user.getCreateDate().toString();
     }
 }
