@@ -3,7 +3,7 @@
     <v-list>
       <v-list-item>
         <v-list-item-avatar>
-          <v-img src="https://images.unsplash.com/photo-1578452496128-ab2d0703a8de?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"></v-img>
+          <v-img v-if="user.image" :src="user.image"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-content>
@@ -17,7 +17,7 @@
               rows="2"
               row-height="20"
               ref="input"
-              v-model="comment.content"
+              v-model="commentWrite.content"
               hide-details=""
               class="comment-input"
               @focus="buttonActivate()"
@@ -27,7 +27,7 @@
       </v-list-item>
       <v-row v-if="btnActive" class="d-flex justify-end mr-5">
         <v-btn @click="$refs.input.reset(); buttonDeactivate();" class="cancel-btn">취소</v-btn>
-        <v-btn @click="createComment; buttonDeactivate();" class="comment-btn">댓글</v-btn>
+        <v-btn @click="createComment(); buttonDeactivate();" class="comment-btn">댓글</v-btn>
       </v-row>
     </v-list>
     <v-list three-line>
@@ -46,7 +46,7 @@
 
         <v-list-item
           v-else
-          :key="comment.writerName"
+          :key="comment.commentPk"
         >
           <v-list-item-avatar>
             <v-img :src="comment.profileImg"></v-img>
@@ -56,6 +56,11 @@
             <v-list-item-title v-html="comment.writerName"></v-list-item-title>
             <v-list-item-subtitle v-html="comment.content"></v-list-item-subtitle>
           </v-list-item-content>
+          <v-list-item-icon 
+            v-if="comment.userPk===user.userPk"
+            class="mx-0 my-auto d-flex justify-end">
+            <font-awesome-icon icon="ellipsis-v"/>
+          </v-list-item-icon>
         </v-list-item>
       </template>
     </v-list>
@@ -71,36 +76,40 @@ export default {
   data: () => ({
     feedPk : 44,
     baseImg : 'https://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
-    comment : {
+    commentWrite : {
       content : '',
       feedPk : 44,
-      userPk : 8
     }, //작성자의 코멘트
 
     comments :[],
-    user :{}, //nickname, userPk, image가 들어있음
+    user :{
+      nickname:'',
+      userPk:'',
+      image:'',
+    }, //nickname, userPk, image가 들어있음
     btnActive:false,
   }),
   props : {
     card: Object,
   },
   created() {
-    this.user = this.$store.getters.getName
+    console.log(this.card)
+    this.commentWrite.feedPk = this.card.feedPk
     this.getComment()
     this.getUser()
   }, 
   methods: {
     createComment() {
       const params = {
-        "content" : this.comment.content,
-        "feedPk" : this.comment.feedPk,
+        "content" : this.commentWrite.content,
+        "feedPk" : this.commentWrite.feedPk,
         "userPk" : this.user.userPk
       }
       this.comment.content =''
       http.post(`comment/createComment`, params)
         .then((res)=>{
           if(res.data.status){
-            console.logt(res.data.object)
+            console.log(res.data.object)
           }
         }).catch((err) => {
           console.log(err)
@@ -110,8 +119,10 @@ export default {
       http.get(`comment/commentList?feedPk=${this.card.feedPk}`)
         .then((res)=>{
           if(res.data.status){
-            console.log('getComment', res.data.object)
             const response = res.data.object
+            response.sort(function (a,b) {
+              return a.commentPk > b.commentPk ? -1 : 1;
+            })
             this.comments = []
             let cnt = 0;
             this.comments = response.flatMap(comment=> {
@@ -120,23 +131,26 @@ export default {
                 return [
                   { "header": '댓글목록' },
                   {
+                  "userPk" : comment.userPk,
+                  "commentPk": String(comment.feedPk) + '/' + String(comment.commentPk),
                   "content": comment.content,
                   "profileImg" : this.baseImg + comment.image,
-                  "writerName": '유저이름',
+                  "writerName": comment.nickname,
                   }
                 ]
               } else {
                 return [
                   { divider: true, inset: true },
                   {
+                  "userPk" : comment.userPk,
+                  "commentPk": String(comment.feedPk) + '/' + String(comment.commentPk),
                   "content": comment.content,
                   "profileImg" : this.baseImg + comment.image,
-                  "writerName": '유저이름',
+                  "writerName": comment.nickname,
                   }
                 ]
               }
             })
-            console.log(this.comments)
           }
       })
     },
@@ -144,7 +158,9 @@ export default {
       http.get(`user/detailUser`)
         .then((res)=>{
           if(res.data.status){
-            this.user = res.data.object
+            this.user.nickname = res.data.object.nickname
+            this.user.userPk = res.data.object.userPk
+            this.user.image = this.baseImg + res.data.object.image
           }
       })
     },
