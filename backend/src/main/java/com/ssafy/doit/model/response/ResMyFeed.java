@@ -1,13 +1,7 @@
 package com.ssafy.doit.model.response;
 
-import com.ssafy.doit.model.Feed;
-import com.ssafy.doit.model.FeedUser;
-import com.ssafy.doit.model.Group;
-import com.ssafy.doit.model.GroupUser;
+import com.ssafy.doit.model.feed.Feed;
 import lombok.Getter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 public class ResMyFeed {

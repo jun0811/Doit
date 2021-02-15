@@ -6,6 +6,7 @@ import FeedWrite from "../views/Group/FeedWrite.vue";
 import Community from "../views/Group/Community.vue";
 import GroupCreate from "../views/Group/GroupCreate.vue";
 import GroupList from "../views/Group/GroupList.vue";
+import CategoryList from "../views/Group/CategoryList.vue";
 import GroupUpdate from "../views/Group/GroupUpdate.vue";
 import Join from "../views/User/Join.vue";
 import MailCheck from "../views/User/MailCheck.vue";
@@ -88,6 +89,12 @@ const routes = [
     path: "/group/grouplist/:word",
     name: "GroupList",
     component: GroupList,
+    props: true,
+  },
+  {
+    path: "/group/categorylist/:category",
+    name: "CategoryList",
+    component: CategoryList,
     props: true,
   },
   {

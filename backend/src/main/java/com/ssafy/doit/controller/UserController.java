@@ -1,9 +1,7 @@
 package com.ssafy.doit.controller;
 
-import com.ssafy.doit.model.Feed;
 import com.ssafy.doit.model.Mileage;
 import com.ssafy.doit.model.request.RequestChangePw;
-import com.ssafy.doit.model.response.ResponseFeed;
 import com.ssafy.doit.model.response.ResponseMileage;
 import com.ssafy.doit.model.response.ResponseUser;
 import com.ssafy.doit.model.user.UserRole;
@@ -13,9 +11,9 @@ import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.FeedService;
-import com.ssafy.doit.service.GroupUserService;
+import com.ssafy.doit.service.group.GroupUserService;
 import com.ssafy.doit.service.S3Service;
-import com.ssafy.doit.service.UserService;
+import com.ssafy.doit.service.user.UserService;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

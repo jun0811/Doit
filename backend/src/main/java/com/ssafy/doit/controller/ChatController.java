@@ -1,12 +1,12 @@
 package com.ssafy.doit.controller;
 
-import com.ssafy.doit.model.chat.ChatMessage;
-import com.ssafy.doit.model.chat.ChatRoom;
-import com.ssafy.doit.model.chat.ChatRoomJoin;
+import com.ssafy.doit.model.store.ChatMessage;
+import com.ssafy.doit.model.store.ChatRoom;
+import com.ssafy.doit.model.store.ChatRoomJoin;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseChatRoom;
 import com.ssafy.doit.service.ChatService;
-import com.ssafy.doit.service.UserService;
+import com.ssafy.doit.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

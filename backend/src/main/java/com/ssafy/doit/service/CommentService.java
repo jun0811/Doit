@@ -9,13 +9,16 @@ import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseFeed;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
+import com.ssafy.doit.repository.feed.CommentRepository;
+import com.ssafy.doit.repository.feed.FeedRepository;
+import com.ssafy.doit.repository.group.GroupRepository;
+import com.ssafy.doit.repository.group.GroupUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

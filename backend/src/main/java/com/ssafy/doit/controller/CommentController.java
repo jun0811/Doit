@@ -8,7 +8,7 @@ import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.CommentRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.CommentService;
-import com.ssafy.doit.service.UserService;
+import com.ssafy.doit.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
