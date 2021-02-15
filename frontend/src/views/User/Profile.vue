@@ -2,10 +2,10 @@
   <div>
     <Header></Header>
     <v-container class="pa-3 pa-sm-16">
-      <v-row class="py-3">
-        <v-col 
-          sm="3" 
-          class="d-flex justify-center"
+      <v-row class="py-3 ma-0" style="width:100%">
+        <v-col
+          cols="5" sm="3" md="3" lg="3" xl="3"
+          class="d-flex justify-space-around"
         >
           <img
             src="@/assets/img/profile_temp.png"
@@ -14,18 +14,32 @@
           />
         </v-col>
         <v-col 
-          sm="9" 
+          cols="5" sm="9" md="9" lg="9" xl="9"
           class="pa-8 text-h4"
         >
-          <div>{{user.nickname}}</div>
-          <v-btn
-            @click="moveUpdate"
-            color="white" 
-            depressed 
-            class="pa-0"
-          > 
-          회원정보 수정 > 
-          </v-btn>
+          <v-row class="mt-2 mb-4">{{user.nickname}}</v-row>
+          <v-row class="d-flex">
+            <v-btn 
+              @click="moveUpdate"
+              class=" ma-2 px-5 mr-sm-8 profile-btn"
+            > 
+            회원정보 수정
+            </v-btn>
+            <v-btn 
+              @click="moveChatList"
+              class=" ma-2 px-5 mr-sm-8 profile-btn"
+            > 
+            채팅 리스트
+            </v-btn>
+            <v-btn 
+              @click="moveMileage"
+              class="ma-2 px-5 mr-sm-8 profile-btn"
+            > 
+            마일리지 내역
+            </v-btn>
+
+
+          </v-row>
         </v-col>
       </v-row>
       <v-row class="py-3">
@@ -93,10 +107,23 @@ export default {
   methods: {
     moveUpdate(){
       this.$router.push('/user/update');
+    },
+    moveMileage() {
+      this.$router.push('/user/mileagehistory')
+    },
+    moveChatList() {
+      this.$router.push('/chatlist')
     }
   }
 };
 </script>
 
-<style>
+<style scoped>
+
+.profile-btn {
+  border : 2px solid #F9802D;
+  border-radius: 15px;
+}
+
+
 </style>
