@@ -37,9 +37,9 @@
             src="@/assets/icon/book.png" 
             alt="book-icon" 
             class="category-icon"
-            @click="clickCategory('책')"
+            @click="clickCategory('독서')"
           >
-          <div class="group-name mt-2">책</div>
+          <div class="group-name mt-2">독서</div>
         </v-col>
         <v-col cols="3" sm="1" class="d-flex flex-column align-center category-icon-effect px-0">
           <img 
