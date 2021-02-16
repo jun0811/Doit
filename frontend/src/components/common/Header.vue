@@ -1,12 +1,83 @@
 <template>
   <header class="header">
+    <div class="d-flex align-center">
+      <!-- navigation drawer 시작-->
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-navigation-drawer
+        v-model="drawer"
+        absolute
+        temporary
+        style="height: 100vh;"
+      >
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-img v-if="img==false" src="@/assets/img/profile_temp.png"></v-img>
+            <v-img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ img"></v-img>
+          </v-list-item-avatar>
 
-    <img 
-      src="@/assets/img/logo.png" 
-      alt="Logo"
-      class="logo"
-      @click="logoClick"
-    >
+          <v-list-item-content>
+            <v-list-item-title v-if="nickname">{{ nickname }}</v-list-item-title>
+            <v-list-item-title v-else>로그인 해주세요</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider></v-divider>
+
+        <v-list v-if="nickname">
+          <v-list-group
+            v-for="item in items"
+            :key="item.title"
+            v-model="item.active"
+            :prepend-icon="item.action"
+            no-action
+          >
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
+              </v-list-item-content>
+            </template>
+    
+            <v-list-item
+              v-for="subItem in item.items"
+              :key="subItem.groupPk"
+              @click="group(subItem.groupPk)"
+              class="px-4"
+            >
+              <v-list-item-action>
+                <v-btn
+                  fab
+                  small
+                  depressed
+                  color="orange"
+                >
+                </v-btn>
+              </v-list-item-action>
+
+              <v-list-item-content>
+                <v-list-item-title> {{ subItem.name }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+        </v-list>
+        <div v-else class="my-auto navi-style d-flex flex-column justify-center align-center">
+          <div class="mb-3">
+            로그인이 필요한 기능입니다.
+          </div>
+          <v-btn
+            class="login"
+            outlined
+            @click="dialog=!dialog"
+          >로그인</v-btn>
+        </div>      
+      </v-navigation-drawer>
+      <!-- navigation drawer 끝-->  
+      <img 
+        src="@/assets/img/logo.png" 
+        alt="Logo"
+        class="logo"
+        @click="logoClick"
+      >
+    </div>
     <div>  
 
       <!-- 로그인창 시작 -->
@@ -149,77 +220,6 @@
       >
         <font-awesome-icon :icon="['far', 'bell']" />
       </v-btn>
-
-      <!-- navigation drawer 시작-->
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-navigation-drawer
-        v-model="drawer"
-        absolute
-        temporary
-        style="height: 100vh;"
-      >
-        <v-list-item>
-          <v-list-item-avatar>
-            <v-img v-if="img==false" src="@/assets/img/profile_temp.png"></v-img>
-            <v-img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ img"></v-img>
-          </v-list-item-avatar>
-
-          <v-list-item-content>
-            <v-list-item-title v-if="nickname">{{ nickname }}</v-list-item-title>
-            <v-list-item-title v-else>로그인 해주세요</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-divider></v-divider>
-
-        <v-list v-if="nickname">
-          <v-list-group
-            v-for="item in items"
-            :key="item.title"
-            v-model="item.active"
-            :prepend-icon="item.action"
-            no-action
-          >
-            <template v-slot:activator>
-              <v-list-item-content>
-                <v-list-item-title v-text="item.title"></v-list-item-title>
-              </v-list-item-content>
-            </template>
-    
-            <v-list-item
-              v-for="subItem in item.items"
-              :key="subItem.groupPk"
-              @click="group(subItem.groupPk)"
-              class="px-4"
-            >
-              <v-list-item-action>
-                <v-btn
-                  fab
-                  small
-                  depressed
-                  color="orange"
-                >
-                </v-btn>
-              </v-list-item-action>
-
-              <v-list-item-content>
-                <v-list-item-title> {{ subItem.name }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-group>
-        </v-list>
-        <div v-else class="my-auto navi-style d-flex flex-column justify-center align-center">
-          <div class="mb-3">
-            로그인이 필요한 기능입니다.
-          </div>
-          <v-btn
-            class="login"
-            outlined
-            @click="dialog=!dialog"
-          >로그인</v-btn>
-        </div>      
-        </v-navigation-drawer>
-      <!-- navigation drawer 끝-->  
     </div>
   </header>
 </template>

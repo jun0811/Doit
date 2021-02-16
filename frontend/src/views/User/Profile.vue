@@ -21,18 +21,21 @@
           <v-row class="mt-2 mb-4">{{user.nickname}}</v-row>
           <v-row class="d-flex">
             <v-btn 
+              text
               @click="moveUpdate"
               class=" ma-2 px-5 mr-sm-8 profile-btn"
             > 
             회원정보 수정
             </v-btn>
             <v-btn 
+              text
               @click="moveChatList"
               class=" ma-2 px-5 mr-sm-8 profile-btn"
             > 
             채팅 리스트
             </v-btn>
             <v-btn 
+              text
               @click="moveMileage"
               class="ma-2 px-5 mr-sm-8 profile-btn"
             > 
