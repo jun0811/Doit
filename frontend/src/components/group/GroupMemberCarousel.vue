@@ -20,7 +20,7 @@
 
 <script>
 import http from "../../http-common";
-
+import { notiType, sendNotify } from "../../api/notification/index"
 
   export default {
     data: () => ({
@@ -91,6 +91,11 @@ import http from "../../http-common";
         http.delete(`/group/kickOutGroupUser?groupPk=${this.groupPk}&userPk=${userPk}`)
         .then((res)=>{
           console.log(res)
+          sendNotify({
+            "notiType": notiType.KICKOUT,
+            "userId": userPk,
+            "targetId": this.groupPk,
+          })
         })
       }
     }

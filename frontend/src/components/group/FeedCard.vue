@@ -62,6 +62,7 @@
 <script>
 import Comment from '../../components/group/Comment.vue'
 import http from '../../http-common'
+import { notiType, sendNotify } from "../../api/notification/index"
 
   export default {
     props: {
@@ -101,9 +102,16 @@ import http from '../../http-common'
         if(this.card.writer == this.$store.getters.getName) console.log(this.card.feedPk)
         else{
           http.get(`feed/authCheckFeed?feedPk=${this.card.feedPk}`)
-          .then(()=>
+          .then((res)=> {
             this.auth= true
-          )
+            if(res.data.object.auth_check){
+              sendNotify({
+                "notiType": notiType.CONFIRMFEED,
+                "userId": this.card.userPk,
+                "targetId": this.card.groupPk
+              })
+            }
+          })
         }
       },
       feedDelete(){

@@ -127,7 +127,7 @@
 <script>
 
 import http from "../../http-common";
-
+import { notiType, sendNotify } from "../../api/notification/index"
 
 export default {
   data: () => ({
@@ -228,6 +228,11 @@ export default {
         .then((res)=>{
           if(res.data.status){
             this.getComment()
+            sendNotify({
+                "notiType": notiType.COMMENT,
+                "userId": this.card.userPk,
+                "targetId": this.card.feedPk
+            })
           }
         }).catch((err) => {
           console.log(err)
