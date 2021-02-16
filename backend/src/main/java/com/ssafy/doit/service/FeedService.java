@@ -9,6 +9,7 @@ import com.ssafy.doit.model.group.Group;
 import com.ssafy.doit.model.group.GroupUser;
 import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseFeed;
+import com.ssafy.doit.model.response.ResponseUser;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.*;
 import com.ssafy.doit.repository.feed.*;
@@ -51,6 +52,22 @@ public class FeedService {
     @Autowired
     private MileageRepository mileageRepository;
 
+    // 오늘 하루 인증 피드 등록한 그룹원 리스트
+    @Transactional
+    public List<ResponseUser> todayAuthUser(Long groupPk){
+        List<ResponseUser> resList = new ArrayList<>();
+        Group group =groupRepository.findById(groupPk).get();
+        List<GroupUser> userList = group.userList;
+        for(GroupUser gu : userList){
+            Long userPk = gu.getUser().getId();
+            Optional<Feed> optFeed = feedRepository.findByGroupPkAndWriterAndCreateDate(groupPk, userPk, LocalDate.now().toString());
+            if(optFeed.isPresent()){
+                resList.add(new ResponseUser(gu.getUser()));
+            }
+        }
+        return resList;
+    }
+
     // 그룹 내 피드 생성
     @Transactional
     public Long createFeed(Long userPk, Feed feedReq) throws Exception {
@@ -60,7 +77,7 @@ public class FeedService {
         Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group,user);
         if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
 
-//        Optional<Feed> optFeed = feedRepository.findByWriterAndCreateDate(userPk, LocalDate.now().toString());
+//        Optional<Feed> optFeed = feedRepository.findByGroupPkAndWriterAndCreateDate(groupPk, userPk, LocalDate.now().toString());
 //        if(optFeed.isPresent()) throw new Exception("오늘 이미 인증피드를 작성하였습니다.");
 
         Feed feed = feedRepository.save(Feed.builder()
