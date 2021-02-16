@@ -1,6 +1,6 @@
 <template>
   <div class="header-navbar">
-    <header class="header">
+    <header class="header d-flex justify-space-between">
       <div class="d-flex align-center">
         <!-- navigation drawer 시작-->
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -38,27 +38,27 @@
               </v-list-item-content>
             </template>
             <!-- 가입 그룹 리스트 -->
-            <v-list-item
-              v-for="subItem in item.items"
-              :key="subItem.groupPk"
-              @click="group(subItem.groupPk)"
-              class="px-4"
-            >
-              <v-list-item-action class="group-image">
-                <v-img
-                  class="profile"
-                  v-if="subItem.image"
-                  :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ subItem.image"
-                ></v-img>
-                <v-img class="profile" v-else src=""> </v-img>
-              </v-list-item-action>
+              <v-list-item
+                v-for="subItem in item.items"
+                :key="subItem.groupPk"
+                @click="group(subItem.groupPk)"
+                class="px-4"
+              >
+                <v-list-item-action class="group-image">
+                  <v-img
+                    class="profile"
+                    v-if="subItem.image"
+                    :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ subItem.image"
+                  ></v-img>
+                  <v-img class="profile" v-else src=""> </v-img>
+                </v-list-item-action>
 
-                <v-list-item-content>
-                  <v-list-item-title> {{ subItem.name }}</v-list-item-title>
-                </v-list-item-content>
+                  <v-list-item-content>
+                    <v-list-item-title> {{ subItem.name }}</v-list-item-title>
+                  </v-list-item-content>
               </v-list-item>
-            </v-list-group>
-          </v-list>
+          </v-list-group>
+        </v-list>
           <div v-else class="my-auto navi-style d-flex flex-column justify-center align-center">
             <div class="mb-3">
               로그인이 필요한 기능입니다.
@@ -78,8 +78,7 @@
           @click="logoClick"
         >
       </div>
-      <div>  
-
+      <div class="d-flex justify-end align-center">
         <!-- 로그인창 시작 -->
         <v-dialog
           v-model="dialog"
@@ -204,42 +203,44 @@
           마이페이지
         </v-btn>
 
-      <v-btn
-        text
-        @click="logout"
-        class="px-0"
-        v-if="this.$store.state.account.accessToken"
-      >
-        로그아웃
-      </v-btn>
-      <!-- 여기부터 알림! -->
-      <v-menu
-        bottom
-        offset-y
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            text
-            class="ma-2"
-            v-bind="attrs"
-            v-on="on"
-          >
-           <font-awesome-icon :icon="['far', 'bell']" />
-          </v-btn>
-        </template>
-        <v-list max-height="400">
-          <v-subheader>나의 알림</v-subheader>
-          <v-list-item
-            v-for="(notice, i) in noti"
-            :key="i"
-            @click="noticeConfirm(notice)"
-          >
-            <v-list-item-title>{{ content[notice.notiType] }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
-  </header>
+        <v-btn
+          text
+          @click="logout"
+          class="px-0"
+          v-if="this.$store.state.account.accessToken"
+        >
+          로그아웃
+        </v-btn>
+        <!-- 여기부터 알림! -->
+        <v-menu
+          bottom
+          offset-y
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              text
+              class="ma-2"
+              v-bind="attrs"
+              v-on="on"
+            >
+            <font-awesome-icon :icon="['far', 'bell']" />
+            </v-btn>
+          </template>
+          <v-list max-height="400">
+            <v-subheader>나의 알림</v-subheader>
+            <v-list-item
+              v-for="(notice, i) in noti"
+              :key="i"
+              @click="noticeConfirm(notice)"
+            >
+              <v-list-item-title>{{ content[notice.notiType] }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </header>
+  </div>
+
 </template>
 
 <script>
