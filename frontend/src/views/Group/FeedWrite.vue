@@ -80,6 +80,7 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { createFeed } from "@/api/feed/index.js"
 import http from "../../http-common";
+import { notiType, sendNotify } from "../../api/notification/index"
 
 // import http from "../../http-common";
 
@@ -134,6 +135,12 @@ export default {
               http.post(`feed/updateImg?feedPk=${feedPk}`,formData)
               .then((res)=>{
                 console.log(res);
+                if(this.feedType){
+                  sendNotify({
+                    "notiType": notiType.NEWFEED,
+                    "targetId": this.groupPk,
+                  })
+                }
                 this.$router.go(-1)
               })
             }

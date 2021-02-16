@@ -150,6 +150,7 @@ import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
 // import ChatRoom from "@/components/mileage/ChatRoom.vue";
 import http from "../../http-common";
+import { notiType, sendNotify } from '../../api/notification/index'
 
 export default {
   name: "ProductDetail",
@@ -213,6 +214,11 @@ export default {
           'roomPk' : this.roomid,
         }
         this.$store.getters.getStompClient.send("/publish/chat", JSON.stringify(chatMessage),{"accessToken": this.$store.getters.getAccessToken})
+        sendNotify({
+          "notiType": notiType.NEWCHAT,
+          "userPk": this.user2['userPk'],
+          "targetId": this.room.id
+        })
         this.content=''
     }
     },
