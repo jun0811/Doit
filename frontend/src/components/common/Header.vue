@@ -1,227 +1,263 @@
 <template>
-  <header class="header">
-    <div class="d-flex align-center">
-      <!-- navigation drawer 시작-->
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-navigation-drawer
-        v-model="drawer"
-        absolute
-        temporary
-        style="height: 100vh;"
-      >
-        <v-list-item>
-          <v-list-item-avatar>
-            <v-img v-if="img==false" src="@/assets/img/profile_temp.png"></v-img>
-            <v-img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ img"></v-img>
-          </v-list-item-avatar>
+  <div>
+    <header class="header">
+      <div class="d-flex align-center">
+        <!-- navigation drawer 시작-->
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-navigation-drawer
+          v-model="drawer"
+          absolute
+          temporary
+          style="height: 100vh;"
+        >
+          <v-list-item>
+            <v-list-item-avatar>
+              <v-img v-if="img==false" src="@/assets/img/profile_temp.png"></v-img>
+              <v-img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ img"></v-img>
+            </v-list-item-avatar>
 
-          <v-list-item-content>
-            <v-list-item-title v-if="nickname">{{ nickname }}</v-list-item-title>
-            <v-list-item-title v-else>로그인 해주세요</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+            <v-list-item-content>
+              <v-list-item-title v-if="nickname">{{ nickname }}</v-list-item-title>
+              <v-list-item-title v-else>로그인 해주세요</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
 
-        <v-divider></v-divider>
+          <v-divider></v-divider>
 
-        <v-list v-if="nickname">
-          <v-list-group
-            v-for="item in items"
-            :key="item.title"
-            v-model="item.active"
-            :prepend-icon="item.action"
-            no-action
-          >
-            <template v-slot:activator>
-              <v-list-item-content>
-                <v-list-item-title v-text="item.title"></v-list-item-title>
-              </v-list-item-content>
-            </template>
-    
-            <v-list-item
-              v-for="subItem in item.items"
-              :key="subItem.groupPk"
-              @click="group(subItem.groupPk)"
-              class="px-4"
+          <v-list v-if="nickname">
+            <v-list-group
+              v-for="item in items"
+              :key="item.title"
+              v-model="item.active"
+              :prepend-icon="item.action"
+              no-action
             >
-              <v-list-item-action>
-                <v-btn
-                  fab
-                  small
-                  depressed
-                  color="orange"
-                >
-                </v-btn>
-              </v-list-item-action>
+              <template v-slot:activator>
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.title"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+      
+              <v-list-item
+                v-for="subItem in item.items"
+                :key="subItem.groupPk"
+                @click="group(subItem.groupPk)"
+                class="px-4"
+              >
+                <v-list-item-action>
+                  <v-btn
+                    fab
+                    small
+                    depressed
+                    color="orange"
+                  >
+                  </v-btn>
+                </v-list-item-action>
 
-              <v-list-item-content>
-                <v-list-item-title> {{ subItem.name }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-group>
-        </v-list>
-        <div v-else class="my-auto navi-style d-flex flex-column justify-center align-center">
-          <div class="mb-3">
-            로그인이 필요한 기능입니다.
-          </div>
-          <v-btn
-            class="login"
-            outlined
-            @click="dialog=!dialog"
-          >로그인</v-btn>
-        </div>      
-      </v-navigation-drawer>
-      <!-- navigation drawer 끝-->  
-      <img 
-        src="@/assets/img/logo.png" 
-        alt="Logo"
-        class="logo"
-        @click="logoClick"
-      >
-    </div>
-    <div>  
+                <v-list-item-content>
+                  <v-list-item-title> {{ subItem.name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-group>
+          </v-list>
+          <div v-else class="my-auto navi-style d-flex flex-column justify-center align-center">
+            <div class="mb-3">
+              로그인이 필요한 기능입니다.
+            </div>
+            <v-btn
+              class="login"
+              outlined
+              @click="dialog=!dialog"
+            >로그인</v-btn>
+          </div>      
+        </v-navigation-drawer>
+        <!-- navigation drawer 끝-->  
+        <img 
+          src="@/assets/img/logo.png" 
+          alt="Logo"
+          class="logo"
+          @click="logoClick"
+        >
+      </div>
+      <div>  
 
-      <!-- 로그인창 시작 -->
-      <v-dialog
-        v-model="dialog"
-        persistent
-        width="600"
-        v-if="!this.$store.state.account.accessToken"
-      >
-        <template v-slot:activator="{on}">
-          <v-btn
-          text
-          v-on="on"
-          class= "px-0"
-          >
-          로그인
-          </v-btn>
-        </template>
+        <!-- 로그인창 시작 -->
+        <v-dialog
+          v-model="dialog"
+          persistent
+          width="600"
+          v-if="!this.$store.state.account.accessToken"
+        >
+          <template v-slot:activator="{on}">
+            <v-btn
+            text
+            v-on="on"
+            class= "px-0"
+            >
+            로그인
+            </v-btn>
+          </template>
 
-        <v-card class="mx-auto">
-          <v-container>
-            <v-row>
-              <v-col class="d-flex justify-end pt-2 pb-0">
-                <v-btn 
-                  class=""
-                  text
-                  @click="close"
-                >
-                  <font-awesome-icon icon="times-circle"/>
-                </v-btn>
-              </v-col>
+          <v-card class="mx-auto">
+            <v-container>
+              <v-row>
+                <v-col class="d-flex justify-end pt-2 pb-0">
+                  <v-btn 
+                    class=""
+                    text
+                    @click="close"
+                  >
+                    <font-awesome-icon icon="times-circle"/>
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
+
+            <v-container class="px-5 px-sm-16 pb-8 pb-sm-16">
+              <v-row>
+                <v-col cols="12" class="d-flex justify-center">
+                  <!-- <v-card-title> -->
+                  <h3 class="">로그인</h3>
+                  <!-- </v-card-title> -->
+                </v-col>
+              </v-row>
+              <v-row class="d-flex justify-center">
+                <v-col cols="11" sm="8" class="pb-0">
+                  <v-text-field
+                  v-model="email"
+                  :error-messages="emailErrors"
+                  label="E-mail"
+                  required
+                  clearable
+                  @input="$v.email.$touch()"
+                  @blur="$v.email.$touch()"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="11" sm="8" class="pt-0">
+                  <v-text-field
+                    v-model="password"
+                    :error-messages="passwordErrors"
+                    label="비밀번호"
+                    clearable
+                    type="password"
+                    required
+                    @input="$v.password.$touch()"
+                    @blur="$v.password.$touch()"
+                  ></v-text-field>
+                </v-col>
             </v-row>
-          </v-container>
+            <v-row class="d-flex justify-center my-6">
+              <v-btn
+                color="#F9802D"
+                class="login input" 
+                text
+                @click="login()"
+              >로그인
+              </v-btn>
 
-          <v-container class="px-5 px-sm-16 pb-8 pb-sm-16">
-            <v-row>
-              <v-col cols="12" class="d-flex justify-center">
-                <!-- <v-card-title> -->
-                <h3 class="">로그인</h3>
-                <!-- </v-card-title> -->
+            </v-row>
+            <v-row class="d-flex justify-center mt-5">
+              <v-col cols="8" sm="5" class="font-small-style">
+                아직 회원이 아니신가요?
+              </v-col>
+              <v-col cols="3" sm="3" class="d-flex justify-end">
+                <v-btn
+                  color="#F9802D"
+                  @click="signup" 
+                  text
+                  small
+                >회원 가입</v-btn>
               </v-col>
             </v-row>
             <v-row class="d-flex justify-center">
-              <v-col cols="11" sm="8" class="pb-0">
-                <v-text-field
-                v-model="email"
-                :error-messages="emailErrors"
-                label="E-mail"
-                required
-                clearable
-                @input="$v.email.$touch()"
-                @blur="$v.email.$touch()"
-                ></v-text-field>
+              <v-col cols="8" sm="4" class="font-small-style">
+                비밀번호를 잊으셨나요?
               </v-col>
-              <v-col cols="11" sm="8" class="pt-0">
-                <v-text-field
-                  v-model="password"
-                  :error-messages="passwordErrors"
-                  label="비밀번호"
-                  clearable
-                  type="password"
-                  required
-                  @input="$v.password.$touch()"
-                  @blur="$v.password.$touch()"
-                ></v-text-field>
+              <v-col cols="3" sm="4" class="d-flex justify-end">
+                <v-btn
+                  color="#F9802D"
+                  text
+                  small
+                  @click="passwordFind"
+                >비밀번호 재설정</v-btn>
               </v-col>
-          </v-row>
-          <v-row class="d-flex justify-center my-6">
-            <v-btn
-              color="#F9802D"
-              class="login input" 
-              text
-              @click="login()"
-            >로그인
-            </v-btn>
+            </v-row>
+            </v-container>
+          </v-card>
+        </v-dialog>
+        <!-- 로그인창 끝 -->
 
-          </v-row>
-          <v-row class="d-flex justify-center mt-5">
-            <v-col cols="8" sm="5" class="font-small-style">
-              아직 회원이 아니신가요?
-            </v-col>
-            <v-col cols="3" sm="3" class="d-flex justify-end">
-              <v-btn
-                color="#F9802D"
-                @click="signup" 
-                text
-                small
-              >회원 가입</v-btn>
-            </v-col>
-          </v-row>
-          <v-row class="d-flex justify-center">
-            <v-col cols="8" sm="4" class="font-small-style">
-              비밀번호를 잊으셨나요?
-            </v-col>
-            <v-col cols="3" sm="4" class="d-flex justify-end">
-              <v-btn
-                color="#F9802D"
-                text
-                small
-                @click="passwordFind"
-              >비밀번호 재설정</v-btn>
-            </v-col>
-          </v-row>
-          </v-container>
-        </v-card>
-      </v-dialog>
-      <!-- 로그인창 끝 -->
+        <v-btn
+          text
+          @click="signup"
+          class= "px-0"
+          v-if="!this.$store.state.account.accessToken"
+        >
+          회원가입
+        </v-btn>
 
-      <v-btn
-        text
-        @click="signup"
-        class= "px-0"
-        v-if="!this.$store.state.account.accessToken"
-      >
-        회원가입
-      </v-btn>
+        <v-btn
+          text
+          @click="mypage"
+          class= "px-0"
+          v-if="this.$store.state.account.accessToken"
+        >
+          마이페이지
+        </v-btn>
 
-      <v-btn
-        text
-        @click="mypage"
-        class= "px-0"
-        v-if="this.$store.state.account.accessToken"
-      >
-        마이페이지
-      </v-btn>
-
-      <v-btn
-        text
-        @click="logout"
-        class="px-0"
-        v-if="this.$store.state.account.accessToken"
-      >
-        로그아웃
-      </v-btn>
-      <v-btn
-        text
-        @click="alarm"
-        class="px-0"
-        v-if="this.$store.state.account.accessToken"
-      >
-        <font-awesome-icon :icon="['far', 'bell']" />
-      </v-btn>
-    </div>
-  </header>
+        <v-btn
+          text
+          @click="logout"
+          class="px-0"
+          v-if="this.$store.state.account.accessToken"
+        >
+          로그아웃
+        </v-btn>
+        <v-btn
+          text
+          @click="alarm"
+          class="px-0"
+          v-if="this.$store.state.account.accessToken"
+        >
+          <font-awesome-icon :icon="['far', 'bell']" />
+        </v-btn>
+      </div>
+    </header>
+    <v-container fluid fixed-header class="nav-style">
+      <v-row class="d-flex justify-center">
+        <v-col cols="5" sm="2" class="d-flex justify-center">
+          <v-btn 
+            text 
+            large
+            @click="introduction"
+          >
+            Doit을 소개합니다
+          </v-btn>
+        </v-col>
+        <v-col cols="4" sm="2" class="d-flex justify-center">
+          <v-btn 
+            text 
+            large
+            @click="goToCategory"
+          >
+            그룹 둘러보기
+          </v-btn>
+        </v-col>
+        <v-col cols="3" sm="2" class="d-flex justify-center">
+          <v-btn 
+            text 
+            large
+            @click="goToShop"
+          >
+            Shop
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-row>
+        <div class="navbar-line" role="presentation"></div>
+      </v-row>
+    </v-container>    
+  </div>
 </template>
 
 <script>
@@ -360,6 +396,15 @@ export default {
       },
       passwordFind(){
         this.$router.push("/user/pwdfind")
+      },
+      goToShop() {
+        this.$router.push("/mileageshop")
+      },
+      goToCategory() {
+        this.$router.push({name: 'CategoryList', params: {category: 'study'}})
+      },
+      introduction() {
+        this.$router.push("/introduction")
       }
     }
 }
@@ -407,6 +452,19 @@ export default {
 
   .drawer-height {
     height: 100vh;
+  }
+  
+  .navbar-line {
+    width: 100%;
+    border-bottom: 1px solid black;
+    opacity: 0.2;
+  }
+
+  .nav-style {
+    /* position: fixed; */
+    background-color: white;
+    margin-bottom: 50px;
+    z-index: 1;
   }
 </style>
 

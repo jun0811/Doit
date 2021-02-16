@@ -2,7 +2,7 @@
   <v-app>
     <div>
       <Header></Header>
-      <NavBar></NavBar>
+      <!-- <NavBar></NavBar> -->
       <SearchBar></SearchBar>
       <Category></Category>
       <v-container class="px-3 px-sm-16 mt-16">
@@ -23,7 +23,7 @@
 <script>
 import "../assets/css/main.css";
 import Header from "@/components/common/Header.vue";
-import NavBar from "@/components/common/NavBar.vue";
+// import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
 import SearchBar from "@/components/common/SearchBar.vue";
 import WordCloud from "@/components/WordCloud.vue";
@@ -34,7 +34,7 @@ export default {
   name: "Main",
   components: {
     Header,
-    NavBar,
+    // NavBar,
     Footer,
     WordCloud,
     SearchBar,
