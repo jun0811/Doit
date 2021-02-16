@@ -4,7 +4,7 @@
       <h4>Doit 그룹랭킹👑</h4>
     </v-row>
     <v-card class="px-4 mr-sm-3">
-      <v-row v-for="(group, idx) in groups" :key="idx" class="my-3">
+      <v-row v-for="(group, idx) in groups" :key="idx" class="my-3" @click="moveToGroup(group)">
         <v-col cols="2" class="text-center">
           <span class="rank-num">{{group.ranking}}</span>
         </v-col>
@@ -39,8 +39,12 @@ export default {
       http.get(`/data/rankingGroup`)
       .then((res)=>{
         this.groups = res.data.object
+        console.log(this.groups)
       })
     },
+    moveToGroup(group) {
+      this.$router.push({ name: 'Community', params: {groupPk: group.groupPk} })
+    }
   }
 }
 </script>
