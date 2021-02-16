@@ -7,15 +7,16 @@ const notiType = {
     NEWCHAT: 1,
     CONFIRMFEED: 2,
     KICKOUT: 3,
-    AUTHORIZE: 4
+    AUTHORIZE: 4,
+    COMMENT: 5,
 }
 
 const api = {
-    async connect(accessToken) {
+    async connect() {
       let serverURL = "http://localhost:8080/ws";
       let socket = new SockJS(serverURL);
       let stompClient = Stomp.over(socket);
-      await stompClient.connect({ "accessToken": accessToken },
+      await stompClient.connect({ "accessToken": store.getters.getAccessToken },
       frame => {
         console.log(frame)
         store.commit("SET_CONNECTED", true);
@@ -26,8 +27,13 @@ const api = {
       return stompClient;
     },
     
-    async disconnect() {
+    disconnect() {
         store.getters.getStompClient.disconnect();
+    },
+    
+    sendNoti(notification) {
+      if (store.getters.getStompClient == null) return;
+      store.getters.getStompClient.send("/publish/noti", JSON.stringify(notification),{"accessToken": store.getters.getAccessToken})
     }
 }
 

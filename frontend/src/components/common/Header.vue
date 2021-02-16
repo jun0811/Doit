@@ -255,7 +255,8 @@ export default {
         },
       ],
       drawer: null,
-      miniVariant: true,     
+      miniVariant: true,
+      noti: [], 
     }),
     computed: {
       emailErrors () {
@@ -279,9 +280,12 @@ export default {
     watch: {
       getConnected(val){
         if(val == true){
-          this.$store.getters.getStompClient.subscribe('/subscribe/noti/user/' + this.$store.state.account.userpk, res => {
+          this.$store.getters.getStompClient.subscribe('/subscribe/noti/user/' + this.$store.state.account.userpk, () => {
             // notification 받기
-            console.log(JSON.parse(res.body));
+            http.get('/noti/getList')
+            .then((res) => {
+                this.noti = res.data.object;
+            })
           })
         }
       }
@@ -295,16 +299,21 @@ export default {
           http.get('/group/currentUserGroup')
             .then((res)=>{
             this.items[0].items = res.data.object;
-        })
-        // 소켓 연결
-        this.socketConnect();
-      }
+          })
+
+          http.get('/noti/getList')
+          .then((res) => {
+              this.noti = res.data.object;
+          })
+          // 소켓 연결
+          this.socketConnect();
+        }
     },
     methods: {
       ...mapActions(['LOGIN', 'LOGOUT', 'CONNECT', 'DISCONNECT']),
 
       socketConnect() {
-        this.CONNECT(this.$store.getters.getAccessToken)
+        this.CONNECT()
       },
       signup() {
         this.$router.push("/user/join")

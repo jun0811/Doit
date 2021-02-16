@@ -27,9 +27,9 @@ const mutations = {
 };
 
 const actions = {
-  async CONNECT({ commit }, payload) {
+  async CONNECT({ commit }) {
     commit('SET_CONNECTED', false);
-    const response = await api.connect(payload);
+    const response = await api.connect();
     commit('CONNECT', response);
     return response;
   },
