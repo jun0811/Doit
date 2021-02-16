@@ -55,7 +55,7 @@ export default {
             var tempword = {'name': word, 'value': (this.words[word]+1)**5}
             this.defaultWords.push(tempword)
           }
-          console.log(this.defaultWords)
+          // console.log(this.defaultWords)
         })
       },
       wordClickHandler(name, value) {
@@ -76,7 +76,6 @@ export default {
 .word:hover {
   cursor: pointer;
 }
-
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .word-cloud-img {
