@@ -5,7 +5,7 @@ const state = {
   name: null,
   email: null,
   userpk: null,
-
+  userimg: null
 };
 
 const getters = {
@@ -21,14 +21,18 @@ const getters = {
   getName(state){
     return state.name;
   },
+  getImg(state){
+    return state.userimg;
+  }
 
 };
 
 const mutations = {
-  SET_ACCESSTOKEN(state, { accessToken, email, name, userpk }) {
+  SET_ACCESSTOKEN(state, { accessToken, email, name, userpk, userimg }) {
     state.accessToken = accessToken;
     state.email = email;
     state.name = name;
+    state.userimg = userimg
     state.userpk = userpk;
   },
   SET_NAME(state, { name }){
@@ -41,19 +45,23 @@ const mutations = {
     state.name = data.object.nickname;
     state.email = data.object.email;
     state.userpk = data.object.id;
-
+    state.userimg = data.object.image
+    
     sessionStorage.accessToken = headers.accesstoken;
     sessionStorage.name = data.object.nickname;
     sessionStorage.email = data.object.email;
     sessionStorage.userpk = data.object.id;
+    sessionStorage.userimg = data.object.image;
   },
   LOGOUT(state) {
     state.accessToken = null;
     state.name = null;
     state.email = null;
     state.userpk = null;
+    state.userimg = null;
 
     sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("userimg");
     sessionStorage.removeItem("name");
     sessionStorage.removeItem("email");
     sessionStorage.removeItem("userpk");
@@ -63,7 +71,6 @@ const mutations = {
 
 const actions = {
   async LOGIN({ commit }, payload) {
-
     const response = await api.login(payload);
     console.log(response)
     commit('LOGIN', response);
