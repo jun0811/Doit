@@ -6,13 +6,14 @@
     <v-card class="px-4 mr-sm-3">
       <v-row v-for="(group, idx) in groups" :key="idx" class="my-3">
         <v-col cols="2" class="text-center">
-          <span class="rank-num">{{idx+1}}</span>
+          <span class="rank-num">{{group.ranking}}</span>
         </v-col>
         <v-col cols="2" class="d-flex flex-column justify-center">
-          <img class="rank-image box" :src="group.groupImage" alt="그룹이미지">
+          <!-- <img class="rank-image box" :src="group.groupImage" alt="그룹이미지"> -->
+          <img class="rank-image box" src="https://images.unsplash.com/photo-1486739985386-d4fae04ca6f7?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80" alt="그룹이미지">
         </v-col>
         <v-col cols="8">
-          <div class="group-name">{{group.groupname}}</div>
+          <div class="group-name">{{group.groupName}}</div>
         </v-col>
       </v-row>
     </v-card>
@@ -20,34 +21,27 @@
 </template>
 
 <script>
+import http from "../http-common";
+
+
 export default {
   data() {
     return {
       isHover:false,
-      groups : [
-        {
-          groupname:'뚜잇!다이어트',
-          groupImage:'https://t1.daumcdn.net/thumb/R720x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/2fG8/image/_WTaS6GwMibxPZE6BVl4emraqJE.jpg',
-        },
-        {
-          groupname:'매일홈트',
-          groupImage:'http://www.greenpostkorea.co.kr/news/photo/202005/117654_118598_566.jpg',
-        },
-        {
-          groupname:'독서원정대',
-          groupImage:'https://t1.daumcdn.net/cfile/tistory/120D63464ED498CA02',
-        },
-        {
-          groupname:'달려달려',
-          groupImage:'https://image.edaily.co.kr/images/Photo/files/NP/S/2016/09/PS16090800342.jpg',
-        },
-        {
-          groupname:'일찍 일어나는 새가 벌레를 잡아먹는다.',
-          groupImage:'https://media.istockphoto.com/vectors/early-bird-with-worm-vector-id96612139?k=6&m=96612139&s=612x612&w=0&h=34bGxeM0JaF25Tl4ezvPt1eBst7Cnta5pNfRouwK3wk=',
-        },
-      ],
+      groups:[],
     }
   },
+  created() {
+    this.getRanking()
+  },
+  methods: {
+    getRanking() {
+      http.get(`/data/rankingGroup`)
+      .then((res)=>{
+        this.groups = res.data.object
+      })
+    },
+  }
 }
 </script>
 
