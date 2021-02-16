@@ -35,8 +35,10 @@
     </v-card-title>
     <v-img
       height="250"
-      src="https://wonderfulmind.co.kr/wp-content/uploads/2018/05/knitting.jpg"
+      v-if="card.media"
+      :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` +card.media"
     ></v-img>
+    <v-img v-else gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="250px" ></v-img>
 
     <v-card-title>{{this.card.content}}</v-card-title>
 
@@ -72,7 +74,7 @@ import http from '../../http-common'
       check: false
     }),
     created(){
-      // console.log(this.card)
+      console.log(this.card)
       this.check = this.card.authCheck
     },
     methods: {

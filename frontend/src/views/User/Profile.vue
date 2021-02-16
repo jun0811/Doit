@@ -3,54 +3,56 @@
     <Header></Header>
     <v-container class="pa-3 pa-sm-16">
       <v-row class="py-3 ma-0" style="width:100%">
+        <!-- 개인 이미지 + 닉네임 시작 -->
         <v-col
-          cols="6" sm="3" md="3" lg="3" xl="3"
-          class="d-flex justify-space-around group-image"
+          cols="12" sm="12" md="4" lg="4" xl="4"
+          class="d-flex justify-center align-center flex-column image"
         >
-          <img v-if="image==null_image" src="@/assets/img/profile_temp.png" class="profile-img">
-          <img v-else
+          <div class= "group-image">
+            <img v-if="image==null_image" src="@/assets/img/profile_temp.png" class="profile-img">
+            <img v-else
             :src="image"
             alt="profile-img"
             class="profile-img"
-          />
+            />
+          </div>
+          <div class="mt-2 mb-4 ml-1 text-h5">{{user.nickname}} </div>
+          <v-btn 
+            text
+            @click="moveUpdate"
+          > 
+            회원정보 수정 >
+          </v-btn>
         </v-col>
-        <v-col 
-          cols="5" sm="9" md="9" lg="9" xl="9"
-          class="pa-8 text-h4"
-        >
-          <v-row class="mt-2 mb-4 ml-1">{{user.nickname}}</v-row>
-          <v-row class="d-flex">
-            <v-btn 
-              text
-              @click="moveUpdate"
-              class=" ma-2 px-5 mr-sm-8 profile-btn"
-            > 
-            회원정보 수정
-            </v-btn>
+        <!-- 개인 이미지 + 닉네임 끝 -->
+        <!-- 잔디 시작 -->
+        <v-col cols="12" sm="8" md="8" lg="8" xl="8">
+          <Grass></Grass>
+        </v-col>
+        <!-- 잔디 끝 -->
+      </v-row>
+      <!-- 프로필 버튼 시작 -->
+      <v-row>
+        <v-col class="mx-3 mx-sm-16" > 
+          <v-row class="d-flex justify-space-around">
             <v-btn 
               text
               @click="moveChatList"
-              class=" ma-2 px-5 mr-sm-8 profile-btn"
+              class=" ma-2 mr-sm-8 profile-btn"
             > 
             채팅 리스트
             </v-btn>
             <v-btn 
               text
               @click="moveMileage"
-              class="ma-2 px-5 mr-sm-8 profile-btn"
+              class="ma-2 mr-sm-8 profile-btn"
             > 
             마일리지 내역
             </v-btn>
-
-
           </v-row>
         </v-col>
-      </v-row>
-      <v-row class="py-3">
-        <v-col class="mx-3 mx-sm-16" > 
-          <Grass></Grass>
-        </v-col>
       </v-row >
+      <!-- 프로필 버튼 끝 -->
       <v-row class="py-16">
         <v-col 
           cols="defined"
@@ -134,14 +136,23 @@ export default {
     overflow: hidden;
     border: 1px solid #FFB685
   }
-.profile-btn {
-  border : 2px solid #F9802D;
-  border-radius: 15px;
-}
-.profile-img{
+  .profile-btn {
+    border : 2px solid #F9802D;
+    border-radius: 15px;
+  }
+  .profile-img{
     width:100%;
     height:100%;
     object-fit: cover;
   }
-
+   /* class="d-flex justify-center align-center flex-column */
+  @media (max-width:500px){
+    .group-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 70%;
+      overflow: hidden;
+      border: 1px solid #FFB685
+    }
+  }
 </style>
