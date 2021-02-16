@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,20 +30,29 @@ public class NotiService {
 
     public List<Notification> getList(Long uid) throws Exception{
         List<Notification> notifications = notiRepository.findAllByUserPkOrderByNotiDateDesc(uid);
-        for(Notification noti : notifications)
-            noti = setTarget(noti);
+        List<Notification> res  = new ArrayList<>();
 
-        return notifications;
+        for(Notification noti : notifications){
+            setTarget(noti);
+            if(noti.getTarget() == null)
+                notiRepository.delete(noti);
+            else res.add(noti);
+        }
+
+        return res;
     }
 
     public Notification setTarget(Notification notification) {
-        if(notification.getNotiType() == NotiType.NEWCHAT){
-            ChatRoom chatRoom = chatRoomRepository.findById(notification.getTargetId()).get();
+        Long id = notification.getTargetId();
+
+        if(notification.getNotiType() == NotiType.NEWCHAT && chatRoomRepository.findById(id).isPresent()){
+            ChatRoom chatRoom = chatRoomRepository.findById(id).get();
             notification.setTarget(new ResponseChatRoom(chatRoom, notification.getUserPk()));
         }
-        else if(notification.getNotiType() == NotiType.COMMENT)
-            notification.setTarget(feedRepository.findById(notification.getTargetId()).get());
-        else notification.setTarget(groupRepository.findById(notification.getTargetId()).get());
+        else if(notification.getNotiType() == NotiType.COMMENT && feedRepository.findById(id).isPresent())
+            notification.setTarget(feedRepository.findById(id).get());
+        else if(groupRepository.findById(id).isPresent())
+            notification.setTarget(groupRepository.findById(id).get());
 
         return notification;
     }
