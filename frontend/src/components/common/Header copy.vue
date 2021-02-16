@@ -38,27 +38,27 @@
               </v-list-item-content>
             </template>
             <!-- 가입 그룹 리스트 -->
-              <v-list-item
-                v-for="subItem in item.items"
-                :key="subItem.groupPk"
-                @click="group(subItem.groupPk)"
-                class="px-4"
-              >
-                <v-list-item-action class="group-image">
-                  <v-img
-                    class="profile"
-                    v-if="subItem.image"
-                    :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ subItem.image"
-                  ></v-img>
-                  <v-img class="profile" v-else src=""> </v-img>
-                </v-list-item-action>
+            <v-list-item
+              v-for="subItem in item.items"
+              :key="subItem.groupPk"
+              @click="group(subItem.groupPk)"
+              class="px-4"
+            >
+              <v-list-item-action class="group-image">
+                <v-img
+                  class="profile"
+                  v-if="subItem.image"
+                  :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ subItem.image"
+                ></v-img>
+                <v-img class="profile" v-else src=""> </v-img>
+              </v-list-item-action>
 
-                  <v-list-item-content>
-                    <v-list-item-title> {{ subItem.name }}</v-list-item-title>
-                  </v-list-item-content>
+                <v-list-item-content>
+                  <v-list-item-title> {{ subItem.name }}</v-list-item-title>
+                </v-list-item-content>
               </v-list-item>
-          </v-list-group>
-        </v-list>
+            </v-list-group>
+          </v-list>
           <div v-else class="my-auto navi-style d-flex flex-column justify-center align-center">
             <div class="mb-3">
               로그인이 필요한 기능입니다.
@@ -78,7 +78,7 @@
           @click="logoClick"
         >
       </div>
-      <div class="d-flex justify-end align-center">
+      <div>  
         <!-- 로그인창 시작 -->
         <v-dialog
           v-model="dialog"
@@ -211,32 +211,14 @@
         >
           로그아웃
         </v-btn>
-        <!-- 여기부터 알림! -->
-        <v-menu
-          bottom
-          offset-y
+        <v-btn
+          text
+          @click="alarm"
+          class="px-0"
+          v-if="this.$store.state.account.accessToken"
         >
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              text
-              class="ma-2"
-              v-bind="attrs"
-              v-on="on"
-            >
-            <font-awesome-icon :icon="['far', 'bell']" />
-            </v-btn>
-          </template>
-          <v-list max-height="400">
-            <v-subheader>나의 알림</v-subheader>
-            <v-list-item
-              v-for="(notice, i) in noti"
-              :key="i"
-              @click="noticeConfirm(notice)"
-            >
-              <v-list-item-title>{{ content[notice.notiType] }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+          <font-awesome-icon :icon="['far', 'bell']" />
+        </v-btn>
       </div>
     </header>
     <v-container fluid class="nav-style">
@@ -272,9 +254,8 @@
       <v-row>
         <div class="navbar-line" role="presentation"></div>
       </v-row>
-    </v-container>  
+    </v-container>    
   </div>
-
 </template>
 
 <script>
@@ -307,18 +288,9 @@ export default {
           ],
         },
       ],
-      content: {
-        0: '그룹에 새 피드가 올라왔습니다.',
-        1: '새로운 채팅이 있습니다.',
-        2: '피드가 인증을 받았습니다.',
-        3: '그룹에서 강퇴 당했습니다.',
-        4: '그룹장으로 위임 됐습니다.',
-        5: '피드에 새로운 댓글이 달렸습니다.',
-      },
       drawer: null,
       miniVariant: true,
       noti: [], 
-      noticeList :[],
     }),
     computed: {
       emailErrors () {
@@ -367,7 +339,6 @@ export default {
           http.get('/noti/getList')
           .then((res) => {
               this.noti = res.data.object;
-              console.log(this.noti)
           })
           // 소켓 연결
           this.socketConnect();
@@ -378,23 +349,6 @@ export default {
 
       socketConnect() {
         this.CONNECT()
-      },
-      moveToChat(chatPk) {
-        console.log(chatPk)
-        this.$router.push({ name: 'ChatList'})
-      },
-      moveToGroup(groupPk) {
-        console.log(groupPk)
-        this.$router.push({ name: 'Community', params: { groupPk: groupPk }})
-      },
-      noticeConfirm(notice) {
-        if (notice.notiType==="1") {
-          let chatPk = notice.target.id
-          this.moveToChat(chatPk)
-        } else {
-          let groupPk = notice.target.groupPk
-          this.moveToGroup(groupPk) 
-        }
       },
       signup() {
         this.$router.push("/user/join")
@@ -531,7 +485,7 @@ export default {
   .nav-style {
     /* position: fixed; */
     background-color: white;
-    margin-bottom: 50px;
+    /* margin-bottom: 50px; */
     /* z-index: 1; */
   }
   
