@@ -35,7 +35,7 @@
 
     <v-container class="pa-3 px-sm-16 py-sm-6 px-0" style="width: 100%">
       <v-row class="d-flex justify-center" >
-        <v-col  cols="12" sm="5" v-if="joined" class="mb-7">
+        <v-col  cols="12" sm="5" v-if="joined" class="mt-4">
           <!-- <div>
             <span class="text-h6"></span>
           </div> -->
@@ -324,8 +324,8 @@ export default {
 <style scoped>
   .group-intro {
     border: 1px solid #E0E0E0;
-    margin-left: 300px;
-    margin-right: 300px;
+    margin-left: 240px;
+    margin-right: 240px;
   } 
 
   @media only screen and (min-width: 300px) and (max-width: 599px) {
