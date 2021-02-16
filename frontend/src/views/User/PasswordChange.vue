@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header></Header>
-     <v-card  class="d-flex align-center flex-column my-15 mx-auto px-5" width="360px">
+     <v-card  class="d-flex align-center flex-column mb-15 mx-auto px-5" width="360px">
     <h3 class="my-10">비밀번호 변경</h3>
     <div>
       <v-text-field

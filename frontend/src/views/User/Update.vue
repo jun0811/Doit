@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header></Header>
-    <v-container class="pa-8 pa-sm-16 mt-16">
+    <v-container class="pa-8 pa-sm-16">
       <form>
         <v-col cols="12">
           <v-row justify="center">

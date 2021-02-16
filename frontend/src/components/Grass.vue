@@ -41,8 +41,16 @@ export default {
 
 <style scoped>
   .grass{
-    width: 350px;
+    width: 310px;
   }
+
+  @media (min-width:500px){
+    .grass {
+      width: 500px;
+      margin-top: 25px;
+    }
+  }
+
   .color1{
     background: #FFE0B2
   }

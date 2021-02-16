@@ -1,7 +1,7 @@
 <template>
 <div>
   <Header></Header>
-  <NavBar></NavBar>
+  <!-- <NavBar></NavBar> -->
   <v-container class="container-width">
     <v-card>
       <v-row>
@@ -144,7 +144,7 @@
 
 <script>
 import Header from "@/components/common/Header.vue";
-import NavBar from "@/components/common/NavBar.vue";
+// import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
 import { notiType, sendNotify } from '../../api/notification/index'
@@ -153,7 +153,7 @@ export default {
   name: "ChatList",
   components: {
     Header,
-    NavBar,
+    // NavBar,
     Footer,
   },
   data() {
@@ -238,7 +238,7 @@ export default {
 <style scoped>
 .container-width {
 width: 55%; 
-margin-top: 80px;
+/* margin-top: 80px; */
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {

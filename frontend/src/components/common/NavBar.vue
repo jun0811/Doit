@@ -52,7 +52,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .navbar-line {
   width: 100%;
   border-bottom: 1px solid black;
@@ -62,7 +62,7 @@ export default {
 .nav-style {
   /* position: fixed; */
   background-color: white;
-  margin-bottom: 50px;
+  /* margin-bottom: 50px; */
   z-index: 1;
 }
 </style>

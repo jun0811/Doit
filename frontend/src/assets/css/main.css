@@ -1,4 +1,28 @@
- 
+@charset "UTF-8";
+@font-face {
+  font-family: NanumSquareRound;
+
+  src: url("../fonts/NanumSquareRoundB.woff") format("woff");
+  
+}
+
+* {
+  font-family: NanumSquareRound;
+  letter-spacing: 0.1px; 
+}
+
+.profile-img {
+    width: 120px;
+}
+
+.profile-mileage {
+  font-size: medium;
+}
+
+.joined-group-btn {
+  border: 3px solid #FFB685;
+  background-color: white !important;
+}
 
 html,
 body {
@@ -17,7 +41,10 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* position: fixed; */
   /* margin-bottom: 50px; */
+  /* z-index: 1; */
+  background-color: white;
 }
 
 .header span {

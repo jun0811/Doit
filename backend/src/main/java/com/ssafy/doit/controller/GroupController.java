@@ -79,7 +79,6 @@ public class GroupController {
             if(group == null) throw new Exception("그룹을 찾을 수 없습니다.");
             result = new ResponseBasic(true,"success",group);
         }catch (Exception e) {
-            e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);

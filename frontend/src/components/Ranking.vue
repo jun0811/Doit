@@ -92,7 +92,7 @@ export default {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  z-index : 1;
+  /* z-index : 0; */
   position:relative;
   cursor: pointer;
 }
@@ -161,7 +161,7 @@ export default {
   position:absolute;
   top: 0;
   left:0;
-  z-index:10;
+  /* z-index:10; */
   border: transparent;
 }
 

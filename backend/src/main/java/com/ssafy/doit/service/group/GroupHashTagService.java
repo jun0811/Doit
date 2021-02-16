@@ -2,6 +2,7 @@ package com.ssafy.doit.service.group;
 
 import com.ssafy.doit.model.group.Group;
 import com.ssafy.doit.model.group.GroupHashTag;
+import com.ssafy.doit.model.group.GroupUser;
 import com.ssafy.doit.model.group.HashTag;
 import com.ssafy.doit.model.request.RequestGroup;
 import com.ssafy.doit.model.request.RequestPage;
@@ -10,6 +11,7 @@ import com.ssafy.doit.model.response.ResponseGroup;
 
 import com.ssafy.doit.repository.group.GroupHashTagRepository;
 import com.ssafy.doit.repository.group.GroupRepository;
+import com.ssafy.doit.repository.group.GroupUserRepository;
 import com.ssafy.doit.repository.group.HashTagRepository;
 import com.ssafy.doit.service.S3Service;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,8 @@ public class GroupHashTagService {
     private final HashTagRepository hashTagRepository;
     @Autowired
     private final GroupHashTagRepository groupHashTagRepository;
+    @Autowired
+    private GroupUserRepository groupUserRepository;
 
     // 특정 해시태그 포함한 그룹 찾기
     @Transactional
@@ -58,7 +62,8 @@ public class GroupHashTagService {
     @Transactional
     public ResGroupDetail findByGroupPk(Long groupPk) {
         Group group = groupRepository.findById(groupPk).get();
-        return (new ResGroupDetail(group));
+        List<GroupUser> users = groupUserRepository.findByGroupAndStatus(group, "true");
+        return (new ResGroupDetail(group, users));
     }
 
     // 그룹 생성
