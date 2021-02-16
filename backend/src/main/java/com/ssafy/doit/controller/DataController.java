@@ -109,8 +109,8 @@ public class DataController {
             List<ResRanking> resList = new ArrayList<>();
             int rank = 1;
             for(CommitGroup cg : cgList){
-                String name = groupRepository.findById(cg.getGroupPk()).get().getName();
-                resList.add(new ResRanking(rank++,cg.getGroupPk(),name));
+                Group group = groupRepository.findById(cg.getGroupPk()).get();
+                resList.add(new ResRanking(rank++,cg.getGroupPk(),group));
             }
             result = new ResponseBasic(true,"success", resList);
         }catch(Exception e){
