@@ -50,6 +50,7 @@ import http from "../../http-common";
         this.loginUser = this.$store.state.account.userpk
       })
     },
+    watch: {},
     computed: {
       paginatedData () {
         const start = (this.page-1) * 4,

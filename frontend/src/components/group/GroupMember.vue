@@ -66,6 +66,23 @@ import http from "../../http-common";
         return page;
       },
     },
+    watch:{
+      groupPk(){
+        http.get(`/group/detailGroup?groupPk=${this.groupPk}`)
+        .then((res)=>{
+        console.log(res.data.object)
+        this.users = res.data.object.users
+        this.category = res.data.object.category
+        this.score = res.data.object.score
+        this.content = res.data.object.content
+        this.leader = res.data.object.leader
+        this.groupName = res.data.object.name
+        this.totalNum = res.data.object.totalNum
+        this.endDate = res.data.object.endDate
+        this.createDate = res.data.object.createDate
+      })
+      }
+    },
     created() {
       http.get(`/group/detailGroup?groupPk=${this.groupPk}`)
       .then((res)=>{
