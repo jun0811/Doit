@@ -93,7 +93,7 @@ import { notiType, sendNotify } from "../../api/notification/index"
           console.log(res)
           sendNotify({
             "notiType": notiType.KICKOUT,
-            "userId": userPk,
+            "userPk": userPk,
             "targetId": this.groupPk,
           })
         })
