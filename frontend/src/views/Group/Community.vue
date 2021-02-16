@@ -7,7 +7,8 @@
         <v-row class="d-flex justify-start">
           <v-col cols="3" sm-cols="2" class="d-flex align-center  justify-end ml-10">
             <div class="group-image">
-                <img src="" alt="">
+                <img class="profile" v-if="!image" src="" alt="">
+                <img class="profile" v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + image" alt="">
             </div>
           </v-col>
           <v-col cols="5">
@@ -142,6 +143,7 @@ export default {
   },
   data() {
     return {
+      image: "",
       menu2: false,
       menu1: false,
       user_info: {},
@@ -275,14 +277,15 @@ export default {
     },
   },
   created(){
-    
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
-        this.user_info= res.data.object
-        this.user_num = this.user_info.users.length
-        this.leader = res.data.object.leader
-        this.tags = res.data.object.tags
-        this.loginUser = this.$store.state.account.userpk
+      console.log(res)
+      this.user_info= res.data.object
+      this.user_num = this.user_info.users.length
+      this.leader = res.data.object.leader
+      this.tags = res.data.object.tags
+      this.loginUser = this.$store.state.account.userpk
+      this.image = res.data.object.image
     }),
     http.get('group/currentUserGroup')
       .then((res)=>{
@@ -310,7 +313,12 @@ export default {
     border-radius: 70%;
     overflow: hidden;
     border: 1px solid #FFB685
-}
+  }
+  .profile {
+    width:100%;
+    height:100%;
+    object-fit: cover;
+  }
   .text-h5 {
     color: #E0E0E0
   }
