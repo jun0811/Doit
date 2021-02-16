@@ -126,8 +126,9 @@ public class GroupUserService {
 
     // 회원 탈퇴(강퇴), 가입된 모든 그룹에서 delete
     @Transactional
-    public void deleteGroupByUser(Long userPk) throws Exception {
-        User user = userRepository.findById(userPk).get();
+    public List<ResGroupList> deleteGroupByUser(Long userPk) throws Exception {
+        List<ResGroupList> resList = new ArrayList<>();
+         User user = userRepository.findById(userPk).get();
         List<GroupUser> list = groupUserRepository.findByUser(user);
 
         for (GroupUser groupUser : list) {
@@ -140,14 +141,15 @@ public class GroupUserService {
             Long newLeader = groupUserRepository.findTopByGroup(group).getUser().getId();
             group.setTotalNum(group.getTotalNum() - 1);     // 회원 수 감소
             if(userPk == group.getLeader()) {
-                group.setLeader(newLeader);                 // 임의의 그룹원으로 그룹장 지정
+                group.setLeader(newLeader);     // 임의의 그룹원으로 그룹장 지정
+                resList.add(new ResGroupList(group));
             }
             groupRepository.save(group);
-            // 새로운 그룹장에게 알림 보내기
         }
         commitUserRepository.deleteByUserPk(userPk);
 
         user.setUserRole(UserRole.WITHDRAW);
         userRepository.save(user);
+        return resList;
     }
 }

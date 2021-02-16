@@ -2,6 +2,7 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.Mileage;
 import com.ssafy.doit.model.request.RequestChangePw;
+import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseMileage;
 import com.ssafy.doit.model.response.ResponseUser;
 import com.ssafy.doit.model.user.UserRole;
@@ -229,9 +230,9 @@ public class UserController {
         ResponseBasic result = null;
         try {
             Long userPk = userService.currentUser();
-            groupUserService.deleteGroupByUser(userPk);
+            List<ResGroupList> list = groupUserService.deleteGroupByUser(userPk);
             feedService.deleteFeedByUser(userPk);
-            result = new ResponseBasic(true, "success", null);
+            result = new ResponseBasic(true, "success", list);
         }
         catch (Exception e){
             e.printStackTrace();
