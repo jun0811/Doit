@@ -12,9 +12,9 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
             "and substring(f.createDate, 1, 10) between :startDate and :endDate order by f.createDate desc ")
     List<Feed> findAllByGroupPkAndStatusAndCreateDateBetween(Long groupPk, String status, String startDate, String endDate);
 
-    @Query(value = "select f from Feed f where f.writer = :userPk " +
+    @Query(value = "select f from Feed f where f.writer = :userPk and f.groupPk = :groupPk " +
             "and substring(f.createDate, 1, 10) = :now")
-    Optional<Feed> findByWriterAndCreateDate(Long userPk, String now);
+    Optional<Feed> findByGroupPkAndWriterAndCreateDate(Long groupPk, Long userPk, String now);
 
     List<Feed> findAllByWriterAndStatusOrderByCreateDateDesc(Long userPk, String aTrue);
     List<Feed> findByGroupPkAndWriter(Long groupPk, Long userPk);

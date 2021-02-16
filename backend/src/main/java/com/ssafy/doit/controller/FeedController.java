@@ -4,6 +4,7 @@ import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.feed.Feed;
 import com.ssafy.doit.model.response.ResponseFeed;
+import com.ssafy.doit.model.response.ResponseUser;
 import com.ssafy.doit.service.FeedService;
 import com.ssafy.doit.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,21 @@ public class FeedController {
     private final UserService userService;
     @Autowired
     private final FeedService feedService;
+
+    // 오늘 하루 인증 피드 등록한 그룹원 리스트
+    @ApiOperation(value = "오늘 하루 인증 피드 등록한 그룹원 리스트")
+    @GetMapping("/todayAuthUser")
+    public Object todayAuthUser(@RequestParam Long groupPk){
+        ResponseBasic result = null;
+        try {
+            List<ResponseUser> list = feedService.todayAuthUser(groupPk);
+            result = new ResponseBasic(true, "success", list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            result = new ResponseBasic(false, "fail", null);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     // 그룹 내 피드 생성
     @ApiOperation(value = "그룹 내 피드 생성")
