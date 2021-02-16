@@ -16,7 +16,7 @@
       </v-row >
       <v-row no-gutters>
         <span class="mr-3">소속 : </span>
-        <span>삼성청년소프트웨어(SSAFY) 4기 광주 1반</span>
+        <span>삼성청년소프트웨어아카데미(SSAFY) 4기 광주 1반</span>
       </v-row>
       <v-row no-gutters>
         <v-col
