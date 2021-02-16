@@ -1,7 +1,7 @@
 <template>
   <div>
       <Header></Header>
-      <NavBar></NavBar>
+      <!-- <NavBar></NavBar> -->
       <v-container class="pa-0 pa-md-3">
         <br>
         <v-row class="mb-3">
@@ -52,7 +52,7 @@
 
 <script>
 import Header from "@/components/common/Header";
-import NavBar from "@/components/common/NavBar.vue";
+// import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer";
 import GroupCard from "@/components/group/GroupCard.vue";
 import { categoryGroup } from "@/api/group/index.js"
@@ -130,7 +130,7 @@ export default {
   },  
   components: { 
       Header, 
-      NavBar,
+      // NavBar,
       Footer, 
       GroupCard 
   },
