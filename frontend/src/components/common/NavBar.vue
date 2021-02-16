@@ -2,7 +2,11 @@
   <v-container fluid fixed-header class="nav-style">
     <v-row class="d-flex justify-center">
       <v-col cols="5" sm="2" class="d-flex justify-center">
-        <v-btn text large>
+        <v-btn 
+          text 
+          large
+          @click="introduction"
+        >
           Doit을 소개합니다
         </v-btn>
       </v-col>
@@ -40,6 +44,9 @@ export default {
     },
     goToCategory() {
       this.$router.push({name: 'CategoryList', params: {category: 'study'}})
+    },
+    introduction() {
+      this.$router.push("/introduction")
     }
   }
 }

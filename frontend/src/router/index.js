@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
+import Introduction from "../views/Introduction.vue";
 import FeedUpdate from "../views/Group/FeedUpdate.vue";
 import FeedWrite from "../views/Group/FeedWrite.vue";
 import Community from "../views/Group/Community.vue";
@@ -141,6 +142,11 @@ const routes = [
     path: "/chatlist",
     name: "ChatList",
     component: ChatList,
+  },
+  {
+    path: "/introduction",
+    name: "Introduction",
+    component: Introduction,
   },
 ];
 
