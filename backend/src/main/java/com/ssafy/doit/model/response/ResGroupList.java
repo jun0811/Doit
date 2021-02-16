@@ -9,11 +9,13 @@ public class ResGroupList {
     private String name;
     private int score;
     private String image;
+    private Long leader;
 
     public ResGroupList(Group group){
         this.groupPk = group.getGroupPk();
         this.name = group.getName();
         this.score = group.getScore();
         this.image = group.getImage();
+        this.leader =group.getLeader();
     }
 }

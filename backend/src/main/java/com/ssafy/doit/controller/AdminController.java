@@ -1,6 +1,7 @@
 package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.group.Group;
+import com.ssafy.doit.model.response.ResGroupList;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.model.user.UserRole;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,11 +66,11 @@ public class AdminController {
             if(Admin.getUserRole().equals(UserRole.ADMIN)) {
                 Optional<User> userInfo = userRepository.findById(userPk);
                 if (userInfo.isPresent()) {
-                    groupUserService.deleteGroupByUser(userPk);
+                    List<ResGroupList> list  = groupUserService.deleteGroupByUser(userPk);
                     feedService.deleteFeedByUser(userPk);
+                    result = new ResponseBasic(true, "success", list);
                 }
             }else throw new Exception("관리자가 아닙니다.");
-            result = new ResponseBasic(true, "success", null);
         }
         catch (Exception e){
             e.printStackTrace();
