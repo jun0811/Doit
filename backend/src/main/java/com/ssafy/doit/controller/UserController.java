@@ -23,7 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
@@ -104,6 +103,7 @@ public class UserController {
         return ResponseEntity.ok().headers(httpHeaders).body(result);
     }
 
+    // 로그아웃
     @ApiOperation(value = "로그아웃")
     @GetMapping("/logout")
     public Object login(HttpServletRequest request, HttpServletResponse response){
@@ -136,7 +136,7 @@ public class UserController {
     }
 
     // 회원정보 수정
-    @ApiOperation(value = "회원정보(닉네임) 수정")
+    @ApiOperation(value = "회원정보 수정")
     @PutMapping("/updateInfo")
     public Object updateInfo(@RequestBody User userReq) {
         ResponseBasic result = null;
@@ -181,8 +181,9 @@ public class UserController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
-    @ApiOperation(value = "회원정보(프로필) 수정")
+
+    // 회원정보 이미지 수정
+    @ApiOperation(value = "회원정보 이미지 수정")
     @PostMapping("/updateImg")
     public Object updateImg(@RequestParam MultipartFile file) {
         ResponseBasic result = null;
@@ -239,34 +240,28 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    //    피드 리스트 공개 (feed_open)
-    //    그룹 리스트 공개 (group_open)
-    //    비공개 - 나만보기
+    // 피드 리스트 공개 (feed_open) & 그룹 리스트 공개 (group_open)
+    // 비공개 - 나만보기
     @ApiOperation(value = "회원 피드,그룹 리스트 공개/비공개")
     @PutMapping("/setOnAndOff")
     public Object setOnAndOff(@RequestParam String open ,@RequestParam String opt) {
-        ResponseBasic result = new ResponseBasic();
+        ResponseBasic result = null;
         try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails) principal;
-            User user = userRepository.findByEmail(userDetails.getUsername()).get();
-            if(opt.equals("feed")) {
-                user.setFeedOpen(open);
-            }else if(opt.equals("group")) {
-                user.setGroupOpen(open);
-            }
+            Long userPk = userService.currentUser();
+            User user = userRepository.findById(userPk).get();
+            if(opt.equals("feed")) user.setFeedOpen(open);
+            else if(opt.equals("group")) user.setGroupOpen(open);
             userRepository.save(user);
-
-            result.status = true;
-            result.data = "공개/비공개 설정정 success";
+            result = new ResponseBasic( true, "success", null);
         }
         catch (Exception e){
             e.printStackTrace();
-            result.status = false;
-            result.data = "error";
+            result = new ResponseBasic( false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    // 마일리지 내역 리스트
     @ApiOperation(value = "마일리지 내역 리스트")
     @GetMapping("/mileageList")
     public Object mileageList(@RequestParam Long userPk){

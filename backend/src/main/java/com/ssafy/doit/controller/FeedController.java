@@ -18,11 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = ResponseBasic.class),
-        @ApiResponse(code = 403, message = "Forbidden", response = ResponseBasic.class),
-        @ApiResponse(code = 404, message = "Not Found", response = ResponseBasic.class),
-        @ApiResponse(code = 500, message = "Failure", response = ResponseBasic.class) })
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/feed")
