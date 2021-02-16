@@ -156,6 +156,7 @@ export default {
   }),
   props : {
     card: Object,
+    groupPk: String,
   },
   created() {
     this.feedPk = this.card.feedPk

@@ -106,7 +106,7 @@
             <v-btn @click="feedRead" text class="ma-4 search-btn" outlined> 검색 </v-btn >
           </v-col>
           <v-col v-if="cards.length" class="d-flex justify-center align-center flex-column card">
-            <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card" ></FeedCard>
+            <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card" :groupPk="groupPk"></FeedCard>
           </v-col>
           <div v-else> 
             <h2 style="text-align:center;">해당 기간에는 작성된 피드가 없어요🤷‍♂️</h2>

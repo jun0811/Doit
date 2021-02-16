@@ -51,7 +51,7 @@
       <div v-show="show">
         <v-divider></v-divider>
         <v-card-text>
-          <Comment :card="card"></Comment>
+          <Comment :card="card" :groupPk="groupPk"></Comment>
         </v-card-text>
       </div>
     </v-expand-transition>
@@ -66,7 +66,8 @@ import { notiType, sendNotify } from "../../api/notification/index"
 
   export default {
     props: {
-      card: Object
+      card: Object,
+      groupPk: String, 
     },
     components: {
       Comment
