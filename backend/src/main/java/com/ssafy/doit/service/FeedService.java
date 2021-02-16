@@ -120,7 +120,7 @@ public class FeedService {
     // 개인 피드 리스트
     @Transactional
     public List<ResMyFeed> userFeedList(Long userPk){
-        List<Feed> list = feedRepository.findAllByWriterAndStatus(userPk, "true");
+        List<Feed> list = feedRepository.findAllByWriterAndStatusOrderByCreateDateDesc(userPk, "true");
         List<ResMyFeed> resList = new ArrayList<>();
         for(Feed feed : list){
             String nickname = userRepository.findById(feed.getWriter()).get().getNickname();
@@ -150,8 +150,6 @@ public class FeedService {
         Optional<Feed> feed = feedRepository.findById(feedPk);
         if(userPk == feed.get().getWriter()) {
             feed.ifPresent(selectFeed -> {
-//                selectFeed.setStatus("false");
-//                feedRepository.save(selectFeed);
                 feedRepository.delete(selectFeed);
             });
             feedUserRepository.deleteByFeedPk(feedPk);
@@ -182,8 +180,6 @@ public class FeedService {
 
     public void getObject(List<Feed> feedList){
         for(Feed feed : feedList){
-//            feed.setStatus("false");
-//            feedRepository.save(feed);
             feedUserRepository.deleteByFeedPk(feed.getFeedPk());
             commentRepository.deleteByFeedPk(feed.getFeedPk());
             feedRepository.deleteById(feed.getFeedPk());
