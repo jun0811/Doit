@@ -14,9 +14,9 @@
         <v-list-item :key="item.groupPk" @click="group(item.groupPk)">
             <v-list-item-avatar>
               <!-- 연결하면 유저 이미지로 사용 -->
-              <v-img v-if="item.image" :src="item.image"></v-img>
+              <v-img v-if="item.image" :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + item.image"></v-img>
               <!-- 이미지 없으면 랜덤 사진, 나중에 사진 바꾸기! -->
-              <v-img v-else src="https://picsum.photos/200"></v-img>
+              <v-img v-else src="" class="default"></v-img>
             </v-list-item-avatar>
 
           <v-list-item-content>
@@ -61,7 +61,10 @@ export default {
 </script>
 
 <style>
-.joined-size {
+ .default{
+   border: 1px solid #FFB685  
+  }
+  .joined-size {
   width: 100%;
   height: 600px !important;
 }

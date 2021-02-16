@@ -4,8 +4,8 @@
     <v-container class="pa-3 pa-sm-16">
       <v-row class="py-3 ma-0" style="width:100%">
         <v-col
-          cols="5" sm="3" md="3" lg="3" xl="3"
-          class="d-flex justify-space-around"
+          cols="6" sm="3" md="3" lg="3" xl="3"
+          class="d-flex justify-space-around group-image"
         >
           <img v-if="image==null_image" src="@/assets/img/profile_temp.png" class="profile-img">
           <img v-else
@@ -18,7 +18,7 @@
           cols="5" sm="9" md="9" lg="9" xl="9"
           class="pa-8 text-h4"
         >
-          <v-row class="mt-2 mb-4">{{user.nickname}}</v-row>
+          <v-row class="mt-2 mb-4 ml-1">{{user.nickname}}</v-row>
           <v-row class="d-flex">
             <v-btn 
               text
@@ -47,7 +47,7 @@
         </v-col>
       </v-row>
       <v-row class="py-3">
-        <v-col class="mx-3 mx-sm-16"> 
+        <v-col class="mx-3 mx-sm-16" > 
           <Grass></Grass>
         </v-col>
       </v-row >
@@ -127,14 +127,21 @@ export default {
 </script>
 
 <style scoped>
-
+  .group-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 70%;
+    overflow: hidden;
+    border: 1px solid #FFB685
+  }
 .profile-btn {
   border : 2px solid #F9802D;
   border-radius: 15px;
 }
 .profile-img{
-  width:150px;
-  height:150px;
-}
+    width:100%;
+    height:100%;
+    object-fit: cover;
+  }
 
 </style>
