@@ -69,7 +69,7 @@ import http from "../../http-common";
     created() {
       http.get(`/group/detailGroup?groupPk=${this.groupPk}`)
       .then((res)=>{
-        // console.log(res.data.object)
+        console.log(res.data.object)
         this.users = res.data.object.users
         this.category = res.data.object.category
         this.score = res.data.object.score

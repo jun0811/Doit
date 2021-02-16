@@ -3,7 +3,8 @@
     class="mt-6 mb-12 mx-sm-12 d-flex align-center flex-wrap justify-space-between"
   >
     <v-col cols="12" sm="5" md="5" lg="5" class="profile-card d-flex align-center mx-xs-6" v-for="(item, idx) in paginatedData" :key="idx">
-      <img class="profile-image">
+      <img v-if="!item.image" src="@/assets/img/profile_temp.png" class="profile-image">
+      <img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + item.image" class="profile-image">
       <span class="mx-2">{{item.nickname}}</span>
       <v-btn v-if="loginUser==leader && item.userPk != leader" normal x-small class="px-0" @click="kickout(item.userPk)">강퇴</v-btn>
       <span v-if="item.userPk == leader" class="groupleader"><font-awesome-icon icon="crown"/></span>
@@ -37,6 +38,7 @@ import http from "../../http-common";
     created() {
       http.get(`/group/detailGroup?groupPk=${this.groupPk}`)
       .then((res)=>{
+        console.log(res);
         this.users = res.data.object.users
         this.category = res.data.object.category
         this.content = res.data.object.content
