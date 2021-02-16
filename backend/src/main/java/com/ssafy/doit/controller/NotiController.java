@@ -43,8 +43,8 @@ public class NotiController {
     }
 
     @ApiOperation(value = "알림 확인")
-    @GetMapping("/confirm/{id}")
-    public Object confirm(@PathVariable Long id){
+    @GetMapping("/confirm")
+    public Object confirm(@RequestParam Long id){
         ResponseBasic result = null;
         try{
             Long currentUser = userService.currentUser();
