@@ -57,12 +57,9 @@ public class SignupController {
     public Object checkEmail(@RequestBody String email) {
         ResponseBasic result = new ResponseBasic();
         if (userRepository.findByEmail(email).isPresent()) {
-            System.out.println("이메일 중복");
-            result.status = false;
-            result.data = "중복된 이메일 입니다.";
+            result = new ResponseBasic(false, "중복된 이메일 입니다.", null);
         } else {
-            result.status = true;
-            result.data = "success";
+            result = new ResponseBasic( true, "success", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -70,30 +67,28 @@ public class SignupController {
     @ApiOperation(value = "비번 찾기 이메일 확인")
     @PostMapping("/confirmEmail")
     public Object confirmEmail(@RequestBody String email) {
-        ResponseBasic result = new ResponseBasic();
+        ResponseBasic result = null;
         Optional<User> optWithdraw = userRepository.findByEmailAndUserRole(email, UserRole.WITHDRAW);
         Optional<User> user =  userRepository.findByEmail(email);
 
         if(user.isPresent()) {
             if(optWithdraw.isPresent()){
-                result.status = false;
-                result.data = "해당 이메일이 존재하지 않습니다.";
+                result = new ResponseBasic(false, "해당 이메일이 존재하지 않습니다.", null);
             }else{
-                result.status = true;
-                result.data = "success";
+                result = new ResponseBasic( true, "success", null);
             }
             return new ResponseEntity<>(result, HttpStatus.OK);
         }else {
-            result.status = false;
-            result.data = "해당 이메일이 존재하지 않습니다.";
+            result = new ResponseBasic(false, "해당 이메일이 존재하지 않습니다.", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
     // 회원가입
     @ApiOperation(value = "회원가입")
     @PostMapping("/signup")
     public Object signup(@RequestBody User request) {
-        ResponseBasic result = new ResponseBasic();
+        ResponseBasic result = null;
         try {
             String authKey = emailSendService.sendSignupMail(request.getEmail());
             User user = userRepository.save(User.builder()
@@ -111,12 +106,10 @@ public class SignupController {
                     .mileage("+1,000")
                     .user(user).build());
 
-            result.status = true;
-            result.data = "success";
+            result = new ResponseBasic( true, "success", null);
         }
         catch (Exception e){
-            result.status = false;
-            result.data = "실패";
+            result = new ResponseBasic(false, "fail", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -138,61 +131,57 @@ public class SignupController {
     @ApiOperation(value = "회원가입 이메일 인증 확인")
     @GetMapping("/confirmSignup")
     public Object confirmSignup(@RequestParam String email, @RequestParam String authKey){
-        Optional<User> user = userRepository.findByEmailAndAuthKey(email, authKey);
-
-        user.ifPresent(selectUser ->{
-            selectUser.setUserRole(UserRole.USER);
-            userRepository.save(selectUser);
-        });
-
-//        mileageRepository.save(Mileage.builder()
-//                .content("회원가입 축하 마일리지 지급")
-//                .date(LocalDate.now())
-//                .user(user.get()).build());
-
-        ResponseBasic result = new ResponseBasic();
-        result.status = true;
-        result.data = "success";
+        ResponseBasic result = null;
+        try{
+            Optional<User> user = userRepository.findByEmailAndAuthKey(email, authKey);
+            user.ifPresent(selectUser ->{
+                selectUser.setUserRole(UserRole.USER);
+                userRepository.save(selectUser);
+            });
+            result = new ResponseBasic( true, "success", null);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic( false, "fail", null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // 비밀번호 변경 이메일 인증 전송
-    @ApiOperation(value = "비밀번호 변경 이메일 인증 전송")
+    // 비밀번호 변경(찾기) 이메일 인증 전송
+    @ApiOperation(value = "비밀번호 변경(찾기) 이메일 인증 전송")
     @PostMapping("/sendChangePwEmail")
     public Object sendChangePwEmail(@RequestBody User request){
-        ResponseBasic result = new ResponseBasic();
-
+        ResponseBasic result = null;
         String authKey = emailSendService.sendChangePwMail(request.getEmail());
         Optional<User> user = userRepository.findByEmail(request.getEmail());
 
         if(!user.isPresent()) {
-            result.status = false;
-            result.data = "해당 이메일이 존재하지 않습니다.";
+            result = new ResponseBasic( false, "해당 이메일이 존재하지 않습니다.", null);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-
         user.ifPresent(selectUser -> {
             selectUser.setAuthKey(authKey);
             userRepository.save(selectUser);
         });
-        result.status = true;
-        result.data = "success";
+        result = new ResponseBasic( true, "success", null);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // 비밀번호 변경 이메일 인증 확인
-    @ApiOperation(value = "비밀번호 변경 이메일 인증 확인")
+    // 비밀번호 변경(찾기) 이메일 인증 확인
+    @ApiOperation(value = "비밀번호 변경(찾기) 이메일 인증 확인")
     @PostMapping("/confirmPw")
     public Object confirmPw(@RequestBody RequestChangePw request){
-        Optional<User> user = userRepository.findByEmailAndAuthKey(request.getEmail(), request.getAuthKey());
-
-        user.ifPresent(selectUser ->{
-            selectUser.setPassword(passwordEncoder.encode(request.getPassword()));
-            userRepository.save(selectUser);
-        });
-        ResponseBasic result = new ResponseBasic();
-        result.status = true;
-        result.data = "success";
+        ResponseBasic result = null;
+        try{
+            Optional<User> user = userRepository.findByEmailAndAuthKey(request.getEmail(), request.getAuthKey());
+            user.ifPresent(selectUser ->{
+                selectUser.setPassword(passwordEncoder.encode(request.getPassword()));
+                userRepository.save(selectUser);
+            });
+            result = new ResponseBasic( true, "success", null);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic( false, "이메일을 다시 한번 확인해주세요.", null);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
