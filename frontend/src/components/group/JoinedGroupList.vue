@@ -5,22 +5,19 @@
   >
     <v-virtual-scroll
       :bench="benched"
-      :items="items"
-      height="600"
+      :items="items" 
+      max-height="600"
       class="joined-size"
       item-height="64"
     >
       <template v-slot="{ item }">
-        <v-list-item :key="item" @click="group(item.groupPk)">
-          <v-list-item-action>
-            <v-btn
-              fab
-              small
-              depressed
-              color="orange"
-            >
-            </v-btn>
-          </v-list-item-action>
+        <v-list-item :key="item.groupPk" @click="group(item.groupPk)">
+            <v-list-item-avatar>
+              <!-- 연결하면 유저 이미지로 사용 -->
+              <v-img v-if="item.image" :src="item.image"></v-img>
+              <!-- 이미지 없으면 랜덤 사진, 나중에 사진 바꾸기! -->
+              <v-img v-else src="https://picsum.photos/200"></v-img>
+            </v-list-item-avatar>
 
           <v-list-item-content>
             <v-list-item-title>
@@ -66,13 +63,16 @@ export default {
 <style>
 .joined-size {
   width: 100%;
-  height: 600px;
+  height: 600px !important;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .joined-size {
     width: 120%;
-    height: 300px;
+    height: 300px  !important;
   }
 }
+
+
+
 </style>
