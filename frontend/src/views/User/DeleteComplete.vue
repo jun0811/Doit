@@ -51,7 +51,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .container-width {
   width: 55%; 
   margin-top: 80px;

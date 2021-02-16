@@ -230,6 +230,17 @@ export default {
 </script>
 
 <style scoped>
+.container-width {
+width: 55%; 
+margin-top: 80px;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+    .container-width {
+      width: 98%;
+    }
+}
+
 .list-prd-img {
   width: 50%;
   height: auto;
