@@ -204,59 +204,42 @@
           마이페이지
         </v-btn>
 
-        <v-btn
-          text
-          @click="logout"
-          class="px-0"
-          v-if="this.$store.state.account.accessToken"
-        >
-          로그아웃
-        </v-btn>
-        <v-btn
-          text
-          @click="alarm"
-          class="px-0"
-          v-if="this.$store.state.account.accessToken"
-        >
-          <font-awesome-icon :icon="['far', 'bell']" />
-        </v-btn>
-      </div>
-    </header>
-    <v-container fluid class="nav-style">
-      <v-row class="d-flex justify-center">
-        <v-col cols="5" sm="2" class="d-flex justify-center">
-          <v-btn 
-            text 
-            large
-            @click="introduction"
+      <v-btn
+        text
+        @click="logout"
+        class="px-0"
+        v-if="this.$store.state.account.accessToken"
+      >
+        로그아웃
+      </v-btn>
+      <!-- 여기부터 알림! -->
+      <v-menu
+        bottom
+        offset-y
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            text
+            class="ma-2"
+            v-bind="attrs"
+            v-on="on"
           >
-            Doit을 소개합니다
+           <font-awesome-icon :icon="['far', 'bell']" />
           </v-btn>
-        </v-col>
-        <v-col cols="4" sm="2" class="d-flex justify-center">
-          <v-btn 
-            text 
-            large
-            @click="goToCategory"
+        </template>
+        <v-list max-height="400">
+          <v-subheader>나의 알림</v-subheader>
+          <v-list-item
+            v-for="(notice, i) in noti"
+            :key="i"
+            @click="noticeConfirm(notice)"
           >
-            그룹 둘러보기
-          </v-btn>
-        </v-col>
-        <v-col cols="3" sm="2" class="d-flex justify-center">
-          <v-btn 
-            text 
-            large
-            @click="goToShop"
-          >
-            Shop
-          </v-btn>
-        </v-col>
-      </v-row>
-      <v-row>
-        <div class="navbar-line" role="presentation"></div>
-      </v-row>
-    </v-container>    
-  </div>
+            <v-list-item-title>{{ content[notice.notiType] }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+  </header>
 </template>
 
 <script>
@@ -289,9 +272,18 @@ export default {
           ],
         },
       ],
+      content: {
+        0: '그룹에 새 피드가 올라왔습니다.',
+        1: '새로운 채팅이 있습니다.',
+        2: '피드가 인증을 받았습니다.',
+        3: '그룹에서 강퇴 당했습니다.',
+        4: '그룹장으로 위임 됐습니다.',
+        5: '피드에 새로운 댓글이 달렸습니다.',
+      },
       drawer: null,
       miniVariant: true,
       noti: [], 
+      noticeList :[],
     }),
     computed: {
       emailErrors () {
@@ -340,6 +332,7 @@ export default {
           http.get('/noti/getList')
           .then((res) => {
               this.noti = res.data.object;
+              console.log(this.noti)
           })
           // 소켓 연결
           this.socketConnect();
@@ -350,6 +343,23 @@ export default {
 
       socketConnect() {
         this.CONNECT()
+      },
+      moveToChat(chatPk) {
+        console.log(chatPk)
+        this.$router.push({ name: 'ChatList'})
+      },
+      moveToGroup(groupPk) {
+        console.log(groupPk)
+        this.$router.push({ name: 'Community', params: { groupPk: groupPk }})
+      },
+      noticeConfirm(notice) {
+        if (notice.notiType==="1") {
+          let chatPk = notice.target.id
+          this.moveToChat(chatPk)
+        } else {
+          let groupPk = notice.target.groupPk
+          this.moveToGroup(groupPk) 
+        }
       },
       signup() {
         this.$router.push("/user/join")
