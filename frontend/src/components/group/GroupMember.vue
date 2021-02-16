@@ -2,7 +2,7 @@
   <v-row class="d-flex jusity-center">
 
     <v-card
-      class=" mb-12 d-flex flex-column align-center justify-center member-card"
+      class=" mb-12 d-flex flex-column align-center justify-center member-card mt-7"
       xs="12"
     >
         <div class="mx-6 my-4 align-self-end">
@@ -11,13 +11,11 @@
           <span class="mx-1">그룹원 수 : </span>
           <span class="team-info">{{totalNum}}</span>
         </div>
-        <v-card
-        width="85%"
-        min-height="200"
-        class="pa-5"
+        <div      
+        class="pa-5 content-style"
         >
           {{content}}
-        </v-card>
+        </div>
         <v-carousel :show-arrows="false"
         hide-delimiter-background
         light
@@ -118,4 +116,11 @@ import http from "../../http-common";
   color:#F9802D;
 }
 
+.content-style {
+  width: 80%;
+  min-height: 200px;
+  overflow: auto;
+  border: 1px solid #E0E0E0;
+  white-space: pre-wrap;
+}
 </style>
