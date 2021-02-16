@@ -5,7 +5,7 @@
     <!-- <hr> -->
       <v-container>
         <v-row class="d-flex justify-center group-intro">
-          <v-col cols="4" sm="3" class="d-flex align-center  justify-end">
+          <v-col cols="4" sm="3" class="d-flex align-center justify-start">
             <div class="group-image">
                 <img class="profile" v-if="!image" src="" alt="">
                 <img class="profile" v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + image" alt="">
@@ -42,8 +42,8 @@
           <!-- <div> -->
             <v-tabs color="orange" class="d-flex justify-center">
               <!-- <v-tab>자유 피드</v-tab> -->
-              <v-tab @click="UserList">Information</v-tab>
-              <v-tab @click="FeedList">Feed</v-tab>
+              <v-tab @click="UserList">그룹정보</v-tab>
+              <v-tab @click="FeedList">인증피드</v-tab>
             </v-tabs>            
             <!-- <v-btn text v-bind:class="{selected: feed}" class="text-h5" :model="feed" @click="FeedList"> <img src="@/assets/icon/social-media.svg" alt="feed-icon" class="icon-style"> FEED</v-btn>
             <v-btn text v-bind:class="{selected: users}" class="text-h5" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn> -->
