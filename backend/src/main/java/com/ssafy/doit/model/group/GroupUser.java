@@ -16,6 +16,8 @@ public class GroupUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    private String status; // 가입여부
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user_pk")

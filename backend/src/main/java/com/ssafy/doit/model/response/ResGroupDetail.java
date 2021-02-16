@@ -3,13 +3,19 @@ package com.ssafy.doit.model.response;
 import com.ssafy.doit.model.group.Group;
 import com.ssafy.doit.model.group.GroupHashTag;
 import com.ssafy.doit.model.group.GroupUser;
+import com.ssafy.doit.repository.group.GroupUserRepository;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class ResGroupDetail {
+
+    @Autowired
+    private GroupUserRepository groupUserRepository;
+
     private Long groupPk;
     private String name;
     private String content;
@@ -25,7 +31,7 @@ public class ResGroupDetail {
     private List<String> tags;
     private List<ResponseUser> users;
 
-    public ResGroupDetail(Group group){
+    public ResGroupDetail(Group group, List<GroupUser> users){
         this.groupPk = group.getGroupPk();
         this.name = group.getName();
         this.content = group.getContent();
@@ -38,7 +44,7 @@ public class ResGroupDetail {
         this.maxNum = group.getMaxNum();
         this.image = group.getImage();
         this.tags = this.getTags(group);
-        this.users = this.getUsers(group);
+        this.users = this.getUsers(users);
     }
 
     public List<String> getTags(Group group){
@@ -49,9 +55,9 @@ public class ResGroupDetail {
         return tag;
     }
 
-    public List<ResponseUser> getUsers(Group group){
+    public List<ResponseUser> getUsers(List<GroupUser> list){
         List<ResponseUser> user = new ArrayList<>();
-        for(GroupUser gu : group.userList){
+        for(GroupUser gu : list){
             user.add(new ResponseUser(gu.getUser()));
         }
         return user;
