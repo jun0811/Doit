@@ -31,6 +31,7 @@
           <v-col cols="12" sm="3" class="d-flex justify-center">
             <v-dialog
               scrollable
+              persistent
               max-width="600px"
             >
               <template v-slot:activator="{ on, attrs }">
@@ -69,7 +70,7 @@
                       <v-col cols="3" sm="2" class="d-flex flex-column justify-center">
                         <v-btn
                           text
-                          @click="dialog.value = false"
+                          @click="[ dialog.value = false, close() ]"
                         >닫기</v-btn>                          
                       </v-col>
                     </v-row>
@@ -146,8 +147,6 @@ import Header from "@/components/common/Header.vue";
 import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
-import Stomp from 'webstomp-client'
-import SockJS from 'sockjs-client'
 
 export default {
   name: "ChatList",
@@ -171,10 +170,10 @@ export default {
       msg:[],
       room: '', // 서버에서 {}타입으로 받음, id, product가 담김
       content:'',
-      stompClient:null,
       user1: {'userPk' : 0, 'userNick' : ''},
       user2: {'userPk' : 0, 'userNick' : ''},
       bottom_flag: true,
+      subscribe: '',
     }
   },
   created() {
@@ -196,12 +195,12 @@ export default {
   },
   methods: {
     sendMessage(){
-     if(this.content.trim() !='' && this.stompClient!=null) {
+     if(this.content.trim() !='' && this.$store.getters.getStompClient!=null) {
         let chatMessage = {
           'message': this.content,
           'roomPk' : this.room.id,
         }
-        this.stompClient.send("/publish/chat", JSON.stringify(chatMessage),{"accessToken": this.$store.getters.getAccessToken})
+        this.$store.getters.getStompClient.send("/publish/chat", JSON.stringify(chatMessage),{"accessToken": this.$store.getters.getAccessToken})
         this.content=''
     }
     },    
@@ -217,38 +216,15 @@ export default {
           this.user1['userNick'] = res.data.object.currentUser.nickname
           this.user2['userPk'] = res.data.object.other.userPk
           this.user2['userNick'] = res.data.object.other.nickname
-          this.connect();
-      }) 
-    },
-    connect() {
-      const serverURL = "http://localhost:8080/ws";
-      let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
 
-      var headers = {
-        'accessToken': this.$store.getters.getAccessToken
-        };
-       this.stompClient.connect(
-        headers,
-        frame => {
-          // 소켓 연결 성공
-          this.connected = true;
-          console.log('소켓 연결 성공', frame);
-          // 서버의 메시지 전송 endpoint를 구독합니다.
-          // 이런형태를 pub sub 구조라고 합니다.
-          this.stompClient.subscribe("/subscribe/chat/room/"+ this.room.id , res => {
-            // console.log('메시지',JSON.parse(res.body));
+          this.subscribe = this.$store.getters.getStompClient.subscribe("/subscribe/chat/room/"+ this.room.id , res => {
             this.msg.push(JSON.parse(res.body));
           });
-        },
-        error => {
-          // 소켓 연결 실패
-          console.log('소켓 연결 실패', error);
-          this.connected = false;
-        }
-      );
+      }) 
     },
+    close() {
+      this.$store.getters.getStompClient.unsubscribe(this.subscribe.id);
+    }
   }
 }
 </script>
