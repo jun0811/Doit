@@ -228,6 +228,8 @@ export default {
           this.leader = res.data.object.leader
           this.tags = res.data.object.tags
           this.loginUser = this.$store.state.account.userpk
+          this.image = res.data.object.image
+
       }),
       http.get('group/currentUserGroup')
         .then((res)=>{

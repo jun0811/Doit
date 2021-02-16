@@ -41,9 +41,10 @@ public class GroupUserService {
     @Transactional
     public List<ResGroupList> findGroupByUserPk(Long userPk){
         User user = userRepository.findById(userPk).get();
+        List<GroupUser> groupList = groupUserRepository.findByUserAndStatus(user,"true");
         List<ResGroupList> list = new ArrayList<>();
-        for(GroupUser group : user.groupList){
-            list.add(new ResGroupList(group.getGroup()));
+        for(GroupUser gu : groupList){
+            list.add(new ResGroupList(gu.getGroup()));
         }
         return list;
     }
@@ -57,10 +58,11 @@ public class GroupUserService {
 
         Group group = optGroup.get();
         Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
+
         if(!opt.isPresent()){
             if(group.getTotalNum() == group.getMaxNum()) throw new Exception("인원이 가득 찼습니다.");
             groupUserRepository.save(GroupUser.builder()
-                    .group(group).user(user).build());
+                    .group(group).user(user).status("true").build());
 
             group.setTotalNum(group.getTotalNum() + 1);
             groupRepository.save(group);
@@ -73,7 +75,12 @@ public class GroupUserService {
                     .date(LocalDateTime.now())
                     .mileage("+100")
                     .user(user).build());
-        }else throw new Exception("이미 가입된 그륩입니다.");
+        }else{
+            if(opt.get().getStatus().equals("false"))
+                throw new Exception("탈퇴하였거나 강퇴당한 그룹입니다.");
+            else
+                throw new Exception("이미 가입된 그륩입니다.");
+        }
     }
 
     // 그룹 탈퇴하기
@@ -83,9 +90,9 @@ public class GroupUserService {
         Group group = groupRepository.findById(groupPk).get();
         if(userPk == group.getLeader()) throw new Exception("그룹장은 탈퇴할 수 없습니다.");
 
-        Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
-        if(opt.isPresent()) {
-            opt.ifPresent(selectGU -> groupUserRepository.delete(selectGU));
+        Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
+        if(optGU.isPresent()) {
+            optGU.ifPresent(selectGU -> selectGU.setStatus("false"));
 
             group.setTotalNum(group.getTotalNum() - 1); //회원 수 감소
             groupRepository.save(group);
@@ -107,8 +114,8 @@ public class GroupUserService {
         Group group = groupRepository.findById(groupPk).get();
         if(leader == group.getLeader()){
             User user = userRepository.findById(userPk).get(); // 강퇴시킬 그룹원
-            Optional<GroupUser> opt = groupUserRepository.findByGroupAndUser(group, user);
-            opt.ifPresent(selectGU -> groupUserRepository.delete(selectGU));
+            Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
+            optGU.ifPresent(selectGU -> selectGU.setStatus("false"));
 
             group.setTotalNum(group.getTotalNum() - 1); // 회원 수 감소
             groupRepository.save(group);

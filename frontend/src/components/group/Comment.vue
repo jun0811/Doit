@@ -156,6 +156,7 @@ export default {
   }),
   props : {
     card: Object,
+    groupPk: String,
   },
   created() {
     this.feedPk = this.card.feedPk
@@ -230,7 +231,7 @@ export default {
             this.getComment()
             sendNotify({
                 "notiType": notiType.COMMENT,
-                "userId": this.card.userPk,
+                "userPk": this.card.userPk,
                 "targetId": this.card.feedPk
             })
           }

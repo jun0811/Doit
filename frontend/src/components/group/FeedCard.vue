@@ -51,7 +51,7 @@
       <div v-show="show">
         <v-divider></v-divider>
         <v-card-text>
-          <Comment :card="card"></Comment>
+          <Comment :card="card" :groupPk="groupPk"></Comment>
         </v-card-text>
       </div>
     </v-expand-transition>
@@ -66,7 +66,8 @@ import { notiType, sendNotify } from "../../api/notification/index"
 
   export default {
     props: {
-      card: Object
+      card: Object,
+      groupPk: String, 
     },
     components: {
       Comment
@@ -104,11 +105,12 @@ import { notiType, sendNotify } from "../../api/notification/index"
           http.get(`feed/authCheckFeed?feedPk=${this.card.feedPk}`)
           .then((res)=> {
             this.auth= true
-            if(res.data.object.auth_check){
+            if(res.data.object.authCheck){
+              console.log(this.card.userPk + " " + this.card.groupPk)
               sendNotify({
                 "notiType": notiType.CONFIRMFEED,
-                "userId": this.card.userPk,
-                "targetId": this.card.groupPk
+                "userPk": this.card.userPk,
+                "targetId": this.groupPk
               })
             }
           })
