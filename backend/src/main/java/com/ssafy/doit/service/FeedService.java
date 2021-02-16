@@ -54,13 +54,13 @@ public class FeedService {
 
     // 오늘 하루 인증 피드 등록한 그룹원 리스트
     @Transactional
-    public List<ResponseUser> todayAuthUser(Long loginPk, Long groupPk) throws Exception {
+    public List<ResponseUser> todayAuthUser(Long groupPk) throws Exception {
         List<ResponseUser> resList = new ArrayList<>();
         Group group =groupRepository.findById(groupPk).get();
-        User user = userRepository.findById(loginPk).get();
+        //User user = userRepository.findById(loginPk).get();
 
-        Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
-        if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
+//        Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
+//        if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
 
         List<GroupUser> userList = group.userList;
         for(GroupUser gu : userList){
@@ -210,7 +210,7 @@ public class FeedService {
 
     // 인증피드 인증확인
     @Transactional
-    public void authCheckFeed(Long userPk, Long feedPk) throws Exception {
+    public Feed authCheckFeed(Long userPk, Long feedPk) throws Exception {
         Feed feed = feedRepository.findById(feedPk).get();
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(feed.getGroupPk()).get();
@@ -244,6 +244,7 @@ public class FeedService {
                 .mileage("+50")
                 .user(user).build());
 
+        // ******************************
         Long groupPk = feed.getGroupPk();
         Long writerPk = feed.getWriter();
         User writer = userRepository.findById(writerPk).get();
@@ -306,5 +307,7 @@ public class FeedService {
                         .cnt(1).build());
             }
         }
+        // ******************************
+        return feed;
     }
 }
