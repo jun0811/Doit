@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container class="grass">
     <v-row d-flex>
-      <v-col v-for="(cnt,idx) in size" :key="idx"  cols="1" class="pa-0 mr-2 mb-2">
+      <v-col v-for="(cnt,idx) in size" :key="idx"  cols="1" class="pa-0 mr-1 mb-1">
         <div class="box" :class="{ color1: check1(cnt), color2: check2(cnt), color3: check3(cnt) }"></div>
       </v-col>
     </v-row>
@@ -40,6 +40,9 @@ export default {
 </script>
 
 <style scoped>
+  .grass{
+    width: 350px;
+  }
   .color1{
     background: #FFE0B2
   }

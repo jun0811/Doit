@@ -4,7 +4,8 @@
   >
     <v-col cols="12" sm="5" md="5" lg="5" class="profile-card mx-xs-6" v-for="(item, idx) in paginatedData" :key="idx">
       <div class="d-flex align-center">
-        <img class="profile-image">
+          <img v-if="!item.image" src="@/assets/img/profile_temp.png" class="profile-image">
+          <img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + item.image" class="profile-image">
         <span class="mx-2">{{item.nickname}}</span>
         <v-btn v-if="loginUser==leader && item.userPk != leader" normal x-small class="px-0" @click="kickout(item.userPk)">강퇴</v-btn>
         <span v-if="item.userPk == leader" class="groupleader"><font-awesome-icon icon="crown"/></span>
@@ -44,7 +45,23 @@ import { notiType, sendNotify } from "../../api/notification/index"
     created() {
       this.getAuthUser()
     },
-    watch: {},
+    watch: {
+      groupPk(){
+        http.get(`/group/detailGroup?groupPk=${this.groupPk}`)
+        .then((res)=>{
+        console.log(res);
+        this.users = res.data.object.users
+        this.category = res.data.object.category
+        this.content = res.data.object.content
+        this.leader = res.data.object.leader
+        this.groupName = res.data.object.name
+        this.totalNum = res.data.object.totalNum
+        this.endDate = res.data.object.endDate
+        this.createDate = res.data.object.createDate
+        this.loginUser = this.$store.state.account.userpk
+      })
+      }
+    },
     computed: {
       paginatedData () {
         const start = (this.page-1) * 4,
