@@ -40,7 +40,7 @@
           <div>
             <span class="text-h6"></span>
           </div>
-          <div >
+          <div>
             <v-btn text v-bind:class="{selected: feed}" class="text-h5" :model="feed" @click="FeedList"> <font-awesome-icon icon="rss-square"/>FEED</v-btn>
             <v-btn text v-bind:class="{selected: users}" class="text-h5" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn>
           </div>
