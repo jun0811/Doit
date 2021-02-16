@@ -2,7 +2,7 @@
   <v-row class="d-flex jusity-center">
 
     <v-card
-      class=" my-12 d-flex flex-column align-center justify-center member-card"
+      class=" mb-12 d-flex flex-column align-center justify-center member-card"
       xs="12"
     >
         <div class="mx-6 my-4 align-self-end">

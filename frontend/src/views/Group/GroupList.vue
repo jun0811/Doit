@@ -1,7 +1,6 @@
 <template>
   <div>
       <Header></Header>
-      <NavBar></NavBar>
       <v-container class="pa-0 pa-md-3">
         <SearchBar></SearchBar>
         <br>
@@ -40,7 +39,6 @@
 
 <script>
 import Header from "@/components/common/Header";
-import NavBar from "@/components/common/NavBar.vue";
 import SearchBar from "@/components/common/SearchBar";
 import Footer from "@/components/common/Footer";
 import GroupCard from "@/components/group/GroupCard.vue";
@@ -111,7 +109,6 @@ export default {
   },
   components: { 
       Header, 
-      NavBar,
       Footer, 
       SearchBar, 
       GroupCard 
