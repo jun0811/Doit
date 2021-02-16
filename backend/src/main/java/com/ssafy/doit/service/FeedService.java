@@ -54,9 +54,14 @@ public class FeedService {
 
     // 오늘 하루 인증 피드 등록한 그룹원 리스트
     @Transactional
-    public List<ResponseUser> todayAuthUser(Long groupPk){
+    public List<ResponseUser> todayAuthUser(Long loginPk, Long groupPk) throws Exception {
         List<ResponseUser> resList = new ArrayList<>();
         Group group =groupRepository.findById(groupPk).get();
+        User user = userRepository.findById(loginPk).get();
+
+        Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
+        if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
+
         List<GroupUser> userList = group.userList;
         for(GroupUser gu : userList){
             Long userPk = gu.getUser().getId();
