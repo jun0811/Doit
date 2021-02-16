@@ -160,7 +160,8 @@
       >
         <v-list-item>
           <v-list-item-avatar>
-            <v-img src="@/assets/img/profile_temp.png"></v-img>
+            <v-img v-if="img==false" src="@/assets/img/profile_temp.png"></v-img>
+            <v-img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ img"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content>
@@ -242,6 +243,7 @@ export default {
       email: "",
       password: "",
       nickname: "",
+      img:"",
       items: [
         {
           action: '',
@@ -285,9 +287,9 @@ export default {
       }
     },
     created(){
-      console.log(this.$store.state.account.accessToken)
+      // console.log(this.$store.state.account.accessToken)
       this.nickname = this.$store.getters.getName; 
-
+      this.img = sessionStorage.getItem("userimg")
       // 현재 로그인 한사람의 가입 그룹 리스트
       if(this.$store.getters.getAccessToken){
           http.get('/group/currentUserGroup')
@@ -348,7 +350,7 @@ export default {
         this.$v.$reset();
       },
       passwordFind(){
-        this.$router.push( "/user/pwdfind")
+        this.$router.push("/user/pwdfind")
       }
     }
 }
