@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,12 +27,8 @@ public class NotiService {
 
     public List<Notification> getList(Long uid) throws Exception{
         List<Notification> notifications = notiRepository.findAllByUserPkOrderByNotiDateDesc(uid);
-        for(Notification n : notifications){
-            if(n.getNotiType() == NotiType.NEWCHAT)
-                n.setTarget(chatRoomRepository.findById(n.getTargetId()).get());
-            else if(n.getNotiType() == NotiType.COMMENT) n.setTarget(feedRepository.findById(n.getTargetId()).get());
-            else n.setTarget(groupRepository.findById(n.getTargetId()).get());
-        }
+        for(Notification noti : notifications)
+            noti = setTarget(noti);
 
         return notifications;
     }
@@ -39,10 +36,16 @@ public class NotiService {
     public Notification setTarget(Notification notification) {
         if(notification.getNotiType() == NotiType.NEWCHAT)
             notification.setTarget(chatRoomRepository.findById(notification.getTargetId()).get());
-        else if(notification.getNotiType() == NotiType.COMMENT) notification.setTarget(feedRepository.findById(notification.getTargetId()).get());
+        else if(notification.getNotiType() == NotiType.COMMENT)
+            notification.setTarget(feedRepository.findById(notification.getTargetId()).get());
         else notification.setTarget(groupRepository.findById(notification.getTargetId()).get());
 
         return notification;
+    }
+
+    public void refreshChat(Notification noti){
+        Optional<Notification> notification = notiRepository.findByUserPkAndNotiTypeAndTargetId(noti.getUserPk(), NotiType.NEWCHAT, noti.getTargetId());
+        if(notification.isPresent()) notiRepository.delete(notification.get());
     }
 
     public void save(Notification notification){

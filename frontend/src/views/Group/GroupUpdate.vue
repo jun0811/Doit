@@ -3,9 +3,31 @@
         <Header></Header>
         <v-container class="pa-3 pa-sm-16" >
             <v-card  class="d-flex align-center flex-column mb-12 mx-sm-auto px-5 col-sm-10" width=100% max-width=600>
-                <h3 class="my-4" style="width:100%">그룹 만들기</h3>
+                <h3 class="my-4" style="width:100%">그룹 수정</h3>
                 <v-divider style="width:100%;"></v-divider>
                 <v-container class="d-flex flex-column">
+                  <v-row >
+                    <v-col cols="4">
+                    <!-- 이미지 뛰우기 -->
+                      <v-img v-if="imageUrl" :src="imageUrl" class="profile-img"></v-img>
+                      <v-img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ image "></v-img>
+                    <!-- <v-img v-else src="@/assets/img/logo.png" class="profile-img"> </v-img> -->
+                    </v-col>
+                    <v-col cols="4" class="d-flex align-end">
+                    <!-- 이미지 첨부 버튼 -->
+                      <div class="pt-3 ">
+                        <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
+                        <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">그룹 이미지</v-btn>
+                        <input
+                          ref="uploader"
+                          class="d-none"
+                          type="file"
+                          accept="image/*"
+                          @change="onFileChanged"
+                        >
+                      </div>
+                    </v-col>
+                  </v-row>
                   <v-row class="mb-5">
                     <v-col cols="12" sm="12" md="6" class="text-left">
                       <v-text-field 
@@ -138,7 +160,6 @@ export default {
     created(){
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
-      
       const user= res.data.object
       console.log(user)
       this.name = user.name
@@ -147,6 +168,7 @@ export default {
       this.hashtag = user.tags
       this.leader = user.leader
       this.category = user.category
+      this.image = user.image
       for (var cate in this.change) {
         if (this.change[cate] === this.category) {
           this.categoryLabel = cate
@@ -158,6 +180,9 @@ export default {
     },
     data(vm){
       return{
+      file: {},
+      image: "",
+      imageUrl: null,
       leader: 0,
       menu: false,
       submit: false,
@@ -214,6 +239,19 @@ export default {
       }
     },
     methods: {
+      // 이미지 관련 메서드 시작
+      onFileChanged(e) {
+        this.selectedFile = e.target.files[0]
+        this.uploadImg = URL.createObjectURL(this.selectedFile)
+       },
+       onImages(e) {
+        this.file = e.target.files[0];
+        this.imageUrl = URL.createObjectURL(this.file)
+      },
+      onClickImageUpload() {
+        this.$refs.imageInput.click();
+      },
+      // 이미지 관련 메서드 끝
       formatDate (date){
         if(!date) return null
         const [year,month, day] = date.split('-')
@@ -243,6 +281,8 @@ export default {
         })
       },
       update(){
+        const formData = new FormData()
+        formData.append("file",this.file)
         if (this.minLength && this.name &&this.submit && this.category.length>0){
           http.put('/group/updateGroup',
           {
@@ -256,9 +296,13 @@ export default {
           })
           .then((res) =>{
             console.log(res)
-            alert('수정완료')
+            alert('생성완료')
+            http.post(`/group/updateImg?groupPk=${this.groupPk}`,formData)
+            .then((res)=>{
+            console.log(res);
             this.$router.go(-1)
           })
+        })
         }else{
           if(this.name.length<1) alert('그룹명을 입력해주세요')
           else if(this.submit ===false) alert('만료 날짜를 선택해주세요')

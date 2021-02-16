@@ -44,6 +44,7 @@ import http from "../../http-common";
     created() {
       this.getAuthUser()
     },
+    watch: {},
     computed: {
       paginatedData () {
         const start = (this.page-1) * 4,

@@ -32,8 +32,6 @@ public class StompController {
     private final RedisTemplate<String, ChatMessage> redisTemplate;
     @Autowired
     private final NotiService notiService;
-    @Autowired
-    private final GroupRepository groupRepository;
 
     private final SimpMessagingTemplate template;
     private final String MESSAGE_KEY = "Room_idx:";
@@ -56,11 +54,7 @@ public class StompController {
         Long currentUser = userRepository.findByEmail(jwtUtil.getUser(Token)).get().getId();
         notification = notiService.setTarget(notification);
 
-        if(notification.getNotiType() != NotiType.NEWFEED){
-            notiService.save(notification);
-            template.convertAndSend("/subscribe/noti/user/" + notification.getUserPk(), notification);
-        }
-        else{
+        if(notification.getNotiType() == NotiType.NEWFEED) {
             Group group = (Group) notification.getTarget();
             for(GroupUser g : group.getUserList()){
                 Long user = g.getUser().getId();
@@ -74,6 +68,11 @@ public class StompController {
                 notiService.save(noti);
                 template.convertAndSend("/subscribe/noti/user/" + noti.getUserPk(), "reload");
             }
+        }
+        else {
+            if(notification.getNotiType() == NotiType.NEWCHAT) notiService.refreshChat(notification);
+            notiService.save(notification);
+            template.convertAndSend("/subscribe/noti/user/" + notification.getUserPk(), notification);
         }
     }
 }
