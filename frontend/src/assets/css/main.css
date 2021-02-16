@@ -43,6 +43,8 @@ body {
   align-items: center;
   /* position: fixed; */
   /* margin-bottom: 50px; */
+  /* z-index: 1; */
+  background-color: white;
 }
 
 .header span {

@@ -2,7 +2,6 @@
   <v-app>
     <div>
       <Header></Header>
-      <!-- <NavBar></NavBar> -->
       <SearchBar></SearchBar>
       <Category></Category>
       <v-container class="px-3 px-sm-16 mt-16">

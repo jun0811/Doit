@@ -1,7 +1,7 @@
 <template>
 <div>
   <Header></Header>
-  <NavBar></NavBar>
+  <!-- <NavBar></NavBar> -->
     <v-container class="container-width">
         <v-row>
           <v-col class="img-wrapper">
@@ -146,7 +146,7 @@
 <script>
 import "@/assets/css/profile.css";
 import Header from "@/components/common/Header.vue";
-import NavBar from "@/components/common/NavBar.vue";
+// import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
 // import ChatRoom from "@/components/mileage/ChatRoom.vue";
 import http from "../../http-common";
@@ -156,7 +156,7 @@ export default {
   name: "ProductDetail",
   components: {
     Header,
-    NavBar,
+    // NavBar,
     Footer,
     // ChatRoom,
   },
@@ -284,7 +284,7 @@ export default {
 <style scoped>
 .container-width {
 width: 600px; 
-margin-top: 50px;
+/* margin-top: 50px; */
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {

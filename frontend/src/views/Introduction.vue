@@ -157,7 +157,7 @@ export default {
 }
 
 .title-style {
-  margin-top: 10%;
+  /* margin-top: 10%; */
   margin-bottom: 20%;
   font-size: 130%;
 }
