@@ -11,8 +11,7 @@ const notiType = {
     COMMENT: 5,
 }
 
-const api = {
-    async connect() {
+    async function connect() {
       let serverURL = "http://localhost:8080/ws";
       let socket = new SockJS(serverURL);
       let stompClient = Stomp.over(socket);
@@ -25,16 +24,16 @@ const api = {
         console.log('소켓 연결 실패', error);
       });
       return stompClient;
-    },
+    }
     
-    disconnect() {
+    function disconnect() {
         store.getters.getStompClient.disconnect();
-    },
+    }
     
-    sendNoti(notification) {
+    function sendNotify(notification) {
       if (store.getters.getStompClient == null) return;
       store.getters.getStompClient.send("/publish/noti", JSON.stringify(notification),{"accessToken": store.getters.getAccessToken})
     }
-}
 
-export { notiType, api }
+
+export { notiType, connect, disconnect, sendNotify }

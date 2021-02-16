@@ -1,4 +1,4 @@
-import { api } from '../../api/notification/index'
+import { connect, disconnect } from '../../api/notification/index'
 
 const state = {
   stompClient: null,
@@ -29,12 +29,12 @@ const mutations = {
 const actions = {
   async CONNECT({ commit }) {
     commit('SET_CONNECTED', false);
-    const response = await api.connect();
+    const response = await connect();
     commit('CONNECT', response);
     return response;
   },
   async DISCONNECT({ commit }) {
-    const response = await api.disconnect();
+    const response = await disconnect();
     commit('DISCONNECT');
     return response;
   },
