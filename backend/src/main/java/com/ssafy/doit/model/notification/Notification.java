@@ -22,7 +22,6 @@ public class Notification {
     private Long userPk;
     private NotiType notiType;
     private Long targetId;
-    private boolean status;
     private LocalDateTime notiDate;
 
     @Transient
@@ -30,7 +29,6 @@ public class Notification {
 
     @PrePersist
     private void init(){
-        this.status = true;
         this.notiDate = LocalDateTime.now();
     }
 }

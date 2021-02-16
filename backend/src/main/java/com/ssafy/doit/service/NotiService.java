@@ -2,6 +2,7 @@ package com.ssafy.doit.service;
 
 import com.ssafy.doit.model.notification.NotiType;
 import com.ssafy.doit.model.notification.Notification;
+import com.ssafy.doit.repository.feed.FeedRepository;
 import com.ssafy.doit.repository.group.GroupRepository;
 import com.ssafy.doit.repository.NotiRepository;
 import com.ssafy.doit.repository.store.ChatRoomRepository;
@@ -20,13 +21,16 @@ public class NotiService {
     private final ChatRoomRepository chatRoomRepository;
     @Autowired
     private final GroupRepository groupRepository;
+    @Autowired
+    private final FeedRepository feedRepository;
 
     public List<Notification> getList(Long uid) throws Exception{
-        List<Notification> notifications = notiRepository.findAllByUserPkAndStatusIsTrue(uid);
+        List<Notification> notifications = notiRepository.findAllByUserPkOrderByNotiDateDesc(uid);
         for(Notification n : notifications){
             if(n.getNotiType() == NotiType.NEWCHAT)
-                n.setTarget(chatRoomRepository.findById(n.getTargetId()));
-            else n.setTarget(groupRepository.findById(n.getTargetId()));
+                n.setTarget(chatRoomRepository.findById(n.getTargetId()).get());
+            else if(n.getNotiType() == NotiType.COMMENT) n.setTarget(feedRepository.findById(n.getTargetId()).get());
+            else n.setTarget(groupRepository.findById(n.getTargetId()).get());
         }
 
         return notifications;
@@ -34,21 +38,15 @@ public class NotiService {
 
     public Notification setTarget(Notification notification) {
         if(notification.getNotiType() == NotiType.NEWCHAT)
-            notification.setTarget(chatRoomRepository.findById(notification.getTargetId()));
-        else notification.setTarget(groupRepository.findById(notification.getTargetId()));
+            notification.setTarget(chatRoomRepository.findById(notification.getTargetId()).get());
+        else if(notification.getNotiType() == NotiType.COMMENT) notification.setTarget(feedRepository.findById(notification.getTargetId()).get());
+        else notification.setTarget(groupRepository.findById(notification.getTargetId()).get());
 
         return notification;
-    }
-
-    public void setStatus(Long nid, Long uid) throws Exception{
-        Notification notification = notiRepository.findById(nid).get();
-        if(uid != notification.getUserPk()) throw new Exception("유저 불일치");
-
-        notification.setStatus(false);
-        notiRepository.save(notification);
     }
 
     public void save(Notification notification){
         notiRepository.save(notification);
     }
+    public void delete(Long id) {notiRepository.delete(notiRepository.findById(id).get());}
 }

@@ -48,7 +48,7 @@ public class NotiController {
         ResponseBasic result = null;
         try{
             Long currentUser = userService.currentUser();
-            notiService.setStatus(id, currentUser);
+            notiService.delete(id);
             List<Notification> notifications = notiService.getList(currentUser);
             result = new ResponseBasic(true, "success", notifications);
         }catch (Exception e){
