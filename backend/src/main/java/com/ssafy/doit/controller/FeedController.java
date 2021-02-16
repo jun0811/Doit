@@ -35,7 +35,8 @@ public class FeedController {
     public Object todayAuthUser(@RequestParam Long groupPk){
         ResponseBasic result = null;
         try {
-            List<ResponseUser> list = feedService.todayAuthUser(groupPk);
+            Long userPk = userService.currentUser();
+            List<ResponseUser> list = feedService.todayAuthUser(userPk, groupPk);
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
             e.printStackTrace();
