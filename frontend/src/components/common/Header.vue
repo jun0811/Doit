@@ -211,14 +211,32 @@
       >
         로그아웃
       </v-btn>
-      <v-btn
-        text
-        @click="alarm"
-        class="px-0"
-        v-if="this.$store.state.account.accessToken"
+      <!-- 여기부터 알림! -->
+      <v-menu
+        bottom
+        offset-y
       >
-        <font-awesome-icon :icon="['far', 'bell']" />
-      </v-btn>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            text
+            class="ma-2"
+            v-bind="attrs"
+            v-on="on"
+          >
+           <font-awesome-icon :icon="['far', 'bell']" />
+          </v-btn>
+        </template>
+        <v-list max-height="400">
+          <v-subheader>나의 알림</v-subheader>
+          <v-list-item
+            v-for="(notice, i) in noti"
+            :key="i"
+            @click="noticeConfirm(notice)"
+          >
+            <v-list-item-title>{{ content[notice.notiType] }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </div>
   </header>
 </template>
@@ -253,9 +271,18 @@ export default {
           ],
         },
       ],
+      content: {
+        0: '그룹에 새 피드가 올라왔습니다.',
+        1: '새로운 채팅이 있습니다.',
+        2: '피드가 인증을 받았습니다.',
+        3: '그룹에서 강퇴 당했습니다.',
+        4: '그룹장으로 위임 됐습니다.',
+        5: '피드에 새로운 댓글이 달렸습니다.',
+      },
       drawer: null,
       miniVariant: true,
       noti: [], 
+      noticeList :[],
     }),
     computed: {
       emailErrors () {
@@ -304,6 +331,7 @@ export default {
           http.get('/noti/getList')
           .then((res) => {
               this.noti = res.data.object;
+              console.log(this.noti)
           })
           // 소켓 연결
           this.socketConnect();
@@ -314,6 +342,23 @@ export default {
 
       socketConnect() {
         this.CONNECT()
+      },
+      moveToChat(chatPk) {
+        console.log(chatPk)
+        this.$router.push({ name: 'ChatList'})
+      },
+      moveToGroup(groupPk) {
+        console.log(groupPk)
+        this.$router.push({ name: 'Community', params: { groupPk: groupPk }})
+      },
+      noticeConfirm(notice) {
+        if (notice.notiType==="1") {
+          let chatPk = notice.target.id
+          this.moveToChat(chatPk)
+        } else {
+          let groupPk = notice.target.groupPk
+          this.moveToGroup(groupPk) 
+        }
       },
       signup() {
         this.$router.push("/user/join")
