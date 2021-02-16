@@ -2,6 +2,8 @@ package com.ssafy.doit.service;
 
 import com.ssafy.doit.model.notification.NotiType;
 import com.ssafy.doit.model.notification.Notification;
+import com.ssafy.doit.model.response.ResponseChatRoom;
+import com.ssafy.doit.model.store.ChatRoom;
 import com.ssafy.doit.repository.feed.FeedRepository;
 import com.ssafy.doit.repository.group.GroupRepository;
 import com.ssafy.doit.repository.NotiRepository;
@@ -34,8 +36,10 @@ public class NotiService {
     }
 
     public Notification setTarget(Notification notification) {
-        if(notification.getNotiType() == NotiType.NEWCHAT)
-            notification.setTarget(chatRoomRepository.findById(notification.getTargetId()).get());
+        if(notification.getNotiType() == NotiType.NEWCHAT){
+            ChatRoom chatRoom = chatRoomRepository.findById(notification.getTargetId()).get();
+            notification.setTarget(new ResponseChatRoom(chatRoom, notification.getUserPk()));
+        }
         else if(notification.getNotiType() == NotiType.COMMENT)
             notification.setTarget(feedRepository.findById(notification.getTargetId()).get());
         else notification.setTarget(groupRepository.findById(notification.getTargetId()).get());
