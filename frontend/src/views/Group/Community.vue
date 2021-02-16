@@ -2,16 +2,16 @@
   <div>
     <Header></Header>
     <!-- 그룹 간략 소개 시작 -->
-    <hr>
+    <!-- <hr> -->
       <v-container>
-        <v-row class="d-flex justify-start">
-          <v-col cols="3" sm-cols="2" class="d-flex align-center  justify-end ml-10">
+        <v-row class="d-flex justify-center group-intro">
+          <v-col cols="4" sm="3" class="d-flex align-center  justify-end">
             <div class="group-image">
                 <img class="profile" v-if="!image" src="" alt="">
                 <img class="profile" v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + image" alt="">
             </div>
           </v-col>
-          <v-col cols="5">
+          <v-col cols="8" sm="5">
             <h3>{{user_info.name}}</h3>
             <p class="ma-0"> 멤버 : {{user_num}}/{{user_info.maxNum}}</p>
             <p class="ma-0"> {{user_info.startDate}} ~ {{user_info.endDate}}</p>
@@ -21,104 +21,117 @@
               </router-link>
             </div>
           </v-col>
-          <v-col cols="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
-            
+          <v-col cols="3" sm="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
             <v-btn class="group" outlined width="75" v-if="loginUser==leader" @click="updateGroup">그룹 수정</v-btn>
             <v-btn class="group" outlined width="75" v-if="!joined" @click="joinGroup">가입하기</v-btn>
             <v-btn class="group" outlined width="75" v-if="joined && loginUser != leader" @click="withdrawGroup">탈퇴하기</v-btn>
           </v-col>
         </v-row>
       </v-container>
-    <hr>
+    <!-- <hr> -->
     <!-- 그룹 소개 끝 -->
     <!-- 메인 content -->
 
 
-    <v-container class="pa-3 px-sm-16 py-sm-6 px-0" >
-      <v-row class="d-flex justify-center">
-        <v-col  cols="9" class="d-flex justify-space-around mx-16" v-if="joined">
-          <div>
+    <v-container class="pa-3 px-sm-16 py-sm-6 px-0" style="width: 100%">
+      <v-row class="d-flex justify-center" >
+        <v-col  cols="12" sm="5" v-if="joined" class="mb-7">
+          <!-- <div>
             <span class="text-h6"></span>
-          </div>
-          <div >
-            <v-btn text v-bind:class="{selected: feed}" class="text-h5" :model="feed" @click="FeedList"> <font-awesome-icon icon="rss-square"/>FEED</v-btn>
-            <v-btn text v-bind:class="{selected: users}" class="text-h5" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn>
-          </div>
-          <div>
-            <v-btn text class="text-h6" @click="feedWrite"> 글작성 </v-btn>
-          </div>
-        </v-col>
+          </div> -->
+          <!-- <div> -->
+            <v-tabs color="orange" class="d-flex justify-center">
+              <!-- <v-tab>자유 피드</v-tab> -->
+              <v-tab @click="UserList">Information</v-tab>
+              <v-tab @click="FeedList">Feed</v-tab>
+            </v-tabs>            
+            <!-- <v-btn text v-bind:class="{selected: feed}" class="text-h5" :model="feed" @click="FeedList"> <img src="@/assets/icon/social-media.svg" alt="feed-icon" class="icon-style"> FEED</v-btn>
+            <v-btn text v-bind:class="{selected: users}" class="text-h5" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn> -->
+          <!-- </div> -->
+        </v-col>       
         <v-col v-if="feed && joined" cols="12" class="d-flex flex-column justify-space-around align-center mx-sm-16">
-          <v-col  cols="9" class="d-flex justify-space-around mx-16"> 
-            <!-- 날짜 선택 시작 -->
-            <!-- start day -->
-            <v-menu
-              v-model="menu1"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  class="date-input"
+          <v-row>
+            <v-col  cols="12" sm="12" class="d-flex justify-space-around"> 
+              <!-- 날짜 선택 시작 -->
+              <!-- start day -->
+              <v-menu
+                v-model="menu1"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    class="date-input"
+                    v-model="start"
+                    label="시작일"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
                   v-model="start"
-                  label="시작일"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="start"
-                @input="menu1 = false"
-              ></v-date-picker>
-            </v-menu>
-            <h2 class="ma-4"> ~ </h2>
-            <!-- end day -->
-            <v-menu
-              v-model="menu2"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  class="date-input"
+                  @input="menu1 = false"
+                ></v-date-picker>
+              </v-menu>
+              <h2 class="ma-4"> ~ </h2>
+              <!-- end day -->
+              <v-menu
+                v-model="menu2"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    class="date-input"
+                    v-model="end"
+                    label="종료일"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
                   v-model="end"
-                  label="종료일"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="end"
-                @input="menu2 = false"
-              ></v-date-picker>
-            </v-menu>
-            <!-- 날짜 선택 끝 -->
-            <v-btn @click="feedRead" text class="ma-4 search-btn" outlined> 검색 </v-btn >
-          </v-col>
-          <v-col v-if="cards.length" class="d-flex justify-center align-center flex-column card">
-            <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card" ></FeedCard>
-          </v-col>
-          <div v-else> 
-            <h2 style="text-align:center;">해당 기간에는 작성된 피드가 없어요🤷‍♂️</h2>
-          </div>
-
+                  @input="menu2 = false"
+                ></v-date-picker>
+              </v-menu>
+              <!-- 날짜 선택 끝 -->
+              <div class="d-flex align-center">
+                <v-btn @click="feedRead" text class="search-btn ml-sm-2" outlined> 검색 </v-btn >
+              </div>
+            </v-col>
+          </v-row>
+          <!-- <v-row> -->
+          <v-row class="" style="width: 100%">
+            <v-col cols="12" sm="9" class="d-flex justify-end">
+              <v-btn text x-large class="mt-5" @click="feedWrite"> 글작성 </v-btn>
+            </v-col>
+          </v-row>
+          <v-row class="d-flex justify-center align-center flex-column card">
+            <v-col cols="10" v-if="cards.length" class="">
+              <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card" ></FeedCard>
+            </v-col>
+            <v-col v-else> 
+              <h2 style="text-align:center;">해당 기간에는 작성된 피드가 없어요🤷‍♂️</h2>
+            </v-col>
+          </v-row>
+          <!-- </v-row> -->
         </v-col>
-        <v-col v-if="users" cols="10" class="d-flex justify-center align-center flex-column">
+        <v-col v-if="users" cols="11" class="d-flex justify-center align-center flex-column">
           <GroupMember :groupPk="groupPk"></GroupMember>
           <!-- <div class="temp">
             asdasdasd
           </div> -->
-        </v-col>
+        </v-col> 
       </v-row>
     </v-container>
     <Footer></Footer>
@@ -148,8 +161,8 @@ export default {
       menu1: false,
       user_info: {},
       user_num: 0,
-      feed: true, //
-      users: false, 
+      feed: false, //
+      users: true, 
       joined: false, // 현재 유저 가입 여부 확인
       start: new Date().toISOString().substr(0,10),
       end: new Date().toISOString().substr(0,10),
@@ -307,12 +320,28 @@ export default {
 </script>
 
 <style scoped>
+  .group-intro {
+    border: 1px solid #E0E0E0;
+    margin-left: 300px;
+    margin-right: 300px;
+  } 
+
+  @media only screen and (min-width: 300px) and (max-width: 599px) {
+  .group-intro {
+    border: 1px solid #E0E0E0;
+    margin-left: 0px;
+    margin-right: 0px;
+    } 
+  }
   .group-image {
     width: 90px;
     height: 90px;
     border-radius: 70%;
     overflow: hidden;
     border: 1px solid #FFB685
+  }
+  .icon-style {
+    width: 6%;
   }
   .profile {
     width:100%;
