@@ -104,11 +104,12 @@ import { notiType, sendNotify } from "../../api/notification/index"
           http.get(`feed/authCheckFeed?feedPk=${this.card.feedPk}`)
           .then((res)=> {
             this.auth= true
-            if(res.data.object.auth_check){
+            if(res.data.object.authCheck){
+              console.log(this.card.userPk + " " + this.card.groupPk)
               sendNotify({
                 "notiType": notiType.CONFIRMFEED,
-                "userId": this.card.userPk,
-                "targetId": this.card.groupPk
+                "userPk": this.card.userPk,
+                "targetId": this.groupPk
               })
             }
           })
