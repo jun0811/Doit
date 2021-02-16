@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import "@/assets/css/profile.css";
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
 import http from "../../http-common";

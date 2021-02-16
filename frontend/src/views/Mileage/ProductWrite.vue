@@ -81,7 +81,6 @@
 </template>
 
 <script>
-import "@/assets/css/profile.css";
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
 import { createProduct } from "@/api/mileage/index.js"

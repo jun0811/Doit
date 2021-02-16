@@ -144,7 +144,6 @@
 </template>
 
 <script>
-import "@/assets/css/profile.css";
 import Header from "@/components/common/Header.vue";
 // import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
