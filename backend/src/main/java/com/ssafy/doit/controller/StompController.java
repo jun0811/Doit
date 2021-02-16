@@ -61,7 +61,7 @@ public class StompController {
             template.convertAndSend("/subscribe/noti/user/" + notification.getUserPk(), notification);
         }
         else{
-            Group group = groupRepository.findById(notification.getTargetId()).get();
+            Group group = (Group) notification.getTarget();
             for(GroupUser g : group.getUserList()){
                 Long user = g.getUser().getId();
                 if(user == currentUser) continue;
@@ -72,7 +72,7 @@ public class StompController {
                 noti.setTargetId(notification.getTargetId());
                 noti.setTarget(group);
                 notiService.save(noti);
-                template.convertAndSend("/subscribe/noti/user/" + noti.getUserPk(), noti);
+                template.convertAndSend("/subscribe/noti/user/" + noti.getUserPk(), "reload");
             }
         }
     }

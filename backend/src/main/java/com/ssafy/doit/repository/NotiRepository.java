@@ -8,6 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NotiRepository extends JpaRepository<Notification, Long> {
-    Optional<Notification> findByUserPkAndNotiTypeAndStatusIsTrue(Long uid, NotiType type);
-    List<Notification> findAllByUserPkAndStatusIsTrue(Long uid);
+    List<Notification> findAllByUserPkOrderByNotiDateDesc(Long id);
 }
