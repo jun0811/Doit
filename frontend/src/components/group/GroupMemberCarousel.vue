@@ -50,7 +50,23 @@ import http from "../../http-common";
         this.loginUser = this.$store.state.account.userpk
       })
     },
-    watch: {},
+    watch: {
+      groupPk(){
+        http.get(`/group/detailGroup?groupPk=${this.groupPk}`)
+        .then((res)=>{
+        console.log(res);
+        this.users = res.data.object.users
+        this.category = res.data.object.category
+        this.content = res.data.object.content
+        this.leader = res.data.object.leader
+        this.groupName = res.data.object.name
+        this.totalNum = res.data.object.totalNum
+        this.endDate = res.data.object.endDate
+        this.createDate = res.data.object.createDate
+        this.loginUser = this.$store.state.account.userpk
+      })
+      }
+    },
     computed: {
       paginatedData () {
         const start = (this.page-1) * 4,
