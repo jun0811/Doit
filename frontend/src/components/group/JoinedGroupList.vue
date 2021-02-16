@@ -65,9 +65,9 @@ export default {
    border: 1px solid #FFB685  
   }
   .joined-size {
-  width: 100%;
-  height: 600px !important;
-}
+   width: 100%;
+   height: 600px !important;
+  }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .joined-size {
