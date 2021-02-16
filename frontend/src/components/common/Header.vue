@@ -36,21 +36,20 @@
                 <v-list-item-title v-text="item.title"></v-list-item-title>
               </v-list-item-content>
             </template>
-    
+            <!-- 가입 그룹 리스트 -->
             <v-list-item
               v-for="subItem in item.items"
               :key="subItem.groupPk"
               @click="group(subItem.groupPk)"
               class="px-4"
             >
-              <v-list-item-action>
-                <v-btn
-                  fab
-                  small
-                  depressed
-                  color="orange"
-                >
-                </v-btn>
+              <v-list-item-action class="group-image">
+                <v-img
+                  class="profile"
+                  v-if="subItem.image"
+                  :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ subItem.image"
+                ></v-img>
+                <v-img class="profile" v-else src=""> </v-img>
               </v-list-item-action>
 
               <v-list-item-content>
@@ -299,6 +298,7 @@ export default {
           http.get('/group/currentUserGroup')
             .then((res)=>{
             this.items[0].items = res.data.object;
+            console.log(this.items[0].items)
           })
 
           http.get('/noti/getList')
@@ -366,8 +366,19 @@ export default {
 </script>
 
 <style scoped>
+  .group-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 70%;
+    overflow: hidden;
+    border: 1px solid #FFB685
+  }
+  .profile {
+    width:100%;
+    height:100%;
+    object-fit: cover;
+  }  
   .login.input{
-
     height: 150%;
     border: 2px solid #F9802D;
     border-radius: 8px;
@@ -407,6 +418,10 @@ export default {
 
   .drawer-height {
     height: 100vh;
+  }
+  .profile{
+    width: 100px;
+    height: 100px;
   }
 </style>
 
