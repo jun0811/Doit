@@ -21,6 +21,7 @@ import MileageShop from "../views/Mileage/MileageShop.vue";
 import ProductDetail from "../views/Mileage/ProductDetail.vue";
 import ChatList from "../views/Mileage/ChatList.vue";
 import ProductWrite from "../views/Mileage/ProductWrite.vue";
+import ProductUpdate from "../views/Mileage/ProductUpdate.vue";
 import PasswordFind from "../views/User/PasswordFind.vue";
 import MileageHistory from "../views/Mileage/MileageHistory.vue";
 
@@ -137,6 +138,12 @@ const routes = [
     path: "/mileageshop/productwrite",
     name: "ProductWrite",
     component: ProductWrite,
+  },
+  {
+    path: "/mileageshop/productupdate/:product_id",
+    name: "ProductUpdate",
+    component: ProductUpdate,
+    props: true,
   },
   {
     path: "/chatlist",
