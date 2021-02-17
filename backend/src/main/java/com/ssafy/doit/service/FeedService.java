@@ -157,7 +157,7 @@ public class FeedService {
     @Transactional
     public void updateFeed(Long userPk, Feed feedReq) throws Exception {
         Optional<Feed> feed = feedRepository.findById(feedReq.getFeedPk());
-        if(userPk == feed.get().getWriter()) {
+        if(userPk == feed.get().getWriter().longValue()) {
             feed.ifPresent(selectFeed -> {
                 selectFeed.setContent(feedReq.getContent());
                 selectFeed.setFeedType(feedReq.getFeedType());
@@ -171,16 +171,16 @@ public class FeedService {
     @Transactional
     public void deleteFeed(Long userPk, Long feedPk) throws Exception {
         Optional<Feed> feed = feedRepository.findById(feedPk);
-        if(userPk == feed.get().getWriter()) {
+        if(userPk == feed.get().getWriter().longValue()) {
             feedUserRepository.deleteByFeedPk(feedPk);
             commentRepository.deleteByFeedPk(feedPk);
             feed.ifPresent(selectFeed -> {
                 try {
+                    feedRepository.delete(selectFeed);
                     s3Service.deleteFile(selectFeed.getMedia());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                feedRepository.delete(selectFeed);
             });
         } else throw new Exception("피드 작성자가 아닙니다.");
     }
@@ -232,7 +232,7 @@ public class FeedService {
         if(!feed.getFeedType().equals("true"))
             throw new Exception("인증피드가 아닙니다.");
 
-        if(userPk == feed.getWriter())
+        if(userPk == feed.getWriter().longValue())
             throw new Exception("자신이 올린 피드에는 인증할 수 없습니다.");
 
         Optional<FeedUser> optFU = feedUserRepository.findByFeedAndUser(feed, user);
