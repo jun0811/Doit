@@ -17,7 +17,6 @@
                     <div class="pt-3 ">
                       <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
                       <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">그룹 이미지</v-btn>
-                      
                     </div>
                   </v-col>
                 </v-row>
