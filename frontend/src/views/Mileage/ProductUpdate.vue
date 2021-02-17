@@ -9,7 +9,7 @@
           tile
           class="content-card pt-3 pb-6"
         >
-          <h3 class="my-4" style="width:100%;">물품 등록</h3>
+          <h3 class="my-4" style="width:100%;">물품 수정</h3>
           <v-divider style="width:100%;"></v-divider>
           <v-row class="d-flex flex-column mt-3" >
             <v-col cols="12">
@@ -88,14 +88,16 @@
 <script>
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
-import { createProduct } from "@/api/mileage/index.js"
-import http from "../../http-common"
+// import http from "../../http-common"
 
 export default {
-  name: "ProductWrite",
+  name: "ProductUpdate",
   components: {
     Header,
     Footer,
+  },
+  props: {
+    product_id: Number,
   },
   data() {
     return {
@@ -106,6 +108,7 @@ export default {
       categories : ['음식', '책', '운동', '카테고리4', '카테고리5', ],
       mileage: "300",
       product : {
+        id: 0,
         category : '',
         content : '',
         image : '',
@@ -114,6 +117,14 @@ export default {
         mileage:'',
       },
     }
+  },
+  created() {
+    console.log(this.product_id);
+    // console.log(this.product.id);
+    // http.get(`/product/${this.product_id}`)
+    // .then((res) => {
+    //   console.log(res);
+    // })
   },
   methods: {
     onImages(e) {
@@ -130,31 +141,30 @@ export default {
         alert("사진 첨부는 필수입니다.")
       }
       else {
-        createProduct(
-          {
-            "category": this.product.category,
-            "content":  this.product.content,
-            "image": this.product.image,
-            "title":  this.product.title,
-            "mileage": this.product.mileage,
-          },
-          (res) =>{
-            if (res.data.status){
-              console.log(res);
-              http.post(`product/image?pid=${res.data.object.id}`, formData)  
-              alert("물품을 등록했습니다.")
-              // this.$router.push(`/mileageshop/product/${res.data.object.id}`)
-              this.$router.push(`/mileageshop`)
-            }
-            else {
-              alert('가입한 그룹 수가 2개 이상이어야 물품을 등록할 수 있습니다.')
-            }
-          },
-          (err) =>{
-            console.log(err)
-            alert("물품 등록 실패")
-          }
-        )
+        // createProduct(
+        //   {
+        //     "category": this.product.category,
+        //     "content":  this.product.content,
+        //     "image": this.product.image,
+        //     "title":  this.product.title,
+        //     "mileage": this.product.mileage,
+        //   },
+        //   (res) =>{
+        //     if (res.data.status){
+        //       // console.log(res);
+        //       alert("물품을 등록했습니다.")
+        //       http.post(`product/image?pid=${res.data.object.id}`, formData)  
+        //       this.$router.push(`/mileageshop/product/${res.data.object.id}`)
+        //     }
+        //     else {
+        //       alert('가입한 그룹 수가 2개 이상이어야 물품을 등록할 수 있습니다.')
+        //     }
+        //   },
+        //   (err) =>{
+        //     console.log(err)
+        //     alert("물품 등록 실패")
+        //   }
+        // )
       }
     },
   }

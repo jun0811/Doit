@@ -5,20 +5,44 @@
     <v-container class="container-width">
         <v-row>
           <v-col class="img-wrapper">
-            <img class="product-img" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80" alt="product image">
+            <img class="product-img" :src="image" alt="product image">
           </v-col>
         </v-row>
         <v-row class="my-3 px-6 d-flex align-center">
-          <span class="profile-wrapper pa-0 d-flex ">
-            <img
-            class="profile-img" 
-            src="https://images.unsplash.com/photo-1529092419721-e78fb7bddfb2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=964&q=80" 
-            alt="글쓴이 이미지"
-            >
-          </span>
-          <span class="pl-4">
-            {{product.nickname}}
-          </span>
+          <v-col class="d-flex align-center">
+            <span class="profile-wrapper pa-0 d-flex ">
+              <img
+              class="profile-img" 
+              :src="profile"
+              alt="글쓴이 이미지"
+              >
+            </span>
+            <span class="pl-4">
+              {{product.nickname}}
+            </span>
+          </v-col>
+          <v-col cols="2" sm="1" v-if="id==seller">
+            <v-menu offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  text
+                  v-bind="attrs"
+                  v-on="on"
+                  icon
+                >
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="updateProduct">
+                  <v-list-item-title>수정하기</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="deleteProduct">
+                  <v-list-item-title>삭제하기</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>               
+          </v-col>
         </v-row>
         <v-row class="d-flex justify-center mt-2">
           <hr class="mb-4 line">
@@ -145,9 +169,7 @@
 
 <script>
 import Header from "@/components/common/Header.vue";
-// import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
-// import ChatRoom from "@/components/mileage/ChatRoom.vue";
 import http from "../../http-common";
 import { notiType, sendNotify } from '../../api/notification/index'
 
@@ -178,18 +200,23 @@ export default {
       roomCheck: false,
       bottom_flag: true,
       subscribe: '',
+      defaultAddress: 'http://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
+      image: '',
+      profile: ''
     }
   },
   props:{
-    product_id: String,
+    product_id: Number,
   },
   created() {
     this.id = this.$store.state.account.userpk;
-
     http.get(`/product/${this.product_id}`)
     .then((res)=>{
+      console.log(res);
       this.product = res.data.object
       this.seller = this.product.user_pk
+      this.image = this.defaultAddress + this.product.image
+      this.profile = this.defaultAddress + this.product.profile
     })   
     // var objDiv = document.getElementById("scroll"); 
     // objDiv.scrollTop = objDiv.scrollHeight;
@@ -261,10 +288,10 @@ export default {
       }
       else {
         // console.log(this.seller, Number(this.id))
-        if (this.seller !== Number(this.id)) {    // 02월 13일 이 부분부터 해야함(판매자와 유저가 같을 경우 어떻게 처리할 것인지!)
+        if (this.seller !== Number(this.id)) {
           http.post(`chat/createRoom?product_pk=${this.product.id}`)
           .then((res) => {
-            console.log(this.product.id)
+            // console.log(this.product.id)
             const val = res.data.object.id
             this.enterRoom(val)
           })
@@ -273,8 +300,16 @@ export default {
           this.$router.push('/chatlist')
         }
       }
-
-
+    },
+    deleteProduct() {
+      http.delete(`/product/${this.product_id}`)
+      .then((res) => {
+        console.log(res)
+        this.$router.push('/mileageshop')
+      })
+    },
+    updateProduct() {
+      this.$router.push({name:"ProductUpdate",params:{product_id:this.product_id}})
     }
   }
 };
@@ -317,6 +352,7 @@ width: 600px;
 .product-img {
   width: 100%;
   height:100%;
+  /* max-height: 500px; */
   overflow: hidden;
   object-fit: cover;
   border-radius: 5px;
