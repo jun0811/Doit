@@ -361,13 +361,11 @@ export default {
           http.get('/group/currentUserGroup')
             .then((res)=>{
             this.items[0].items = res.data.object;
-            console.log(this.items[0].items)
           })
 
           http.get('/noti/getList')
           .then((res) => {
               this.noti = res.data.object;
-              console.log(this.noti)
           })
           // 소켓 연결
           this.socketConnect();
