@@ -76,8 +76,12 @@
               <v-btn text @click="updateComment(comment)" class="comment-btn">수정</v-btn>
             </v-list-item-title>
           </v-list-item-content>
-          <v-list-item-icon class="mx-0 my-auto d-flex justify-end">
-            <v-menu
+          <v-list-item-icon 
+            class="mx-0 my-auto d-flex justify-end" 
+            v-if="comment.userPk==user['userPk']"  
+          >
+            <v-menu 
+              offset-y
               bottom
               rightcomment.updateActive =!comment.updateActive
               :nudge-width="100"
@@ -136,7 +140,6 @@ export default {
 
     newContent : '',
 
-
     createHeader: '댓글작성',
     listHeader:'댓글목록',
 
@@ -188,6 +191,7 @@ export default {
       let cnt = 1;
       http.get(`comment/commentList?feedPk=${this.card.feedPk}`)
         .then((res)=>{
+          console.log(res);
           if(res.data.status){
             const response = res.data.object
             this.commentCount = response.length
@@ -195,6 +199,7 @@ export default {
               return a.commentPk > b.commentPk ? -1 : 1;
             })
             this.comments = []
+
             this.comments = response.flatMap(comment=> {
               let profile = ''
               if (comment.image) {
@@ -275,7 +280,8 @@ export default {
           if(res.data.status){
             this.user.nickname = res.data.object.nickname
             this.user.userPk = res.data.object.userPk
-            if (this.user.image) {
+            // console.log();
+            if (res.data.object.image) {
               this.user.image = this.baseImg + res.data.object.image
             }
           }
