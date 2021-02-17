@@ -2,7 +2,6 @@
   <div>
     <Header></Header>
     <!-- 그룹 간략 소개 시작 -->
-    <!-- <hr> -->
       <v-container>
         <v-row class="d-flex justify-center group-intro">
           <v-col cols="4" sm="3" class="d-flex align-center justify-start">
@@ -28,26 +27,17 @@
           </v-col>
         </v-row>
       </v-container>
-    <!-- <hr> -->
     <!-- 그룹 소개 끝 -->
     <!-- 메인 content -->
-
-
     <v-container class="pa-3 px-sm-16 py-sm-6 px-0" style="width: 100%">
       <v-row class="d-flex justify-center" >
         <v-col  cols="12" sm="5" v-if="joined" class="mt-4">
-          <!-- <div>
-            <span class="text-h6"></span>
-          </div> -->
-          <!-- <div> -->
+
             <v-tabs color="orange" class="d-flex justify-center">
               <!-- <v-tab>자유 피드</v-tab> -->
               <v-tab @click="UserList">그룹정보</v-tab>
               <v-tab @click="FeedList">인증피드</v-tab>
             </v-tabs>            
-            <!-- <v-btn text v-bind:class="{selected: feed}" class="text-h5" :model="feed" @click="FeedList"> <img src="@/assets/icon/social-media.svg" alt="feed-icon" class="icon-style"> FEED</v-btn>
-            <v-btn text v-bind:class="{selected: users}" class="text-h5" :model="users" @click="UserList"> <font-awesome-icon icon="users"/>MEMBERS</v-btn> -->
-          <!-- </div> -->
         </v-col>       
         <v-col v-if="feed && joined" cols="12" class="d-flex flex-column justify-space-around align-center mx-sm-16">
           <v-row>
@@ -110,27 +100,32 @@
               </div>
             </v-col>
           </v-row>
-          <!-- <v-row> -->
           <v-row class="" style="width: 100%">
-            <v-col cols="12" sm="9" class="d-flex justify-end">
-              <v-btn text x-large class="mt-5" @click="feedWrite"> 글작성 </v-btn>
+            <v-col v-if="cards.length" cols="12" sm="10" class="d-flex justify-end pr-sm-16">
+              <v-btn text x-large class="mt-5" @click="feedWrite"> 글작성 <img src="@/assets/img/edit.png" alt="writing" class="write-icon"></v-btn>
             </v-col>
+            <!-- <v-col cols="1" class="d-flex align-center">
+              
+            </v-col> -->
           </v-row>
           <v-row class="d-flex justify-center align-center flex-column card">
-            <v-col cols="10" v-if="cards.length" class="">
+            <v-col cols="10" v-if="cards.length">
               <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card" ></FeedCard>
             </v-col>
-            <v-col v-else> 
-              <h2 style="text-align:center;">해당 기간에는 작성된 피드가 없어요🤷‍♂️</h2>
+            <v-col cols="10" v-else>
+              <v-row  class="d-flex justify-center">
+                <v-col cols="12">
+                  <h3 class="mt-16" style="text-align:center;">해당 기간에는 작성된 피드가 없어요🤷‍♂️</h3>
+                </v-col>
+              </v-row> 
+              <v-row  class="d-flex justify-center">
+                <v-btn text x-large class="mt-5" @click="feedWrite"> 글작성 <img src="@/assets/img/edit.png" alt="writing" class="write-icon"></v-btn>
+              </v-row>
             </v-col>
           </v-row>
-          <!-- </v-row> -->
         </v-col>
         <v-col v-if="users" cols="11" class="d-flex justify-center align-center flex-column">
           <GroupMember :groupPk="groupPk"></GroupMember>
-          <!-- <div class="temp">
-            asdasdasd
-          </div> -->
         </v-col> 
       </v-row>
     </v-container>
@@ -287,7 +282,7 @@ export default {
       .then((res)=>{
         // console.log(res.data.object)
         this.cards = res.data.object
-        console.log(this.cards)
+        // console.log(this.cards)
       })
     },
   },
@@ -378,5 +373,11 @@ export default {
 
   .date-input >>> input {
     text-align: center;
+  }
+
+  .write-icon {
+    width:20px; 
+    height:20px;
+    margin-left: 5px;
   }
 </style>

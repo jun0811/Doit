@@ -14,7 +14,7 @@
     <v-img
       v-if="null_image==image"
       height="250"
-      src="https://wonderfulmind.co.kr/wp-content/uploads/2018/05/knitting.jpg"
+      gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
     ></v-img>
     <v-img v-else :src="image"></v-img>
     <v-card-title>{{this.card.content}}</v-card-title>

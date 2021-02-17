@@ -106,21 +106,30 @@ import http from "../../http-common";
     }
   }
 
+  .member-card {
+    border-radius: 20px;
 
-.member-card {
-  border-radius: 20px;
+  }
 
-}
+  .team-info {
+    color:#F9802D;
+  }
 
-.team-info {
-  color:#F9802D;
-}
+  .content-style {
+    width: 80%;
+    min-height: 200px;
+    overflow: auto;
+    border: 1px solid #E0E0E0;
+    white-space: pre-wrap;
+  }
 
-.content-style {
-  width: 80%;
-  min-height: 200px;
-  overflow: auto;
-  border: 1px solid #E0E0E0;
-  white-space: pre-wrap;
-}
+  @media only screen and (min-width: 300px) and (max-width: 599px) {
+    .content-style {
+      width: 90%;
+      min-height: 180px;
+      overflow: auto;
+      border: 1px solid #E0E0E0;
+      white-space: pre-wrap;
+    }
+  }
 </style>
