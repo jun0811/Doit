@@ -24,6 +24,8 @@ public interface ResponseProduct {
         return getUserEmail();
     }
 
+    default String getProfile() { return getUserImage(); }
+
     @JsonIgnore
     Long getUserId();
 
@@ -32,4 +34,7 @@ public interface ResponseProduct {
 
     @JsonIgnore
     String getUserEmail();
+
+    @JsonIgnore
+    String getUserImage();
 }
