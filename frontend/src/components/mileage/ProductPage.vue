@@ -11,7 +11,7 @@
         :key="idx"
         class="d-flex justify-center pa-4"
       >
-          <v-card 
+          <v-card style="width:100%;"
           router-link :to="{name: 'ProductDetail', params: {product_id: product.id}}">
             <v-img
               :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + product.image"
@@ -42,6 +42,8 @@ import http from "../../http-common";
     data: () => ({
       products:[],
       direction:'DESC',
+      totalElements:0,
+      totalPages:0,
     }),
     props: {
       page:Number,
@@ -56,11 +58,15 @@ import http from "../../http-common";
         http.get(`/product/search?direction=${this.direction}&keyword=${this.keyword}&option=${this.option}&pg=${this.page}`)
         .then((res)=>{
           this.products = res.data.object.content
+          this.empty = res.data.object.sort.empty
         })
       }
     },
     watch: {
       keyword: function () {
+        this.getProducts()
+      },
+      page: function () {
         this.getProducts()
       }
     }
