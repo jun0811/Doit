@@ -181,27 +181,28 @@ public class FeedService {
 
     // 그룹을 탈퇴한 경우 그룹&회원의 피드 삭제
     @Transactional
-    public void deleteFeedByGroupUser(Long userPk, Long groupPk) {
+    public void deleteFeedByGroupUser(Long userPk, Long groupPk) throws Exception {
         List<Feed> feedList = feedRepository.findByGroupPkAndWriter(groupPk, userPk);
         getObject(feedList);
     }
 
     // 회원이 탈퇴했거나 강퇴된 경우 그 회원의 모든 피드 삭제
     @Transactional
-    public void deleteFeedByUser(Long userPk) {
+    public void deleteFeedByUser(Long userPk) throws Exception {
         List<Feed> feedList = feedRepository.findByWriter(userPk);
         getObject(feedList);
     }
 
     // 관리자가 그룹을 삭제했을 경우 그 그룹과 관련된 모든 피드 삭제
     @Transactional
-    public void deleteFeedByGroup(Long groupPk) {
+    public void deleteFeedByGroup(Long groupPk) throws Exception {
         List<Feed> feedList = feedRepository.findByGroupPk(groupPk);
         getObject(feedList);
     }
 
-    public void getObject(List<Feed> feedList){
+    public void getObject(List<Feed> feedList) throws Exception {
         for(Feed feed : feedList){
+            s3Service.deleteFile(feed.getMedia());
             feedUserRepository.deleteByFeedPk(feed.getFeedPk());
             commentRepository.deleteByFeedPk(feed.getFeedPk());
             feedRepository.deleteById(feed.getFeedPk());
