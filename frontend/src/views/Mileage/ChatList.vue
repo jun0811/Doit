@@ -191,8 +191,6 @@ export default {
       // console.log(this.chattings)
     })
     this.enterRoom(this.chatPk)
-    // const modal = document.querySelectorAll('dialog')
-    // console.log('modal',modal)
     this.dialog = true;
     console.log('props',this.chatPk)
   },
@@ -205,11 +203,6 @@ export default {
           objDiv.scrollTop = objDiv.scrollHeight;
       }
     },
-    // chatPk() {
-    //   console.log('notice', this.chatPk)
-    //   this.enterRoom(this.chatPk)
-    //   this.chatPk = 0;
-    // }
   },
   methods: {
     sendMessage(){

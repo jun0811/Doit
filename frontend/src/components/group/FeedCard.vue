@@ -110,7 +110,7 @@ import { notiType, sendNotify } from "../../api/notification/index"
               sendNotify({
                 "notiType": notiType.CONFIRMFEED,
                 "userPk": this.card.userPk,
-                "targetId": this.groupPk
+                "targetId": this.feedPk
               })
             }
           })

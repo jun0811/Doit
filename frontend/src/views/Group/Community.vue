@@ -147,7 +147,9 @@ const date=new Date()
 export default {
   components: { Header, Footer, GroupMember,FeedCard },
   props: {
-    groupPk: {type:String}
+    groupPk: {type:String},
+    notiFeed : Boolean,
+    notiGroup: Object,
   },
   data() {
     return {
@@ -312,6 +314,19 @@ export default {
     .then((res)=>{
       this.cards = res.data.object
     })
+    if (this.notiFeed) {
+      console.log('noti', this.groupPk)
+      this.FeedList()
+      console.log('notigroup', this.notiGroup.feedPk)
+      
+      // const tempDate = this.notiGroup.createDate
+      // const feedDate = tempDate[0] + '-' + tempDate[1] + '-' + tempDate[2]
+      // console.log('feedDate', feedDate)
+      // this.end = feedDate
+      // this.start = feedDate
+      // this.feedRead()
+
+    }
   }
 }
 </script>
