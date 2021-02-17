@@ -67,7 +67,7 @@ import { notiType, sendNotify } from "../../api/notification/index"
   export default {
     props: {
       card: Object,
-      groupPk: String, 
+      groupPk: String,
     },
     components: {
       Comment
@@ -97,6 +97,7 @@ import { notiType, sendNotify } from "../../api/notification/index"
           return true
         }
       })
+      // 알림
     },
     methods: {
       accept(){
