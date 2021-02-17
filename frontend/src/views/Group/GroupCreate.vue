@@ -7,9 +7,9 @@
               <v-divider style="width:100%;"></v-divider>
               <v-container class="d-flex flex-column">
                 <v-row >
-                  <v-col cols="4">
+                  <v-col v-if="imageUrl" cols="4">
                     <!-- 이미지 뛰우기 -->
-                    <v-img v-if="imageUrl" :src="imageUrl" class="profile-img"></v-img>
+                    <v-img :src="imageUrl" class="profile-img"></v-img>
                     <!-- <v-img v-else src="@/assets/img/logo.png" class="profile-img"> </v-img> -->
                   </v-col>
                   <v-col cols="4" class="d-flex align-end">
