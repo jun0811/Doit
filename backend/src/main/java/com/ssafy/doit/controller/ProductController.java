@@ -46,7 +46,7 @@ public class ProductController {
 
     @ApiOperation(value = "물품 등록")
     @PostMapping("/createProduct")
-    public Object createProduct(@RequestBody Product product, @RequestParam(required = false) MultipartFile file){
+    public Object createProduct(@RequestBody Product product){
         ResponseBasic result = null;
         try{
             long userPk = userService.currentUser();
@@ -56,10 +56,6 @@ public class ProductController {
             if(groupCount < 2) throw new Exception("가입 그룹 수 부족");
             product.setUser(currentUser);
 
-            if(file != null) {
-                String imgPath = s3Service.upload(product.getImage(), file);
-                product.setImage(imgPath);
-            }
             productRepository.save(product);
             result = new ResponseBasic(true, "success", product);
         }catch (Exception e){
@@ -70,9 +66,29 @@ public class ProductController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "물품 이미지 등록/수정")
+    @PostMapping("/image")
+    public Object productImage(@RequestParam Long pid, @RequestParam MultipartFile file) {
+        ResponseBasic result = null;
+        try{
+            Product product = productRepository.findById(pid).get();
+            String mediaPath = s3Service.upload(product.getImage(), file);
+            product.setImage(mediaPath);
+            productRepository.save(product);
+
+            result = new ResponseBasic(true, "success", product);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @ApiOperation(value = "물품 수정")
     @PutMapping("/{id}")
-    public Object modifyProduct(@PathVariable Long id, @RequestBody Product product, @RequestParam(required = false) MultipartFile file){
+    public Object modifyProduct(@PathVariable Long id, @RequestBody Product product){
         ResponseBasic result = null;
         try{
             long currentUser = userService.currentUser();
@@ -85,13 +101,8 @@ public class ProductController {
             origin.setImage(product.getImage());
             origin.setCategory(product.getCategory());
 
-            if(file != null){
-                String imgPath = s3Service.upload(origin.getImage(), file);
-                origin.setImage(imgPath);
-            } else origin.setImage(null);
-
             productRepository.save(origin);
-            result = new ResponseBasic(true, "success", null);
+            result = new ResponseBasic(true, "success", origin);
         }catch (Exception e){
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
