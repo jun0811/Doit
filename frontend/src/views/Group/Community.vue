@@ -175,6 +175,7 @@ export default {
     }
   },
   watch: {
+    //검색 마지막 날짜 선택시
     end(){
       this.submit = false
       const start = new Date(this.start)
@@ -195,6 +196,7 @@ export default {
         this.submit = true
       }
     },
+    //검색 날짜 시작 날짜
     start(){
       this.submit = false
       const start = new Date(this.start)
@@ -206,7 +208,6 @@ export default {
         alert('미래를 볼순 없어요!')
         this.start = `${this.year}-${String(this.month).padStart(2, "0")}-${String(this.day).padStart(2, "0")}`
         this.submit = true
-
       }
       else if (dateDiff<0){
         alert('끝 날짜 이전 날짜를 선택해주세요')
@@ -216,6 +217,7 @@ export default {
         this.submit = true
       }
     },
+    // 그룹간 이동을 할 때 데이터 변경
     groupPk(){
       this.start = new Date().toISOString().substr(0,10);
       this.end = new Date().toISOString().substr(0,10);
@@ -227,7 +229,6 @@ export default {
           this.tags = res.data.object.tags
           this.loginUser = this.$store.state.account.userpk
           this.image = res.data.object.image
-
       }),
       http.get('group/currentUserGroup')
         .then((res)=>{
@@ -252,6 +253,7 @@ export default {
     updateGroup(){
       this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
     },
+    // 피드 멤버 노출 버튼 시작
     FeedList(){
       this.feed = true
       this.users = false
@@ -260,6 +262,7 @@ export default {
       this.feed = false
       this.users = true
     },
+    // 피드 멤버 노출 버튼 끝
     feedWrite(){
       this.$router.push({name:"FeedWrite",params:{groupPk:this.groupPk}})
     },
@@ -292,12 +295,11 @@ export default {
       const pk = Number(this.groupPk)
       http.get(`feed/groupFeed?end=${this.end}&groupPk=${pk}&start=${this.start}`)
       .then((res)=>{
-        // console.log(res.data.object)
         this.cards = res.data.object
-        // console.log(this.cards)
       })
     },
   },
+  //
   created(){
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
