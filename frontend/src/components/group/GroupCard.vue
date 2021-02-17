@@ -80,6 +80,25 @@ export default {
                 alert("검색 결과 가져오기 실패")
               }
             )
+          } else {
+            categoryGroup(
+              {
+                "category":this.category,
+                "direction":"DESC",
+                "page":this.page,
+                "size":9,
+              },
+              (res) =>{
+                console.log(res)
+                if (res.status){
+                this.groups = res.data.object.content // 배열로 집어넣기
+                }
+              },
+              (err) =>{
+                console.log(err)
+                alert("검색 결과 가져오기 실패")
+              }
+            )
           }
         }
       },

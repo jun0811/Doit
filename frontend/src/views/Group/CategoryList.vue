@@ -34,6 +34,7 @@
         <!-- </div> -->
         <div v-else class="d-flex align-center flex-column">
           <v-pagination
+            class="mt-12 mb-5"
             color="orange"
             v-model="page"
             :length="pageCount"
@@ -150,6 +151,7 @@ export default {
       this.selected['hobby'] = false
       this.selected['etc'] = false
       this.selected[this.categories[v]] = true
+      this.page = 1
       // console.log(this.selected);
       // console.log(this.selected['study']);
     }
