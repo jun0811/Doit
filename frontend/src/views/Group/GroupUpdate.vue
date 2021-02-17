@@ -8,7 +8,7 @@
                 <v-container class="d-flex flex-column">
                   <v-row >
                     <v-col cols="4">
-                    <!-- 이미지 뛰우기 -->
+                    <!-- 이미지 띄우기 -->
                       <v-img v-if="imageUrl" :src="imageUrl" class="profile-img"></v-img>
                       <v-img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ image "></v-img>
                     <!-- <v-img v-else src="@/assets/img/logo.png" class="profile-img"> </v-img> -->
@@ -198,15 +198,15 @@ export default {
       hashtag : [],
       cotegoryLabel:'',
       category : "",
-      items: ['운동', '공부', '다이어트', '취미', '독서', '라이프', '그 외'],
+      items: ['운동', '공부', '다이어트', '취미', '독서', '생활습관', '기타'],
       change :{
         "운동" : "exercise",
         "공부" : "study",
         "다이어트" : "diet",
         "취미" : "hobby",
         "독서" : "book",
-        "라이프" : "life",
-        "그 외" : "etc"
+        "생활습관" : "life",
+        "기타" : "etc"
         }
       }
     },
@@ -283,7 +283,7 @@ export default {
       update(){
         const formData = new FormData()
         formData.append("file",this.file)
-        if (this.minLength && this.name &&this.submit && this.category.length>0){
+        if (this.minLength && this.name &&this.submit && this.category.length>0&&this.hashtag.length>0){
           http.put('/group/updateGroup',
           {
             "name": this.name,
@@ -296,7 +296,7 @@ export default {
           })
           .then((res) =>{
             console.log(res)
-            alert('생성완료')
+            alert('그룹 수정 완료')
             http.post(`/group/updateImg?groupPk=${this.groupPk}`,formData)
             .then((res)=>{
             console.log(res);
@@ -307,6 +307,7 @@ export default {
           if(this.name.length<1) alert('그룹명을 입력해주세요')
           else if(this.submit ===false) alert('만료 날짜를 선택해주세요')
           else if(this.category.length==0) alert('카테고리를 골라주세요')
+          else if(this.hashtag.length==0) alert('해시태그를 1개 이상 추가해주세요')
           else {alert(`그룹 소개글을 20자 이상 작성해주세요 ` )}
         }
       }
