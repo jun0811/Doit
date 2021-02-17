@@ -14,11 +14,14 @@ import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.FeedService;
 import com.ssafy.doit.service.group.GroupUserService;
 import com.ssafy.doit.service.S3Service;
+import com.ssafy.doit.service.jwt.CookieUtil;
+import com.ssafy.doit.service.jwt.RedisUtil;
 import com.ssafy.doit.service.user.UserService;
 import com.ssafy.doit.service.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
@@ -44,6 +48,10 @@ public class UserController {
 
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private final CookieUtil cookieUtil;
+    @Autowired
+    private final RedisUtil redisUtil;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -63,8 +71,7 @@ public class UserController {
     // 로그인
     @ApiOperation(value = "로그인")
     @PostMapping("/login")
-    public Object login(@RequestBody RequestLoginUser userReq) {
-        HttpHeaders httpHeaders = new HttpHeaders();
+    public Object login(@RequestBody RequestLoginUser userReq, HttpServletResponse response) {
         ResponseBasic result = new ResponseBasic();
 
         Optional<User> userOpt = userRepository.findByEmail(userReq.getEmail());
@@ -96,12 +103,23 @@ public class UserController {
                                 .mileage("+50")
                                 .user(user).build());
                     }
+
+                    final String token = jwtUtil.generateToken(user.getEmail());
+                    final String refresh = jwtUtil.generateRefreshToken(user.getEmail());
+
+                    Cookie accessToken = cookieUtil.createCookie(JwtUtil.ACCESS_TOKEN_NAME, token);
+                    Cookie refreshToken = cookieUtil.createCookie(JwtUtil.REFRESH_TOKEN_NAME, refresh);
+                    redisUtil.setDataExpire(refresh, user.getEmail(), JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
+
+                    response.addCookie(accessToken);
+                    response.addCookie(refreshToken);
+
                     result = new ResponseBasic(true, "success", user);
-                    httpHeaders.set("accessToken", jwtUtil.generateToken(user));
                 }
             }
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
-        return ResponseEntity.ok().headers(httpHeaders).body(result);
     }
 
     // 로그아웃
