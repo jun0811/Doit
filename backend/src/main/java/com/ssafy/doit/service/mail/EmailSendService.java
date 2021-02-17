@@ -40,16 +40,18 @@ public class EmailSendService {
         //인증메일 보내기
         try {
             MailUtil sendMail = new MailUtil(mailSender);
-            sendMail.setSubject("회원가입 이메일 인증");
-            sendMail.setText(new StringBuffer().append("<h1>[이메일 인증]</h1>")
-                    .append("<p>아래 링크를 클릭하시면 이메일 인증이 완료됩니다.</p>")
-                    .append("<a href='http://i4c108.p.ssafy.io:80/user/complete?email=") // *** 나중에 뷰로 보내기
+            sendMail.setSubject("Doit 회원가입 이메일 인증");
+            sendMail.setText(new StringBuffer()
+                    .append("<h1> Doit 회원가입 이메일 인증</h1>")
+                    .append("<h3> 함께 만들어가는 목표 관리 커뮤니티 <strong>Doit</strong> 입니다. </h3>")
+                    .append("<h4> 아래 링크를 클릭하시면 가입완료 페이지로 이동됩니다. </h4>")
+                    .append("<a href='http://i4c108.p.ssafy.io:80/user/complete?email=")
                     .append(email)
                     .append("&authKey=")
                     .append(authKey)
                     .append("' target='_blenk'>회원가입 이메일 인증 확인</a>")
                     .toString());
-            sendMail.setFrom("buhee1029@gmail.com", "관리자");
+            sendMail.setFrom("buhee1029@gmail.com", "Doit 관리자");
             sendMail.setTo(email);
             sendMail.send();
         } catch (Exception e) {
@@ -65,17 +67,18 @@ public class EmailSendService {
         //인증메일 보내기
         try {
             MailUtil sendMail = new MailUtil(mailSender);
-            sendMail.setSubject("비밀번호 변경 링크");
-            sendMail.setText(new StringBuffer().append("<h1>[비밀번호 변경을 위한 이메일 인증]</h1>")
-                    .append("<p>아래 링크를 클릭하시면 비밀번호 변경페이지로 이동됩니다.</p>")
-                    .append("<a href='http://i4c108.p.ssafy.io:80/user/pwchange?email=") // 비밀번호 변경 페이지로 이동
-//                    .append("<a href='http://localhost:3000/user/pwchange?email=")
+            sendMail.setSubject("Doit 비밀번호 변경 이메일 인증");
+            sendMail.setText(new StringBuffer()
+                    .append("<h1> Doit 비밀번호 변경 이메일 인증 </h1>")
+                    .append("<h3> 함께 만들어가는 목표 관리 커뮤니티 <strong>Doit</strong> 입니다. </h3>")
+                    .append("<h4> 아래 링크를 클릭하시면 비밀번호 변경페이지로 이동됩니다. </h4>")
+                    .append("<a href='http://i4c108.p.ssafy.io:80/user/pwchange?email=")
                     .append(email)
                     .append("&authKey=")
                     .append(authKey)
-                    .append("' target='_blenk'>비밀번호 변경 이메일 인증 확인</a>")
+                    .append("' target='_blenk'> 비밀번호 변경 이메일 인증 확인</a>")
                     .toString());
-            sendMail.setFrom("buhee1029@gmail.com", "관리자");
+            sendMail.setFrom("buhee1029@gmail.com", "Doit 관리자");
             sendMail.setTo(email);
             sendMail.send();
         } catch (MessagingException e) {
