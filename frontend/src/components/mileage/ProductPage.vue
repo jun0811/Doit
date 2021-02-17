@@ -12,10 +12,12 @@
         class="d-flex justify-center pa-4"
       >
           <v-card 
-          router-link :to="{name: 'ProductDetail', params: {product_id: product.id}}">
+            router-link :to="{name: 'ProductDetail', params: {product_id: product.id}}"
+            height="100%" width="100%"
+          >
             <v-img
               :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + product.image"
-              class="white--text align-end product-image"
+              class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               height="200px"
             >
