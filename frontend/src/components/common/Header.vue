@@ -380,8 +380,8 @@ export default {
         this.CONNECT()
       },
       moveToChat(chatPk) {
-        console.log(chatPk)
-        this.$router.push({ name: 'ChatList', props : {chatPk:chatPk}})
+        console.log('moveToChat', chatPk)
+        this.$router.push({ name: 'ChatList', params : {chatPk:chatPk}})
       },
       moveToGroup(groupPk) {
         // console.log(groupPk)
