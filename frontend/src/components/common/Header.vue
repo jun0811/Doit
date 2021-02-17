@@ -386,7 +386,7 @@ export default {
         this.$router.push({ name: 'Community', params: { groupPk: String(groupPk) }})
       },
       moveToGroupFeed(notiInfo) {
-        this.$router.push({ name: 'Community', params: { groupPk: notiInfo.groupPk, notiFeed: true, notiInfo: notiInfo }})
+        this.$router.push({ name: 'Community', params: { groupPk: String(notiInfo.groupPk), notiFeed: true, notiInfo: notiInfo }})
       },
       noticeConfirm(notice) {
         if (notice.notiType==="1") {
@@ -397,8 +397,13 @@ export default {
           this.moveToGroup(groupPk) 
         } else {
           let notiInfo = notice.target
-          this.moveToGroupFeed(notiInfo) 
+          this.moveToGroupFeed(notiInfo)
         }
+        http.get(`noti/confirm?id=${notice.id}`)
+        .then((res)=>{
+          console.log('res', res)
+        })
+        console.log('notice',notice)
       },
       signup() {
         this.$router.push("/user/join")
