@@ -48,7 +48,6 @@ public class NotiService {
     }
 
     public Notification setTarget(Notification n) {
-        System.out.println(n);
         Long id = n.getTargetId();
 
         if(n.getNotiType() == NotiType.NEWCHAT && chatRoomRepository.findById(id).isPresent()){
