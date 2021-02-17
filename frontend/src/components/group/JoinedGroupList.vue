@@ -48,7 +48,6 @@ export default {
         http.get('/group/currentUserGroup')
           .then((res)=>{
           this.items = res.data.object;
-          console.log(res.data.object)
       })
     }    
   },

@@ -4,16 +4,16 @@
   <!-- <NavBar></NavBar> -->
     <v-container class="container-width">
         <v-row>
-          <v-col class="img-wrapper">
-            <img class="product-img" :src="image" alt="product image">
+          <v-col v-if="image" class="img-wrapper">
+            <img class="product-img" :src="defaultAddress+image" alt="product image">
           </v-col>
         </v-row>
         <v-row class="my-3 px-6 d-flex align-center">
           <v-col class="d-flex align-center">
             <span class="profile-wrapper pa-0 d-flex ">
-              <img
+              <img 
               class="profile-img" 
-              :src="profile"
+              :src="defaultAddress + profile"
               alt="글쓴이 이미지"
               >
             </span>
@@ -212,11 +212,10 @@ export default {
     this.id = this.$store.state.account.userpk;
     http.get(`/product/${this.product_id}`)
     .then((res)=>{
-      console.log(res);
       this.product = res.data.object
       this.seller = this.product.user_pk
-      this.image = this.defaultAddress + this.product.image
-      this.profile = this.defaultAddress + this.product.profile
+      this.image =  this.product.image
+      this.profile = this.product.profile
     })   
     // var objDiv = document.getElementById("scroll"); 
     // objDiv.scrollTop = objDiv.scrollHeight;

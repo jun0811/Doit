@@ -7,4 +7,11 @@ function createProduct(params, success, fail) {
   .catch(fail);
 } 
 
-export { createProduct }
+function updateProduct(product_id, params, success, fail) {
+  http
+  .put(`product/${product_id}`,params)
+  .then(success)
+  .catch(fail);
+} 
+
+export { createProduct, updateProduct }
