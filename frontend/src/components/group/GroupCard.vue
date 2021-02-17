@@ -60,12 +60,13 @@ export default {
     watch: {
       page:{
         handler: function () {
+          console.log('page', this.category, this.page)
           if (this.category==null) {
             searchGroup(
               {
-                "direction":"ASC",
+                "direction":"DESC",
                 "page":this.page,
-                "size":1,
+                "size":9,
                 "tag":this.word,
                 "token": ""
               },
@@ -86,7 +87,7 @@ export default {
         handler: function () {
           searchGroup(
             {
-              "direction":"ASC",
+              "direction":"DESC",
               "page":this.page,
               "size":9,
               "tag":this.word,
@@ -109,7 +110,7 @@ export default {
         categoryGroup(
           {
             "category":this.category,
-            "direction":"ASC",
+            "direction":"DESC",
             "page":this.page,
             "size":9,
           },
@@ -133,7 +134,7 @@ export default {
       if (this.category==undefined) {
         searchGroup(
           {
-            "direction":"ASC",
+            "direction":"DESC",
             "page":this.page,
             "size":9,
             "tag":this.word,
@@ -154,7 +155,7 @@ export default {
         categoryGroup(
           {
             "category":this.category,
-            "direction":"ASC",
+            "direction":"DESC",
             "page":this.page,
             "size":9,
           },

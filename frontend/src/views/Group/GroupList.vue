@@ -6,7 +6,7 @@
         <br>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
         <div v-if="!empty" class="pl-sm-16">
-          총 <span style="color: #F9802D">{{ length }}</span> 개의 검색 결과가 있습니다.
+          총 <span style="color: #F9802D">{{ contentlength }}</span> 개의 검색 결과가 있습니다.
         </div>
         <GroupCard :page="page" :word="word"></GroupCard>
         <div v-if="empty" class="d-flex align-center flex-column">
@@ -25,6 +25,7 @@
             v-model="page"
             :length="pageCount"
             :total-visible="7"
+            class="mt-12 mb-5"
           ></v-pagination>
           <h4 class="mt-6">'{{ word }}' 관련 그룹을 만들고 싶으시다면?</h4>
           <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
@@ -49,22 +50,22 @@ import { searchGroup } from "@/api/group/index.js"
 export default {
   name: 'GroupList',
   props:{
-    word:{ type: String, default: ""}
+    word:{ type: String, default: ""},
+    page: Number,
   },
     data() {
         return {
           results: {},
-          page:1,
           pageCount:0,
           groups:[],
           empty: '',
-          length: 0,
+          contentlength: 0,
         }
     },
   updated(){
     searchGroup(
       {
-        "direction":"ASC",
+        "direction":"DESC",
         "page":this.page,
         "size":9,
         "tag":this.word,
@@ -74,8 +75,9 @@ export default {
         console.log(res)
         this.groups = res.data.object.content
         this.pageCount = parseInt(res.data.object.totalPages)
-        this.empty = res.data.object.empty
-        this.length = res.data.object.content.length
+        this.empty = res.data.object.sort.empty
+        this.contentlength = res.data.object.totalElements
+        
         }
       },
       (err) =>{
@@ -87,7 +89,7 @@ export default {
   created() {
     searchGroup(
       {
-        "direction":"ASC",
+        "direction":"DESC",
         "page":this.page,
         "size":9,
         "tag":this.word,
