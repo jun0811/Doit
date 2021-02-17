@@ -98,8 +98,9 @@ public class GroupHashTagService {
     @Transactional
     public void updateGroup(Long userPk, Group groupReq) throws Exception {
         Optional<Group> group = groupRepository.findById(groupReq.getGroupPk());
-
-        if(userPk == group.get().getLeader()){
+        int leader = group.get().getLeader().intValue();
+        if(userPk == leader){
+            System.out.println(userPk +" "+ group.get().getLeader());
             group.ifPresent(selectGroup ->{
                 selectGroup.setName(groupReq.getName());
                 selectGroup.setContent(groupReq.getContent());
