@@ -171,6 +171,8 @@ public class FeedService {
     public void deleteFeed(Long userPk, Long feedPk) throws Exception {
         Optional<Feed> feed = feedRepository.findById(feedPk);
         if(userPk == feed.get().getWriter()) {
+            feedUserRepository.deleteByFeedPk(feedPk);
+            commentRepository.deleteByFeedPk(feedPk);
             feed.ifPresent(selectFeed -> {
                 try {
                     s3Service.deleteFile(selectFeed.getMedia());
@@ -179,8 +181,6 @@ public class FeedService {
                 }
                 feedRepository.delete(selectFeed);
             });
-            feedUserRepository.deleteByFeedPk(feedPk);
-            commentRepository.deleteByFeedPk(feedPk);
         } else throw new Exception("피드 작성자가 아닙니다.");
     }
 
@@ -256,7 +256,7 @@ public class FeedService {
         User writer = userRepository.findById(writerPk).get();
         LocalDate date = feed.getCreateDate().toLocalDate();
         int cnt = feed.getAuthCnt();
-        int total = group.getTotalNum();
+        int total = group.getTotalNum() - 1;
         if (cnt >= Math.round(total * 0.1)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
             feedRepository.save(feed);
