@@ -77,6 +77,7 @@
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
+import { mapActions } from 'vuex'
 
 export default {
   name: "Delete",
@@ -96,17 +97,23 @@ export default {
     this.email = this.$store.getters.getEmail
   },
   methods: {
+    ...mapActions(['LOGOUT', 'DISCONNECT']),
+
     deleteUser () {
       if(!this.checkbox) {
         alert("탈퇴 안내를 확인하고 동의해 주세요.")
       }
       else {
         http.put('/user/deleteUser')
-        .then((res) => {
-          console.log(res)
+
+        this.LOGOUT()
+        .then((response) => {
+          console.log(response)
+          this.DISCONNECT();
           this.$router.push("/user/delete/complete")
         })
       }
+
     }
   }
 }
