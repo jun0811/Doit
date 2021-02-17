@@ -387,13 +387,20 @@ export default {
         // console.log(groupPk)
         this.$router.push({ name: 'Community', params: { groupPk: groupPk }})
       },
+      moveToGroupFeed(group) {
+        this.$router.push({ name: 'Community', params: { groupPk: group.groupPk, notiFeed: true, notiGroup: group }})
+      },
       noticeConfirm(notice) {
         if (notice.notiType==="1") {
           let chatPk = notice.target.id
           this.moveToChat(chatPk)
-        } else {
+        } else if (notice.notiType === "3" || notice.notiType ==="4"){
           let groupPk = notice.target.groupPk
           this.moveToGroup(groupPk) 
+        } else {
+          console.log('com', notice.target)
+          let group = notice.target
+          this.moveToGroupFeed(group) 
         }
       },
       signup() {
