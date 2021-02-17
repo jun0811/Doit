@@ -153,6 +153,7 @@ export default {
   },
   data() {
     return {
+      full: false,
       image: "",
       menu2: false,
       menu1: false,
@@ -258,12 +259,17 @@ export default {
     feedWrite(){
       this.$router.push({name:"FeedWrite",params:{groupPk:this.groupPk}})
     },
+    // 그룹가입
     joinGroup(){
     http.get(`group/joinGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
+      console.log(res)
       if(res.data.status){
         alert('그룹에 가입하였습니다.🐱‍🚀')
-        this.$router.go()
+        // this.$router.go()
+      }else{
+        if(res.data.data =="인원이 가득 찼습니다.") alert('가입인원이 최대입니다.')
+        else alert('탈퇴하였가나 추방당한 그룹입니다.')
       }
       })
     },
