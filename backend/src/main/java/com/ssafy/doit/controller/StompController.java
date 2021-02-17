@@ -2,6 +2,7 @@ package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.group.Group;
 import com.ssafy.doit.model.group.GroupUser;
+import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.store.ChatMessage;
 import com.ssafy.doit.model.notification.NotiType;
 import com.ssafy.doit.model.notification.Notification;
@@ -32,6 +33,8 @@ public class StompController {
     private final RedisTemplate<String, ChatMessage> redisTemplate;
     @Autowired
     private final NotiService notiService;
+    @Autowired
+    private final GroupRepository groupRepository;
 
     private final SimpMessagingTemplate template;
     private final String MESSAGE_KEY = "Room_idx:";
@@ -55,7 +58,9 @@ public class StompController {
         notification = notiService.setTarget(notification);
 
         if(notification.getNotiType() == NotiType.NEWFEED) {
-            Group group = (Group) notification.getTarget();
+            ResMyFeed feed = (ResMyFeed)notification.getTarget();
+            Group group = groupRepository.findById(feed.getGroupPk()).get();
+
             for(GroupUser g : group.getUserList()){
                 Long user = g.getUser().getId();
                 if(user == currentUser) continue;
