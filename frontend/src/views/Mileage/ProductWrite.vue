@@ -62,7 +62,7 @@
               <!-- 이미지 첨부 버튼 -->
               <div>
                 <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
-                <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">그룹 이미지</v-btn>
+                <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">물품 이미지</v-btn>
               </div>
             </v-col>
             <v-col v-if="imageUrl" cols="4">
@@ -139,16 +139,20 @@ export default {
             "mileage": this.product.mileage,
           },
           (res) =>{
-            if (res.status){
-              // console.log(res);
-              alert("물품을 등록했습니다.")
+            if (res.data.status){
+              console.log(res);
               http.post(`product/image?pid=${res.data.object.id}`, formData)  
-              this.$router.push(`/mileageshop/product/${res.data.object.id}`)
+              alert("물품을 등록했습니다.")
+              // this.$router.push(`/mileageshop/product/${res.data.object.id}`)
+              this.$router.push(`/mileageshop`)
+            }
+            else {
+              alert('가입한 그룹 수가 2개 이상이어야 물품을 등록할 수 있습니다.')
             }
           },
           (err) =>{
             console.log(err)
-            alert("등록 실패")
+            alert("물품 등록 실패")
           }
         )
       }

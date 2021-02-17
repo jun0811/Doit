@@ -140,9 +140,10 @@ const routes = [
     component: ProductWrite,
   },
   {
-    path: "/mileageshop/productupdate",
+    path: "/mileageshop/productupdate/:product_id",
     name: "ProductUpdate",
     component: ProductUpdate,
+    props: true,
   },
   {
     path: "/chatlist",

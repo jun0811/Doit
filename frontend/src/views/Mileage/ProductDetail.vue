@@ -34,7 +34,7 @@
                 </v-btn>
               </template>
               <v-list>
-                <v-list-item @click="modifyProduct">
+                <v-list-item @click="updateProduct">
                   <v-list-item-title>수정하기</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="deleteProduct">
@@ -169,9 +169,7 @@
 
 <script>
 import Header from "@/components/common/Header.vue";
-// import NavBar from "@/components/common/NavBar.vue";
 import Footer from "@/components/common/Footer.vue";
-// import ChatRoom from "@/components/mileage/ChatRoom.vue";
 import http from "../../http-common";
 import { notiType, sendNotify } from '../../api/notification/index'
 
@@ -202,13 +200,13 @@ export default {
       roomCheck: false,
       bottom_flag: true,
       subscribe: '',
-      default: 'http://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
+      defaultAddress: 'http://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
       image: '',
       profile: ''
     }
   },
   props:{
-    product_id: String,
+    product_id: Number,
   },
   created() {
     this.id = this.$store.state.account.userpk;
@@ -217,8 +215,8 @@ export default {
       console.log(res);
       this.product = res.data.object
       this.seller = this.product.user_pk
-      this.image = this.default + this.product.image
-      this.profile = this.default + this.product.profile
+      this.image = this.defaultAddress + this.product.image
+      this.profile = this.defaultAddress + this.product.profile
     })   
     // var objDiv = document.getElementById("scroll"); 
     // objDiv.scrollTop = objDiv.scrollHeight;
@@ -309,6 +307,9 @@ export default {
         console.log(res)
         this.$router.push('/mileageshop')
       })
+    },
+    updateProduct() {
+      this.$router.push({name:"ProductUpdate",params:{product_id:this.product_id}})
     }
   }
 };

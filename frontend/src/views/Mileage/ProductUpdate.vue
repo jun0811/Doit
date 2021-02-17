@@ -9,13 +9,13 @@
           tile
           class="content-card pt-3 pb-6"
         >
-          <h3 class="my-4" style="width:100%;">물품 등록</h3>
+          <h3 class="my-4" style="width:100%;">물품 수정</h3>
           <v-divider style="width:100%;"></v-divider>
           <v-row class="d-flex flex-column mt-3" >
             <v-col cols="12">
               <v-text-field
                 hide-details=""
-                solo
+                outlined
                 :label="title"
                 clearable
                 v-model="product.title"
@@ -57,14 +57,19 @@
             ></v-textarea>
           </v-row>
           <v-row class="my-2">
-            <v-col cols="12">사진 첨부<span>(최대 5장)</span></v-col>
-            <v-file-input
-              chips
-              small-chips
-              truncate-length="15"
-              hide-details=""
-              v-on:change="product.image"
-            ></v-file-input>
+            <v-col cols="12">사진 첨부</v-col>
+            <v-col cols="12" class="d-flex">
+              <!-- 이미지 첨부 버튼 -->
+              <div>
+                <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
+                <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">물품 이미지</v-btn>
+              </div>
+            </v-col>
+            <v-col v-if="imageUrl" cols="4">
+              <!-- 이미지 뛰우기 -->
+              <v-img :src="imageUrl" class="profile-img"></v-img>
+              <!-- <v-img v-else src="@/assets/img/logo.png" class="profile-img"> </v-img> -->
+            </v-col>
           </v-row>
         </v-card>
 
@@ -83,7 +88,7 @@
 <script>
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
-import { createProduct } from "@/api/mileage/index.js"
+// import http from "../../http-common"
 
 export default {
   name: "ProductUpdate",
@@ -91,12 +96,19 @@ export default {
     Header,
     Footer,
   },
+  props: {
+    product_id: Number,
+  },
   data() {
     return {
+      file: {},
+      image: "",
+      imageUrl: null,
       title : "상품명 및 제목을 입력하세요.",
       categories : ['음식', '책', '운동', '카테고리4', '카테고리5', ],
       mileage: "300",
       product : {
+        id: 0,
         category : '',
         content : '',
         image : '',
@@ -106,29 +118,54 @@ export default {
       },
     }
   },
+  created() {
+    console.log(this.product_id);
+    // console.log(this.product.id);
+    // http.get(`/product/${this.product_id}`)
+    // .then((res) => {
+    //   console.log(res);
+    // })
+  },
   methods: {
+    onImages(e) {
+        this.file = e.target.files[0];
+        this.imageUrl = URL.createObjectURL(this.file)
+      },
+      onClickImageUpload() {
+        this.$refs.imageInput.click();
+      },
     write() {
-      createProduct(
-        {
-          "category": this.product.category,
-          "content":  this.product.content,
-          "image": this.product.image,
-          "title":  this.product.title,
-          "id":0,
-          "mileage": this.product.mileage,
-        },
-        (res) =>{
-          if (res.status){
-          alert("물품을 등록했습니다.")
-          console.log(res)
-          // this.$router.push('/') // 어디로 보낼지 정하고 변경!
-          }
-        },
-        (err) =>{
-          console.log(err)
-          alert("등록 실패")
-        }
-      )
+      const formData = new FormData()
+      formData.append("file",this.file)
+      if(this.imageUrl==null) {
+        alert("사진 첨부는 필수입니다.")
+      }
+      else {
+        // createProduct(
+        //   {
+        //     "category": this.product.category,
+        //     "content":  this.product.content,
+        //     "image": this.product.image,
+        //     "title":  this.product.title,
+        //     "mileage": this.product.mileage,
+        //   },
+        //   (res) =>{
+        //     if (res.data.status){
+        //       // console.log(res);
+        //       alert("물품을 등록했습니다.")
+        //       http.post(`product/image?pid=${res.data.object.id}`, formData)  
+        //       this.$router.push(`/mileageshop/product/${res.data.object.id}`)
+        //     }
+        //     else {
+        //       alert('가입한 그룹 수가 2개 이상이어야 물품을 등록할 수 있습니다.')
+        //     }
+        //   },
+        //   (err) =>{
+        //     console.log(err)
+        //     alert("물품 등록 실패")
+        //   }
+        // )
+      }
     },
   }
 };
@@ -140,8 +177,10 @@ export default {
   width:100%;
 }
 
-
-
+  .profile-img{
+    min-width: 350px;
+    min-height: 150px;
+  }
 .content-card {
   width:100%;
   padding : 30px;
