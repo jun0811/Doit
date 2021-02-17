@@ -10,6 +10,7 @@ import com.ssafy.doit.repository.*;
 import com.ssafy.doit.repository.feed.CommitUserRepository;
 import com.ssafy.doit.repository.group.GroupRepository;
 import com.ssafy.doit.repository.group.GroupUserRepository;
+import com.ssafy.doit.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,8 @@ public class GroupUserService {
     private MileageRepository mileageRepository;
     @Autowired
     private CommitUserRepository commitUserRepository;
-
+    @Autowired
+    private S3Service s3Service;
     // 가입 그룹 리스트
     @Transactional
     public List<ResGroupList> findGroupByUserPk(Long userPk){
@@ -154,7 +156,9 @@ public class GroupUserService {
             groupRepository.save(group);
         }
         commitUserRepository.deleteByUserPk(userPk);
-
+        //탈퇴 시 이미지 삭제 - 서버 & 디비
+        s3Service.deleteFile(user.getImage());
+        user.setImage(null);
         user.setUserRole(UserRole.WITHDRAW);
         userRepository.save(user);
         return resList;

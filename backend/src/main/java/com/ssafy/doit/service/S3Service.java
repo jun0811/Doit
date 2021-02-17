@@ -83,5 +83,16 @@ public class S3Service {
         System.out.println(s3Client.getUrl(bucket, fileName).toString());
         return fileName;
     }
+    public void deleteFile(String currentFilePath) throws Exception {
 
+        // key가 존재하면 기존 파일은 삭제
+        if ("".equals(currentFilePath) == false && currentFilePath != null) {
+            boolean isExistObject = s3Client.doesObjectExist(bucket, currentFilePath);
+
+            if (isExistObject == true) {
+                s3Client.deleteObject(bucket, currentFilePath);
+            }
+        }
+
+    }
 }
