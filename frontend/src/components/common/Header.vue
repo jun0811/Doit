@@ -215,15 +215,24 @@
         <v-menu
           bottom
           offset-y
+           v-if="this.$store.state.account.accessToken"
         >
-          <template v-slot:activator="{ on, attrs }">
+          <template v-slot:activator="{ on, attrs }" >
             <v-btn
               text
-              class="ma-2"
               v-bind="attrs"
               v-on="on"
             >
-            <font-awesome-icon :icon="['far', 'bell']" />
+            <div v-if="notiCount" v-on="notiCount">
+              <v-badge :content="notiCount" color="pink" offset-x="-2" offset-y="-2"></v-badge>
+              <font-awesome-icon  class="bell fa-lg" icon="bell"/>
+            </div>
+            <div v-else>
+              <font-awesome-icon class="bell fa-lg" :icon="['far', 'bell']" />
+            </div>
+
+
+
             </v-btn>
           </template>
           <v-list max-height="400">
@@ -297,6 +306,7 @@ export default {
       password: "",
       nickname: "",
       img:"",
+      notiCount: 0,
       items: [
         {
           action: '',
@@ -318,7 +328,6 @@ export default {
       drawer: null,
       miniVariant: true,
       noti: [], 
-      noticeList :[],
     }),
     computed: {
       emailErrors () {
@@ -347,10 +356,12 @@ export default {
             http.get('/noti/getList')
             .then((res) => {
                 this.noti = res.data.object;
+                this.notiCount = this.noti.length
             })
           })
         }
       }
+
     },
     created(){
       // console.log(this.$store.state.account.accessToken)
@@ -361,13 +372,13 @@ export default {
           http.get('/group/currentUserGroup')
             .then((res)=>{
             this.items[0].items = res.data.object;
-            console.log(this.items[0].items)
           })
 
           http.get('/noti/getList')
           .then((res) => {
               this.noti = res.data.object;
               console.log(this.noti)
+              this.notiCount = this.noti.length
           })
           // 소켓 연결
           this.socketConnect();
@@ -380,7 +391,7 @@ export default {
         this.CONNECT()
       },
       moveToChat(chatPk) {
-        this.$router.push({ name: 'ChatList', params : {chatPk:chatPk}})
+        this.$router.push({ name: 'ChatList', params : {chatPk:String(chatPk)}})
       },
       moveToGroup(groupPk) {
         this.$router.push({ name: 'Community', params: { groupPk: String(groupPk) }})
@@ -389,6 +400,10 @@ export default {
         this.$router.push({ name: 'Community', params: { groupPk: String(notiInfo.groupPk), notiFeed: true, notiInfo: notiInfo }})
       },
       noticeConfirm(notice) {
+
+        const index = this.noti.indexOf(notice)
+        this.noti.splice(index, 1)
+        this.notiCount = this.notiCount -1
         if (notice.notiType==="1") {
           let chatPk = notice.target.id
           this.moveToChat(chatPk)
@@ -401,9 +416,9 @@ export default {
         }
         http.get(`noti/confirm?id=${notice.id}`)
         .then((res)=>{
+          this.noti = res.data.obejct
           console.log('res', res)
         })
-        console.log('notice',notice)
       },
       signup() {
         this.$router.push("/user/join")
@@ -548,6 +563,12 @@ export default {
     width: 100px;
     height: 100px;
   }
+
+  .bell {
+    color : #F9802D;
+  }
+
+
 </style>
 
 

@@ -23,7 +23,6 @@ import http from "../../http-common";
       http.get(`feed/userFeed?&userPk=${sessionStorage.getItem("userpk")}`)
       .then((res)=>{
         this.cards = res.data.object
-        console.log('card', this.cards)
       })
     }
     ,

@@ -74,7 +74,6 @@ import http from '../../http-common'
       check: false
     }),
     created(){
-      console.log(this.card)
       this.check = this.card.authCheck
     },
     methods: {

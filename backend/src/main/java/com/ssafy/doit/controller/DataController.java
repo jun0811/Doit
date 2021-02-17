@@ -52,10 +52,12 @@ public class DataController {
     public Object wordCloud(){
         ResponseBasic result = null;
         try {
-            List<HashTag> list = hashTagRepository.findAll();
+            List<HashTag> list = hashTagRepository.findTop50ByOrderByCntDesc();
             Map<String, Integer> resWC = new HashMap<>();
             for (HashTag ht : list) {
-                resWC.put(ht.getName(), ht.getCnt());
+                if(ht.getCnt() > 0) {
+                    resWC.put(ht.getName(), ht.getCnt());
+                }
             }
             result = new ResponseBasic(true,"success", resWC);
         }catch(Exception e){

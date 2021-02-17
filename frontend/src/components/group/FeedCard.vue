@@ -34,9 +34,9 @@
       </v-row>
       <v-row class="d-flex justify-space-between  align-center mx-3">
         <!-- 본인이면 피드 수정 --> 
-        <div v-if="!writer && feedType">
-          <v-btn outlined class="my-3 btn" v-if="!auth" @click="accept" >인증</v-btn>
-          <span class="my-3" v-else >인증을 해주셨습니다.</span>
+        <div v-if="!writer && feedType ">
+          <v-btn outlined class="my-3 btn" v-if="!auth && !check" @click="accept" >인증</v-btn>
+          <span class="my-3" v-else-if="auth" >인증을 해주셨습니다.</span>
           <!-- 다른 유저면 인증/미인증으로 구분 -->
         </div>
        
@@ -116,7 +116,12 @@ import { notiType, sendNotify } from "../../api/notification/index"
       accept(){
         http.get(`feed/authCheckFeed?feedPk=${this.card.feedPk}`)
         .then((res)=> {
-          this.auth= true
+          console.log(res)
+          if(res.data.status){
+            this.auth= true
+          }else{
+            alert("이미 인증된 피드입니다.")
+          }
           if(res.data.object.authCheck){
             console.log(this.card.userPk + " " + this.card.groupPk)
             sendNotify({
