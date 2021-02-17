@@ -34,8 +34,7 @@
           </v-card>
       </v-col>
     </v-row>
-
-                  <!-- <span v-for="(tag,idx) in group.tags" :key="idx" class="mr-2"># {{tag}}</span> -->
+    <!-- <span v-for="(tag,idx) in group.tags" :key="idx" class="mr-2"># {{tag}}</span> -->
    
   </v-container >
 </template>

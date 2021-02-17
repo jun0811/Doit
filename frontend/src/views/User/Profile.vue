@@ -34,7 +34,7 @@
       <!-- 프로필 버튼 시작 -->
       <v-row>
         <v-col class="mx-3 mx-sm-16" > 
-          <v-row class="d-flex justify-space-around">
+          <v-row class="d-flex justify-center">
             <v-btn 
               text
               @click="moveChatList"

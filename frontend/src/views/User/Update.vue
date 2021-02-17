@@ -74,8 +74,7 @@
                 <v-col cols="8" sm="6">
                   <div class="pt-2 text-center pt-0 d-flex justify-start">
                     <v-btn @click="changePW" outlined text rounded class="mt-0"
-                      >비밀번호 변경 ></v-btn
-                    >
+                      >비밀번호 변경 ></v-btn>
                   </div>
                 </v-col>
               </v-row>
