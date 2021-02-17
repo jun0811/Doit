@@ -266,7 +266,7 @@ export default {
       console.log(res)
       if(res.data.status){
         alert('그룹에 가입하였습니다.🐱‍🚀')
-        // this.$router.go()
+        this.$router.go()
       }else{
         if(res.data.data =="인원이 가득 찼습니다.") alert('가입인원이 최대입니다.')
         else alert('탈퇴하였가나 추방당한 그룹입니다.')

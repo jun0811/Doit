@@ -17,7 +17,9 @@
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
     ></v-img>
     <v-img v-else :src="image"></v-img>
-    <v-card-title>{{this.card.content}}</v-card-title>
+    <span v-if="!feedType" class="ma-3 text-h6 title">정보</span>
+    <span v-else class="ma-3 text-h6 title">인증</span>
+    <v-card-title>{{this.card.content}} </v-card-title>
 
     <v-card-text>
       <v-row>
@@ -31,11 +33,12 @@
       </v-row>
       <v-row class="d-flex justify-space-between  align-center mx-3">
         <!-- 본인이면 피드 수정 --> 
-        <div v-if="!writer">
+        <div v-if="!writer && feedType">
           <v-btn outlined class="my-3 btn" v-if="!auth" @click="accept" >인증</v-btn>
           <span class="my-3" v-else >인증을 해주셨습니다.</span>
           <!-- 다른 유저면 인증/미인증으로 구분 -->
         </div>
+       
         <div v-if="writer">
           <v-btn outlined class="my-3 mr-5 btn green-btn" @click="feedUpdate">피드 수정 </v-btn>
           <v-btn outlined class="my-3 btn red-btn" @click="feedDelete">피드 삭제 </v-btn>    
@@ -67,7 +70,7 @@ import { notiType, sendNotify } from "../../api/notification/index"
   export default {
     props: {
       card: Object,
-      groupPk: String, 
+      groupPk: String,
     },
     components: {
       Comment
@@ -80,12 +83,13 @@ import { notiType, sendNotify } from "../../api/notification/index"
       writer: false, // 본인 여부 판단 변수
       check: false,
       show:false,
+      feedType: false,
       null_image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/null",
       image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/" 
     }),
     created(){
       this.image = this.image + this.card.media
-      console.log(this.image)
+      this.feedType = this.card.feedType === "true" ? true:false
       this.check= (this.card.authCheck ==='true' ? true:false) 
       // 본인 여부
       if(this.card.userPk == sessionStorage.getItem("userpk")) {
@@ -97,24 +101,22 @@ import { notiType, sendNotify } from "../../api/notification/index"
           return true
         }
       })
+      // 알림
     },
     methods: {
       accept(){
-        if(this.card.writer == this.$store.getters.getName) console.log(this.card.feedPk)
-        else{
-          http.get(`feed/authCheckFeed?feedPk=${this.card.feedPk}`)
-          .then((res)=> {
-            this.auth= true
-            if(res.data.object.authCheck){
-              console.log(this.card.userPk + " " + this.card.groupPk)
-              sendNotify({
-                "notiType": notiType.CONFIRMFEED,
-                "userPk": this.card.userPk,
-                "targetId": res.data.object.feedPk
-              })
-            }
-          })
-        }
+        http.get(`feed/authCheckFeed?feedPk=${this.card.feedPk}`)
+        .then((res)=> {
+          this.auth= true
+          if(res.data.object.authCheck){
+            console.log(this.card.userPk + " " + this.card.groupPk)
+            sendNotify({
+              "notiType": notiType.CONFIRMFEED,
+              "userPk": this.card.userPk,
+              "targetId": res.data.object.feedPk
+            })
+          }
+        })
       },
       feedDelete(){
         http.delete(`feed/deleteFeed?feedPk=${this.card.feedPk}`)
@@ -132,6 +134,10 @@ import { notiType, sendNotify } from "../../api/notification/index"
 </script>
 
 <style scoped>
+.title{
+  border: 1px solid #F9802D;
+  border-radius: 10%;
+}
 .stamp{
   width: 50px;
 }

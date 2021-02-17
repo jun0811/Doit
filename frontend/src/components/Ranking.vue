@@ -9,8 +9,8 @@
           <span class="rank-num">{{group.ranking}}</span>
         </v-col>
         <v-col cols="2" class="d-flex flex-column justify-center">
-          <!-- <img class="rank-image box" :src="group.groupImage" alt="그룹이미지"> -->
-          <img class="rank-image box" src="https://images.unsplash.com/photo-1486739985386-d4fae04ca6f7?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80" alt="그룹이미지">
+          <img v-if="group.image" class="rank-image box" :src="group.image" alt="그룹이미지">
+          <img v-else src="@/assets/img/group_default.png" class="rank-image box" alt="group-img">
         </v-col>
         <v-col cols="8">
           <div class="group-name">{{group.groupName}}</div>
@@ -29,6 +29,7 @@ export default {
     return {
       isHover:false,
       groups:[],
+      baseImg : 'https://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
     }
   },
   created() {
@@ -40,6 +41,11 @@ export default {
       .then((res)=>{
         this.groups = res.data.object
         console.log(this.groups)
+        this.groups.map(group => {
+          if (group.image) {
+            group.image = this.baseImg + group.image
+          }
+        })
       })
     },
     moveToGroup(group) {
@@ -95,6 +101,7 @@ export default {
   /* z-index : 0; */
   position:relative;
   cursor: pointer;
+  border: 3px solid orange;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {

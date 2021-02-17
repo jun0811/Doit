@@ -31,7 +31,7 @@ public class ResGroupDetail {
     private List<String> tags;
     private List<ResponseUser> users;
 
-    public ResGroupDetail(Group group, List<GroupUser> users){
+    public ResGroupDetail(Group group, List<GroupUser> users, int total){
         this.groupPk = group.getGroupPk();
         this.name = group.getName();
         this.content = group.getContent();
@@ -40,7 +40,7 @@ public class ResGroupDetail {
         this.endDate = group.getEndDate();
         this.leader = group.getLeader();
         this.score = group.getScore();
-        this.totalNum = group.getTotalNum();
+        this.totalNum = total;
         this.maxNum = group.getMaxNum();
         this.image = group.getImage();
         this.tags = this.getTags(group);

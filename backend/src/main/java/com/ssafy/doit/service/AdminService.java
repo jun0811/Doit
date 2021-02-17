@@ -2,12 +2,14 @@ package com.ssafy.doit.service;
 
 import com.ssafy.doit.model.feed.Feed;
 import com.ssafy.doit.model.group.Group;
+import com.ssafy.doit.model.store.Product;
 import com.ssafy.doit.repository.feed.CommentRepository;
 import com.ssafy.doit.repository.feed.FeedRepository;
 import com.ssafy.doit.repository.feed.FeedUserRepository;
 import com.ssafy.doit.repository.group.GroupHashTagRepository;
 import com.ssafy.doit.repository.group.GroupRepository;
 import com.ssafy.doit.repository.group.GroupUserRepository;
+import com.ssafy.doit.repository.store.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ public class AdminService {
     private FeedUserRepository feedUserRepository;
     @Autowired
     private CommentRepository commentRepository;
+
 
     // 관리자에 의한 그룹 삭제
     public void deleteGroupByAdmin(Long groupPk) {
@@ -59,4 +62,5 @@ public class AdminService {
         feedUserRepository.deleteByFeedPk(feedPk);
         commentRepository.deleteByFeedPk(feedPk);
     }
+
 }

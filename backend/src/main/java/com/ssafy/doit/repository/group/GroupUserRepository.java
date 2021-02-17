@@ -18,6 +18,8 @@ public interface GroupUserRepository extends JpaRepository<GroupUser, Long> {
     GroupUser findTopByGroup(Group group);
     List<GroupUser> findByUser(User user);
 
+    int countByGroupAndStatus(Group group, String status);
+
     @Modifying
     @Transactional
     @Query(value = "delete from group_has_user where group_pk = ?1",nativeQuery = true)

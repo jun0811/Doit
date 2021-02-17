@@ -103,7 +103,7 @@ export default {
         feed: 0,
         nick: "",
         new_content: "",
-        selected : '',
+        selected : '인증',
         items : [
             '인증',
             '정보 공유'
