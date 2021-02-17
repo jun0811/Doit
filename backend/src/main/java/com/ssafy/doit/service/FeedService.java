@@ -65,7 +65,8 @@ public class FeedService {
         List<GroupUser> userList = group.userList;
         for(GroupUser gu : userList){
             Long userPk = gu.getUser().getId();
-            Optional<Feed> optFeed = feedRepository.findByGroupPkAndWriterAndCreateDate(groupPk, userPk, LocalDate.now().toString());
+            Optional<Feed> optFeed = feedRepository.findByGroupPkAndWriterAndCreateDate
+                    (groupPk, userPk,"true", LocalDate.now().toString());
             if(optFeed.isPresent()){
                 resList.add(new ResponseUser(gu.getUser()));
             }
