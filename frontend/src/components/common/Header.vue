@@ -381,10 +381,10 @@ export default {
       },
       moveToChat(chatPk) {
         console.log(chatPk)
-        this.$router.push({ name: 'ChatList'})
+        this.$router.push({ name: 'ChatList', props : {chatPk:chatPk}})
       },
       moveToGroup(groupPk) {
-        console.log(groupPk)
+        // console.log(groupPk)
         this.$router.push({ name: 'Community', params: { groupPk: groupPk }})
       },
       noticeConfirm(notice) {

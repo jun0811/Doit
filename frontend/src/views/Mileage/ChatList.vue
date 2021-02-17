@@ -149,6 +149,7 @@ import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
 import { notiType, sendNotify } from '../../api/notification/index'
 
+
 export default {
   name: "ChatList",
   components: {
@@ -177,12 +178,16 @@ export default {
       subscribe: '',
     }
   },
+  props : {
+    chatPk: String,
+  },
   created() {
     http.get('/chat/getList')
     .then(res => {
       this.chattings = res.data.object
       // console.log(this.chattings)
     })
+    console.log(this.chatPk)
   },
   watch: {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역
@@ -192,6 +197,11 @@ export default {
         // 채팅창 스크롤 바닥 유지
           objDiv.scrollTop = objDiv.scrollHeight;
       }
+    },
+    chatPk() {
+      console.log('notice', this.chatPk)
+      this.enterRoom(this.chatPk)
+      this.chatPk = 0;
     }
   },
   methods: {
