@@ -32,7 +32,9 @@
             <v-dialog
               scrollable
               persistent
+              class="notice-dialog"
               max-width="600px"
+              v-model="dialog"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -149,6 +151,7 @@ import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
 import { notiType, sendNotify } from '../../api/notification/index'
 
+
 export default {
   name: "ChatList",
   components: {
@@ -175,7 +178,11 @@ export default {
       user2: {'userPk' : 0, 'userNick' : ''},
       bottom_flag: true,
       subscribe: '',
+      dialog:false,
     }
+  },
+  props : {
+    chatPk: String,
   },
   created() {
     http.get('/chat/getList')
@@ -183,6 +190,11 @@ export default {
       this.chattings = res.data.object
       // console.log(this.chattings)
     })
+    this.enterRoom(this.chatPk)
+    // const modal = document.querySelectorAll('dialog')
+    // console.log('modal',modal)
+    this.dialog = true;
+    console.log('props',this.chatPk)
   },
   watch: {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역
@@ -192,7 +204,12 @@ export default {
         // 채팅창 스크롤 바닥 유지
           objDiv.scrollTop = objDiv.scrollHeight;
       }
-    }
+    },
+    // chatPk() {
+    //   console.log('notice', this.chatPk)
+    //   this.enterRoom(this.chatPk)
+    //   this.chatPk = 0;
+    // }
   },
   methods: {
     sendMessage(){

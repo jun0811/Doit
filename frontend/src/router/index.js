@@ -142,6 +142,7 @@ const routes = [
     path: "/chatlist",
     name: "ChatList",
     component: ChatList,
+    props:true,
   },
   {
     path: "/introduction",
