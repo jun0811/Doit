@@ -56,7 +56,7 @@ public class ProductController {
             if(groupCount < 2) throw new Exception("가입 그룹 수 부족");
             product.setUser(currentUser);
 
-            productRepository.save(product);
+            product = productRepository.save(product);
             result = new ResponseBasic(true, "success", product);
         }catch (Exception e){
             e.printStackTrace();
