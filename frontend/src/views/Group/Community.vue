@@ -149,7 +149,7 @@ export default {
   props: {
     groupPk: {type:String},
     notiFeed : Boolean,
-    notiInfo: Object,
+    notiGroup: Object,
   },
   data() {
     return {
@@ -266,7 +266,7 @@ export default {
       console.log(res)
       if(res.data.status){
         alert('그룹에 가입하였습니다.🐱‍🚀')
-        // this.$router.go()
+        this.$router.go()
       }else{
         if(res.data.data =="인원이 가득 찼습니다.") alert('가입인원이 최대입니다.')
         else alert('탈퇴하였가나 추방당한 그룹입니다.')
@@ -321,12 +321,26 @@ export default {
       this.cards = res.data.object
     })
     if (this.notiFeed) {
+      console.log('noti', this.groupPk)
       this.FeedList()
-      const notiDate = this.notiInfo.createDate.substr(0,10)
-      this.start = notiDate
-      this.end = notiDate
+      console.log('notigroup', this.notiGroup.feedPk)
+      
+
+      // const year = tempDate[0]
+      // const month = tempDate[1]
+      // const day = tempDate[2]
+      const year = 2021
+      const month = 2
+      const day = 16
+      this.start = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+      this.end = this.start
       this.feedRead()
-      this.notiFeed = false;
+      // const tempDate = this.notiGroup.createDate
+      // const feedDate = tempDate[0] + '-' + tempDate[1] + '-' + tempDate[2]
+      // console.log('feedDate', feedDate)
+      // this.end = feedDate
+      // this.start = feedDate
+
     }
   }
 }

@@ -96,7 +96,7 @@ export default {
     data() {
       return {
         imageUrl: null,
-        selected : '',
+        selected : '인증',
         content :'',
         items : [
             '인증',
@@ -107,6 +107,9 @@ export default {
         file: {},
         status: true,
       }
+    },
+    created(){
+      // this.selected = "인증"
     },
     watch: {
       selected: function() {
