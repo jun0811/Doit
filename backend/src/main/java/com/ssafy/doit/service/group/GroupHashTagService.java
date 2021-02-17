@@ -62,8 +62,9 @@ public class GroupHashTagService {
     @Transactional
     public ResGroupDetail findByGroupPk(Long groupPk) {
         Group group = groupRepository.findById(groupPk).get();
+        int total = groupUserRepository.countByGroupAndStatus(group, "true");
         List<GroupUser> users = groupUserRepository.findByGroupAndStatus(group, "true");
-        return (new ResGroupDetail(group, users));
+        return (new ResGroupDetail(group, users, total));
     }
 
     // 그룹 생성
