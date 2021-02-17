@@ -1,8 +1,9 @@
 <template>
   <v-card
     :loading="loading"
-    class="mx-auto mb-12"
+    class="mx-auto mb-12 noticard"
     width="550"
+    name="noticard"
   >
     <template slot="progress">
       <v-progress-linear
@@ -102,6 +103,14 @@ import { notiType, sendNotify } from "../../api/notification/index"
         }
       })
       // 알림
+      // if (this.notiFeed && this.notiInfo.feedPk == this.card.feedPk) {
+      //   const noticard = document.getElementsByName('noticard')
+      //   const location = noticard.item(0).offsetTop
+      //   const location = noticard.item(0)
+
+      //   console.log('lolo',location)
+      //   this.$emit('scroll', location)
+      // }
     },
     methods: {
       accept(){

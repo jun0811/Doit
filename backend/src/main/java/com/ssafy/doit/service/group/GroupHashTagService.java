@@ -43,7 +43,12 @@ public class GroupHashTagService {
     // 특정 해시태그 포함한 그룹 찾기
     @Transactional
     public Page<ResponseGroup> findAllByHashTag(String hashtag, RequestPage pageable){
-        Page<Group> groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true", pageable.of());
+        Page<Group> groupList = null;
+        if(hashtag.equals("")) {
+            groupList = groupRepository.findAllByStatus("true", pageable.of());
+        }else{
+            groupList = groupRepository.findAllByHashTagAndStatus(hashtag, "true", pageable.of());
+        }
         Page<ResponseGroup> resList = groupList.map(
                 group -> new ResponseGroup(group));
         return resList;
