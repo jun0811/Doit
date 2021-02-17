@@ -225,12 +225,17 @@ public class UserController {
     // 회원 탈퇴
     @ApiOperation(value = "회원 탈퇴")
     @PutMapping("/deleteUser")
-    public Object deleteUser() {
+    public Object deleteUser(HttpServletRequest request, HttpServletResponse response) {
         ResponseBasic result = null;
         try {
             Long userPk = userService.currentUser();
             List<ResGroupList> list = groupUserService.deleteGroupByUser(userPk);
             feedService.deleteFeedByUser(userPk);
+
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if(auth != null)
+                new SecurityContextLogoutHandler().logout(request, response, auth);
+
             result = new ResponseBasic(true, "success", list);
         }
         catch (Exception e){
