@@ -138,7 +138,7 @@ export default {
                 if(this.feedType){
                   sendNotify({
                     "notiType": notiType.NEWFEED,
-                    "targetId": this.feedPk,
+                    "targetId": feedPk,
                   })
                 }
                 this.$router.go(-1)

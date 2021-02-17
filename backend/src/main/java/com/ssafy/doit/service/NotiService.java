@@ -1,9 +1,12 @@
 package com.ssafy.doit.service;
 
+import com.ssafy.doit.model.feed.Feed;
 import com.ssafy.doit.model.notification.NotiType;
 import com.ssafy.doit.model.notification.Notification;
+import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.response.ResponseChatRoom;
 import com.ssafy.doit.model.store.ChatRoom;
+import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.repository.feed.FeedRepository;
 import com.ssafy.doit.repository.group.GroupRepository;
 import com.ssafy.doit.repository.NotiRepository;
@@ -27,6 +30,8 @@ public class NotiService {
     private final GroupRepository groupRepository;
     @Autowired
     private final FeedRepository feedRepository;
+    @Autowired
+    private final UserRepository userRepository;
 
     public List<Notification> getList(Long uid) throws Exception{
         List<Notification> notifications = notiRepository.findAllByUserPkOrderByNotiDateDesc(uid);
@@ -42,19 +47,24 @@ public class NotiService {
         return res;
     }
 
-    public Notification setTarget(Notification notification) {
-        Long id = notification.getTargetId();
+    public Notification setTarget(Notification n) {
+        System.out.println(n);
+        Long id = n.getTargetId();
 
-        if(notification.getNotiType() == NotiType.NEWCHAT && chatRoomRepository.findById(id).isPresent()){
+        if(n.getNotiType() == NotiType.NEWCHAT && chatRoomRepository.findById(id).isPresent()){
             ChatRoom chatRoom = chatRoomRepository.findById(id).get();
-            notification.setTarget(new ResponseChatRoom(chatRoom, notification.getUserPk()));
+            n.setTarget(new ResponseChatRoom(chatRoom, n.getUserPk()));
         }
-        else if(notification.getNotiType() == NotiType.COMMENT && feedRepository.findById(id).isPresent())
-            notification.setTarget(feedRepository.findById(id).get());
-        else if(groupRepository.findById(id).isPresent())
-            notification.setTarget(groupRepository.findById(id).get());
+        else if((n.getNotiType() == NotiType.KICKOUT || n.getNotiType() == NotiType.AUTHORIZE ) && groupRepository.findById(id).isPresent())
+            n.setTarget(groupRepository.findById(id).get());
+        else if(feedRepository.findById(id).isPresent()) {
+            Feed feed = feedRepository.findById(id).get();
+            String writer = userRepository.findById(feed.getWriter()).get().getNickname();
+            String group = groupRepository.findById(feed.getGroupPk()).get().getName();
+            n.setTarget(new ResMyFeed(feed, writer, group));
+        }
 
-        return notification;
+        return n;
     }
 
     public void refreshChat(Notification noti){
