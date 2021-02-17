@@ -149,7 +149,7 @@ export default {
   props: {
     groupPk: {type:String},
     notiFeed : Boolean,
-    notiGroup: Object,
+    notiInfo: Object,
   },
   data() {
     return {
@@ -321,26 +321,12 @@ export default {
       this.cards = res.data.object
     })
     if (this.notiFeed) {
-      console.log('noti', this.groupPk)
       this.FeedList()
-      console.log('notigroup', this.notiGroup.feedPk)
-      
-
-      // const year = tempDate[0]
-      // const month = tempDate[1]
-      // const day = tempDate[2]
-      const year = 2021
-      const month = 2
-      const day = 16
-      this.start = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
-      this.end = this.start
+      const notiDate = this.notiInfo.createDate.substr(0,10)
+      this.start = notiDate
+      this.end = notiDate
       this.feedRead()
-      // const tempDate = this.notiGroup.createDate
-      // const feedDate = tempDate[0] + '-' + tempDate[1] + '-' + tempDate[2]
-      // console.log('feedDate', feedDate)
-      // this.end = feedDate
-      // this.start = feedDate
-
+      this.notiFeed = false;
     }
   }
 }

@@ -380,15 +380,13 @@ export default {
         this.CONNECT()
       },
       moveToChat(chatPk) {
-        console.log('moveToChat', chatPk)
         this.$router.push({ name: 'ChatList', params : {chatPk:chatPk}})
       },
       moveToGroup(groupPk) {
-        // console.log(groupPk)
-        this.$router.push({ name: 'Community', params: { groupPk: groupPk }})
+        this.$router.push({ name: 'Community', params: { groupPk: String(groupPk) }})
       },
-      moveToGroupFeed(group) {
-        this.$router.push({ name: 'Community', params: { groupPk: group.groupPk, notiFeed: true, notiGroup: group }})
+      moveToGroupFeed(notiInfo) {
+        this.$router.push({ name: 'Community', params: { groupPk: notiInfo.groupPk, notiFeed: true, notiInfo: notiInfo }})
       },
       noticeConfirm(notice) {
         if (notice.notiType==="1") {
@@ -398,9 +396,8 @@ export default {
           let groupPk = notice.target.groupPk
           this.moveToGroup(groupPk) 
         } else {
-          console.log('com', notice.target)
-          let group = notice.target
-          this.moveToGroupFeed(group) 
+          let notiInfo = notice.target
+          this.moveToGroupFeed(notiInfo) 
         }
       },
       signup() {
