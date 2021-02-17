@@ -90,7 +90,7 @@ public class GroupUserService {
     public void withdrawGroupUser(Long userPk, Long groupPk) throws Exception {
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(groupPk).get();
-        if(userPk == group.getLeader()) throw new Exception("그룹장은 탈퇴할 수 없습니다.");
+        if(userPk == group.getLeader().longValue()) throw new Exception("그룹장은 탈퇴할 수 없습니다.");
 
         Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
         if(optGU.isPresent()) {
@@ -114,7 +114,7 @@ public class GroupUserService {
     @Transactional
     public void kickOutGroupUser(Long userPk, Long groupPk, Long leader) throws Exception {
         Group group = groupRepository.findById(groupPk).get();
-        if(leader == group.getLeader()){
+        if(leader == group.getLeader().longValue()){
             User user = userRepository.findById(userPk).get(); // 강퇴시킬 그룹원
             Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
             optGU.ifPresent(selectGU -> selectGU.setStatus("false"));
