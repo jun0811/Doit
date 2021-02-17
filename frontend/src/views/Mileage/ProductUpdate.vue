@@ -63,21 +63,29 @@
               <div>
                 <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
                 <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">물품 이미지</v-btn>
+                <input
+                  ref="uploader"
+                  class="d-none"
+                  type="file"
+                  accept="image/*"
+                  @change="onFileChanged"
+                >
+    
               </div>
             </v-col>
-            <v-col v-if="imageUrl" cols="4">
-              <!-- 이미지 뛰우기 -->
-              <v-img :src="imageUrl" class="profile-img"></v-img>
-              <!-- <v-img v-else src="@/assets/img/logo.png" class="profile-img"> </v-img> -->
+            <v-col cols="4">
+              <!-- 이미지 띄우기 -->
+              <v-img v-if="imageUrl" :src="imageUrl" class="profile-img"></v-img>
+              <v-img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ product.image" class="profile-img"> </v-img>
             </v-col>
           </v-row>
         </v-card>
 
         <v-btn class="submit-btn mt-12" 
           outlined
-          @click="write"
+          @click="update"
           >
-          등록하기
+          수정하기
         </v-btn>
     </v-container>
   <Footer></Footer>
@@ -88,7 +96,8 @@
 <script>
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
-// import http from "../../http-common"
+import { updateProduct } from "@/api/mileage/index.js"
+import http from "../../http-common"
 
 export default {
   name: "ProductUpdate",
@@ -97,7 +106,7 @@ export default {
     Footer,
   },
   props: {
-    product_id: Number,
+    product_id: String,
   },
   data() {
     return {
@@ -119,14 +128,22 @@ export default {
     }
   },
   created() {
-    console.log(this.product_id);
-    // console.log(this.product.id);
-    // http.get(`/product/${this.product_id}`)
-    // .then((res) => {
-    //   console.log(res);
-    // })
+    http.get(`/product/${this.product_id}`)
+    .then((res) => {
+      console.log(res);
+      this.product.title = res.data.object.title
+      this.product.category = res.data.object.category
+      this.product.mileage = res.data.object.mileage
+      this.product.content = res.data.object.content
+      this.product.image = res.data.object.image
+      // console.log(this.product.image);
+    })
   },
   methods: {
+    onFileChanged(e) {
+      this.selectedFile = e.target.files[0]
+      this.uploadImg = URL.createObjectURL(this.selectedFile)
+      },
     onImages(e) {
         this.file = e.target.files[0];
         this.imageUrl = URL.createObjectURL(this.file)
@@ -134,38 +151,32 @@ export default {
       onClickImageUpload() {
         this.$refs.imageInput.click();
       },
-    write() {
+    update() {
       const formData = new FormData()
       formData.append("file",this.file)
-      if(this.imageUrl==null) {
-        alert("사진 첨부는 필수입니다.")
-      }
-      else {
-        // createProduct(
-        //   {
-        //     "category": this.product.category,
-        //     "content":  this.product.content,
-        //     "image": this.product.image,
-        //     "title":  this.product.title,
-        //     "mileage": this.product.mileage,
-        //   },
-        //   (res) =>{
-        //     if (res.data.status){
-        //       // console.log(res);
-        //       alert("물품을 등록했습니다.")
-        //       http.post(`product/image?pid=${res.data.object.id}`, formData)  
-        //       this.$router.push(`/mileageshop/product/${res.data.object.id}`)
-        //     }
-        //     else {
-        //       alert('가입한 그룹 수가 2개 이상이어야 물품을 등록할 수 있습니다.')
-        //     }
-        //   },
-        //   (err) =>{
-        //     console.log(err)
-        //     alert("물품 등록 실패")
-        //   }
-        // )
-      }
+      
+      updateProduct(
+        this.product_id,
+        {
+          "category": this.product.category,
+          "content":  this.product.content,
+          "image": this.product.image,
+          "title":  this.product.title,
+          "mileage": this.product.mileage,
+        },
+        (res) =>{
+          if (res.data.status){
+            // console.log(res);
+            alert('물품 수정 완료')
+            http.post(`product/image?pid=${res.data.object.id}`, formData)  
+            this.$router.push(`/mileageshop/product/${res.data.object.id}`)
+          }
+        },
+        (err) =>{
+          console.log(err)
+          alert("물품 등록 실패")
+        }
+      )
     },
   }
 };

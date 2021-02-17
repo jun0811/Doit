@@ -240,7 +240,7 @@ export default {
       create(){
         const formData = new FormData()
         formData.append("file",this.file)
-        if (this.minLength && this.name &&this.submit){
+        if (this.minLength && this.name &&this.submit&&this.category.length>0&&this.hashtag.length>0){
           http.post('/group/createGroup',
           {
             "name": this.name,
@@ -261,7 +261,9 @@ export default {
           })
         }else{
           if(this.name.length<1) alert('그룹명을 입력해주세요')
-          else if(this.submit===false) alert('만료 날짜 일주일 이후를 선택해주세요')
+          else if(this.submit ===false) alert('만료 날짜를 선택해주세요')
+          else if(this.category.length==0) alert('카테고리를 골라주세요')
+          else if(this.hashtag.length==0) alert('해시태그를 1개 이상 추가해주세요')
           else {alert(`그룹 소개글을 20자 이상 작성해주세요 ` )}
         }
       }
