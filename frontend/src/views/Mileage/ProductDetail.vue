@@ -5,15 +5,15 @@
     <v-container class="container-width">
         <v-row>
           <v-col class="img-wrapper">
-            <img class="product-img" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80" alt="product image">
+            <img class="product-img" :src="image" alt="product image">
           </v-col>
         </v-row>
         <v-row class="my-3 px-6 d-flex align-center">
-          <v-col>
+          <v-col class="d-flex align-center">
             <span class="profile-wrapper pa-0 d-flex ">
               <img
               class="profile-img" 
-              src="https://images.unsplash.com/photo-1529092419721-e78fb7bddfb2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=964&q=80" 
+              src="https://i.pinimg.com/736x/3f/94/70/3f9470b34a8e3f526dbdb022f9f19cf7.jpg"
               alt="글쓴이 이미지"
               >
             </span>
@@ -21,7 +21,7 @@
               {{product.nickname}}
             </span>
           </v-col>
-          <v-col v-if="id==seller">
+          <v-col cols="2" sm="1" v-if="id==seller">
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -202,6 +202,7 @@ export default {
       roomCheck: false,
       bottom_flag: true,
       subscribe: '',
+      image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/" 
     }
   },
   props:{
@@ -209,12 +210,12 @@ export default {
   },
   created() {
     this.id = this.$store.state.account.userpk;
-
     http.get(`/product/${this.product_id}`)
     .then((res)=>{
       console.log(res);
       this.product = res.data.object
       this.seller = this.product.user_pk
+      this.image = this.image + this.product.image
     })   
     // var objDiv = document.getElementById("scroll"); 
     // objDiv.scrollTop = objDiv.scrollHeight;
@@ -347,6 +348,7 @@ width: 600px;
 .product-img {
   width: 100%;
   height:100%;
+  /* max-height: 500px; */
   overflow: hidden;
   object-fit: cover;
   border-radius: 5px;

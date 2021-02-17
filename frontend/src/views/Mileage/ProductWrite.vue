@@ -126,26 +126,32 @@ export default {
     write() {
       const formData = new FormData()
       formData.append("file",this.file)
-      createProduct(
-        {
-          "category": this.product.category,
-          "content":  this.product.content,
-          "image": this.product.image,
-          "title":  this.product.title,
-          "mileage": this.product.mileage,
-        },
-        (res) =>{
-          if (res.status){
-            alert("물품을 등록했습니다.")
-            http.post(`product/image?pid=${res.data.object}`, formData)      
-            this.$router.push(`/product/${res.data.object.id}`)
+      if(this.imageUrl==null) {
+        alert("사진 첨부는 필수입니다.")
+      }
+      else {
+        createProduct(
+          {
+            "category": this.product.category,
+            "content":  this.product.content,
+            "image": this.product.image,
+            "title":  this.product.title,
+            "mileage": this.product.mileage,
+          },
+          (res) =>{
+            if (res.status){
+              // console.log(res);
+              alert("물품을 등록했습니다.")
+              http.post(`product/image?pid=${res.data.object.id}`, formData)  
+              this.$router.push(`/mileageshop/product/${res.data.object.id}`)
+            }
+          },
+          (err) =>{
+            console.log(err)
+            alert("등록 실패")
           }
-        },
-        (err) =>{
-          console.log(err)
-          alert("등록 실패")
-        }
-      )
+        )
+      }
     },
   }
 };
