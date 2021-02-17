@@ -172,6 +172,11 @@ public class FeedService {
         Optional<Feed> feed = feedRepository.findById(feedPk);
         if(userPk == feed.get().getWriter()) {
             feed.ifPresent(selectFeed -> {
+                try {
+                    s3Service.deleteFile(selectFeed.getMedia());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 feedRepository.delete(selectFeed);
             });
             feedUserRepository.deleteByFeedPk(feedPk);
