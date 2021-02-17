@@ -114,7 +114,7 @@ public class GroupUserService {
     @Transactional
     public void kickOutGroupUser(Long userPk, Long groupPk, Long leader) throws Exception {
         Group group = groupRepository.findById(groupPk).get();
-        if(userPk.equals(group.getLeader())){
+        if(leader.equals(group.getLeader())){
             User user = userRepository.findById(userPk).get(); // 강퇴시킬 그룹원
             Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
             optGU.ifPresent(selectGU -> selectGU.setStatus("false"));
