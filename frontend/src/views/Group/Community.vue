@@ -109,7 +109,7 @@
             </v-col> -->
           </v-row>
           <v-row class="d-flex justify-center align-center flex-column card">
-            <v-col cols="10" v-if="cards.length">
+            <v-col cols="10" v-if="cards.length" class="feeds">
               <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card" ></FeedCard>
             </v-col>
             <v-col cols="10" v-else>
@@ -325,12 +325,21 @@ export default {
       this.FeedList()
       console.log('notigroup', this.notiGroup.feedPk)
       
+
+      // const year = tempDate[0]
+      // const month = tempDate[1]
+      // const day = tempDate[2]
+      const year = 2021
+      const month = 2
+      const day = 16
+      this.start = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+      this.end = this.start
+      this.feedRead()
       // const tempDate = this.notiGroup.createDate
       // const feedDate = tempDate[0] + '-' + tempDate[1] + '-' + tempDate[2]
       // console.log('feedDate', feedDate)
       // this.end = feedDate
       // this.start = feedDate
-      // this.feedRead()
 
     }
   }
