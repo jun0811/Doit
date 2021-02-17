@@ -109,8 +109,8 @@
             </v-col> -->
           </v-row>
           <v-row class="d-flex justify-center align-center flex-column card">
-            <v-col cols="10" v-if="cards.length" class="feeds">
-              <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card" ></FeedCard>
+            <v-col cols="10" v-if="cards.length" class="feeds noticards"> 
+              <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card"></FeedCard>
             </v-col>
             <v-col cols="10" v-else>
               <v-row  class="d-flex justify-center">
@@ -149,7 +149,7 @@ export default {
   props: {
     groupPk: {type:String},
     notiFeed : Boolean,
-    notiGroup: Object,
+    notiInfo: Object,
   },
   data() {
     return {
@@ -245,6 +245,10 @@ export default {
   }
   ,
   methods: {
+    // moveScroll(location){
+    //   console.log(location)
+    //   window.scrollTo({top:location, behavior:'smooth'})
+    // }, 
     updateGroup(){
       this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
     },
@@ -323,24 +327,11 @@ export default {
     if (this.notiFeed) {
       console.log('noti', this.groupPk)
       this.FeedList()
-      console.log('notigroup', this.notiGroup.feedPk)
-      
-
-      // const year = tempDate[0]
-      // const month = tempDate[1]
-      // const day = tempDate[2]
-      const year = 2021
-      const month = 2
-      const day = 16
-      this.start = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
-      this.end = this.start
+      console.log('notigroup', this.notiInfo)
+      const notiDate = this.notiInfo.createDate.substr(0,10)
+      this.end = notiDate
+      this.start = notiDate
       this.feedRead()
-      // const tempDate = this.notiGroup.createDate
-      // const feedDate = tempDate[0] + '-' + tempDate[1] + '-' + tempDate[2]
-      // console.log('feedDate', feedDate)
-      // this.end = feedDate
-      // this.start = feedDate
-
     }
   }
 }
