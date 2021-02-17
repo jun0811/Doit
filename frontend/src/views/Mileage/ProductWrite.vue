@@ -142,9 +142,11 @@ export default {
             if (res.data.status){
               console.log(res);
               http.post(`product/image?pid=${res.data.object.id}`, formData)  
-              alert("물품을 등록했습니다.")
-              // this.$router.push(`/mileageshop/product/${res.data.object.id}`)
-              this.$router.push(`/mileageshop`)
+              .then((res)=>{
+                console.log(res)
+                alert("물품을 등록했습니다.")
+                this.$router.push(`/mileageshop/product/${res.data.object.id}`)
+              })
             }
             else {
               alert('가입한 그룹 수가 2개 이상이어야 물품을 등록할 수 있습니다.')
