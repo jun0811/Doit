@@ -215,15 +215,24 @@
         <v-menu
           bottom
           offset-y
+           v-if="this.$store.state.account.accessToken"
         >
-          <template v-slot:activator="{ on, attrs }">
+          <template v-slot:activator="{ on, attrs }" >
             <v-btn
               text
-              class="ma-2"
               v-bind="attrs"
               v-on="on"
             >
-            <font-awesome-icon :icon="['far', 'bell']" />
+            <div v-if="notiCount">
+              <v-badge :content="notiCount" color="pink" offset-x="-2" offset-y="-2"></v-badge>
+              <font-awesome-icon  class="bell fa-lg" icon="bell"/>
+            </div>
+            <div v-else>
+              <font-awesome-icon class="bell fa-lg" :icon="['far', 'bell']" />
+            </div>
+
+
+
             </v-btn>
           </template>
           <v-list max-height="400">
@@ -297,6 +306,7 @@ export default {
       password: "",
       nickname: "",
       img:"",
+      notiCount: 0,
       items: [
         {
           action: '',
@@ -347,6 +357,7 @@ export default {
             http.get('/noti/getList')
             .then((res) => {
                 this.noti = res.data.object;
+                this.notiCount = this.noti.length
             })
           })
         }
@@ -368,6 +379,7 @@ export default {
           .then((res) => {
               this.noti = res.data.object;
               console.log(this.noti)
+              this.notiCount = this.noti.length
           })
           // 소켓 연결
           this.socketConnect();
@@ -548,6 +560,12 @@ export default {
     width: 100px;
     height: 100px;
   }
+
+  .bell {
+    color : #F9802D;
+  }
+
+
 </style>
 
 
