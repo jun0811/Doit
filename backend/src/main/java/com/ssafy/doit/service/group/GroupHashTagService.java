@@ -98,7 +98,7 @@ public class GroupHashTagService {
     @Transactional
     public void updateGroup(Long userPk, Group groupReq) throws Exception {
         Optional<Group> group = groupRepository.findById(groupReq.getGroupPk());
-        int leader = group.get().getLeader().intValue();
+        Long leader = group.get().getLeader().longValue();
         if(userPk == leader){
             System.out.println(userPk +" "+ group.get().getLeader());
             group.ifPresent(selectGroup ->{
@@ -126,7 +126,7 @@ public class GroupHashTagService {
     @Transactional
     public void updateHashTag(Long userPk, Long groupPk, String tag) throws Exception {
         Optional<Group> optGroup = groupRepository.findById(groupPk);
-        if(userPk == optGroup.get().getLeader()) {
+        if(userPk == optGroup.get().getLeader().longValue()) {
             Optional<HashTag> hashTag =  hashTagRepository.findByName(tag);
             if(hashTag.isPresent()){
                 Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag.get());
@@ -140,7 +140,7 @@ public class GroupHashTagService {
     @Transactional
     public void deleteHashTag(Long userPk, Long groupPk, String hashtag) throws Exception {
         Optional<Group> optGroup = groupRepository.findById(groupPk);
-        if(userPk == optGroup.get().getLeader()) {
+        if(userPk == optGroup.get().getLeader().longValue()) {
             HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
             GroupHashTag gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag).get();
             groupHashTagRepository.delete(gh);
