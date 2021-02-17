@@ -6,10 +6,8 @@
       ></v-subheader>
       <v-list-item>
         <v-list-item-avatar>
-          <!-- 연결하면 유저 이미지로 사용 -->
-          <!-- <v-img v-if="user.image" :src="user.image"></v-img> -->
-          <!-- 이미지 연결 전 임시 프로필사진 -->
-          <v-img src="https://images.unsplash.com/photo-1589807407471-ed87e4ab940b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"></v-img>
+          <v-img v-if="user.image" :src="user.image" class="user-profile"></v-img>
+          <img v-else src="@/assets/img/user.png" class="user-profile" alt="group-img">
         </v-list-item-avatar>
 
         <v-list-item-content>
@@ -54,7 +52,8 @@
           :key="comment.uniquePk"
         >
           <v-list-item-avatar>
-            <v-img :src="comment.profileImg"></v-img>
+            <v-img v-if="comment.profileImg" :src="comment.profileImg"></v-img>
+            <v-img v-else src="@/assets/img/user.png" class="user-profile" alt="group-img"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content>
@@ -197,12 +196,16 @@ export default {
             })
             this.comments = []
             this.comments = response.flatMap(comment=> {
+              let profile = ''
+              if (comment.image) {
+                profile = this.baseImg + comment.image
+              }
               const commentData = {
                 "userPk" : comment.userPk,
                 "commentPk" : comment.commentPk,
                 "uniquePk": String(comment.feedPk) + '/' + String(comment.commentPk),
                 "content": comment.content,
-                "profileImg" : this.baseImg + comment.image,
+                "profileImg" : profile,
                 "writerName": comment.nickname,
                 "updateActive": false,
                 }
@@ -272,7 +275,9 @@ export default {
           if(res.data.status){
             this.user.nickname = res.data.object.nickname
             this.user.userPk = res.data.object.userPk
-            this.user.image = this.baseImg + res.data.object.image
+            if (this.user.image) {
+              this.user.image = this.baseImg + res.data.object.image
+            }
           }
       })
     },
@@ -307,4 +312,7 @@ export default {
   border-radius: 5px;
 }
 
+.user-profile {
+  border : 1.5px solid grey;
+}
 </style>
