@@ -15,7 +15,7 @@
             <v-col cols="12">
               <v-text-field
                 hide-details=""
-                solo
+                outlined
                 :label="title"
                 clearable
                 v-model="product.title"
@@ -57,14 +57,19 @@
             ></v-textarea>
           </v-row>
           <v-row class="my-2">
-            <v-col cols="12">사진 첨부<span>(최대 5장)</span></v-col>
-            <v-file-input
-              chips
-              small-chips
-              truncate-length="15"
-              hide-details=""
-              v-on:change="product.image"
-            ></v-file-input>
+            <v-col cols="12">사진 첨부</v-col>
+            <v-col cols="12" class="d-flex">
+              <!-- 이미지 첨부 버튼 -->
+              <div>
+                <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
+                <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">그룹 이미지</v-btn>
+              </div>
+            </v-col>
+            <v-col v-if="imageUrl" cols="4">
+              <!-- 이미지 뛰우기 -->
+              <v-img :src="imageUrl" class="profile-img"></v-img>
+              <!-- <v-img v-else src="@/assets/img/logo.png" class="profile-img"> </v-img> -->
+            </v-col>
           </v-row>
         </v-card>
 
@@ -84,6 +89,7 @@
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
 import { createProduct } from "@/api/mileage/index.js"
+import http from "../../http-common"
 
 export default {
   name: "ProductWrite",
@@ -93,6 +99,9 @@ export default {
   },
   data() {
     return {
+      file: {},
+      image: "",
+      imageUrl: null,
       title : "상품명 및 제목을 입력하세요.",
       categories : ['음식', '책', '운동', '카테고리4', '카테고리5', ],
       mileage: "300",
@@ -107,21 +116,29 @@ export default {
     }
   },
   methods: {
+    onImages(e) {
+        this.file = e.target.files[0];
+        this.imageUrl = URL.createObjectURL(this.file)
+      },
+      onClickImageUpload() {
+        this.$refs.imageInput.click();
+      },
     write() {
+      const formData = new FormData()
+      formData.append("file",this.file)
       createProduct(
         {
           "category": this.product.category,
           "content":  this.product.content,
           "image": this.product.image,
           "title":  this.product.title,
-          "id":0,
           "mileage": this.product.mileage,
         },
         (res) =>{
           if (res.status){
-          alert("물품을 등록했습니다.")
-          console.log(res)
-          // this.$router.push('/') // 어디로 보낼지 정하고 변경!
+            alert("물품을 등록했습니다.")
+            http.post(`product/image?pid=${res.data.object}`, formData)      
+            this.$router.go(-1)
           }
         },
         (err) =>{
@@ -140,8 +157,10 @@ export default {
   width:100%;
 }
 
-
-
+  .profile-img{
+    min-width: 350px;
+    min-height: 150px;
+  }
 .content-card {
   width:100%;
   padding : 30px;
