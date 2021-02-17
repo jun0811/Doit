@@ -107,7 +107,7 @@ public class UserController {
     // 로그아웃
     @ApiOperation(value = "로그아웃")
     @GetMapping("/logout")
-    public Object login(HttpServletRequest request, HttpServletResponse response){
+    public Object logout(HttpServletRequest request, HttpServletResponse response){
         ResponseBasic result = new ResponseBasic();
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -161,8 +161,7 @@ public class UserController {
     @ApiOperation(value = "프로필 닉네임 중복 확인")
     @PostMapping("/profile/checkNick")
     public Object checkNickname(@RequestBody String nickname){
-        ResponseBasic result = new ResponseBasic();
-//        System.out.println(UserRole.USER);
+        ResponseBasic result = null;
         Long userPk = userService.currentUser();
 
         Optional<User> user = userRepository.findById(userPk); //로그인한 회원

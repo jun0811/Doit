@@ -1,12 +1,14 @@
 package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.Mileage;
+import com.ssafy.doit.model.feed.CommitUser;
 import com.ssafy.doit.model.request.RequestChangePw;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.UserRepository;
+import com.ssafy.doit.repository.feed.CommitUserRepository;
 import com.ssafy.doit.service.mail.EmailSendService;
 
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +35,9 @@ public class SignupController {
     private EmailSendService emailSendService;
     @Autowired
     private MileageRepository mileageRepository;
+    @Autowired
+    private CommitUserRepository commitUserRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     // 닉네임 중복 확인
@@ -138,6 +143,7 @@ public class SignupController {
                 selectUser.setUserRole(UserRole.USER);
                 userRepository.save(selectUser);
             });
+            beforeCommitUser(user.get().getId());
             result = new ResponseBasic( true, "success", null);
         }catch (Exception e){
             e.printStackTrace();
@@ -183,5 +189,18 @@ public class SignupController {
             result = new ResponseBasic( false, "이메일을 다시 한번 확인해주세요.", null);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    public void beforeCommitUser(Long userPk){
+        LocalDate now = LocalDate.now();
+        LocalDate before = now.minusDays(29);
+        for(int day = 1; day <= 30; day++){
+            commitUserRepository.save(CommitUser.builder()
+                    .date(before)
+                    .userPk(userPk)
+                    .cnt(0)
+                    .build());
+            before = before.plusDays(1);
+        }
     }
 }
