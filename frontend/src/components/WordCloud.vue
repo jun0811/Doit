@@ -60,7 +60,7 @@ export default {
       },
       wordClickHandler(name, value) {
         console.log('wordClickHandler', name, value);
-        this.$router.push({name: "GroupList",params: {word: name}})
+        this.$router.push({name: "GroupList",params: {word: name, page:1}})
       }
    },
 }
