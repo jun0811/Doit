@@ -13,7 +13,7 @@
             <span class="profile-wrapper pa-0 d-flex ">
               <img
               class="profile-img" 
-              src="https://i.pinimg.com/736x/3f/94/70/3f9470b34a8e3f526dbdb022f9f19cf7.jpg"
+              :src="profile"
               alt="글쓴이 이미지"
               >
             </span>
@@ -202,7 +202,9 @@ export default {
       roomCheck: false,
       bottom_flag: true,
       subscribe: '',
-      image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/" 
+      default: 'http://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
+      image: '',
+      profile: ''
     }
   },
   props:{
@@ -215,7 +217,8 @@ export default {
       console.log(res);
       this.product = res.data.object
       this.seller = this.product.user_pk
-      this.image = this.image + this.product.image
+      this.image = this.default + this.product.image
+      this.profile = this.default + this.product.profile
     })   
     // var objDiv = document.getElementById("scroll"); 
     // objDiv.scrollTop = objDiv.scrollHeight;
