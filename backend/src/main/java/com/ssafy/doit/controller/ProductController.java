@@ -120,7 +120,7 @@ public class ProductController {
             Product origin = productRepository.findById(id).get();
 
             if(origin.getUser().getId() != currentUser) throw new Exception("유저 불일치");
-
+            s3Service.deleteFile(origin.getImage());
             productRepository.delete(origin);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
