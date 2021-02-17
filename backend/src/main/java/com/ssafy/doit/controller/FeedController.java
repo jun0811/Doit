@@ -87,7 +87,6 @@ public class FeedController {
             List<ResponseFeed> list = feedService.groupFeedList(userPk, groupPk, start, end);
             result = new ResponseBasic(true, "success", list);
         }catch (Exception e) {
-            e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
         }
 
