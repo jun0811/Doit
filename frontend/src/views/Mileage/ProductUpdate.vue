@@ -86,7 +86,7 @@ import Footer from "@/components/common/Footer.vue";
 import { createProduct } from "@/api/mileage/index.js"
 
 export default {
-  name: "ProductWrite",
+  name: "ProductUpdate",
   components: {
     Header,
     Footer,
@@ -121,7 +121,7 @@ export default {
           if (res.status){
           alert("물품을 등록했습니다.")
           console.log(res)
-          this.$router.push(`/product/${res.data.object.id}`) // 어디로 보낼지 정하고 변경!
+          // this.$router.push('/') // 어디로 보낼지 정하고 변경!
           }
         },
         (err) =>{
