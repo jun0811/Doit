@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { api, response } from './api/account/index'
-import account from './store/modules/account'
 
 const http = axios.create({
-    baseURL: 'http://localhost:8080/',
+    baseURL: 'http://i4c108.p.ssafy.io/api',
     headers: {
         'Content-type': 'application/json',
     },
@@ -25,8 +24,7 @@ http.interceptors.response.use(function (response) {
 });
 
 http.interceptors.request.use(function (config) {
-    if(account.state.accessToken)
-        config.headers.accessToken = account.state.accessToken;
+    config.withCredentials = true;
     return config;
 }, function (error) {
     return Promise.reject(error);

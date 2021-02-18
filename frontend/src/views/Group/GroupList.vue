@@ -1,11 +1,10 @@
 <template>
   <div>
-      <Header></Header>
       <v-container class="pa-0 pa-md-3">
         <SearchBar></SearchBar>
         <br>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
-        <div v-if="!empty" class="pl-sm-16">
+        <div v-if="!empty" class="pl-sm-16 pb-3">
           총 <span style="color: #F9802D">{{ contentlength }}</span> 개의 검색 결과가 있습니다.
         </div>
         <GroupCard :page="page" :word="word"></GroupCard>
@@ -13,37 +12,41 @@
           <h3>'{{ word }}'와(과) 일치하는 검색결과가 없습니다.</h3>
           <br>
           <br>
+
           <h4>'{{ word }}' 관련 그룹을 만들고 싶으시다면?</h4>
-          <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
+          <v-btn text class="text-h6" color="#F9802D" @click="createGroup" v-if="member">
             그룹 만들기
           </v-btn>
+          <h3 class="login" v-else>
+            로그인
+          </h3>
         </div>
         <!-- </div> -->
         <div v-else class="d-flex align-center flex-column">
           <v-pagination
+            v-if="pageCount>=1"
             color="orange"
             v-model="page"
             :length="pageCount"
             :total-visible="7"
-            class="mt-12 mb-5"
+            class="mt-12 "
           ></v-pagination>
-          <h4 class="mt-6">'{{ word }}' 관련 그룹을 만들고 싶으시다면?</h4>
-          <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
+          <h4 class="mt-12">'{{ word }}' 관련 그룹을 만들고 싶으시다면?</h4>
+          <v-btn text class="text-h6" color="#F9802D" @click="createGroup" v-if="member">
             그룹 만들기
           </v-btn>
+          <h3 class="login" v-else>
+            로그인
+          </h3>
         </div>
 
       </v-container>
-      <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
 import SearchBar from "@/components/common/SearchBar";
-import Footer from "@/components/common/Footer";
 import GroupCard from "@/components/group/GroupCard.vue";
-// import http from "../../http-common"
 import { searchGroup } from "@/api/group/index.js"
 
 
@@ -60,6 +63,7 @@ export default {
           groups:[],
           empty: '',
           contentlength: 0,
+          member: false,
         }
     },
   updated(){
@@ -87,6 +91,7 @@ export default {
     )
   },
   created() {
+    this.member = sessionStorage.getItem("accessToken")
     searchGroup(
       {
         "direction":"DESC",
@@ -110,19 +115,19 @@ export default {
     )
   },
   components: { 
-      Header, 
-      Footer, 
       SearchBar, 
       GroupCard 
   },
   methods: {
     createGroup(){
       this.$router.push('/group/groupcreate')
-    }
+    },
   }
 }
 </script>
 
 <style scoped>
-
+ .login{
+   color: #F9802D;
+ }
 </style>

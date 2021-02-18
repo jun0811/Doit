@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header></Header>
     <v-container class="container-width">
       <v-row class="mb-5">
         <v-col>
@@ -69,21 +68,16 @@
         </v-col>
       </v-row>
     </v-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
 import { mapActions } from 'vuex'
 
 export default {
   name: "Delete",
   components: {
-    Header,
-    Footer,
   },
   data() {
     return {
@@ -104,14 +98,15 @@ export default {
         alert("탈퇴 안내를 확인하고 동의해 주세요.")
       }
       else {
-        http.put('/user/deleteUser')
-
-        this.LOGOUT()
-        .then((response) => {
-          console.log(response)
-          this.DISCONNECT();
-          this.$router.push("/user/delete/complete")
-        })
+        if(confirm("정말 Doit을 탈퇴하시겠습니까?")==true) {
+          http.put('/user/deleteUser')
+  
+          this.LOGOUT()
+          .then(() => {
+            this.DISCONNECT();
+            this.$router.push("/user/delete/complete")
+          })
+        }      
       }
 
     }

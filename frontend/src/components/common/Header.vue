@@ -1,6 +1,6 @@
 <template>
   <div class="header-navbar">
-    <header class="header">
+    <header class="header pl-0">
       <div class="d-flex align-center">
         <!-- navigation drawer 시작-->
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -12,8 +12,8 @@
         >
           <v-list-item>
             <v-list-item-avatar>
-              <v-img v-if="img==false" src="@/assets/img/profile_temp.png"></v-img>
-              <v-img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ img"></v-img>
+              <v-img v-if="img!=`undefined`" :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ img" ></v-img>
+              <v-img v-else src="@/assets/img/profile_temp.png"></v-img>
             </v-list-item-avatar>
 
             <v-list-item-content>
@@ -305,7 +305,7 @@ export default {
       email: "",
       password: "",
       nickname: "",
-      img:"",
+      img: false,
       notiCount: 0,
       items: [
         {
@@ -392,7 +392,7 @@ export default {
         this.CONNECT()
       },
       moveToChat(chatPk) {
-        this.$router.push({ name: 'ChatList', params : {chatPk:String(chatPk)}})
+        this.$router.push({ name: 'ChatList', params : {chatPk:String(chatPk), notiChat : true}})
       },
       moveToGroup(groupPk) {
         this.$router.push({ name: 'Community', params: { groupPk: String(groupPk) }}).catch(error => {
@@ -432,6 +432,7 @@ export default {
       },
       signup() {
         this.$router.push("/user/join")
+        this.dialog = false;  
       },
       logoClick() {
         this.$router.push("/")
@@ -446,7 +447,7 @@ export default {
           "password": this.password
         })
         .then((response)=>{
-          console.log(response);
+          // console.log(response);
           if(response.data.status){
             this.dialog = false;  
             this.$router.go()
@@ -475,6 +476,7 @@ export default {
       },
       passwordFind(){
         this.$router.push("/user/pwdfind")
+        this.dialog = false;  
       },
       goToShop() {
         this.$router.push("/mileageshop")

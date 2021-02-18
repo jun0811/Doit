@@ -5,7 +5,8 @@ const state = {
   name: null,
   email: null,
   userpk: null,
-  userimg: null
+  userimg: null,
+  role:""
 };
 
 const getters = {
@@ -39,15 +40,16 @@ const mutations = {
     state.name = name;
     sessionStorage.name = name;
   },  
-  LOGIN(state, { headers, data }) {
-    if (!headers.accesstoken) return;
-    state.accessToken = headers.accesstoken;
+  LOGIN(state, { data }) {
+    if (!data.status) return;
+    state.accessToken = true;
     state.name = data.object.nickname;
     state.email = data.object.email;
     state.userpk = data.object.id;
     state.userimg = data.object.image
+    state.role = data.object.role
     
-    sessionStorage.accessToken = headers.accesstoken;
+    sessionStorage.accessToken = state.accessToken;
     sessionStorage.name = data.object.nickname;
     sessionStorage.email = data.object.email;
     sessionStorage.userpk = data.object.id;

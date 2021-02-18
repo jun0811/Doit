@@ -3,7 +3,7 @@
     <v-row class="mx-1 mb-2 mt-16 mt-sm-0">
       <h4>Doit 그룹랭킹👑</h4>
     </v-row>
-    <v-card class="px-4 mr-sm-3">
+    <v-card class="px-4 mr-sm-3" v-if="groups.length >0" style="min-height:400px" >
       <v-row v-for="(group, idx) in groups" :key="idx" class="my-3" @click="moveToGroup(group)">
         <v-col cols="2" class="text-center">
           <span class="rank-num">{{group.ranking}}</span>
@@ -15,6 +15,18 @@
         <v-col cols="8">
           <div class="group-name">{{group.groupName}}</div>
         </v-col>
+      </v-row>
+    </v-card>
+    <v-card class="px-4 mr-sm-3" v-else >
+      <v-row class="my-3 zero-list d-flex flex-column align-center justify-center">
+          <div>아직 일간 그룹 순위가 생성되지 않았어요!</div>
+          <div>참여한 그룹에 인증글을 올려</div>
+          <div>인증마크를 획득하고 그룹 랭킹을 높여보세요!</div>
+          <div
+            class="d-flex flex-column align-center justify-end ml-8 auth-icon">
+            <font-awesome-icon class="fa-3x " :icon="['far', 'smile']" />
+            <div style="font-size:14px;">오늘인증</div>
+          </div>
       </v-row>
     </v-card>
   </div>
@@ -56,6 +68,15 @@ export default {
 </script>
 
 <style scoped>
+
+.zero-list {
+  min-height:400px;
+  color : rgb(102, 95, 95);
+}
+
+.approved:hover {
+  transform: scale(1.2);
+}
 
 .rank-num {
   font-size: x-large;
@@ -192,5 +213,8 @@ export default {
   transform : scale(1.1);
 }
 
+.auth-icon {
+  color:#5dc9b6;
+}
 
 </style>

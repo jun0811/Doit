@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header></Header>
      <v-card  class="d-flex align-center flex-column mb-15 mx-auto px-5" width="360px">
     <h3 class="my-10">비밀번호 변경</h3>
     <div>
@@ -39,20 +38,15 @@
         </v-card-actions>
     </div>
   </v-card>
-
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from '../../components/common/Header.vue'
-import Footer from '../../components/common/Footer.vue'
 import { validationMixin } from 'vuelidate';
 import { required, sameAs, minLength } from 'vuelidate/lib/validators'
 import http from '../../http-common'
 
 export default {
-    components: { Header, Footer },
     mixins: [validationMixin],
     validations: {
       password:{ required, minLength: minLength(8)},
@@ -89,8 +83,8 @@ export default {
             http.post('/user/changePw', {
                 "password": this.password
             })
-            .then((res)=>{
-                alert(res.data.status);
+            .then(()=>{
+                alert("변경에 성공하였습니다.");
                 this.$router.push('/');
             })
         }},

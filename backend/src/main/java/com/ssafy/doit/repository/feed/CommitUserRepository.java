@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface CommitUserRepository extends JpaRepository<CommitUser, Long> {
     Optional<CommitUser> findByUserPkAndDate(Long userPk, LocalDate now);
-    List<CommitUser> findByUserPkAndDateBetweenOrderByDate(Long userPk, LocalDate before, LocalDate today);
+    List<CommitUser> findTop30ByUserPkAndDateBetweenOrderByDate(Long userPk, LocalDate before, LocalDate today);
 
     @Modifying
     @Transactional

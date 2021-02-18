@@ -1,8 +1,7 @@
 <template>
   <div>
-    <Header></Header>
     <!-- 그룹 간략 소개 시작 -->
-      <v-container>
+      <v-container  id="container">
         <v-row class="d-flex justify-center group-intro">
           <v-col cols="4" sm="3" class="d-flex align-center justify-start">
             <div class="group-image">
@@ -38,8 +37,8 @@
 
             <v-tabs color="orange" class="d-flex justify-center">
               <!-- <v-tab>자유 피드</v-tab> -->
-              <v-tab @click="UserList">그룹정보</v-tab>
               <v-tab @click="FeedList">인증피드</v-tab>
+              <v-tab @click="UserList">그룹정보</v-tab>
             </v-tabs>            
         </v-col>       
         <v-col v-if="feed && joined" cols="12" class="d-flex flex-column justify-space-around align-center mx-sm-16">
@@ -114,6 +113,21 @@
           <v-row class="d-flex justify-center align-center flex-column card">
             <v-col cols="10" v-if="cards.length" class="feeds noticards"> 
               <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card"></FeedCard>
+              <v-row>
+                <v-btn v-show="visible" 
+                  class="top pa-0" 
+                  text  
+                  @click="onTop"
+                  plain
+                  x-large
+                  >
+                  맨위로
+                  <v-icon> 
+                    mdi-arrow-up-bold-box-outline  
+                  </v-icon>          
+                 
+                </v-btn>
+              </v-row>
             </v-col>
             <v-col cols="10" v-else>
               <v-row  class="d-flex justify-center">
@@ -132,23 +146,19 @@
         </v-col> 
       </v-row>
     </v-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
 import GroupMember from "@/components/group/GroupMember";
 import FeedCard from "@/components/group/FeedCard";
 import http from "../../http-common"
-// 해야할일 현재 날짜 받아와서 현재 달, 날짜 값으로 feed 보여주기 
 
 
 const date=new Date()
 
 export default {
-  components: { Header, Footer, GroupMember,FeedCard },
+  components: { GroupMember,FeedCard },
   props: {
     groupPk: {type:String},
     notiFeed : Boolean,
@@ -156,14 +166,15 @@ export default {
   },
   data() {
     return {
+      visible: false,
       full: false,
       image: "",
       menu2: false,
       menu1: false,
       user_info: {},
       user_num: 0,
-      feed: false, //
-      users: true, 
+      feed: true, //
+      users: false, 
       joined: false, // 현재 유저 가입 여부 확인
       start: new Date().toISOString().substr(0,10),
       end: new Date().toISOString().substr(0,10),
@@ -203,7 +214,7 @@ export default {
     //검색 날짜 시작 날짜
     start(){
       this.submit = false
-      const start = new Date(this.start)
+      const start =  new Date(this.start)
       const end = new Date(this.end)
       const TODAY = new Date() // 
       let dateDiff = Math.ceil((end.getTime()-start.getTime())/(1000*3600*24));
@@ -225,6 +236,7 @@ export default {
     groupPk(){
       this.start = new Date().toISOString().substr(0,10);
       this.end = new Date().toISOString().substr(0,10);
+
       http.get(`group/detailGroup?groupPk=${this.groupPk}`)
       .then((res)=>{
           this.user_info= res.data.object
@@ -233,27 +245,52 @@ export default {
           this.tags = res.data.object.tags
           this.loginUser = this.$store.state.account.userpk
           this.image = res.data.object.image
-      }),
+          this.createDate = res.data.object.createDate
+          this.start = res.data.object.createDate
+      })
       http.get('group/currentUserGroup')
         .then((res)=>{
           this.joined = res.data.object.some((group)=>{
             if(this.groupPk == group.groupPk){
               return true
-            }
-          })
-        }),
-      http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.start}`)
-      .then((res)=>{
-        this.cards = res.data.object
+          }
+        })
       })
+      if (this.notiFeed) {
+        this.FeedList()
+        const notiDate = this.notiInfo.createDate.substr(0,10)
+        this.end = notiDate
+        this.start = notiDate
+        this.feedRead()
+        http.get(`feed/groupFeed?end=${notiDate}&groupPk=${this.groupPk}&start=${notiDate}`)
+        .then((res)=>{
+          this.cards = res.data.object
+          console.log("커뮤니티")
+        })
+      }
+      else{
+        http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.createDate}`)
+        .then((res)=>{
+          this.cards = res.data.object
+          console.log("커뮤니티")
+        })
+      }
     }
   }
   ,
   methods: {
-    // moveScroll(location){
-    //   console.log(location)
-    //   window.scrollTo({top:location, behavior:'smooth'})
-    // }, 
+    // 스크롤 
+    onTop(){
+      this.intervalId = setInterval(() => {
+        if (window.pageYOffset === 0) {
+          clearInterval(this.intervalId)
+        }
+        window.scroll(0, window.pageYOffset - 500)
+      }, 1)
+    },
+    scrollListener() {
+      this.visible = window.scrollY > 150
+    },
     updateGroup(){
       this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
     },
@@ -274,7 +311,6 @@ export default {
     joinGroup(){
     http.get(`group/joinGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
-      console.log(res)
       if(res.data.status){
         alert('그룹에 가입하였습니다.🐱‍🚀')
         this.$router.go()
@@ -303,11 +339,9 @@ export default {
       })
     },
   },
-  //
   created(){
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
-      console.log(res)
       this.user_info= res.data.object
       this.user_num = this.user_info.users.length
       this.leader = res.data.object.leader
@@ -315,7 +349,13 @@ export default {
       this.loginUser = this.$store.state.account.userpk
       this.image = res.data.object.image
       this.createDate = res.data.object.createDate
-    }),
+      this.start = res.data.object.createDate
+    })
+    http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.createDate}`)
+    .then((res)=>{
+      this.cards = res.data.object
+    })
+    
     http.get('group/currentUserGroup')
       .then((res)=>{
         this.joined = res.data.object.some((group)=>{
@@ -326,20 +366,14 @@ export default {
         if (!this.joined) {
           this.users = true;
         }
-      }),
-    http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.start}`)
-    .then((res)=>{
-      this.cards = res.data.object
     })
-    if (this.notiFeed) {
-      console.log('noti', this.groupPk)
-      this.FeedList()
-      console.log('notigroup', this.notiInfo)
-      const notiDate = this.notiInfo.createDate.substr(0,10)
-      this.end = notiDate
-      this.start = notiDate
-      this.feedRead()
-    }
+    // 알람이 왔을 때 피드
+  },
+  mounted: function () {
+    window.addEventListener('scroll', this.scrollListener)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('scroll', this.scrollListener)
   }
 }
 </script>
@@ -353,8 +387,6 @@ export default {
   @media only screen and (min-width: 300px) and (max-width: 599px) {
   .group-intro {
     border: 1px solid #E0E0E0;
-    /* margin-left: 0px;
-    margin-right: 0px; */
     } 
   }
   @media only screen and (min-width: 2000px) {
@@ -382,14 +414,11 @@ export default {
   .text-h5 {
     color: #E0E0E0
   }
-  /* .temp {
-    border: 1px solid;
-    width: 100%;
-  } */
   .selected{
     color:#F9802D
   }
-  .group{
+  .group
+  {
     border: 1px solid #F9802D;
     color: #F9802D
   }
@@ -419,12 +448,10 @@ export default {
     color: #616161;
   }
  .tag-style {
-  /* text-shadow: 0 0 2px yellow;  */
   background-color: #F9802D;
   border-radius: 5px;
   padding: 3px;
   color: white;
-  /* font-size: 90%; */
  }
 
 .tag-effect{
@@ -440,12 +467,17 @@ export default {
     transition:.1s;
 }
 .tag-effect:hover {
-    -webkit-transform:scale(1.2);
-    -moz-transform:scale(1.2);
-    -ms-transform:scale(1.2);   
-    -o-transform:scale(1.2);
-    transform:scale(1.05);
+  -webkit-transform:scale(1.2);
+  -moz-transform:scale(1.2);
+  -ms-transform:scale(1.2);   
+  -o-transform:scale(1.2);
+  transform:scale(1.05);
 }
-
+.top{
+  color: gray;
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+}
  
 </style>

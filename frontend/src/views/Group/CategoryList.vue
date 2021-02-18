@@ -1,12 +1,10 @@
 <template>
   <div>
-      <Header></Header>
-      <!-- <NavBar></NavBar> -->
       <v-container class="pa-0 pa-md-3">
         <br>
         <v-row class="mb-3">
           <v-col cols="12" sm="6" xl="8" class="d-flex flex-column justify-center">
-            <h3 class="pl-1 pl-sm-16"><span class="keycolor">{{ category_k }}</span> 카테고리</h3>
+            <h3 class="pl-5 pl-sm-16"><span class="keycolor">{{ category_k }}</span> 카테고리</h3>
           </v-col>
           <v-col cols="12" sm="6" xl="4">
             <v-btn text  @click="clickCategory('공부')" v-bind:class="{keycolor: selected['study']}">공부</v-btn>
@@ -27,34 +25,38 @@
           <br>
           <br>
           <h4>'{{ category_k }}' 관련 그룹을 만들고 싶으시다면?</h4>
-          <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
+          <v-btn text class="text-h6" color="#F9802D" @click="createGroup" v-if="member">
             그룹 만들기
           </v-btn>
+          <h3 class="login" v-else>
+            로그인
+          </h3>
+          
         </div>
         <!-- </div> -->
         <div v-else class="d-flex align-center flex-column">
           <v-pagination
-            class="mt-12 mb-5"
+            v-if="pageCount>=1"
+            class="mt-12 mb-2"
             color="orange"
             v-model="page"
             :length="pageCount"
             :total-visible="7"
           ></v-pagination>
-          <h4 class="mt-6">'{{ category_k }}' 관련 그룹을 만들고 싶으시다면?</h4>
-          <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
+          <h4 class="mt-14">'{{ category_k }}' 관련 그룹을 만들고 싶으시다면?</h4>
+          <v-btn text class="text-h6" color="#F9802D" @click="createGroup" v-if="member">
             그룹 만들기
           </v-btn>
+          <h3 class="login" v-else>
+            로그인
+          </h3>
         </div>
 
       </v-container>
-      <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
-// import NavBar from "@/components/common/NavBar.vue";
-import Footer from "@/components/common/Footer";
 import GroupCard from "@/components/group/GroupCard.vue";
 import { categoryGroup } from "@/api/group/index.js"
 
@@ -90,7 +92,6 @@ export default {
       },
       (res) =>{
         if (res.status){
-        // console.log(res)
         this.groups = res.data.object.content
         this.pageCount = parseInt(res.data.object.totalPages)
         this.empty = res.data.object.empty
@@ -115,7 +116,6 @@ export default {
       },
       (res) =>{
         if (res.status){
-        // console.log(res)
         this.groups = res.data.object.content
         this.pageCount = parseInt(res.data.object.totalPages)
         this.empty = res.data.object.empty
@@ -130,9 +130,6 @@ export default {
     )
   },  
   components: { 
-      Header, 
-      // NavBar,
-      Footer, 
       GroupCard 
   },
   methods: {
@@ -140,7 +137,6 @@ export default {
       this.$router.push('/group/groupcreate')
     },
     clickCategory(v) {
-      // console.log(v);
       this.category = this.categories[v]
       this.category_k = v
       this.selected['study'] = false
@@ -152,8 +148,6 @@ export default {
       this.selected['etc'] = false
       this.selected[this.categories[v]] = true
       this.page = 1
-      // console.log(this.selected);
-      // console.log(this.selected['study']);
     }
   }
 }
@@ -163,4 +157,7 @@ export default {
 .keycolor {
   color: #F9802D;
 }
+.login{
+   color: #F9802D;
+ }
 </style>

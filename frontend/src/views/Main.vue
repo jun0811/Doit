@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <div>
-      <Header></Header>
       <SearchBar></SearchBar>
       <Category></Category>
       <v-container class="px-3 px-sm-16 mt-16">
@@ -14,16 +13,12 @@
           </v-col>
         </v-row>
       </v-container>
-      <Footer></Footer>
     </div>
   </v-app>
 </template>
 
 <script>
 import "../assets/css/main.css";
-import Header from "@/components/common/Header.vue";
-// import NavBar from "@/components/common/NavBar.vue";
-import Footer from "@/components/common/Footer.vue";
 import SearchBar from "@/components/common/SearchBar.vue";
 import WordCloud from "@/components/WordCloud.vue";
 import Category from "@/components/Category.vue";
@@ -32,9 +27,6 @@ import Ranking from "@/components/Ranking.vue";
 export default {
   name: "Main",
   components: {
-    Header,
-    // NavBar,
-    Footer,
     WordCloud,
     SearchBar,
     Category,

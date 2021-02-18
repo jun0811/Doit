@@ -12,10 +12,10 @@ const notiType = {
 }
 
     async function connect() {
-      let serverURL = "http://localhost:8080/ws";
+      let serverURL = "http://i4c108.p.ssafy.io/api/ws";
       let socket = new SockJS(serverURL);
       let stompClient = Stomp.over(socket);
-      await stompClient.connect({ "accessToken": store.getters.getAccessToken },
+      await stompClient.connect({},
       frame => {
         console.log(frame)
         store.commit("SET_CONNECTED", true);
@@ -32,7 +32,7 @@ const notiType = {
     
     function sendNotify(notification) {
       if (store.getters.getStompClient == null) return;
-      store.getters.getStompClient.send("/publish/noti", JSON.stringify(notification),{"accessToken": store.getters.getAccessToken})
+      store.getters.getStompClient.send("/publish/noti", JSON.stringify(notification),{})
     }
 
 

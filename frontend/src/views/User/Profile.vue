@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header></Header>
     <v-container class="pa-3 pa-sm-16">
       <v-row class="py-3 ma-0 d-flex justify-center" style="width:100%">
         <!-- 개인 이미지 + 닉네임 시작 -->
@@ -77,13 +76,10 @@
         </v-col>
       </v-row>
     </v-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import FeedList from "@/components/group/FeedList.vue";
 import JoinedGroupList from "@/components/group/JoinedGroupList.vue";
 import http from "../../http-common";
@@ -92,8 +88,6 @@ import Grass from '../../components/Grass.vue';
 export default {
   name: "Profile",
   components: {
-    Header,
-    Footer,
     FeedList,
     JoinedGroupList,
     Grass,

@@ -1,11 +1,9 @@
 <template>
 <div>
-  <Header></Header>
-  <!-- <NavBar></NavBar> -->
     <v-container class="container-width">
         <v-row>
-          <v-col v-if="image" class="img-wrapper">
-            <img class="product-img" :src="defaultAddress+image" alt="product image">
+          <v-col v-if="productImg" class="img-wrapper">
+            <img class="product-img" :src="defaultAddress+productImg" alt="product image">
           </v-col>
         </v-row>
         <v-row class="my-3 px-6 d-flex align-center">
@@ -85,33 +83,48 @@
               </template>
               <template v-slot:default="dialog">
               <v-card>
-                <v-card-title>
+                <v-card-title class="py-1 px-1">
                   <v-container>
                     <v-row>
-                      <v-col cols="3" sm="2" class="mt-1">
-                        <img 
-                          :src="productImg" 
-                          alt="product-img"
-                          class="prd-img"
-                        >    
+                      <v-col cols="2" sm="2" class="mt-1 d-flex justify-center align-center">
+                        <v-avatar>
+                          <img 
+                            :src="defaultAddress + productImg" 
+                            alt="product-img"
+                            class="prd-img"
+                          >    
+                        </v-avatar>
                       </v-col>
-                      <v-col cols="6" sm="8" class="d-flex flex-column justify-center">
+                      <v-col cols="6" sm="6" class="d-flex flex-column justify-center">
                         <v-row class="prd-name">
                           <v-col class="">
                             {{ productName }}  
                           </v-col>
                         </v-row>
                         <v-row class="chat-prd-mileage">
-                          <v-col class="">
+                          <v-col class="pb-0">
                           {{ productPrice }} 마일리지
                           </v-col>
                         </v-row>
                       </v-col>
-                      <v-col cols="3" sm="2" class="d-flex flex-column justify-center">
-                        <v-btn
-                          text
-                          @click="[ dialog.value = false, close() ]"
-                        >닫기</v-btn>                          
+                      <v-col cols="4" sm="4" class="d-flex flex-column justify-center">
+                        <v-row class="d-flex justify-end mb-4">
+                          <v-btn
+                            text
+                            icon
+                            large
+                            class="mr-1 mt-1"
+                            @click="[ dialog.value = false, close() ]"
+                          ><v-icon>mdi-close</v-icon></v-btn>                          
+                        </v-row>
+                        <!-- <v-row class="d-flex justify-end">
+                          <v-btn
+                            text
+                            color="#F9802D"
+                            class="mr-1"
+                            @click="sell"
+                          >거래버튼 전송</v-btn>
+                        </v-row>                          -->
                       </v-col>
                     </v-row>
                   </v-container>
@@ -140,10 +153,10 @@
                   </div>
                 </v-card-text>
                 <v-divider></v-divider>
-                <v-card-actions>
+                <v-card-actions class="pb-0">
                   <v-container>
                     <v-row class="">
-                      <v-col cols="10">
+                      <v-col cols="12" class="py-0">
                         <v-text-field
                           label="메세지를 입력하세요."
                           v-model="content" 
@@ -151,15 +164,9 @@
                           outlined
                           @keyup.enter="sendMessage()"
                           background-color="white"
+                          dense
+                          append-icon="mdi-send"                          
                         ></v-text-field>                        
-                      </v-col>
-                      <v-col cols="2" class="d-flex justify-center">
-                        <div class="send-icon">
-                          <font-awesome-icon 
-                            :icon="['far', 'paper-plane']"
-                            @click="sendMessage()"                         
-                          /> 
-                        </div>                        
                       </v-col>
                     </v-row>
                   </v-container>
@@ -170,29 +177,22 @@
           </v-col>
         </v-row>
     </v-container>
-  <Footer></Footer>
-
 </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import http from "../../http-common";
 import { notiType, sendNotify } from '../../api/notification/index'
 
 export default {
   name: "ProductDetail",
   components: {
-    Header,
-    // NavBar,
-    Footer,
-    // ChatRoom,
   },
   data() {
     return {
       product: '',
       user : 'nickname',
+      chattings: [], 
       seller: '',
       roomid : 0,
       id : 84,
@@ -222,7 +222,7 @@ export default {
     .then((res)=>{
       this.product = res.data.object
       this.seller = this.product.user_pk
-      this.image =  this.product.image
+      this.productImg =  this.product.image
       this.profile = this.product.profile
     })   
     // var objDiv = document.getElementById("scroll"); 
@@ -246,7 +246,7 @@ export default {
           'message': this.content,
           'roomPk' : this.roomid,
         }
-        this.$store.getters.getStompClient.send("/publish/chat", JSON.stringify(chatMessage),{"accessToken": this.$store.getters.getAccessToken})
+        this.$store.getters.getStompClient.send("/publish/chat", JSON.stringify(chatMessage),{})
         sendNotify({
           "notiType": notiType.NEWCHAT,
           "userPk": this.user2['userPk'],
@@ -309,15 +309,21 @@ export default {
       }
     },
     deleteProduct() {
-      http.delete(`/product/${this.product_id}`)
-      .then((res) => {
-        console.log(res)
-        this.$router.push('/mileageshop')
-      })
+      if(confirm("등록하신 물품을 삭제하시겠습니까?")==true) {
+        http.delete(`/product/${this.product_id}`)
+        .then(()=>{
+            alert("해당 물품이 삭제되었습니다.")
+            this.$router.push('/mileageshop')
+          }
+        )
+      }      
     },
     updateProduct() {
       this.$router.push({name:"ProductUpdate",params:{product_id:this.product_id}})
-    }
+    },
+    sell() {
+
+    },
   }
 };
 </script>

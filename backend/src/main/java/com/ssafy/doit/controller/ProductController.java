@@ -1,14 +1,20 @@
 package com.ssafy.doit.controller;
 
 import com.ssafy.doit.model.Mileage;
+import com.ssafy.doit.model.store.ChatRoom;
 import com.ssafy.doit.model.store.Product;
 import com.ssafy.doit.model.request.RequestPage;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseProduct;
+import com.ssafy.doit.model.store.ProductStatus;
+import com.ssafy.doit.model.store.Sale;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.MileageRepository;
+import com.ssafy.doit.repository.store.ChatRoomJoinRepository;
+import com.ssafy.doit.repository.store.ChatRoomRepository;
 import com.ssafy.doit.repository.store.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
+import com.ssafy.doit.repository.store.SaleRepository;
 import com.ssafy.doit.service.S3Service;
 import com.ssafy.doit.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -43,6 +49,15 @@ public class ProductController {
 
     @Autowired
     private S3Service s3Service;
+
+    @Autowired
+    private SaleRepository saleRepository;
+
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
+
+    @Autowired
+    private ChatRoomJoinRepository chatRoomJoinRepository;
 
     @ApiOperation(value = "물품 등록")
     @PostMapping("/createProduct")
@@ -177,17 +192,55 @@ public class ProductController {
     }
     
 
-    @ApiOperation(value = "물품 판매")
-    @GetMapping("/sell")
-    public Object sell(@RequestParam Long pid, @RequestParam Long uid){
+    @ApiOperation(value = "물품 판매 예약")
+    @GetMapping("/requestSell")
+    public Object sell(@RequestParam Long roomPk){
         ResponseBasic result = null;
         try{
             User host = userRepository.findById(userService.currentUser()).get();
-            User consumer = userRepository.findById(uid).get();
-            Product product = productRepository.findById(pid).get();
+            ChatRoom chatRoom = chatRoomRepository.findById(roomPk).get();
+            Product product = chatRoom.getProduct();
 
             if(host.getId() != product.getUser().getId()) throw new Exception("유저 불일치");
+            if(saleRepository.findByChatRoom_Product_Id(product.getId()).isPresent()) throw new Exception("이미 예약중인 상품");
+
+            Sale sale = new Sale();
+            sale.setChatRoom(chatRoom);
+            saleRepository.save(sale);
+
+            product.setStatus(ProductStatus.WAITING);
+            productRepository.save(product);
+
+            result = new ResponseBasic(true, "success", null);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "구매 확정")
+    @GetMapping("/purchase")
+    public Object purchase(@RequestParam Long roomPk) {
+        ResponseBasic result = null;
+        try {
+            ChatRoom chatRoom = chatRoomRepository.findById(roomPk).get();
+            Product product = chatRoom.getProduct();
+
+            User consumer = userRepository.findById(userService.currentUser()).get();
+            User host = product.getUser();
+
+            if (!chatRoomJoinRepository.findChatRoomJoinByUser_IdAndChatRoom_Id(consumer.getId(), roomPk).isPresent())
+                throw new Exception("유저 불일치");
             if(consumer.getMileage() < product.getMileage()) throw new Exception("마일리지 부족");
+
+            Sale sale = saleRepository.findByChatRoom_Id(roomPk).get();
+            saleRepository.delete(sale);
+
+            for(ChatRoom c : product.getChatRooms())
+                chatRoomRepository.delete(c);
 
             host.setMileage(host.getMileage() + product.getMileage());
             userRepository.save(host);
@@ -205,11 +258,39 @@ public class ProductController {
                     .mileage("-" + product.getMileage())
                     .user(consumer).build());
 
-            product.setStatus(false);
+            product.setStatus(ProductStatus.SOLDOUT);
             productRepository.save(product);
-            result = new ResponseBasic(true, "판매 완료", null);
+
+            result = new ResponseBasic(true, "success", null);
+
+        } catch (Exception e){
+            e.printStackTrace();
+            result = new ResponseBasic(false, e.getMessage(), null);
         }
-        catch (Exception e){
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "예약 취소")
+    @GetMapping("/cancel")
+    public Object cancel(@RequestParam Long roomPk){
+        ResponseBasic result = null;
+        try {
+            User currentUser = userRepository.findById(userService.currentUser()).get();
+            if (!chatRoomJoinRepository.findChatRoomJoinByUser_IdAndChatRoom_Id(currentUser.getId(), roomPk).isPresent())
+                throw new Exception("유저 불일치");
+
+            ChatRoom chatRoom = chatRoomRepository.findById(roomPk).get();
+            Sale sale = saleRepository.findByChatRoom_Id(chatRoom.getId()).get();
+            saleRepository.delete(sale);
+
+            Product product = chatRoom.getProduct();
+            product.setStatus(ProductStatus.ONSALE);
+            productRepository.save(product);
+
+            result = new ResponseBasic(true, "success", null);
+
+        } catch (Exception e){
             e.printStackTrace();
             result = new ResponseBasic(false, e.getMessage(), null);
         }

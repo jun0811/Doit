@@ -7,11 +7,11 @@
           <img v-if="!item.image" src="@/assets/img/profile_temp.png" class="profile-image">
           <img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + item.image" class="profile-image">
         <span class="mx-2">{{item.nickname}}</span>
-        <v-btn v-if="loginUser==leader && item.userPk != leader" normal x-small class="px-0" @click="kickout(item.userPk)">강퇴</v-btn>
+        <v-btn text v-if="loginUser==leader && item.userPk != leader" normal x-small class="px-0 kick" @click="kickout(item.userPk)">강퇴</v-btn>
         <span v-if="item.userPk == leader" class="groupleader"><font-awesome-icon icon="crown"/></span>
       </div>
       <div v-if="item.auth"
-        class="d-flex flex-column align-center justify-end auth-icon">
+        class="d-flex flex-column align-center justify-end auth-icon ml-8">
         <font-awesome-icon class="fa-3x " :icon="['far', 'smile']" />
         <div style="font-size:14px;">오늘인증</div>
       </div>
@@ -148,6 +148,18 @@ import { notiType, sendNotify } from "../../api/notification/index"
   position:absolute;
   top:0;
   left:110px;
+  z-index: -3;
+}
+
+.kick {
+  background-color: orange;
+  color:white;
+}
+
+.kick:hover {
+  background-color: red;
+  transform : scale(1.05);
+  
 }
 
 </style>
