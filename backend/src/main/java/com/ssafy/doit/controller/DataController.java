@@ -9,6 +9,7 @@ import com.ssafy.doit.model.group.HashTag;
 import com.ssafy.doit.model.response.ResRanking;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.user.User;
+import com.ssafy.doit.model.user.UserRole;
 import com.ssafy.doit.repository.*;
 import com.ssafy.doit.repository.feed.CommitGroupRepository;
 import com.ssafy.doit.repository.feed.CommitUserRepository;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,10 +69,11 @@ public class DataController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    //@Scheduled(cron = "0 0 0 * * *") // 매일 00시 마다
+    @Scheduled(cron = "0 0 0 * * *") // 매일 00시 마다
     public void initCommitUser(){
-        List<User> userList = userRepository.findAll();
+        List<User> userList = userRepository.findByUserRole(UserRole.USER);
         for(User user : userList){
+            System.out.println(user.getNickname());
             LocalDate date = LocalDate.now();
             commitUserRepository.save(CommitUser.builder()
                     .date(date)
@@ -125,8 +128,8 @@ public class DataController {
     // 주간 그룹 순위 => 그룹점수와 개인 마일리지 점수를 제공하는 function
     // 매주 월요일마다 그 전주(7일)동안 각 그룹의 인증수 비율을 합한 수대로 순위를 매겨
     // 1~5위부터 그룹 점수 제공하며 각 그룹에 속해 있는 그룹원들에게 마일리지 점수 제공
-    // ((group table에는 그 동안(주간 그룹 순위) 받은 누적 그룹 점수로 명예의 전당으로 활용 가능))
-    // @Scheduled(cron = "0 0 0 * * MON") // 월요일 자정마다
+    // ((group table에 있는 score : 그 동안(주간 그룹 순위) 받은 누적 그룹 점수로 명예의 전당으로 활용 가능))
+    @Scheduled(cron = "0 0 0 * * MON") // 월요일 자정마다
     @Transactional
     public void giveScore(){
         LocalDate start = LocalDate.now().plusDays(1).minusDays(7);

@@ -5,17 +5,17 @@
       <v-container class="pa-0 pa-md-3">
         <br>
         <v-row class="mb-3">
-          <v-col cols="12" sm="6" class="d-flex flex-column justify-center">
+          <v-col cols="12" sm="6" xl="8" class="d-flex flex-column justify-center">
             <h3 class="pl-1 pl-sm-16"><span class="keycolor">{{ category_k }}</span> 카테고리</h3>
           </v-col>
-          <v-col cols="12" sm="6">
-            <v-btn text outlined @click="clickCategory('공부')" v-bind:class="{keycolor: selected['study']}">공부</v-btn>
-            <v-btn text outlined @click="clickCategory('다이어트')" v-bind:class="{keycolor: selected['diet']}">다이어트</v-btn>
-            <v-btn text outlined @click="clickCategory('운동')" v-bind:class="{keycolor: selected['exercise']}">운동</v-btn>
-            <v-btn text outlined @click="clickCategory('독서')" v-bind:class="{keycolor: selected['book']}">독서</v-btn>
-            <v-btn text outlined @click="clickCategory('생활습관')" v-bind:class="{keycolor: selected['life']}">생활습관</v-btn>
-            <v-btn text outlined @click="clickCategory('취미')" v-bind:class="{keycolor: selected['hobby']}">취미</v-btn>
-            <v-btn text outlined @click="clickCategory('기타')" v-bind:class="{keycolor: selected['etc']}">기타</v-btn> 
+          <v-col cols="12" sm="6" xl="4">
+            <v-btn text  @click="clickCategory('공부')" v-bind:class="{keycolor: selected['study']}">공부</v-btn>
+            <v-btn text  @click="clickCategory('다이어트')" v-bind:class="{keycolor: selected['diet']}">다이어트</v-btn>
+            <v-btn text  @click="clickCategory('운동')" v-bind:class="{keycolor: selected['exercise']}">운동</v-btn>
+            <v-btn text  @click="clickCategory('독서')" v-bind:class="{keycolor: selected['book']}">독서</v-btn>
+            <v-btn text  @click="clickCategory('생활습관')" v-bind:class="{keycolor: selected['life']}">생활습관</v-btn>
+            <v-btn text  @click="clickCategory('취미')" v-bind:class="{keycolor: selected['hobby']}">취미</v-btn>
+            <v-btn text  @click="clickCategory('기타')" v-bind:class="{keycolor: selected['etc']}">기타</v-btn> 
           </v-col>
         </v-row>
         <div v-if="!empty" class="pl-1 pl-sm-16">

@@ -116,7 +116,7 @@ import { notiType, sendNotify } from "../../api/notification/index"
       accept(){
         http.get(`feed/authCheckFeed?feedPk=${this.card.feedPk}`)
         .then((res)=> {
-          console.log(res)
+          // console.log(res)
           if(res.data.status){
             this.auth= true
           }else{
@@ -141,7 +141,7 @@ import { notiType, sendNotify } from "../../api/notification/index"
         )
       },
       feedUpdate(){
-        this.$router.push({name:"FeedUpdate",params:{feedPk:Number(this.card.feedPk),"content":this.card.content, "writer":this.card.writer}})
+        this.$router.push({name:"FeedUpdate",params:{feedPk:Number(this.card.feedPk),"content":this.card.content, "writer":this.card.writer, "image":this.card.media}})
       }
     }
   }
