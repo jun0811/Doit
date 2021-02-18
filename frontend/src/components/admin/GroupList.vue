@@ -4,6 +4,7 @@
       :columns="columns"
       max-height="500px"
       :fixed-header="true"
+      @on-cell-click="onCellClick"
       :rows="rows"/>
   </div>
 </template>
@@ -52,6 +53,15 @@ export default {
     .then((res)=>{
       this.rows = res.data.object
     })
+  },
+  methods: {
+    onCellClick(v){
+      var message = confirm(`${v.row.name}(${v.row.groupPk}) 페이지로 이동하시겠습니까?`) 
+      if (message == true){
+        this.$router.push({name:"Community", params:{groupPk: v.row.groupPk}})
+
+      }
+    }
   }
 }
 </script>

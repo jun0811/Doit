@@ -50,9 +50,8 @@ export default {
     onCellClick(v){
       var message = confirm(`${v.row.nickname}(${v.row.id}) 유저를 강퇴시키겠습니까?`) 
       if (message == true){
-        // http.put(`/admin/deleteUserByAdmin?userPk=${v.row.id}`)
-        // .then(()=> alert("해당 유저를 강퇴시켰습니다."))
-        alert("ㅎㅁㄴㅇㄴㅁ")
+        http.put(`/admin/deleteUserByAdmin?userPk=${v.row.id}`)
+        .then(()=> alert("해당 유저를 강퇴시켰습니다."))
       }
     }
   }

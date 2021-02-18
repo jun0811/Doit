@@ -1,14 +1,18 @@
 <template>
   <div>
-    <h3>관리자 페이지</h3>
     <v-container>
+    <h2 class="my-10"> 👷‍♂Doit 관리자 페이지👷‍♂</h2>
       <v-row>
         <v-col>
+          <h3 >그룹 정보</h3>
+          <span>해당 셀을 누르면 그룹으로 이동이 가능합니다.</span>
           <GroupList></GroupList>
         </v-col>
       </v-row>
       <v-row class="mt-10">
         <v-col>
+          <h3>회원 정보</h3>
+          <span>해당 셀을 누르면 회원 강퇴여부를 결정할 수 있습니다.</span>
           <MemberList></MemberList>
         </v-col>
       </v-row>
@@ -35,6 +39,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  h2, h3{
+  color: #F9802D;
+}
 
 </style>
