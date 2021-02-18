@@ -232,13 +232,6 @@ export default {
           this.createDate = res.data.object.createDate
           this.start = res.data.object.createDate
       })
-      if (this.notiFeed) {
-        this.FeedList()
-        const notiDate = this.notiInfo.createDate.substr(0,10)
-        this.end = notiDate
-        this.start = notiDate
-        this.feedRead()
-      }
       http.get('group/currentUserGroup')
         .then((res)=>{
           this.joined = res.data.object.some((group)=>{
@@ -246,12 +239,26 @@ export default {
               return true
           }
         })
-      }),
-      http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.createDate}`)
-      .then((res)=>{
-        this.cards = res.data.object
-        console.log("커뮤니티")
       })
+      if (this.notiFeed) {
+        this.FeedList()
+        const notiDate = this.notiInfo.createDate.substr(0,10)
+        this.end = notiDate
+        this.start = notiDate
+        this.feedRead()
+        http.get(`feed/groupFeed?end=${notiDate}&groupPk=${this.groupPk}&start=${notiDate}`)
+        .then((res)=>{
+          this.cards = res.data.object
+          console.log("커뮤니티")
+        })
+      }
+      else{
+        http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.createDate}`)
+        .then((res)=>{
+          this.cards = res.data.object
+          console.log("커뮤니티")
+        })
+      }
     }
   }
   ,
