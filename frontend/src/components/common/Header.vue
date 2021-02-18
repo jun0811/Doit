@@ -8,7 +8,7 @@
           v-model="drawer"
           absolute
           temporary
-          style="height: 110vh;"
+          style="height: 100vh;"
         >
           <v-list-item>
             <v-list-item-avatar>
