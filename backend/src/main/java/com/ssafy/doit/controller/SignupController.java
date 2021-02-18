@@ -106,7 +106,6 @@ public class SignupController {
                     .build());
 
             beforeCommitUser(user.getId());
-            
             mileageRepository.save(Mileage.builder()
                     .content("회원가입 축하 마일리지 지급")
                     .date(LocalDateTime.now())
@@ -196,12 +195,15 @@ public class SignupController {
         LocalDate now = LocalDate.now();
         LocalDate before = now.minusDays(29);
         for(int day = 1; day <= 30; day++){
-            commitUserRepository.save(CommitUser.builder()
-                    .date(before)
-                    .userPk(userPk)
-                    .cnt(0)
-                    .build());
-            before = before.plusDays(1);
+            Optional<CommitUser> opt = commitUserRepository.findByUserPkAndDate(userPk,before);
+            if(!opt.isPresent()) {
+                commitUserRepository.save(CommitUser.builder()
+                        .date(before)
+                        .userPk(userPk)
+                        .cnt(0)
+                        .build());
+                before = before.plusDays(1);
+            }
         }
     }
 }
