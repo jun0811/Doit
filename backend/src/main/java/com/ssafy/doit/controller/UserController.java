@@ -128,9 +128,7 @@ public class UserController {
     public Object logout(HttpServletRequest request, HttpServletResponse response){
         ResponseBasic result = new ResponseBasic();
         try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if(auth != null)
-                new SecurityContextLogoutHandler().logout(request, response, auth);
+            userService.logout(request, response);
             result = new ResponseBasic(true, "success", null);
         }catch (Exception e){
             result = new ResponseBasic(false, "로그인 실패", null);
@@ -250,10 +248,7 @@ public class UserController {
             List<ResGroupList> list = groupUserService.deleteGroupByUser(userPk);
             feedService.deleteFeedByUser(userPk);
 
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if(auth != null)
-                new SecurityContextLogoutHandler().logout(request, response, auth);
-
+            userService.logout(request, response);
             result = new ResponseBasic(true, "success", list);
         }
         catch (Exception e){
