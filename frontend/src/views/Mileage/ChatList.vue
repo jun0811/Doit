@@ -39,32 +39,32 @@
               </v-avatar>
             </router-link>
           </v-col>
-          <v-col cols="6" sm="3" class="deal--btn d-flex justify-end">
+          <v-col cols="6" sm="3" class="deal--btn">
             <v-btn
               v-if="chatting.button==`sale`"
               text
-              @click="deal"
-            >판매하기</v-btn>
+              @click="reservation(chatting.id)"
+            >판매예약</v-btn>
             <!-- <div > -->
             <v-btn
               v-else-if="chatting.button==`waiting`"
               text
               class="cancel"
-              @click="deal"
-            >거래취소</v-btn>
+              @click="cancel(chatting.id)"
+            >예약취소</v-btn>
             <v-row v-else-if="chatting.button==`purchase`">
               <v-col cols="6" sm="6">
                 <v-btn               
                   text
                   class="confirm px-2"
-                  @click="deal"
+                  @click="confirm(chatting.id)"
                 >구매확정</v-btn>
               </v-col>
               <v-col cols="6" sm="6">
                 <v-btn               
                   text
                   class="cancel"
-                  @click="deal"
+                  @click="cancel(chatting.id)"
                 >구매취소</v-btn>
               </v-col>
             </v-row>
@@ -226,7 +226,7 @@ export default {
     http.get('/chat/getList')
     .then(res => {
       this.chattings = res.data.object
-      console.log(this.chattings);
+      // console.log(res);
     })
     if(this.notiChat) {
       this.enterRoom(this.chatPk)
@@ -234,6 +234,13 @@ export default {
       // console.log('props',this.chatPk)
       this.notiChat = false
     }
+  },
+  updated() {
+    http.get('/chat/getList')
+    .then(res => {
+      this.chattings = res.data.object
+      // console.log(res);
+    })
   },
   watch: {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역
@@ -282,8 +289,21 @@ export default {
     close() {
       this.$store.getters.getStompClient.unsubscribe(this.subscribe.id);
     },
-    deal() {
-
+    reservation(v) {
+      if(confirm("판매 예약하시겠습니까?")==true) {
+        http.get(`product/requestSell?roomPk=${v}`)
+      }      
+    },      
+    confirm(v) {
+      if(confirm("구매를 확정하시겠습니까?")==true) {
+        http.get(`product/purchase?roomPk=${v}`)       
+      }
+      // alert('구매를 확정하시겠습니까?')
+    },
+    cancel(v) {
+      if(confirm("판매 예약을 취소하시겠습니까?")==true) {
+        http.get(`product/cancel?roomPk=${v}`)
+      }        
     },
   }
 }
@@ -355,14 +375,14 @@ width: 55%;
 }
 
 .deal--btn {
-  display: flex;
+  /* display: flex; */
   justify-content: end;
   padding-left: 0;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .deal--btn {
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     padding-left: 12px;
   }
