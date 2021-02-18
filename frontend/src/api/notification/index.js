@@ -12,7 +12,7 @@ const notiType = {
 }
 
     async function connect() {
-      let serverURL = "http://localhost:8080/ws";
+      let serverURL = "http://i4c108.p.ssafy.io/ws";
       let socket = new SockJS(serverURL);
       let stompClient = Stomp.over(socket);
       await stompClient.connect({ "accessToken": store.getters.getAccessToken },
