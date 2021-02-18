@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { api, response } from './api/account/index'
+import { api, response } from './api/index'
 import account from './store/modules/account'
 
 const http = axios.create({
-    baseURL: 'http://localhost:8080/',
+    baseURL: 'http://i4c108.p.ssafy.io/api/',
     headers: {
         'Content-type': 'application/json',
     },
@@ -14,9 +14,7 @@ http.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
         if (error.response.status == response.UNAUTHORIZED)
-        {
             api.onUnauthorized();
-        }
         else if (error.response.status == response.FOBBIDEN)
             api.onFobbiden();
         else {
