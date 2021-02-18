@@ -44,7 +44,17 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/user/signup").permitAll()
                 .antMatchers("/user/login").permitAll()
-                .antMatchers("/user/info").hasRole("USER")
+                .antMatchers("/user/checkNick").permitAll()
+                .antMatchers("/user/checkEmail").permitAll()
+                .antMatchers("/user/confirmEmail").permitAll()
+                .antMatchers("/user/sendSignupEmail").permitAll()
+                .antMatchers("/user/confirmSignup").permitAll()
+                .antMatchers("/data/wordCloud").permitAll()
+                .antMatchers("/data/rankingGroup").permitAll()
+                .antMatchers("/group/searchGroup").permitAll()
+                .antMatchers("/group/categoryGroup").permitAll()
+                .antMatchers("/product/search").permitAll()
+                .anyRequest().hasRole("USER")
                 .and()
                 .addFilterBefore(jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class);

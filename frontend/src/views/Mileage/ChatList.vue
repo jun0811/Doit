@@ -215,7 +215,7 @@ export default {
           'message': this.content,
           'roomPk' : this.room.id,
         }
-        this.$store.getters.getStompClient.send("/publish/chat", JSON.stringify(chatMessage),{"accessToken": this.$store.getters.getAccessToken})
+        this.$store.getters.getStompClient.send("/publish/chat", JSON.stringify(chatMessage),{})
         sendNotify({
           "notiType": notiType.NEWCHAT,
           "userPk": this.user2['userPk'],

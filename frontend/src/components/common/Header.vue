@@ -12,8 +12,8 @@
         >
           <v-list-item>
             <v-list-item-avatar>
-              <v-img v-if="img==false" src="@/assets/img/profile_temp.png"></v-img>
-              <v-img v-else :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ img"></v-img>
+              <v-img v-if="img!=`undefined`" :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ img" ></v-img>
+              <v-img v-else src="@/assets/img/profile_temp.png"></v-img>
             </v-list-item-avatar>
 
             <v-list-item-content>
@@ -305,7 +305,7 @@ export default {
       email: "",
       password: "",
       nickname: "",
-      img:"",
+      img: false,
       notiCount: 0,
       items: [
         {
