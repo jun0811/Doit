@@ -1,7 +1,5 @@
 <template>
 <div>
-  <Header></Header>
-  <!-- <NavBar></NavBar> -->
     <v-container class="container-width">
         <v-row>
           <v-col v-if="productImg" class="img-wrapper">
@@ -172,30 +170,21 @@
           </v-col>
         </v-row>
     </v-container>
-  <Footer></Footer>
-
 </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import http from "../../http-common";
 import { notiType, sendNotify } from '../../api/notification/index'
 
 export default {
   name: "ProductDetail",
   components: {
-    Header,
-    // NavBar,
-    Footer,
-    // ChatRoom,
   },
   data() {
     return {
       product: '',
       user : 'nickname',
-      // baseImg : 'https://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
       chattings: [], 
       seller: '',
       roomid : 0,

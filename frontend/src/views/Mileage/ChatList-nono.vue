@@ -1,7 +1,9 @@
 <template>
 <div>
+  <Header></Header>
+  <!-- <NavBar></NavBar> -->
   <v-container class="container-width">
-    <v-card min-height="600">
+    <v-card>
       <v-row>
         <v-col cols="11" class="pl-10">
           <h2>나의 채팅 목록</h2>
@@ -10,28 +12,21 @@
       <div v-for="(chatting, idx) in chattings" :key="idx">
         <v-row class="ma-3 d-flex align-center">
           <v-col cols="3" sm="2" class="pl-6">
-            <v-avatar>
-              <img 
-                :src="baseImg + chatting.otherUser.image" 
-                alt="other-profile"
-                class="other-user-img"
-                style="width:100%; height:100%;"
-              >
-
-            </v-avatar>
+            <img 
+              :src="chatting.otherUser.image" 
+              alt="other-profile"
+              class="other-user-img"
+            >
           </v-col>
           <v-col cols="6" sm="5">
             {{ chatting.otherUser.nickname }}
           </v-col>
           <v-col cols="3" sm="2" class="pr-6">
-            <v-avatar>
-              <img 
-                :src="baseImg + chatting.product.image" 
-                alt="product-img"
-                class="list-prd-img"
-                style="width:100%; height:100%;"
-              >
-            </v-avatar>
+            <img 
+              :src="chatting.product.image" 
+              alt="product-img"
+              class="list-prd-img"
+            >
           </v-col>
           <v-col cols="12" sm="3" class="d-flex justify-center">
             <v-dialog
@@ -56,13 +51,11 @@
                   <v-container>
                     <v-row>
                       <v-col cols="3" sm="2" class="mt-1">
-                        <v-avatar>
-                          <img 
-                            :src="baseImg + productImg" 
-                            alt="product-img"
-                            class="prd-img"
-                          >    
-                        </v-avatar>
+                        <img 
+                          :src="productImg" 
+                          alt="product-img"
+                          class="prd-img"
+                        >    
                       </v-col>
                       <v-col cols="6" sm="8" class="d-flex flex-column justify-center">
                         <v-row class="prd-name">
@@ -146,11 +139,15 @@
       </div>
     </v-card>
   </v-container>
+  <Footer></Footer>
 </div>
   
 </template>
 
 <script>
+import Header from "@/components/common/Header.vue";
+// import NavBar from "@/components/common/NavBar.vue";
+import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
 import { notiType, sendNotify } from '../../api/notification/index'
 
@@ -158,16 +155,13 @@ import { notiType, sendNotify } from '../../api/notification/index'
 export default {
   name: "ChatList",
   components: {
+    Header,
+    // NavBar,
+    Footer,
   },
   data() {
     return {
-      // product: '',
-      // user : 'nickname',
-      // seller: '',
-      // id : 84,
-      // idx:0,
-      // roomCheck: false,
-      baseImg : 'https://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
+
       chattings: [], 
       productImg: '',
       productName: '',
@@ -180,23 +174,22 @@ export default {
       bottom_flag: true,
       subscribe: '',
       dialog:false,
+      otherUser: [],
+      currentUser: [],
     }
   },
   props : {
     chatPk: String,
-    notiChat: Boolean,
   },
   created() {
     http.get('/chat/getList')
     .then(res => {
       this.chattings = res.data.object
+      console.log('resfrom chattings', res)
     })
-    if(this.notiChat) {
-      this.enterRoom(this.chatPk)
-      this.dialog = true;
-      console.log('props',this.chatPk)
-      this.notiChat = false
-    }
+    this.enterRoom(this.chatPk)
+    this.dialog = true;
+    console.log('props',this.chatPk)
   },
   watch: {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역
@@ -232,10 +225,12 @@ export default {
           this.productPrice = res.data.object.room.product.mileage
           this.msg = res.data.object.messages;
           this.room = res.data.object.room;
-          this.user1['userPk'] = res.data.object.currentUser.userPk
-          this.user1['userNick'] = res.data.object.currentUser.nickname
-          this.user2['userPk'] = res.data.object.other.userPk
-          this.user2['userNick'] = res.data.object.other.nickname
+          // this.user1['userPk'] = res.data.object.currentUser.userPk
+          // this.user1['userNick'] = res.data.object.currentUser.nickname
+          // this.user2['userPk'] = res.data.object.other.userPk
+          // this.user2['userNick'] = res.data.object.other.nickname
+          this.currentUser = res.data.object.currentUser
+          this.otherUser = res.data.object.other
 
           this.subscribe = this.$store.getters.getStompClient.subscribe("/subscribe/chat/room/"+ this.room.id , res => {
             this.msg.push(JSON.parse(res.body));

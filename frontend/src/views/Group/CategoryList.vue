@@ -1,7 +1,5 @@
 <template>
   <div>
-      <Header></Header>
-      <!-- <NavBar></NavBar> -->
       <v-container class="pa-0 pa-md-3">
         <br>
         <v-row class="mb-3">
@@ -48,14 +46,10 @@
         </div>
 
       </v-container>
-      <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
-// import NavBar from "@/components/common/NavBar.vue";
-import Footer from "@/components/common/Footer";
 import GroupCard from "@/components/group/GroupCard.vue";
 import { categoryGroup } from "@/api/group/index.js"
 
@@ -91,7 +85,6 @@ export default {
       },
       (res) =>{
         if (res.status){
-        // console.log(res)
         this.groups = res.data.object.content
         this.pageCount = parseInt(res.data.object.totalPages)
         this.empty = res.data.object.empty
@@ -116,7 +109,6 @@ export default {
       },
       (res) =>{
         if (res.status){
-        // console.log(res)
         this.groups = res.data.object.content
         this.pageCount = parseInt(res.data.object.totalPages)
         this.empty = res.data.object.empty
@@ -131,9 +123,6 @@ export default {
     )
   },  
   components: { 
-      Header, 
-      // NavBar,
-      Footer, 
       GroupCard 
   },
   methods: {
@@ -141,7 +130,6 @@ export default {
       this.$router.push('/group/groupcreate')
     },
     clickCategory(v) {
-      // console.log(v);
       this.category = this.categories[v]
       this.category_k = v
       this.selected['study'] = false
@@ -153,8 +141,6 @@ export default {
       this.selected['etc'] = false
       this.selected[this.categories[v]] = true
       this.page = 1
-      // console.log(this.selected);
-      // console.log(this.selected['study']);
     }
   }
 }

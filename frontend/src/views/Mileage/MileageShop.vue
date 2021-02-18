@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header></Header>
     <v-container class="d-flex flex-column justify-center pa-0 pa-md-3">
       <v-row class="d-flex flex-wrap align-center px-md-16 mt-3">
         <v-col 
@@ -72,21 +71,16 @@
       ></v-pagination>
 
     </v-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import ProductPage from "@/components/mileage/ProductPage.vue";
 import http from "../../http-common";
 
 export default {
   name: "MileageShop",
   components: {
-    Header,
-    Footer,
     ProductPage,
   },
   data() {

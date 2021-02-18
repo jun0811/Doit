@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header></Header>
     <!-- 그룹 간략 소개 시작 -->
       <v-container>
         <v-row class="d-flex justify-center group-intro">
@@ -132,23 +131,19 @@
         </v-col> 
       </v-row>
     </v-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
 import GroupMember from "@/components/group/GroupMember";
 import FeedCard from "@/components/group/FeedCard";
 import http from "../../http-common"
-// 해야할일 현재 날짜 받아와서 현재 달, 날짜 값으로 feed 보여주기 
 
 
 const date=new Date()
 
 export default {
-  components: { Header, Footer, GroupMember,FeedCard },
+  components: { GroupMember,FeedCard },
   props: {
     groupPk: {type:String},
     notiFeed : Boolean,
@@ -250,10 +245,6 @@ export default {
   }
   ,
   methods: {
-    // moveScroll(location){
-    //   console.log(location)
-    //   window.scrollTo({top:location, behavior:'smooth'})
-    // }, 
     updateGroup(){
       this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
     },
@@ -274,7 +265,6 @@ export default {
     joinGroup(){
     http.get(`group/joinGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
-      console.log(res)
       if(res.data.status){
         alert('그룹에 가입하였습니다.🐱‍🚀')
         this.$router.go()
@@ -303,11 +293,9 @@ export default {
       })
     },
   },
-  //
   created(){
     http.get(`group/detailGroup?groupPk=${this.groupPk}`)
     .then((res)=>{
-      console.log(res)
       this.user_info= res.data.object
       this.user_num = this.user_info.users.length
       this.leader = res.data.object.leader
@@ -332,9 +320,7 @@ export default {
       this.cards = res.data.object
     })
     if (this.notiFeed) {
-      console.log('noti', this.groupPk)
       this.FeedList()
-      console.log('notigroup', this.notiInfo)
       const notiDate = this.notiInfo.createDate.substr(0,10)
       this.end = notiDate
       this.start = notiDate
@@ -353,8 +339,6 @@ export default {
   @media only screen and (min-width: 300px) and (max-width: 599px) {
   .group-intro {
     border: 1px solid #E0E0E0;
-    /* margin-left: 0px;
-    margin-right: 0px; */
     } 
   }
   @media only screen and (min-width: 2000px) {
@@ -382,10 +366,6 @@ export default {
   .text-h5 {
     color: #E0E0E0
   }
-  /* .temp {
-    border: 1px solid;
-    width: 100%;
-  } */
   .selected{
     color:#F9802D
   }
@@ -419,12 +399,10 @@ export default {
     color: #616161;
   }
  .tag-style {
-  /* text-shadow: 0 0 2px yellow;  */
   background-color: #F9802D;
   border-radius: 5px;
   padding: 3px;
   color: white;
-  /* font-size: 90%; */
  }
 
 .tag-effect{

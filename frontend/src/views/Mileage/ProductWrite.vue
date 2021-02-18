@@ -1,6 +1,5 @@
 <template>
 <div>
-  <Header></Header>
     <v-container class="d-flex flex-column justify-center align-center pa-0" sm="10" md="6" style="max-width:600px;">
         <v-card
           elevation="2"
@@ -80,22 +79,17 @@
           등록하기
         </v-btn>
     </v-container>
-  <Footer></Footer>
 
 </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import { createProduct } from "@/api/mileage/index.js"
 import http from "../../http-common"
 
 export default {
   name: "ProductWrite",
   components: {
-    Header,
-    Footer,
   },
   data() {
     return {
