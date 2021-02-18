@@ -51,6 +51,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 user = jwtUtil.getUser(jwt);
             }
             if(user != null){
+                System.out.println("토큰 안주겄다");
                 UserDetails userDetails = userDetailsService.loadUserByUsername(user);
                 if(jwtUtil.validateToken(jwt, userDetails)){
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
@@ -69,6 +70,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         try{
             if(refreshJwt != null){
+                System.out.println("토큰 재발급");
                 refreshUser = redisUtil.getData(refreshJwt);
 
                 if(refreshUser.equals(jwtUtil.getUser(refreshJwt))){
