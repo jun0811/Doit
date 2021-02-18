@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 그룹 간략 소개 시작 -->
-      <v-container>
+      <v-container  id="container">
         <v-row class="d-flex justify-center group-intro">
           <v-col cols="4" sm="3" class="d-flex align-center justify-start">
             <div class="group-image">
@@ -113,6 +113,21 @@
           <v-row class="d-flex justify-center align-center flex-column card">
             <v-col cols="10" v-if="cards.length" class="feeds noticards"> 
               <FeedCard v-for="(card,idx) in cards" :key="idx" :card="card"></FeedCard>
+              <v-row>
+                <v-btn v-show="visible" 
+                  class="top pa-0" 
+                  text  
+                  @click="onTop"
+                  plain
+                  x-large
+                  >
+                  맨위로
+                  <v-icon> 
+                    mdi-arrow-up-bold-box-outline  
+                  </v-icon>          
+                 
+                </v-btn>
+              </v-row>
             </v-col>
             <v-col cols="10" v-else>
               <v-row  class="d-flex justify-center">
@@ -151,6 +166,7 @@ export default {
   },
   data() {
     return {
+      visible: false,
       full: false,
       image: "",
       menu2: false,
@@ -263,6 +279,18 @@ export default {
   }
   ,
   methods: {
+    // 스크롤 
+    onTop(){
+      this.intervalId = setInterval(() => {
+        if (window.pageYOffset === 0) {
+          clearInterval(this.intervalId)
+        }
+        window.scroll(0, window.pageYOffset - 500)
+      }, 1)
+    },
+    scrollListener() {
+      this.visible = window.scrollY > 150
+    },
     updateGroup(){
       this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
     },
@@ -340,7 +368,12 @@ export default {
         }
     })
     // 알람이 왔을 때 피드
-   
+  },
+  mounted: function () {
+    window.addEventListener('scroll', this.scrollListener)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('scroll', this.scrollListener)
   }
 }
 </script>
@@ -384,7 +417,8 @@ export default {
   .selected{
     color:#F9802D
   }
-  .group{
+  .group
+  {
     border: 1px solid #F9802D;
     color: #F9802D
   }
@@ -433,12 +467,17 @@ export default {
     transition:.1s;
 }
 .tag-effect:hover {
-    -webkit-transform:scale(1.2);
-    -moz-transform:scale(1.2);
-    -ms-transform:scale(1.2);   
-    -o-transform:scale(1.2);
-    transform:scale(1.05);
+  -webkit-transform:scale(1.2);
+  -moz-transform:scale(1.2);
+  -ms-transform:scale(1.2);   
+  -o-transform:scale(1.2);
+  transform:scale(1.05);
 }
-
+.top{
+  color: gray;
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+}
  
 </style>

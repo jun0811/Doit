@@ -68,7 +68,19 @@
         </v-col>
       </v-row>
     </v-container>
-    
+     <v-btn v-show="visible" 
+      class="top pa-0" 
+      text  
+      @click="onTop"
+      plain
+      x-large
+      >
+      맨위로
+      <v-icon> 
+        mdi-arrow-up-bold-box-outline  
+      </v-icon>          
+      
+    </v-btn>
   </div>
 </template>
 
@@ -78,6 +90,32 @@ export default {
   name: 'Introduction',
   components: { 
   },
+  data () {
+    return {
+      visible: false,
+    }
+  },
+  methods: {
+    // 스크롤 
+    onTop(){
+      this.intervalId = setInterval(() => {
+        if (window.pageYOffset === 0) {
+          clearInterval(this.intervalId)
+        }
+        window.scroll(0, window.pageYOffset - 500)
+      }, 1)
+    },
+    scrollListener() {
+      this.visible = window.scrollY > 150
+    },
+  },
+  mounted: function () {
+    window.addEventListener('scroll', this.scrollListener)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('scroll', this.scrollListener)
+  }
+
 }
 </script>
 
@@ -168,5 +206,11 @@ export default {
 
 .word-break-style {
   word-break: keep-all;
+}
+.top{
+  color: gray;
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
 }
 </style>
