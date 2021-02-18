@@ -118,7 +118,6 @@ export default {
     getProducts() {
       http.get(`/product/search?direction=${this.direction}&keyword=${this.keyword}&option=${this.option}&pg=${this.page}`)
       .then((res)=>{
-        // console.log(res);
         this.products = res.data.object.content
         this.totalPages = res.data.object.totalPages
         this.totalElements = res.data.object.totalElements
