@@ -7,11 +7,12 @@
             <v-col cols="12" sm="3">
               <div class="text-center d-flex align-center flex-column" >
                 <v-img v-if="imageUrl" :src="imageUrl" class="profile-img"></v-img>
+                <v-img v-else-if="image" :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ image" class="profile-img"> </v-img>
                 <v-img v-else src="@/assets/img/profile_temp.png" class="profile-img"> </v-img>
                 <!-- 사진변경 버튼 시작 -->
                 <div class="pt-3 text-center">
                   <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
-                  <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">사진 업로드</v-btn>
+                  <v-btn class="mt-4" outlined type="button" @click="onClickImageUpload">업로드</v-btn>
                   <input
                     ref="uploader"
                     class="d-none"
@@ -131,7 +132,7 @@ export default {
       selectedFile: null,
       isSelecting: false,
       uploadImg: "",
-      image: "",
+      image: ""
     };
   },
   computed: {
@@ -149,6 +150,11 @@ export default {
     this.email = this.$store.getters.getEmail;
     this.image =  sessionStorage.getItem("userimg")
     this.uploadImg = defaultImg
+    // http.get('/user/detailUser')
+    // .then((res)=> {
+    //     this.name = res.data.object.nickname;
+    //     this.email = res.data.object.email;
+    // })
   },
   methods: {
     changhPhoto() {},
@@ -179,7 +185,7 @@ export default {
     },
     checkNick() {
       http.post("/user/profile/checkNick", this.name).then((res) => {
-        // console.log(res);
+        console.log(res);
         if (res.data.status) this.c_Nick = true;
         else {
           alert("중복 닉네임입니다");
