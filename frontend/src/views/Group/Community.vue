@@ -220,6 +220,7 @@ export default {
     groupPk(){
       this.start = new Date().toISOString().substr(0,10);
       this.end = new Date().toISOString().substr(0,10);
+
       http.get(`group/detailGroup?groupPk=${this.groupPk}`)
       .then((res)=>{
           this.user_info= res.data.object
@@ -230,7 +231,7 @@ export default {
           this.image = res.data.object.image
           this.createDate = res.data.object.createDate
           this.start = res.data.object.createDate
-      }),
+      })
       http.get('group/currentUserGroup')
         .then((res)=>{
           this.joined = res.data.object.some((group)=>{
@@ -238,17 +239,30 @@ export default {
               return true
           }
         })
-      }),
-      http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.createDate}`)
-      .then((res)=>{
-        this.cards = res.data.object
-        console.log("커뮤니티")
       })
+      if (this.notiFeed) {
+        this.FeedList()
+        const notiDate = this.notiInfo.createDate.substr(0,10)
+        this.end = notiDate
+        this.start = notiDate
+        this.feedRead()
+        http.get(`feed/groupFeed?end=${notiDate}&groupPk=${this.groupPk}&start=${notiDate}`)
+        .then((res)=>{
+          this.cards = res.data.object
+          console.log("커뮤니티")
+        })
+      }
+      else{
+        http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.createDate}`)
+        .then((res)=>{
+          this.cards = res.data.object
+          console.log("커뮤니티")
+        })
+      }
     }
   }
   ,
   methods: {
-
     updateGroup(){
       this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
     },
@@ -325,14 +339,8 @@ export default {
           this.users = true;
         }
     })
-    
-    if (this.notiFeed) {
-      this.FeedList()
-      const notiDate = this.notiInfo.createDate.substr(0,10)
-      this.end = notiDate
-      this.start = notiDate
-      this.feedRead()
-    }
+    // 알람이 왔을 때 피드
+   
   }
 }
 </script>
