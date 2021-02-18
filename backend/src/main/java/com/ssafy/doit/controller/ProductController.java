@@ -5,6 +5,7 @@ import com.ssafy.doit.model.store.Product;
 import com.ssafy.doit.model.request.RequestPage;
 import com.ssafy.doit.model.response.ResponseBasic;
 import com.ssafy.doit.model.response.ResponseProduct;
+import com.ssafy.doit.model.store.ProductStatus;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.MileageRepository;
 import com.ssafy.doit.repository.store.ProductRepository;
@@ -205,7 +206,7 @@ public class ProductController {
                     .mileage("-" + product.getMileage())
                     .user(consumer).build());
 
-            product.setStatus(false);
+            product.setStatus(ProductStatus.SOLDOUT);
             productRepository.save(product);
             result = new ResponseBasic(true, "판매 완료", null);
         }
