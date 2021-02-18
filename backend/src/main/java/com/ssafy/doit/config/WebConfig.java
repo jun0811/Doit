@@ -53,6 +53,8 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/checkNick").permitAll()
                 .antMatchers("/user/checkEmail").permitAll()
                 .antMatchers("/user/confirmEmail").permitAll()
+                .antMatchers("/user/sendChangePwEmail").permitAll()
+                .antMatchers("/user/confirmPw").permitAll()
                 .antMatchers("/user/sendSignupEmail").permitAll()
                 .antMatchers("/user/confirmSignup").permitAll()
                 .antMatchers("/data/wordCloud").permitAll()
