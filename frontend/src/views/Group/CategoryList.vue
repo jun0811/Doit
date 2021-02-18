@@ -34,13 +34,14 @@
         <!-- </div> -->
         <div v-else class="d-flex align-center flex-column">
           <v-pagination
-            class="mt-12 mb-5"
+            v-if="pageCount>=1"
+            class="mt-12 mb-2"
             color="orange"
             v-model="page"
             :length="pageCount"
             :total-visible="7"
           ></v-pagination>
-          <h4 class="mt-6">'{{ category_k }}' 관련 그룹을 만들고 싶으시다면?</h4>
+          <h4 class="mt-14">'{{ category_k }}' 관련 그룹을 만들고 싶으시다면?</h4>
           <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
             그룹 만들기
           </v-btn>

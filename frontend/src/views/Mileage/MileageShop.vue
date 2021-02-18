@@ -63,7 +63,7 @@
       <ProductPage :page="page" :keyword="keyword" :option="option"></ProductPage>
 
       <v-pagination
-        v-if="totalPages"
+        v-if="totalPages>= 1"
         color="orange"
         v-model="page"
         :length="totalPages"

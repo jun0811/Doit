@@ -5,7 +5,7 @@
         <SearchBar></SearchBar>
         <br>
         <!-- <div class="d-flex align-center flex-column mx-auto"> -->
-        <div v-if="!empty" class="pl-sm-16">
+        <div v-if="!empty" class="pl-sm-16 pb-3">
           총 <span style="color: #F9802D">{{ contentlength }}</span> 개의 검색 결과가 있습니다.
         </div>
         <GroupCard :page="page" :word="word"></GroupCard>
@@ -21,13 +21,14 @@
         <!-- </div> -->
         <div v-else class="d-flex align-center flex-column">
           <v-pagination
+            v-if="pageCount>=1"
             color="orange"
             v-model="page"
             :length="pageCount"
             :total-visible="7"
-            class="mt-12 mb-5"
+            class="mt-12 "
           ></v-pagination>
-          <h4 class="mt-6">'{{ word }}' 관련 그룹을 만들고 싶으시다면?</h4>
+          <h4 class="mt-12">'{{ word }}' 관련 그룹을 만들고 싶으시다면?</h4>
           <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
             그룹 만들기
           </v-btn>
