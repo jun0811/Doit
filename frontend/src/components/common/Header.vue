@@ -395,10 +395,18 @@ export default {
         this.$router.push({ name: 'ChatList', params : {chatPk:String(chatPk)}})
       },
       moveToGroup(groupPk) {
-        this.$router.push({ name: 'Community', params: { groupPk: String(groupPk) }})
+        this.$router.push({ name: 'Community', params: { groupPk: String(groupPk) }}).catch(error => {
+          if (error.name === "NavigationDuplicated") {
+            this.$router.go({ name: 'Community', params: { groupPk: String(groupPk) }})
+          }
+        })
       },
       moveToGroupFeed(notiInfo) {
-        this.$router.push({ name: 'Community', params: { groupPk: String(notiInfo.groupPk), notiFeed: true, notiInfo: notiInfo }})
+        this.$router.push({ name: 'Community', params: { groupPk: String(notiInfo.groupPk), notiFeed: true, notiInfo: notiInfo }}).catch(error => {
+           if (error.name === "NavigationDuplicated") {
+            this.$router.go({ name: 'Community', params: { groupPk: String(notiInfo.groupPk), notiFeed: true, notiInfo: notiInfo  }})
+          }
+        })
       },
       noticeConfirm(notice) {
         
