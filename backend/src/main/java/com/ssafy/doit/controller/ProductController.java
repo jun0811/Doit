@@ -270,6 +270,10 @@ public class ProductController {
     public Object cancel(@RequestParam Long roomPk){
         ResponseBasic result = null;
         try {
+            User currentUser = userRepository.findById(userService.currentUser()).get();
+            if (!chatRoomJoinRepository.findChatRoomJoinByUser_IdAndChatRoom_Id(currentUser.getId(), roomPk).isPresent())
+                throw new Exception("유저 불일치");
+
             ChatRoom chatRoom = chatRoomRepository.findById(roomPk).get();
             Sale sale = saleRepository.findByChatRoom_Id(chatRoom.getId()).get();
             saleRepository.delete(sale);
