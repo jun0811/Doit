@@ -1,6 +1,6 @@
 <template>
   <div class="header-navbar">
-    <header class="header">
+    <header class="header pl-0">
       <div class="d-flex align-center">
         <!-- navigation drawer 시작-->
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -8,7 +8,7 @@
           v-model="drawer"
           absolute
           temporary
-          style="height: 100vh;"
+          style="height: 110vh;"
         >
           <v-list-item>
             <v-list-item-avatar>
