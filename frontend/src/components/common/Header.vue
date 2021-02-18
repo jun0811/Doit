@@ -432,6 +432,7 @@ export default {
       },
       signup() {
         this.$router.push("/user/join")
+        this.dialog = false;  
       },
       logoClick() {
         this.$router.push("/")
@@ -446,7 +447,7 @@ export default {
           "password": this.password
         })
         .then((response)=>{
-          console.log(response);
+          // console.log(response);
           if(response.data.status){
             this.dialog = false;  
             this.$router.go()
@@ -475,6 +476,7 @@ export default {
       },
       passwordFind(){
         this.$router.push("/user/pwdfind")
+        this.dialog = false;  
       },
       goToShop() {
         this.$router.push("/mileageshop")
