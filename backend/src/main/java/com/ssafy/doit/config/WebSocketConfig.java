@@ -56,7 +56,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     HttpServletRequest servletRequest = servletServerRequest.getServletRequest();
                     Cookie token = cookieUtil.getCookie(servletRequest, "refreshToken");
                     attributes.put("refreshToken", token.getValue());
-                    System.out.println(token.getValue());
                 }
                 return true;
             }

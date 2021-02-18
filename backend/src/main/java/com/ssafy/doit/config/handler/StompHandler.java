@@ -37,7 +37,6 @@ public class StompHandler implements ChannelInterceptor {
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
             String refreshJwt = (String)sessionAttributes.get("refreshToken");
-            System.out.println(refreshJwt);
 
             String refreshUser = redisUtil.getData(refreshJwt);
 
