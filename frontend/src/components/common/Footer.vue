@@ -13,7 +13,7 @@
         no-gutters
         class="mb-2"
       >
-        <v-text class="mr-3 text-style">만든사람들 : </v-text>
+        <div class="mr-3 text-style">만든사람들 : </div>
         <span v-for="(member,idx) in members" :key="idx" class="d-flex align-center">
           <font-awesome-icon v-if="idx !== 0" class="circle mx-2" icon="circle"/>
           <span class="text-style">{{member}}</span>

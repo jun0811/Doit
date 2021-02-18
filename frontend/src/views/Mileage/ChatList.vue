@@ -9,7 +9,7 @@
       </v-row>
       <div v-for="(chatting, idx) in chattings" :key="idx">
         <v-row class="ma-3 d-flex align-center">
-          <v-col cols="3" sm="2" class="pl-6">
+          <v-col cols="3" sm="2" class="pl-6 d-flex justify-end">
             <v-avatar>
               <img 
                 :src="baseImg + chatting.otherUser.image" 
@@ -20,20 +20,56 @@
 
             </v-avatar>
           </v-col>
-          <v-col cols="6" sm="3">
+          <v-col cols="6" sm="2">
             {{ chatting.otherUser.nickname }}
           </v-col>
           <v-col cols="3" sm="2" class="pr-6">
-            <v-avatar>
-              <img 
-                :src="baseImg + chatting.product.image" 
-                alt="product-img"
-                class="list-prd-img"
-                style="width:100%; height:100%;"
+            <router-link 
+              :to="{name: 'ProductDetail', params: {product_id: chatting.id}}"
+            >
+              <v-avatar 
+                class="list-prd-img-effect"             
               >
-            </v-avatar>
+                <img 
+                  :src="baseImg + chatting.product.image" 
+                  alt="product-img"
+                  class="list-prd-img"
+                  style="width:100%; height:100%;"
+                >               
+              </v-avatar>
+            </router-link>
           </v-col>
-          <v-col cols="12" sm="3" class="d-flex justify-center">
+          <v-col cols="6" sm="3" class="deal--btn d-flex justify-end">
+            <v-btn
+              v-if="chatting.button==`sale`"
+              text
+              @click="deal"
+            >판매하기</v-btn>
+            <!-- <div > -->
+            <v-btn
+              v-else-if="chatting.button==`waiting`"
+              text
+              class="cancel"
+              @click="deal"
+            >거래취소</v-btn>
+            <v-row v-else-if="chatting.button==`purchase`">
+              <v-col cols="6" sm="6">
+                <v-btn               
+                  text
+                  class="confirm px-2"
+                  @click="deal"
+                >구매확정</v-btn>
+              </v-col>
+              <v-col cols="6" sm="6">
+                <v-btn               
+                  text
+                  class="cancel"
+                  @click="deal"
+                >구매취소</v-btn>
+              </v-col>
+            </v-row>
+          </v-col>          
+          <v-col cols="6" sm="2" class="d-flex justify-center">
             <v-dialog
               scrollable
               persistent
@@ -43,12 +79,12 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  class="deal-btn"
+                  class="enter-chatting"
                   text
                   v-bind="attrs"
                   v-on="on"
                   @click="enterRoom(chatting.id)"
-                >채팅방 들어가기</v-btn>
+                >채팅방</v-btn>
               </template>
               <template v-slot:default="dialog">
               <v-card>
@@ -136,13 +172,7 @@
               </template>
             </v-dialog>            
           </v-col>
-          <v-col cols="2" class="pl-0">
-            <v-btn
-              text
-              class="deal-btn"
-              @click="deal"
-            >거래 제안</v-btn>
-          </v-col>
+
         </v-row>
         <v-row>
           <v-col>
@@ -196,11 +226,12 @@ export default {
     http.get('/chat/getList')
     .then(res => {
       this.chattings = res.data.object
+      console.log(this.chattings);
     })
     if(this.notiChat) {
       this.enterRoom(this.chatPk)
       this.dialog = true;
-      console.log('props',this.chatPk)
+      // console.log('props',this.chatPk)
       this.notiChat = false
     }
   },
@@ -273,13 +304,35 @@ width: 55%;
 .list-prd-img {
   width: 50%;
   height: auto;
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
 .list-prd-img {
   width: 100%;
   height: auto;
+  cursor: pointer;
 }
+}
+
+.list-prd-img-effect {
+    -webkit-transform:scale(1);
+    -moz-transform:scale(1);
+    -ms-transform:scale(1); 
+    -o-transform:scale(1);  
+    transform:scale(1);
+    -webkit-transition:.3s;
+    -moz-transition:.3s;
+    -ms-transition:.3s;
+    -o-transition:.3s;
+    transition:.05s;
+}
+.list-prd-img-effect:hover {
+    -webkit-transform:scale(1.2);
+    -moz-transform:scale(1.2);
+    -ms-transform:scale(1.2);   
+    -o-transform:scale(1.2);
+    transform:scale(1.05);
 }
 
 .other-user-img {
@@ -297,12 +350,29 @@ width: 55%;
 .deal-btn {
   /* margin:30px; */
   border: 2px solid orange;
-  border-radius: 15px;
+  /* border-radius: 15px; */
   background-color:white;
 }
 
+.deal--btn {
+  display: flex;
+  justify-content: end;
+  padding-left: 0;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .deal--btn {
+    display: flex;
+    justify-content: center;
+    padding-left: 12px;
+  }
+}
+
+.enter-chatting {
+  color: #F9802D;
+}
+
 .prd-img {
-  /* margin-top: 24px; */
   width: 90%;
 }
 
@@ -310,7 +380,6 @@ width: 55%;
   .prd-img {
     width:90%;
     height: 90%;
-  /* margin-top: 24px; */
   }
 }
 .prd-name {
@@ -353,7 +422,6 @@ width: 55%;
 .send-icon {
   font-size: 40px;
   cursor: pointer;
-  /* color: black; */
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
@@ -366,5 +434,13 @@ width: 55%;
 
 .card-style {
   height: 900px;
+}
+
+.confirm {
+  color: green;
+}
+
+.cancel {
+  color: red;
 }
 </style>
