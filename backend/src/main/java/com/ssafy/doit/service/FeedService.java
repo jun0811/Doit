@@ -265,7 +265,7 @@ public class FeedService {
         LocalDate date = feed.getCreateDate().toLocalDate();
         int cnt = feed.getAuthCnt();
         int total = group.getTotalNum() - 1;
-        if (cnt >= Math.round(total * 0.1)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
+        if (cnt >= Math.round(total * 0.7)) {       // 그룹의 현재 총 인원수의 70%(반올림) 이상이 인증확인하면
             feed.setAuthCheck("true");              // 그 인증피드는 인증완료
             feedRepository.save(feed);
 
