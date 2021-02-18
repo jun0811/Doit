@@ -25,9 +25,13 @@
           <br>
           <br>
           <h4>'{{ category_k }}' 관련 그룹을 만들고 싶으시다면?</h4>
-          <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
+          <v-btn text class="text-h6" color="#F9802D" @click="createGroup" v-if="member">
             그룹 만들기
           </v-btn>
+          <h3 class="login" v-else>
+            로그인
+          </h3>
+          
         </div>
         <!-- </div> -->
         <div v-else class="d-flex align-center flex-column">
@@ -40,9 +44,12 @@
             :total-visible="7"
           ></v-pagination>
           <h4 class="mt-14">'{{ category_k }}' 관련 그룹을 만들고 싶으시다면?</h4>
-          <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
+          <v-btn text class="text-h6" color="#F9802D" @click="createGroup" v-if="member">
             그룹 만들기
           </v-btn>
+          <h3 class="login" v-else>
+            로그인
+          </h3>
         </div>
 
       </v-container>
@@ -150,4 +157,7 @@ export default {
 .keycolor {
   color: #F9802D;
 }
+.login{
+   color: #F9802D;
+ }
 </style>
