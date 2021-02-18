@@ -103,7 +103,9 @@ export default {
     }
   },
   created() {
-    this.getMileage()
+    if(sessionStorage.accessToken=="true") {
+      this.getMileage()
+    }
     this.getProducts()
     this.keywordclass()
   },
