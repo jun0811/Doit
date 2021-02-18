@@ -1,6 +1,5 @@
 <template>
   <div>
-      <Header></Header>
       <v-container class="pa-8 pa-sm-16 d-flex align-center flex-column mx-auto">
           <v-img
             src="@/assets/img/mail.png"
@@ -43,20 +42,15 @@
             </div>
           </div>
       </v-container>
-      <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
 
 export default {
     name: "MailCheck",
     components: {
-        Header,
-        Footer,
     },
     data() {
         return {

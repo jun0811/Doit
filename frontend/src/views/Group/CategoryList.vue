@@ -1,7 +1,5 @@
 <template>
   <div>
-      <Header></Header>
-      <!-- <NavBar></NavBar> -->
       <v-container class="pa-0 pa-md-3">
         <br>
         <v-row class="mb-3">
@@ -34,27 +32,24 @@
         <!-- </div> -->
         <div v-else class="d-flex align-center flex-column">
           <v-pagination
-            class="mt-12 mb-5"
+            v-if="pageCount>=1"
+            class="mt-12 mb-2"
             color="orange"
             v-model="page"
             :length="pageCount"
             :total-visible="7"
           ></v-pagination>
-          <h4 class="mt-6">'{{ category_k }}' 관련 그룹을 만들고 싶으시다면?</h4>
+          <h4 class="mt-14">'{{ category_k }}' 관련 그룹을 만들고 싶으시다면?</h4>
           <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
             그룹 만들기
           </v-btn>
         </div>
 
       </v-container>
-      <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
-// import NavBar from "@/components/common/NavBar.vue";
-import Footer from "@/components/common/Footer";
 import GroupCard from "@/components/group/GroupCard.vue";
 import { categoryGroup } from "@/api/group/index.js"
 
@@ -90,7 +85,6 @@ export default {
       },
       (res) =>{
         if (res.status){
-        // console.log(res)
         this.groups = res.data.object.content
         this.pageCount = parseInt(res.data.object.totalPages)
         this.empty = res.data.object.empty
@@ -115,7 +109,6 @@ export default {
       },
       (res) =>{
         if (res.status){
-        // console.log(res)
         this.groups = res.data.object.content
         this.pageCount = parseInt(res.data.object.totalPages)
         this.empty = res.data.object.empty
@@ -130,9 +123,6 @@ export default {
     )
   },  
   components: { 
-      Header, 
-      // NavBar,
-      Footer, 
       GroupCard 
   },
   methods: {
@@ -140,7 +130,6 @@ export default {
       this.$router.push('/group/groupcreate')
     },
     clickCategory(v) {
-      // console.log(v);
       this.category = this.categories[v]
       this.category_k = v
       this.selected['study'] = false
@@ -152,8 +141,6 @@ export default {
       this.selected['etc'] = false
       this.selected[this.categories[v]] = true
       this.page = 1
-      // console.log(this.selected);
-      // console.log(this.selected['study']);
     }
   }
 }

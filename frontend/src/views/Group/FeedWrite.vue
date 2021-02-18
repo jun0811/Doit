@@ -1,7 +1,5 @@
 <template>
     <div>
-        <Header></Header>
-
         <v-container class="pa-3 pa-sm-16">
             <v-card  class="d-flex align-center flex-column mb-15 mx-sm-auto px-5 col-sm-10" width=100% max-width="600">
                 <h3 class="my-4" style="width:100%">피드 작성</h3>
@@ -81,18 +79,13 @@
                 </v-col>
             </v-row>
         </v-container>
-        <Footer></Footer>
     </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
 import { createFeed } from "@/api/feed/index.js"
 import http from "../../http-common";
 import { notiType, sendNotify } from "../../api/notification/index"
-
-// import http from "../../http-common";
 
 export default {
     name :"FeedWrite",
@@ -100,8 +93,6 @@ export default {
         groupPk: Number,
     },
     components: {
-        Header,
-        Footer
     },
     data() {
       return {
@@ -163,7 +154,6 @@ export default {
           },
           (err) =>{
             console.log(err)
-            console.log(this.createDate)
             alert("생성 실패")
           }
         )

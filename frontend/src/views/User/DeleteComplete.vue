@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header></Header>
     <v-container class="container-width">
       <v-row>
         <v-col class="d-flex justify-center">
@@ -28,19 +27,13 @@
         </v-col>
       </v-row>
     </v-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
-
 export default {
   name: "DeleteComplete",
   components: {
-    Header,
-    Footer,
   },
   methods: {
     mainBtn () {
