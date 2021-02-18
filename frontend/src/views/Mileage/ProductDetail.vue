@@ -85,10 +85,10 @@
               </template>
               <template v-slot:default="dialog">
               <v-card>
-                <v-card-title>
+                <v-card-title class="py-1 px-1">
                   <v-container>
                     <v-row>
-                      <v-col cols="3" sm="2" class="mt-1">
+                      <v-col cols="2" sm="2" class="mt-1 d-flex justify-center align-center">
                         <v-avatar>
                           <img 
                             :src="baseImg + productImg" 
@@ -97,23 +97,34 @@
                           >    
                         </v-avatar>
                       </v-col>
-                      <v-col cols="6" sm="8" class="d-flex flex-column justify-center">
+                      <v-col cols="6" sm="6" class="d-flex flex-column justify-center">
                         <v-row class="prd-name">
                           <v-col class="">
                             {{ productName }}  
                           </v-col>
                         </v-row>
                         <v-row class="chat-prd-mileage">
-                          <v-col class="">
+                          <v-col class="pb-0">
                           {{ productPrice }} 마일리지
                           </v-col>
                         </v-row>
                       </v-col>
-                      <v-col cols="3" sm="2" class="d-flex flex-column justify-center">
-                        <v-btn
-                          text
-                          @click="[ dialog.value = false, close() ]"
-                        >닫기</v-btn>                          
+                      <v-col cols="4" sm="4" class="d-flex flex-column justify-center">
+                        <v-row class="d-flex justify-end mb-4">
+                          <v-btn
+                            text
+                            class="mr-1 mt-1"
+                            @click="[ dialog.value = false, close() ]"
+                          >창 닫기</v-btn>                          
+                        </v-row>
+                        <v-row class="d-flex justify-end">
+                          <v-btn
+                            text
+                            color="#F9802D"
+                            class="mr-1"
+                            @click="sell"
+                          >거래버튼 전송</v-btn>
+                        </v-row>                         
                       </v-col>
                     </v-row>
                   </v-container>
@@ -142,10 +153,10 @@
                   </div>
                 </v-card-text>
                 <v-divider></v-divider>
-                <v-card-actions>
+                <v-card-actions class="pb-0">
                   <v-container>
                     <v-row class="">
-                      <v-col cols="10">
+                      <v-col cols="12" class="py-0">
                         <v-text-field
                           label="메세지를 입력하세요."
                           v-model="content" 
@@ -153,15 +164,10 @@
                           outlined
                           @keyup.enter="sendMessage()"
                           background-color="white"
+                          autofocus
+                          dense
+                          append-icon="mdi-send"                          
                         ></v-text-field>                        
-                      </v-col>
-                      <v-col cols="2" class="d-flex justify-center">
-                        <div class="send-icon">
-                          <font-awesome-icon 
-                            :icon="['far', 'paper-plane']"
-                            @click="sendMessage()"                         
-                          /> 
-                        </div>                        
                       </v-col>
                     </v-row>
                   </v-container>
@@ -321,7 +327,10 @@ export default {
     },
     updateProduct() {
       this.$router.push({name:"ProductUpdate",params:{product_id:this.product_id}})
-    }
+    },
+    sell() {
+
+    },
   }
 };
 </script>
