@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header></Header>
     <v-container class="d-flex flex-column justify-center pa-0 pa-md-3 table-wrapper">
       <v-card>
         <v-card-title>
@@ -24,20 +23,17 @@
         ></v-data-table>
       </v-card>
     </v-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import http from "../../http-common";
 
 export default {
   name: "MileageShop",
   components: {
-    Header,
-    Footer,
+    // Header,
+    // Footer,
   },
   data() {
     return {

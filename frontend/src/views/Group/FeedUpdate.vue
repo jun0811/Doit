@@ -1,6 +1,5 @@
 <template>
     <div>
-        <Header></Header>
         <!-- 그룹 간략 소개 시작 -->
         <v-container class="pa-3 pa-sm-16">
             <v-card  class="d-flex align-center flex-column my-15 mx-sm-auto px-5 col-sm-10" width=100% max-width="600">
@@ -85,21 +84,16 @@
 
             </v-card>
         </v-container>
-        <Footer></Footer>
     </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
 import { updateFeed } from "@/api/feed/index.js"
 import http from "../../http-common";
 
 export default {
     name :"FeedUpdate",
     components: {
-        Header,
-        Footer
     },
     props:{
         feedPk: Number,

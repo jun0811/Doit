@@ -27,7 +27,7 @@ public class Product {
     private String image;
 
     private int mileage;
-    private boolean status;
+    private ProductStatus status;
     private LocalDateTime createDate;
 
     @ManyToOne
@@ -41,7 +41,7 @@ public class Product {
 
     @PrePersist
     private void init(){
-        this.status = true;
+        this.status = ProductStatus.ONSALE;
         this.createDate = LocalDateTime.now();
     }
 }

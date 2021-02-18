@@ -1,7 +1,5 @@
 <template>
   <div>
-    <Header></Header>
-    <!-- <NavBar></NavBar> -->
     <v-container class="title-style">
       <v-row class="d-flex flex-column align-center pa-10 pa-sm-0">
         <div class="title-size">만들고 싶은 습관, 바꾸고 싶은 습관이 있나요?</div>
@@ -71,21 +69,14 @@
       </v-row>
     </v-container>
     
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
-// import NavBar from "@/components/common/NavBar.vue";
-import Footer from "@/components/common/Footer";
 
 export default {
   name: 'Introduction',
   components: { 
-      Header, 
-      // NavBar,
-      Footer, 
   },
 }
 </script>

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header></Header>
     <v-container class="pa-8 pa-sm-16">
       <form>
         <v-col cols="12">
@@ -111,21 +110,16 @@
         </v-col>
       </form>
     </v-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import http from "../../http-common";
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import defaultImg from "@/assets/img/profile_temp.png"
 
 export default {
   name: "Update",
   components: {
-    Header,
-    Footer,
   },
   data() {
     return {

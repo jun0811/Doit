@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header></Header>
      <v-card  class="d-flex align-center flex-column my-15 mx-auto py-5 px-3 card-width">
     <h3 class="my-10">비밀번호 재설정</h3>
     <h5 class="mb-5">비밀번호를 재설정 하려는 이메일을 입력해주세요</h5>
@@ -44,20 +43,15 @@
         </v-card-actions>
     </div>
   </v-card>
-
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from '../../components/common/Header.vue'
-import Footer from '../../components/common/Footer.vue'
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators'
 import http from '../../http-common'
 
 export default {
-  components: { Header, Footer },
   mixins: [validationMixin],
   validations: {
     email: { required, email },

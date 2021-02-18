@@ -1,6 +1,5 @@
 <template>
     <div>
-        <Header></Header>
         <v-container class="pa-3 pa-sm-16" >
             <v-card  class="d-flex align-center flex-column mb-12 mx-sm-auto px-5 col-sm-10" width=100% max-width=600>
                 <h3 class="my-4" style="width:100%">그룹 수정</h3>
@@ -139,20 +138,15 @@
             </v-col>
           </v-row>
         </v-container>
-        <Footer></Footer>
     </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
 import http from "../../http-common"
 
 export default {
     name :"GroupUpdate",
     components: {
-        Header,
-        Footer
     },
     props: {
       groupPk: {type:Number}

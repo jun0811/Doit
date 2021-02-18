@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header></Header>
     <v-container class="container-width">
       <v-row class="mb-5">
         <v-col>
@@ -69,21 +68,16 @@
         </v-col>
       </v-row>
     </v-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import http from '../../http-common'
 import { mapActions } from 'vuex'
 
 export default {
   name: "Delete",
   components: {
-    Header,
-    Footer,
   },
   data() {
     return {
