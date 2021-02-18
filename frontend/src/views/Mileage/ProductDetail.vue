@@ -88,12 +88,14 @@
                 <v-card-title>
                   <v-container>
                     <v-row>
-                      <v-col cols="3" sm="2" class="mt-1">
-                        <img 
-                          :src="productImg" 
-                          alt="product-img"
-                          class="prd-img"
-                        >    
+                      <v-col cols="3" sm="2" class="mt-1"> 
+                        <v-avatar>
+                          <img 
+                            :src="baseImg + productImg" 
+                            alt="product-img"
+                            class="prd-img"
+                          >    
+                        </v-avatar>
                       </v-col>
                       <v-col cols="6" sm="8" class="d-flex flex-column justify-center">
                         <v-row class="prd-name">
