@@ -10,13 +10,21 @@
         </v-row>
         <v-row class="my-3 px-6 d-flex align-center">
           <v-col class="d-flex align-center">
-            <span class="profile-wrapper pa-0 d-flex ">
+            <span class="profile-wrapper pa-0 d-flex">
               <img 
+              v-if="profile" 
               class="profile-img" 
               :src="defaultAddress + profile"
               alt="글쓴이 이미지"
               >
+              <img 
+              v-else
+              class="profile-img" 
+              src="@/assets/img/user.png"
+              alt="글쓴이 이미지"
+              >
             </span>
+
             <span class="pl-4">
               {{product.nickname}}
             </span>
@@ -73,7 +81,7 @@
                   v-bind="attrs"
                   v-on="on"
                   @click="chatting()"
-                >채팅방 들어가기</v-btn>
+                >채팅으로 거래하기</v-btn>
               </template>
               <template v-slot:default="dialog">
               <v-card>
