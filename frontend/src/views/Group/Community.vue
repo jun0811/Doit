@@ -203,7 +203,7 @@ export default {
     //검색 날짜 시작 날짜
     start(){
       this.submit = false
-      const start = new Date(this.start)
+      const start = this.createDate
       const end = new Date(this.end)
       const TODAY = new Date() // 
       let dateDiff = Math.ceil((end.getTime()-start.getTime())/(1000*3600*24));
@@ -233,6 +233,8 @@ export default {
           this.tags = res.data.object.tags
           this.loginUser = this.$store.state.account.userpk
           this.image = res.data.object.image
+          this.createDate = res.data.object.createDate
+          this.start = res.data.object.createDate
       }),
       http.get('group/currentUserGroup')
         .then((res)=>{
@@ -250,10 +252,7 @@ export default {
   }
   ,
   methods: {
-    // moveScroll(location){
-    //   console.log(location)
-    //   window.scrollTo({top:location, behavior:'smooth'})
-    // }, 
+
     updateGroup(){
       this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
     },
@@ -315,7 +314,9 @@ export default {
       this.loginUser = this.$store.state.account.userpk
       this.image = res.data.object.image
       this.createDate = res.data.object.createDate
+      this.start = res.data.object.createDate
     }),
+    
     http.get('group/currentUserGroup')
       .then((res)=>{
         this.joined = res.data.object.some((group)=>{
