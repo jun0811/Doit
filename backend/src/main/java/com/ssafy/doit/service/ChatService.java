@@ -84,7 +84,8 @@ public class ChatService {
                     responseChatRoom.setButton("waiting");
                 }
                 else responseChatRoom.setButton("purchase");
-            } else if(uid == responseChatRoom.getProduct().getUser().getId()) responseChatRoom.setButton("sale");
+            } else if(uid == responseChatRoom.getProduct().getUser().getId() && !saleRepository.findByChatRoom_Product_Id(responseChatRoom.getProduct().getId()).isPresent())
+                responseChatRoom.setButton("sale");
 
             result.add(responseChatRoom);
         }
