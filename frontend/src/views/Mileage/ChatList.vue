@@ -3,7 +3,7 @@
   <Header></Header>
   <!-- <NavBar></NavBar> -->
   <v-container class="container-width">
-    <v-card>
+    <v-card min-height="600">
       <v-row>
         <v-col cols="11" class="pl-10">
           <h2>나의 채팅 목록</h2>
