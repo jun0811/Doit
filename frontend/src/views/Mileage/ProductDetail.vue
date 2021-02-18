@@ -111,18 +111,20 @@
                         <v-row class="d-flex justify-end mb-4">
                           <v-btn
                             text
+                            icon
+                            large
                             class="mr-1 mt-1"
                             @click="[ dialog.value = false, close() ]"
-                          >창 닫기</v-btn>                          
+                          ><v-icon>mdi-close</v-icon></v-btn>                          
                         </v-row>
-                        <v-row class="d-flex justify-end">
+                        <!-- <v-row class="d-flex justify-end">
                           <v-btn
                             text
                             color="#F9802D"
                             class="mr-1"
                             @click="sell"
                           >거래버튼 전송</v-btn>
-                        </v-row>                         
+                        </v-row>                          -->
                       </v-col>
                     </v-row>
                   </v-container>
@@ -162,7 +164,6 @@
                           outlined
                           @keyup.enter="sendMessage()"
                           background-color="white"
-                          autofocus
                           dense
                           append-icon="mdi-send"                          
                         ></v-text-field>                        

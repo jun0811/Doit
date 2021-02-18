@@ -20,7 +20,7 @@
 
             </v-avatar>
           </v-col>
-          <v-col cols="6" sm="5">
+          <v-col cols="6" sm="3">
             {{ chatting.otherUser.nickname }}
           </v-col>
           <v-col cols="3" sm="2" class="pr-6">
@@ -80,17 +80,11 @@
                         <v-row class="d-flex justify-end mb-4">
                           <v-btn
                             text
+                            icon
+                            large
                             class="mr-1 mt-1"
                             @click="[ dialog.value = false, close() ]"
-                          >창 닫기</v-btn>                          
-                        </v-row>
-                        <v-row class="d-flex justify-end">
-                          <v-btn
-                            text
-                            color="#F9802D"
-                            class="mr-1"
-                            @click="sell"
-                          >거래버튼 전송</v-btn>
+                          ><v-icon>mdi-close</v-icon></v-btn>                          
                         </v-row>
                       </v-col>
                     </v-row>
@@ -131,7 +125,6 @@
                           outlined
                           @keyup.enter="sendMessage()"
                           background-color="white"
-                          autofocus
                           dense
                           append-icon="mdi-send"
                         ></v-text-field>
@@ -142,6 +135,13 @@
               </v-card>
               </template>
             </v-dialog>            
+          </v-col>
+          <v-col cols="2" class="pl-0">
+            <v-btn
+              text
+              class="deal-btn"
+              @click="deal"
+            >거래 제안</v-btn>
           </v-col>
         </v-row>
         <v-row>
@@ -251,7 +251,7 @@ export default {
     close() {
       this.$store.getters.getStompClient.unsubscribe(this.subscribe.id);
     },
-    sell() {
+    deal() {
 
     },
   }
