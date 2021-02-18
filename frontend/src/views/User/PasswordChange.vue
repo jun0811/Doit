@@ -83,8 +83,8 @@ export default {
             http.post('/user/changePw', {
                 "password": this.password
             })
-            .then((res)=>{
-                alert(res.data.status);
+            .then(()=>{
+                alert("변경에 성공하였습니다.");
                 this.$router.push('/');
             })
         }},

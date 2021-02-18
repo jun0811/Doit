@@ -10,6 +10,7 @@ import com.ssafy.doit.repository.store.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.repository.store.ChatRoomJoinRepository;
 import com.ssafy.doit.repository.store.ChatRoomRepository;
+import com.ssafy.doit.repository.store.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class ChatService {
     private final ChatRoomJoinRepository chatRoomJoinRepository;
     @Autowired
     private final ProductRepository productRepository;
+    @Autowired
+    private final SaleRepository saleRepository;
 
     public ChatRoom checkByProduct(Long uid, Long pid) throws Exception {
         Optional<ChatRoomJoin> opt = chatRoomJoinRepository.findChatRoomJoinByUser_IdAndChatRoom_Product_Id(uid, pid);
@@ -74,8 +77,17 @@ public class ChatService {
         List<ResponseChatRoom> result = new ArrayList<>();
         List<ChatRoom> chatRooms = chatRoomRepository.findAllByChatRoomJoins_User_IdAndProduct_StatusNot(uid, ProductStatus.SOLDOUT);
 
-        for(ChatRoom c : chatRooms)
-            result.add(new ResponseChatRoom(c, uid));
+        for(ChatRoom c : chatRooms){
+            ResponseChatRoom responseChatRoom = new ResponseChatRoom(c, uid);
+            if(saleRepository.findByChatRoom_Id(responseChatRoom.getId()).isPresent()){
+                if(uid == responseChatRoom.getProduct().getUser().getId()){
+                    responseChatRoom.setButton("waiting");
+                }
+                else responseChatRoom.setButton("purchase");
+            } else if(uid == responseChatRoom.getProduct().getUser().getId()) responseChatRoom.setButton("sale");
+
+            result.add(responseChatRoom);
+        }
 
         return result;
     }

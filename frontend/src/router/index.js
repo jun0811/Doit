@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
+import Admin from "../views/Admin.vue";
 import Introduction from "../views/Introduction.vue";
 import FeedUpdate from "../views/Group/FeedUpdate.vue";
 import FeedWrite from "../views/Group/FeedWrite.vue";
@@ -31,6 +32,11 @@ const routes = [
     path: "/",
     name: "Main",
     component: Main,
+  },
+  {
+    path: "/admin",
+    name: "Admin",
+    component: Admin,
   },
   {
     path: "/user/join",

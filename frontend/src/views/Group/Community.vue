@@ -198,7 +198,7 @@ export default {
     //검색 날짜 시작 날짜
     start(){
       this.submit = false
-      const start = this.createDate
+      const start =  new Date(this.start)
       const end = new Date(this.end)
       const TODAY = new Date() // 
       let dateDiff = Math.ceil((end.getTime()-start.getTime())/(1000*3600*24));
@@ -236,12 +236,13 @@ export default {
           this.joined = res.data.object.some((group)=>{
             if(this.groupPk == group.groupPk){
               return true
-            }
-          })
-        }),
-      http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.start}`)
+          }
+        })
+      }),
+      http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.createDate}`)
       .then((res)=>{
         this.cards = res.data.object
+        console.log("커뮤니티")
       })
     }
   }
@@ -307,7 +308,11 @@ export default {
       this.image = res.data.object.image
       this.createDate = res.data.object.createDate
       this.start = res.data.object.createDate
-    }),
+    })
+    http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.createDate}`)
+    .then((res)=>{
+      this.cards = res.data.object
+    })
     
     http.get('group/currentUserGroup')
       .then((res)=>{
@@ -319,11 +324,8 @@ export default {
         if (!this.joined) {
           this.users = true;
         }
-      }),
-    http.get(`feed/groupFeed?end=${this.end}&groupPk=${this.groupPk}&start=${this.start}`)
-    .then((res)=>{
-      this.cards = res.data.object
     })
+    
     if (this.notiFeed) {
       this.FeedList()
       const notiDate = this.notiInfo.createDate.substr(0,10)

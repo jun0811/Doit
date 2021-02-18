@@ -13,11 +13,11 @@
       ></v-progress-linear>
     </template>
     <v-img
-      v-if="null_image==image"
+      v-if="!image"
       height="250"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
     ></v-img>
-    <v-img v-else :src="image"></v-img>
+    <v-img v-else :src="DefaultURL + image"></v-img>
     <span v-if="!feedType" class="ma-3 text-h6 title">정보</span>
     <span v-else class="ma-3 text-h6 title">인증</span>
     <v-card-title class="card_content">{{this.card.content}} </v-card-title>
@@ -28,8 +28,10 @@
           작성자:<span> {{this.card.writer}}</span>
          <div> 작성날짜: {{this.card.createDate.slice(0,10)}}</div>
         </v-col>
-        <v-col  class="col-4 d-flex justify-end">
-          <img v-if="check" src="@/assets/img/stamp.png" class="stamp">
+        <v-col class="col-4 d-flex flex-column align-center justify-end auth-icon">
+          <!-- <img v-if="check" src="@/assets/img/stamp.png" class="stamp"> -->
+            <font-awesome-icon v-if="check" class="fa-3x  " :icon="['far', 'smile']" />
+            <div v-if="check" style="font-size:14px;" class="">인증</div>
         </v-col>
       </v-row>
       <v-row class="d-flex justify-space-between  align-center mx-3">
@@ -85,11 +87,11 @@ import { notiType, sendNotify } from "../../api/notification/index"
       check: false,
       show:false,
       feedType: false,
-      null_image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/null",
-      image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/" 
+      DefaultURL: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/",
+      image: "" 
     }),
     created(){
-      this.image = this.image + this.card.media
+      this.image = this.card.media
       this.feedType = this.card.feedType === "true" ? true:false
       this.check= (this.card.authCheck ==='true' ? true:false) 
       // 본인 여부
@@ -112,6 +114,24 @@ import { notiType, sendNotify } from "../../api/notification/index"
       //   this.$emit('scroll', location)
       // }
     },
+    watch:{
+      card(){
+        this.image = this.card.media
+        console.log(this.image)
+        this.feedType = this.card.feedType === "true" ? true:false
+        this.check= (this.card.authCheck ==='true' ? true:false) 
+      // 본인 여부
+        if(this.card.userPk == sessionStorage.getItem("userpk")) {
+          this.writer = true
+        }
+        // 인증 확인 여부
+        this.auth = this.card.authUsers.some((res)=>{
+        if(sessionStorage.getItem("userpk") == res.userPk){
+          return true
+        }
+      })
+      }
+    },
     methods: {
       accept(){
         http.get(`feed/authCheckFeed?feedPk=${this.card.feedPk}`)
@@ -131,6 +151,7 @@ import { notiType, sendNotify } from "../../api/notification/index"
             })
           }
         })
+        
       },
       feedDelete(){
         http.delete(`feed/deleteFeed?feedPk=${this.card.feedPk}`)
@@ -174,6 +195,18 @@ color: #F9802D
 .card_content{
   white-space: pre-wrap;
 }
+
+.auth-icon {
+  color:#5dc9b6;
+  /* opacity: 0.2; */
+  text-align: center;
+  transform: rotate(-30deg);
+  top:0;
+  left:110px;
+  z-index: 2;
+}
+
+
 
 
 </style>
