@@ -4,6 +4,7 @@ import com.ssafy.doit.model.store.Product;
 import com.ssafy.doit.model.store.ChatRoom;
 import com.ssafy.doit.model.store.ChatRoomJoin;
 import com.ssafy.doit.model.response.ResponseChatRoom;
+import com.ssafy.doit.model.store.ProductStatus;
 import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.store.ProductRepository;
 import com.ssafy.doit.repository.UserRepository;
@@ -71,7 +72,7 @@ public class ChatService {
 
     public List<ResponseChatRoom> getList(Long uid) throws Exception{
         List<ResponseChatRoom> result = new ArrayList<>();
-        List<ChatRoom> chatRooms = chatRoomRepository.findAllByChatRoomJoins_User_Id(uid);
+        List<ChatRoom> chatRooms = chatRoomRepository.findAllByChatRoomJoins_User_IdAndProduct_StatusNot(uid, ProductStatus.SOLDOUT);
 
         for(ChatRoom c : chatRooms)
             result.add(new ResponseChatRoom(c, uid));
