@@ -83,9 +83,6 @@ public class FeedService {
         Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group,user);
         if(!optGU.isPresent()) throw new Exception("해당 그룹에 가입되어 있지 않아 접근 불가합니다.");
 
-//        Optional<Feed> optFeed = feedRepository.findByGroupPkAndWriterAndCreateDate(groupPk, userPk, LocalDate.now().toString());
-//        if(optFeed.isPresent()) throw new Exception("오늘 이미 인증피드를 작성하였습니다.");
-
         Feed feed = feedRepository.save(Feed.builder()
                 .content(feedReq.getContent())
                 .feedType(feedReq.getFeedType())
@@ -157,7 +154,7 @@ public class FeedService {
     @Transactional
     public void updateFeed(Long userPk, Feed feedReq) throws Exception {
         Optional<Feed> feed = feedRepository.findById(feedReq.getFeedPk());
-        if(userPk == feed.get().getWriter()) {
+        if(userPk == feed.get().getWriter().longValue()) {
             feed.ifPresent(selectFeed -> {
                 selectFeed.setContent(feedReq.getContent());
                 selectFeed.setFeedType(feedReq.getFeedType());
@@ -171,17 +168,27 @@ public class FeedService {
     @Transactional
     public void deleteFeed(Long userPk, Long feedPk) throws Exception {
         Optional<Feed> feed = feedRepository.findById(feedPk);
-        if(userPk == feed.get().getWriter()) {
+        User user = userRepository.findById(userPk).get();
+
+        if(userPk.equals(feed.get().getWriter())) {
             feedUserRepository.deleteByFeedPk(feedPk);
             commentRepository.deleteByFeedPk(feedPk);
             feed.ifPresent(selectFeed -> {
                 try {
+                    feedRepository.delete(selectFeed);
                     s3Service.deleteFile(selectFeed.getMedia());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                feedRepository.delete(selectFeed);
             });
+
+            user.setMileage(user.getMileage() - 50);
+            userRepository.save(user);
+            mileageRepository.save(Mileage.builder()
+                    .content("피드 삭제 마일리지 차감")
+                    .date(LocalDateTime.now())
+                    .mileage("-50")
+                    .user(user).build());
         } else throw new Exception("피드 작성자가 아닙니다.");
     }
 
@@ -232,7 +239,7 @@ public class FeedService {
         if(!feed.getFeedType().equals("true"))
             throw new Exception("인증피드가 아닙니다.");
 
-        if(userPk == feed.getWriter())
+        if(userPk == feed.getWriter().longValue())
             throw new Exception("자신이 올린 피드에는 인증할 수 없습니다.");
 
         Optional<FeedUser> optFU = feedUserRepository.findByFeedAndUser(feed, user);

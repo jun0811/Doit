@@ -52,7 +52,7 @@ export default {
         .then((res)=>{
           this.words = res.data.object
           for (var word in this.words) {
-            var tempword = {'name': word, 'value': (this.words[word]+1)**5}
+            var tempword = {'name': word, 'value': (this.words[word]+1)}
             this.defaultWords.push(tempword)
           }
           // console.log(this.defaultWords)
@@ -60,7 +60,7 @@ export default {
       },
       wordClickHandler(name, value) {
         console.log('wordClickHandler', name, value);
-        this.$router.push({name: "GroupList",params: {word: name}})
+        this.$router.push({name: "GroupList",params: {word: name, page:1}})
       }
    },
 }

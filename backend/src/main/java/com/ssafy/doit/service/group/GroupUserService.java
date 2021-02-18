@@ -90,7 +90,7 @@ public class GroupUserService {
     public void withdrawGroupUser(Long userPk, Long groupPk) throws Exception {
         User user = userRepository.findById(userPk).get();
         Group group = groupRepository.findById(groupPk).get();
-        if(userPk == group.getLeader()) throw new Exception("그룹장은 탈퇴할 수 없습니다.");
+        if(userPk.equals(group.getLeader())) throw new Exception("그룹장은 탈퇴할 수 없습니다.");
 
         Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
         if(optGU.isPresent()) {
@@ -114,7 +114,7 @@ public class GroupUserService {
     @Transactional
     public void kickOutGroupUser(Long userPk, Long groupPk, Long leader) throws Exception {
         Group group = groupRepository.findById(groupPk).get();
-        if(leader == group.getLeader()){
+        if(leader.equals(group.getLeader())){
             User user = userRepository.findById(userPk).get(); // 강퇴시킬 그룹원
             Optional<GroupUser> optGU = groupUserRepository.findByGroupAndUser(group, user);
             optGU.ifPresent(selectGU -> selectGU.setStatus("false"));
@@ -137,7 +137,7 @@ public class GroupUserService {
     @Transactional
     public List<ResGroupList> deleteGroupByUser(Long userPk) throws Exception {
         List<ResGroupList> resList = new ArrayList<>();
-         User user = userRepository.findById(userPk).get();
+        User user = userRepository.findById(userPk).get();
         List<GroupUser> list = groupUserRepository.findByUser(user);
 
         for (GroupUser groupUser : list) {

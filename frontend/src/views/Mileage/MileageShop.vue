@@ -45,14 +45,20 @@
           {{category}}
         </v-btn>
       </v-row>
-
+      <div v-if="!empty" class="pl-sm-16 my-3">
+        총 <span style="color: #F9802D">{{ totalElements }}</span> 개의 검색 결과가 있습니다.
+      </div>
       <ProductPage :page="page" :keyword="keyword" :option="option"></ProductPage>
+
       <v-pagination
+        v-if="totalPages"
         color="orange"
         v-model="page"
-        :length="pageCount"
+        :length="totalPages"
         :total-visible="7"
+        class="mt-12 mb-5"
       ></v-pagination>
+
     </v-container>
     <Footer></Footer>
   </div>
@@ -74,18 +80,20 @@ export default {
   data() {
     return {
       categories:[
-        '전체','음식', '책', '운동', '취미', '카테고리5', '카테고리6', 
+        '전체','음식', '책', '운동', '취미', '의류', '기타', 
       ],
       page:1,
-      pageCount :1,
       products:[],
       direction:'DESC',
       keyword:'',
       option:'',
-      mileage:90,
+      mileage:0,
       joind:false,
       selectedKeyword:'전체',
       category: '',
+      totalElements:0,
+      totalPages:0,
+      empty:true,
     }
   },
   created() {
@@ -97,6 +105,9 @@ export default {
       http.get(`/product/search?direction=${this.direction}&keyword=${this.keyword}&option=${this.option}&pg=${this.page}`)
       .then((res)=>{
         this.products = res.data.object.content
+        this.totalPages = res.data.object.totalPages
+        this.totalElements = res.data.object.totalElements
+        this.empty = res.data.object.sort.empty
       })
     },
     keywordSearch(idx) {
@@ -118,6 +129,7 @@ export default {
         this.option = 'category'
         this.getProducts()
       }
+      this.page = 1
     },
     getMileage() {
       http.get(`/user/detailUser`)

@@ -291,7 +291,7 @@ public class UserController {
         ResponseBasic result = null;
         try {
             Long loginPk = userService.currentUser();
-            if(loginPk == userPk){
+            if(loginPk.equals(userPk)){
                 User user = userRepository.findById(loginPk).get();
                 List<Mileage> mileageList = mileageRepository.findAllByUser(user);
                 List<ResponseMileage> resList = new ArrayList<>();

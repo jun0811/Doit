@@ -34,8 +34,7 @@
           </v-card>
       </v-col>
     </v-row>
-
-                  <!-- <span v-for="(tag,idx) in group.tags" :key="idx" class="mr-2"># {{tag}}</span> -->
+    <!-- <span v-for="(tag,idx) in group.tags" :key="idx" class="mr-2"># {{tag}}</span> -->
    
   </v-container >
 </template>
@@ -60,16 +59,36 @@ export default {
     watch: {
       page:{
         handler: function () {
+          console.log('page', this.category, this.page)
           if (this.category==null) {
             searchGroup(
               {
-                "direction":"ASC",
+                "direction":"DESC",
                 "page":this.page,
-                "size":1,
+                "size":9,
                 "tag":this.word,
                 "token": ""
               },
               (res) =>{
+                if (res.status){
+                this.groups = res.data.object.content // 배열로 집어넣기
+                }
+              },
+              (err) =>{
+                console.log(err)
+                alert("검색 결과 가져오기 실패")
+              }
+            )
+          } else {
+            categoryGroup(
+              {
+                "category":this.category,
+                "direction":"DESC",
+                "page":this.page,
+                "size":9,
+              },
+              (res) =>{
+                console.log(res)
                 if (res.status){
                 this.groups = res.data.object.content // 배열로 집어넣기
                 }
@@ -86,7 +105,7 @@ export default {
         handler: function () {
           searchGroup(
             {
-              "direction":"ASC",
+              "direction":"DESC",
               "page":this.page,
               "size":9,
               "tag":this.word,
@@ -109,7 +128,7 @@ export default {
         categoryGroup(
           {
             "category":this.category,
-            "direction":"ASC",
+            "direction":"DESC",
             "page":this.page,
             "size":9,
           },
@@ -133,7 +152,7 @@ export default {
       if (this.category==undefined) {
         searchGroup(
           {
-            "direction":"ASC",
+            "direction":"DESC",
             "page":this.page,
             "size":9,
             "tag":this.word,
@@ -154,7 +173,7 @@ export default {
         categoryGroup(
           {
             "category":this.category,
-            "direction":"ASC",
+            "direction":"DESC",
             "page":this.page,
             "size":9,
           },

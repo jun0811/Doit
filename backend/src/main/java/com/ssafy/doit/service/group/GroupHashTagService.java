@@ -98,8 +98,8 @@ public class GroupHashTagService {
     @Transactional
     public void updateGroup(Long userPk, Group groupReq) throws Exception {
         Optional<Group> group = groupRepository.findById(groupReq.getGroupPk());
-
-        if(userPk == group.get().getLeader()){
+        if(userPk.equals(group.get().getLeader())){
+            System.out.println(userPk +" "+ group.get().getLeader());
             group.ifPresent(selectGroup ->{
                 selectGroup.setName(groupReq.getName());
                 selectGroup.setContent(groupReq.getContent());
@@ -124,24 +124,24 @@ public class GroupHashTagService {
     // 그룹 해시태그 추가
     @Transactional
     public void updateHashTag(Long userPk, Long groupPk, String tag) throws Exception {
-        Optional<Group> optGroup = groupRepository.findById(groupPk);
-        if(userPk == optGroup.get().getLeader()) {
+        Optional<Group> group = groupRepository.findById(groupPk);
+        if(userPk.equals(group.get().getLeader())){
             Optional<HashTag> hashTag =  hashTagRepository.findByName(tag);
             if(hashTag.isPresent()){
-                Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag.get());
+                Optional<GroupHashTag> gh = groupHashTagRepository.findByGroupAndHashTag(group.get(),hashTag.get());
                 if(gh.isPresent()) throw new Exception("해시태그가 이미 존재합니다."); // 이미 해시태그 존재
             }
-            findOrCreateHashTag(optGroup.get(), tag);
+            findOrCreateHashTag(group.get(), tag);
         } else throw new Exception("그룹장이 아닙니다."); // 로그인한 유저가 그룹장이 아니면 수정불가
     }
 
     // 그룹 해시태그 삭제
     @Transactional
     public void deleteHashTag(Long userPk, Long groupPk, String hashtag) throws Exception {
-        Optional<Group> optGroup = groupRepository.findById(groupPk);
-        if(userPk == optGroup.get().getLeader()) {
+        Optional<Group> group = groupRepository.findById(groupPk);
+        if(userPk.equals(group.get().getLeader())){
             HashTag hashTag =  hashTagRepository.findByName(hashtag).get();
-            GroupHashTag gh = groupHashTagRepository.findByGroupAndHashTag(optGroup.get(),hashTag).get();
+            GroupHashTag gh = groupHashTagRepository.findByGroupAndHashTag(group.get(),hashTag).get();
             groupHashTagRepository.delete(gh);
             hashTag.setCnt(hashTag.getCnt() - 1);
             hashTagRepository.save(hashTag);

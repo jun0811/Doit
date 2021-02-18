@@ -1,26 +1,31 @@
 <template>
   <div>
+    <!-- <div>
+    </div> -->
     <v-footer 
-    color="#F9802D"
-    class="foot d-flex flex-column justify-center py-6 white--text">
+      color="white"
+      class="foot d-flex flex-column justify-center py-6 black--text">
+      <v-row style="width:100%" class="mb-5">
+        <div class="navbar-line" role="presentation"></div>
+      </v-row>
       <v-row
         justify="center"
-
         no-gutters
+        class="mb-2"
       >
-        <span class="mr-3">만든사람들 : </span>
+        <v-text class="mr-3 text-style">만든사람들 : </v-text>
         <span v-for="(member,idx) in members" :key="idx" class="d-flex align-center">
           <font-awesome-icon v-if="idx !== 0" class="circle mx-2" icon="circle"/>
-          <span >{{member}}</span>
+          <span class="text-style">{{member}}</span>
         </span>
       </v-row >
       <v-row no-gutters>
-        <span class="mr-3">소속 : </span>
-        <span>삼성청년소프트웨어아카데미(SSAFY) 4기 광주 1반</span>
+        <span class="mr-3 text-style">소속 : </span>
+        <span class="text-style">삼성청년소프트웨어아카데미(SSAFY) 4기 광주 1반</span>
       </v-row>
       <v-row no-gutters>
         <v-col
-          class="py-4 text-center "
+          class="py-4 text-center text-style"
           cols="12"
         >
           {{ new Date().getFullYear() }} — <strong>Doit</strong>
@@ -45,12 +50,26 @@
 .foot {
   display:absolute;
   bottom:-100px;
-  background-color: darkorange;
-  color:lightgoldenrodyellow;
+  /* font-size: 80%; */
+  /* background-color: darkorange;
+  color: black; */
+  /* text-color: black; */
+  /* font-color: black; */
+}
+
+.text-style {
+  font-size: 90%;
+  color: #616161;
 }
 
 .circle{
   width: 0.25rem;
   height: 0.25rem;
+}
+
+.navbar-line {
+  width: 100%;
+  border-bottom: 1px solid black;
+  opacity: 0.2;
 }
 </style>

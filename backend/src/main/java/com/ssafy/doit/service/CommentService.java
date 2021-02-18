@@ -74,7 +74,7 @@ public class CommentService {
     @Transactional
     public void updateComment(Long userPk, Comment commentReq) throws Exception {
         Optional<Comment> comment = commentRepository.findById(commentReq.getCommentPk());
-        if (userPk == comment.get().getUserPk()) {
+        if (userPk.equals(comment.get().getUserPk())) {
             comment.ifPresent(selectComment -> {
                 selectComment.setContent(commentReq.getContent());
                 selectComment.setUpdateDate(LocalDateTime.now().toString());
@@ -85,7 +85,7 @@ public class CommentService {
 
     public void deleteComment(Long userPk, Long commentPk) throws Exception {
         Optional<Comment> comment = commentRepository.findById(commentPk);
-        if (userPk == comment.get().getUserPk()) {
+        if (userPk.equals(comment.get().getUserPk())) {
             comment.ifPresent(selectComment -> {
                 commentRepository.delete(selectComment);
             });
