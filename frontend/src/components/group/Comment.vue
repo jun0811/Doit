@@ -72,7 +72,7 @@
               ></v-textarea>
              </v-list-item-subtitle> 
             <v-list-item-title v-if="comment.updateActive" class="d-flex justify-end mr-1">
-              <v-btn text @click="comment.updateActive = !comment.updateActive; " class="cancel-btn">취소</v-btn>
+              <v-btn text @click="comment.updateActive = !comment.updateActive; comment.content = tempContent " class="cancel-btn">취소</v-btn>
               <v-btn text @click="updateComment(comment)" class="comment-btn">수정</v-btn>
             </v-list-item-title>
           </v-list-item-content>
@@ -98,7 +98,7 @@
               </template>
 
               <v-list>
-                <v-list-item @click="comment.updateActive =!comment.updateActive">
+                <v-list-item @click="comment.updateActive =!comment.updateActive; tempUpdate(comment)">
                   <v-list-item-title text style="text-align:center;">수정</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="deleteComment(comment.commentPk)" >
@@ -155,6 +155,7 @@ export default {
     page:1,
     commentCount :0,
     listSize :5,
+    tempContent : '',
   }),
   props : {
     card: Object,
@@ -186,7 +187,9 @@ export default {
     }
   },
   methods: {
-    
+    tempUpdate(comment) {
+      this.tempContent = comment.content
+    },
     getComment() {
       let cnt = 1;
       http.get(`comment/commentList?feedPk=${this.card.feedPk}`)
