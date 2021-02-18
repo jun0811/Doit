@@ -83,6 +83,7 @@ export default {
     }
   },
   created() {
+    this.member = sessionStorage.getItem("accessToken")
     categoryGroup(
       {
         "category":this.category,
