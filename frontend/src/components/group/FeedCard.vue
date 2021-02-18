@@ -13,11 +13,11 @@
       ></v-progress-linear>
     </template>
     <v-img
-      v-if="null_image==image"
+      v-if="!image"
       height="250"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
     ></v-img>
-    <v-img v-else :src="image"></v-img>
+    <v-img v-else :src="DefaultURL + image"></v-img>
     <span v-if="!feedType" class="ma-3 text-h6 title">정보</span>
     <span v-else class="ma-3 text-h6 title">인증</span>
     <v-card-title class="card_content">{{this.card.content}} </v-card-title>
@@ -87,11 +87,11 @@ import { notiType, sendNotify } from "../../api/notification/index"
       check: false,
       show:false,
       feedType: false,
-      null_image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/null",
-      image: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/" 
+      DefaultURL: "http://ssafydoit.s3.ap-northeast-2.amazonaws.com/",
+      image: "" 
     }),
     created(){
-      this.image = this.image + this.card.media
+      this.image = this.card.media
       this.feedType = this.card.feedType === "true" ? true:false
       this.check= (this.card.authCheck ==='true' ? true:false) 
       // 본인 여부
@@ -113,6 +113,24 @@ import { notiType, sendNotify } from "../../api/notification/index"
       //   console.log('lolo',location)
       //   this.$emit('scroll', location)
       // }
+    },
+    watch:{
+      card(){
+        this.image = this.card.media
+        console.log(this.image)
+        this.feedType = this.card.feedType === "true" ? true:false
+        this.check= (this.card.authCheck ==='true' ? true:false) 
+      // 본인 여부
+        if(this.card.userPk == sessionStorage.getItem("userpk")) {
+          this.writer = true
+        }
+        // 인증 확인 여부
+        this.auth = this.card.authUsers.some((res)=>{
+        if(sessionStorage.getItem("userpk") == res.userPk){
+          return true
+        }
+      })
+      }
     },
     methods: {
       accept(){

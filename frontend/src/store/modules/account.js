@@ -5,7 +5,8 @@ const state = {
   name: null,
   email: null,
   userpk: null,
-  userimg: null
+  userimg: null,
+  role:""
 };
 
 const getters = {
@@ -46,6 +47,7 @@ const mutations = {
     state.email = data.object.email;
     state.userpk = data.object.id;
     state.userimg = data.object.image
+    state.role = data.object.role
     
     sessionStorage.accessToken = state.accessToken;
     sessionStorage.name = data.object.nickname;
