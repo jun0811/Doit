@@ -103,7 +103,7 @@ export default {
       image: "",
       imageUrl: null,
       title : "상품명 및 제목을 입력하세요.",
-      categories : ['음식', '책', '운동', '카테고리4', '카테고리5', ],
+      categories : ['음식', '책', '운동', '의류', '기타', ],
       mileage: "300",
       product : {
         category : '',

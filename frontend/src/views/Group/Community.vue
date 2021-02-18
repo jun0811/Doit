@@ -38,8 +38,8 @@
 
             <v-tabs color="orange" class="d-flex justify-center">
               <!-- <v-tab>자유 피드</v-tab> -->
-              <v-tab @click="UserList">그룹정보</v-tab>
               <v-tab @click="FeedList">인증피드</v-tab>
+              <v-tab @click="UserList">그룹정보</v-tab>
             </v-tabs>            
         </v-col>       
         <v-col v-if="feed && joined" cols="12" class="d-flex flex-column justify-space-around align-center mx-sm-16">
@@ -162,8 +162,8 @@ export default {
       menu1: false,
       user_info: {},
       user_num: 0,
-      feed: false, //
-      users: true, 
+      feed: true, //
+      users: false, 
       joined: false, // 현재 유저 가입 여부 확인
       start: new Date().toISOString().substr(0,10),
       end: new Date().toISOString().substr(0,10),

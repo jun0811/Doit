@@ -11,7 +11,7 @@
         <span v-if="item.userPk == leader" class="groupleader"><font-awesome-icon icon="crown"/></span>
       </div>
       <div v-if="item.auth"
-        class="d-flex flex-column align-center justify-end auth-icon ml-6">
+        class="d-flex flex-column align-center justify-end auth-icon ml-8">
         <font-awesome-icon class="fa-3x " :icon="['far', 'smile']" />
         <div style="font-size:14px;">오늘인증</div>
       </div>
