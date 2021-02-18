@@ -9,7 +9,7 @@
       </v-row>
       <div v-for="(chatting, idx) in chattings" :key="idx">
         <v-row class="ma-3 d-flex align-center">
-          <v-col cols="3" sm="2" class="pl-6">
+          <v-col cols="3" sm="2" class="pl-6 d-flex justify-end">
             <v-avatar>
               <img 
                 :src="baseImg + chatting.otherUser.image" 
@@ -20,20 +20,56 @@
 
             </v-avatar>
           </v-col>
-          <v-col cols="6" sm="5">
+          <v-col cols="6" sm="2">
             {{ chatting.otherUser.nickname }}
           </v-col>
           <v-col cols="3" sm="2" class="pr-6">
-            <v-avatar>
-              <img 
-                :src="baseImg + chatting.product.image" 
-                alt="product-img"
-                class="list-prd-img"
-                style="width:100%; height:100%;"
+            <router-link 
+              :to="{name: 'ProductDetail', params: {product_id: chatting.id}}"
+            >
+              <v-avatar 
+                class="list-prd-img-effect"             
               >
-            </v-avatar>
+                <img 
+                  :src="baseImg + chatting.product.image" 
+                  alt="product-img"
+                  class="list-prd-img"
+                  style="width:100%; height:100%;"
+                >               
+              </v-avatar>
+            </router-link>
           </v-col>
-          <v-col cols="12" sm="3" class="d-flex justify-center">
+          <v-col cols="6" sm="3" class="deal--btn">
+            <v-btn
+              v-if="chatting.button==`sale`"
+              text
+              @click="reservation(chatting.id)"
+            >판매예약</v-btn>
+            <!-- <div > -->
+            <v-btn
+              v-else-if="chatting.button==`waiting`"
+              text
+              class="cancel"
+              @click="cancel(chatting.id)"
+            >예약취소</v-btn>
+            <v-row v-else-if="chatting.button==`purchase`">
+              <v-col cols="6" sm="6">
+                <v-btn               
+                  text
+                  class="confirm px-2"
+                  @click="confirm(chatting.id)"
+                >구매확정</v-btn>
+              </v-col>
+              <v-col cols="6" sm="6">
+                <v-btn               
+                  text
+                  class="cancel"
+                  @click="cancel(chatting.id)"
+                >구매취소</v-btn>
+              </v-col>
+            </v-row>
+          </v-col>          
+          <v-col cols="6" sm="2" class="d-flex justify-center">
             <v-dialog
               scrollable
               persistent
@@ -43,19 +79,19 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  class="deal-btn"
+                  class="enter-chatting"
                   text
                   v-bind="attrs"
                   v-on="on"
                   @click="enterRoom(chatting.id)"
-                >채팅방 들어가기</v-btn>
+                >채팅방</v-btn>
               </template>
               <template v-slot:default="dialog">
               <v-card>
-                <v-card-title>
+                <v-card-title class="py-1 px-1">
                   <v-container>
                     <v-row>
-                      <v-col cols="3" sm="2" class="mt-1">
+                      <v-col cols="2" sm="2" class="mt-1 d-flex justify-center align-center">
                         <v-avatar>
                           <img 
                             :src="baseImg + productImg" 
@@ -64,23 +100,28 @@
                           >    
                         </v-avatar>
                       </v-col>
-                      <v-col cols="6" sm="8" class="d-flex flex-column justify-center">
+                      <v-col cols="6" sm="6" class="d-flex flex-column justify-center">
                         <v-row class="prd-name">
                           <v-col class="">
                             {{ productName }}  
                           </v-col>
                         </v-row>
                         <v-row class="prd-mileage">
-                          <v-col class="">
+                          <v-col class="pb-0">
                           {{ productPrice }} 마일리지
                           </v-col>
                         </v-row>
                       </v-col>
-                      <v-col cols="3" sm="2" class="d-flex flex-column justify-center">
-                        <v-btn
-                          text
-                          @click="[ dialog.value = false, close() ]"
-                        >닫기</v-btn>                          
+                      <v-col cols="4" sm="4" class="d-flex flex-column justify-center">
+                        <v-row class="d-flex justify-end mb-4">
+                          <v-btn
+                            text
+                            icon
+                            large
+                            class="mr-1 mt-1"
+                            @click="[ dialog.value = false, close() ]"
+                          ><v-icon>mdi-close</v-icon></v-btn>                          
+                        </v-row>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -109,10 +150,10 @@
                   </div>
                 </v-card-text>
                 <v-divider></v-divider>
-                <v-card-actions>
+                <v-card-actions class="pb-0">
                   <v-container>
                     <v-row class="">
-                      <v-col cols="10">
+                      <v-col cols="12" class="py-0">
                         <v-text-field
                           label="메세지를 입력하세요."
                           v-model="content" 
@@ -120,15 +161,9 @@
                           outlined
                           @keyup.enter="sendMessage()"
                           background-color="white"
-                        ></v-text-field>                        
-                      </v-col>
-                      <v-col cols="2" class="d-flex justify-center">
-                        <div class="send-icon">
-                          <font-awesome-icon 
-                            :icon="['far', 'paper-plane']"
-                            @click="sendMessage()"                         
-                          /> 
-                        </div>                        
+                          dense
+                          append-icon="mdi-send"
+                        ></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -137,6 +172,7 @@
               </template>
             </v-dialog>            
           </v-col>
+
         </v-row>
         <v-row>
           <v-col>
@@ -190,13 +226,21 @@ export default {
     http.get('/chat/getList')
     .then(res => {
       this.chattings = res.data.object
+      // console.log(res);
     })
     if(this.notiChat) {
       this.enterRoom(this.chatPk)
       this.dialog = true;
-      console.log('props',this.chatPk)
+      // console.log('props',this.chatPk)
       this.notiChat = false
     }
+  },
+  updated() {
+    http.get('/chat/getList')
+    .then(res => {
+      this.chattings = res.data.object
+      // console.log(res);
+    })
   },
   watch: {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역
@@ -244,7 +288,23 @@ export default {
     },
     close() {
       this.$store.getters.getStompClient.unsubscribe(this.subscribe.id);
-    }
+    },
+    reservation(v) {
+      if(confirm("판매 예약하시겠습니까?")==true) {
+        http.get(`product/requestSell?roomPk=${v}`)
+      }      
+    },      
+    confirm(v) {
+      if(confirm("구매를 확정하시겠습니까?")==true) {
+        http.get(`product/purchase?roomPk=${v}`)       
+      }
+      // alert('구매를 확정하시겠습니까?')
+    },
+    cancel(v) {
+      if(confirm("판매 예약을 취소하시겠습니까?")==true) {
+        http.get(`product/cancel?roomPk=${v}`)
+      }        
+    },
   }
 }
 </script>
@@ -264,13 +324,35 @@ width: 55%;
 .list-prd-img {
   width: 50%;
   height: auto;
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
 .list-prd-img {
   width: 100%;
   height: auto;
+  cursor: pointer;
 }
+}
+
+.list-prd-img-effect {
+    -webkit-transform:scale(1);
+    -moz-transform:scale(1);
+    -ms-transform:scale(1); 
+    -o-transform:scale(1);  
+    transform:scale(1);
+    -webkit-transition:.3s;
+    -moz-transition:.3s;
+    -ms-transition:.3s;
+    -o-transition:.3s;
+    transition:.05s;
+}
+.list-prd-img-effect:hover {
+    -webkit-transform:scale(1.2);
+    -moz-transform:scale(1.2);
+    -ms-transform:scale(1.2);   
+    -o-transform:scale(1.2);
+    transform:scale(1.05);
 }
 
 .other-user-img {
@@ -288,28 +370,55 @@ width: 55%;
 .deal-btn {
   /* margin:30px; */
   border: 2px solid orange;
-  border-radius: 15px;
+  /* border-radius: 15px; */
   background-color:white;
 }
 
+.deal--btn {
+  /* display: flex; */
+  justify-content: end;
+  padding-left: 0;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .deal--btn {
+    /* display: flex; */
+    justify-content: center;
+    padding-left: 12px;
+  }
+}
+
+.enter-chatting {
+  color: #F9802D;
+}
+
 .prd-img {
-  /* margin-top: 24px; */
   width: 90%;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .prd-img {
-    width:100%;
-  /* margin-top: 24px; */
-
+    width:90%;
+    height: 90%;
   }
 }
 .prd-name {
   font-size: 90%;
 }
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .prd-name {
+    font-size: 70%;
+  }
+}
 .prd-mileage {
   color: grey;
   font-size: 70%;
+}
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .prd-mileage {
+    color: grey;
+    font-size: 50%;
+  }
 }
 .other-message-box {
   background-color: #EEEEEE;
@@ -333,7 +442,6 @@ width: 55%;
 .send-icon {
   font-size: 40px;
   cursor: pointer;
-  /* color: black; */
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
@@ -346,5 +454,13 @@ width: 55%;
 
 .card-style {
   height: 900px;
+}
+
+.confirm {
+  color: green;
+}
+
+.cancel {
+  color: red;
 }
 </style>
