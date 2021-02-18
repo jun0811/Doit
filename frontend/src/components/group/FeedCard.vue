@@ -20,7 +20,7 @@
     <v-img v-else :src="image"></v-img>
     <span v-if="!feedType" class="ma-3 text-h6 title">정보</span>
     <span v-else class="ma-3 text-h6 title">인증</span>
-    <v-card-title>{{this.card.content}} </v-card-title>
+    <v-card-title class="card_content">{{this.card.content}} </v-card-title>
 
     <v-card-text>
       <v-row>
@@ -170,6 +170,9 @@ color: #F9802D
 .red-btn:hover {  
   color:red;
   border:1px solid red;
+}
+.card_content{
+  white-space: pre-wrap;
 }
 
 

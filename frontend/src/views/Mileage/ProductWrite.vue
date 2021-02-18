@@ -126,7 +126,7 @@ export default {
     write() {
       const formData = new FormData()
       formData.append("file",this.file)
-      if(this.imageUrl==null) {
+      if(this.imageUrl==null && !this.title && !this.product.content) {
         alert("사진 첨부는 필수입니다.")
       }
       else {

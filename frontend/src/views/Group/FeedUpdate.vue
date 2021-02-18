@@ -11,6 +11,16 @@
                     <v-row class="text-left">
                         <v-col cols="3" sm="2">
                             <v-img
+                            v-if="profile"
+                            id="profile"
+                            :src="'http://ssafydoit.s3.ap-northeast-2.amazonaws.com/'+profile"
+                            alt="profile-img"
+                            class="profile-img my-auto mx-auto"
+                            max-height="50"
+                            max-width="50"
+                            />
+                            <v-img
+                            v-else
                             id="profile"
                             src="@/assets/img/profile_temp.png"
                             alt="profile-img"
@@ -116,7 +126,7 @@ export default {
             '정보 공유'
         ], 
         authCheck: false,
-        authCnt: 0,
+        profile: "",
         authDate: '',
         createDate: new Date(), // 변경X
         feedType: true,
@@ -186,5 +196,12 @@ export default {
 
 .text-size {
     font-size: 80%;
+}
+.profile-img{
+    width: 200px;
+    height: 200px;
+    border-radius: 70%;
+    overflow: hidden;
+    border: 1px solid #FFB685
 }
 </style>

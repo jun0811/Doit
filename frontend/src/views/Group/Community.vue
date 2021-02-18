@@ -15,7 +15,7 @@
             <p class="ma-0"> 멤버 : {{user_num}}/{{user_info.maxNum}}</p>
             <p class="ma-0"> {{user_info.startDate}} ~ {{user_info.endDate}}</p>
             <div class="" style="display:inline-block" v-for="(tag,idx) in user_info.tags" :key="idx">
-              <router-link :to="{name: 'GroupList', params: {word: tag}}" style="display:inline-block">
+              <router-link :to="{name: 'GroupList', params: {word: tag, page: 1}}" style="display:inline-block">
                 <p class="ma-0 mr-1" > #{{tag}}</p>
               </router-link>
             </div>
