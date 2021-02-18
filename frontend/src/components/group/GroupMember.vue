@@ -11,7 +11,7 @@
           <span class="mx-1">그룹원 수 : </span>
           <span class="team-info">{{totalNum}}</span>
         </div>
-        <div      
+        <div style="height:auto"      
         class="pa-5 content-style"
         >
           {{content}}
@@ -20,7 +20,7 @@
         hide-delimiter-background
         light
         width="100%"
-        height="100%">
+        height="auto">
           <v-carousel-item
             v-for="(page,i) in pageCount"
             :key="i"
