@@ -202,11 +202,14 @@ public class ProductController {
             Product product = chatRoom.getProduct();
 
             if(host.getId() != product.getUser().getId()) throw new Exception("유저 불일치");
-            if(saleRepository.findByChatRoom_Product_Id(roomPk).isPresent()) throw new Exception("이미 예약중인 상품");
+            if(saleRepository.findByChatRoom_Product_Id(product.getId()).isPresent()) throw new Exception("이미 예약중인 상품");
 
             Sale sale = new Sale();
             sale.setChatRoom(chatRoom);
             saleRepository.save(sale);
+
+            product.setStatus(ProductStatus.WAITING);
+            productRepository.save(product);
 
             result = new ResponseBasic(true, "success", null);
         }
