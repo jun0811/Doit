@@ -58,7 +58,7 @@
 
           <v-list-item-content>
             <v-list-item-title v-html="comment.writerName"></v-list-item-title>
-            <v-list-item-subtitle v-if="!comment.updateActive" v-html="comment.content"></v-list-item-subtitle>
+            <v-list-item-subtitle v-if="!comment.updateActive" v-html="comment.content" style="white-space: pre-wrap;"></v-list-item-subtitle>
              <v-list-item-subtitle v-if="comment.updateActive">  
               <v-textarea
                 filled
