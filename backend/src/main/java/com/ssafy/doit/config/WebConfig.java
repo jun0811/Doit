@@ -60,7 +60,8 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/group/searchGroup").permitAll()
                 .antMatchers("/group/categoryGroup").permitAll()
                 .antMatchers("/product/search").permitAll()
-                .anyRequest().hasRole("USER")
+                .antMatchers("/admin").hasRole("ADMIN")
+                .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
                 .addFilterBefore(jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class);
