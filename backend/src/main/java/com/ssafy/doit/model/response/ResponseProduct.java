@@ -1,6 +1,7 @@
 package com.ssafy.doit.model.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.doit.model.store.ProductStatus;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ public interface ResponseProduct {
     String getImage();
     LocalDateTime getCreateDate();
     int getMileage();
-    boolean getStatus();
+    ProductStatus getStatus();
 
     default Long getUser_pk(){ return getUserId(); }
 

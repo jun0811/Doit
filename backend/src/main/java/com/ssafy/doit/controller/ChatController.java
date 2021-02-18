@@ -58,7 +58,6 @@ public class ChatController {
         try{
             Long uid = userService.currentUser();
             List<ResponseChatRoom> chatRooms = chatService.getList(uid);
-            System.out.println(chatRooms);
             result = new ResponseBasic(true, "success", chatRooms);
         }catch (Exception e){
             e.printStackTrace();
