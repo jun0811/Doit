@@ -1,6 +1,5 @@
 <template>
   <div class="">
-    <Header></Header>
     <v-container class="d-flex justify-center" >
       <v-card  class="d-flex align-center flex-column" pa-4 style="width:100%;max-width:600px;">
         <h3 class="mt-10 mb-4">회원가입</h3>
@@ -101,22 +100,17 @@
         </v-container>
       </v-card>
     </v-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from '@/components/common/Header.vue';
-import Footer from '@/components/common/Footer.vue';
 import { validationMixin } from 'vuelidate';
 import { required, maxLength, sameAs, minLength, email } from 'vuelidate/lib/validators'
 import http from '../../http-common'
 
 export default {
   name: 'Join',
-  components: { 
-    Header,
-    Footer,  
+  components: {   
   },
   mixins: [validationMixin],
   validations: {

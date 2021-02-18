@@ -1,11 +1,9 @@
 <template>
 <div>
-  <Header></Header>
-  <!-- <NavBar></NavBar> -->
     <v-container class="container-width">
         <v-row>
-          <v-col v-if="image" class="img-wrapper">
-            <img class="product-img" :src="defaultAddress+image" alt="product image">
+          <v-col v-if="productImg" class="img-wrapper">
+            <img class="product-img" :src="defaultAddress+productImg" alt="product image">
           </v-col>
         </v-row>
         <v-row class="my-3 px-6 d-flex align-center">
@@ -91,7 +89,7 @@
                       <v-col cols="3" sm="2" class="mt-1">
                         <v-avatar>
                           <img 
-                            :src="baseImg + productImg" 
+                            :src="defaultAddress + productImg" 
                             alt="product-img"
                             class="prd-img"
                           >    
@@ -172,30 +170,21 @@
           </v-col>
         </v-row>
     </v-container>
-  <Footer></Footer>
-
 </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header.vue";
-import Footer from "@/components/common/Footer.vue";
 import http from "../../http-common";
 import { notiType, sendNotify } from '../../api/notification/index'
 
 export default {
   name: "ProductDetail",
   components: {
-    Header,
-    // NavBar,
-    Footer,
-    // ChatRoom,
   },
   data() {
     return {
       product: '',
       user : 'nickname',
-      baseImg : 'https://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
       chattings: [], 
       seller: '',
       roomid : 0,
