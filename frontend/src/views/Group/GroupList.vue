@@ -12,10 +12,14 @@
           <h3>'{{ word }}'와(과) 일치하는 검색결과가 없습니다.</h3>
           <br>
           <br>
+
           <h4>'{{ word }}' 관련 그룹을 만들고 싶으시다면?</h4>
-          <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
+          <v-btn text class="text-h6" color="#F9802D" @click="createGroup" v-if="member">
             그룹 만들기
           </v-btn>
+          <h3 class="login" v-else>
+            로그인
+          </h3>
         </div>
         <!-- </div> -->
         <div v-else class="d-flex align-center flex-column">
@@ -28,9 +32,12 @@
             class="mt-12 "
           ></v-pagination>
           <h4 class="mt-12">'{{ word }}' 관련 그룹을 만들고 싶으시다면?</h4>
-          <v-btn text class="text-h6" color="#F9802D" @click="createGroup">
+          <v-btn text class="text-h6" color="#F9802D" @click="createGroup" v-if="member">
             그룹 만들기
           </v-btn>
+          <h3 class="login" v-else>
+            로그인
+          </h3>
         </div>
 
       </v-container>
@@ -56,6 +63,7 @@ export default {
           groups:[],
           empty: '',
           contentlength: 0,
+          member: false,
         }
     },
   updated(){
@@ -83,6 +91,7 @@ export default {
     )
   },
   created() {
+    this.member = sessionStorage.getItem("accessToken")
     searchGroup(
       {
         "direction":"DESC",
@@ -112,11 +121,13 @@ export default {
   methods: {
     createGroup(){
       this.$router.push('/group/groupcreate')
-    }
+    },
   }
 }
 </script>
 
 <style scoped>
-
+ .login{
+   color: #F9802D;
+ }
 </style>
