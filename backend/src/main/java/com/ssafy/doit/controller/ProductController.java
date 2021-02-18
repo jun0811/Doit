@@ -239,6 +239,9 @@ public class ProductController {
             Sale sale = saleRepository.findByChatRoom_Id(roomPk).get();
             saleRepository.delete(sale);
 
+            for(ChatRoom c : product.getChatRooms())
+                chatRoomRepository.delete(c);
+
             host.setMileage(host.getMileage() + product.getMileage());
             userRepository.save(host);
             mileageRepository.save(Mileage.builder()
