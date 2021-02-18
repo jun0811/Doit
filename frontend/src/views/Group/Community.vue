@@ -220,6 +220,7 @@ export default {
     groupPk(){
       this.start = new Date().toISOString().substr(0,10);
       this.end = new Date().toISOString().substr(0,10);
+
       http.get(`group/detailGroup?groupPk=${this.groupPk}`)
       .then((res)=>{
           this.user_info= res.data.object
@@ -230,7 +231,14 @@ export default {
           this.image = res.data.object.image
           this.createDate = res.data.object.createDate
           this.start = res.data.object.createDate
-      }),
+      })
+      if (this.notiFeed) {
+        this.FeedList()
+        const notiDate = this.notiInfo.createDate.substr(0,10)
+        this.end = notiDate
+        this.start = notiDate
+        this.feedRead()
+      }
       http.get('group/currentUserGroup')
         .then((res)=>{
           this.joined = res.data.object.some((group)=>{
@@ -248,7 +256,6 @@ export default {
   }
   ,
   methods: {
-
     updateGroup(){
       this.$router.push({name:"GroupUpdate",params:{groupPk:this.groupPk}})
     },
@@ -325,14 +332,8 @@ export default {
           this.users = true;
         }
     })
-    
-    if (this.notiFeed) {
-      this.FeedList()
-      const notiDate = this.notiInfo.createDate.substr(0,10)
-      this.end = notiDate
-      this.start = notiDate
-      this.feedRead()
-    }
+    // 알람이 왔을 때 피드
+   
   }
 }
 </script>
