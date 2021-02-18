@@ -223,13 +223,13 @@
               v-bind="attrs"
               v-on="on"
             >
-            <div v-if="notiCount" v-on="notiCount">
+            <v-col v-if="notiCount" >
               <v-badge :content="notiCount" color="pink" offset-x="-2" offset-y="-2"></v-badge>
               <font-awesome-icon  class="bell fa-lg" icon="bell"/>
-            </div>
-            <div v-else>
+            </v-col>
+            <v-col v-else>
               <font-awesome-icon class="bell fa-lg" :icon="['far', 'bell']" />
-            </div>
+            </v-col>
 
 
 
@@ -356,6 +356,8 @@ export default {
             http.get('/noti/getList')
             .then((res) => {
                 this.noti = res.data.object;
+                console.log(res)
+                console.logt('watch',this.noti)
                 this.notiCount = this.noti.length
             })
           })
@@ -373,7 +375,6 @@ export default {
             .then((res)=>{
             this.items[0].items = res.data.object;
           })
-
           http.get('/noti/getList')
           .then((res) => {
               this.noti = res.data.object;
@@ -400,10 +401,16 @@ export default {
         this.$router.push({ name: 'Community', params: { groupPk: String(notiInfo.groupPk), notiFeed: true, notiInfo: notiInfo }})
       },
       noticeConfirm(notice) {
-
-        const index = this.noti.indexOf(notice)
-        this.noti.splice(index, 1)
-        this.notiCount = this.notiCount -1
+        
+        http.get(`noti/confirm?id=${notice.id}`)
+        .then((res)=>{
+          this.noti = res.data.object
+          this.notiCount = this.noti.length
+          console.log('res', res)
+        })
+        // const index = this.noti.indexOf(notice)
+        // this.noti.splice(index, 1)
+        // this.notiCount = this.notiCount -1
         if (notice.notiType==="1") {
           let chatPk = notice.target.id
           this.moveToChat(chatPk)
@@ -414,11 +421,6 @@ export default {
           let notiInfo = notice.target
           this.moveToGroupFeed(notiInfo)
         }
-        http.get(`noti/confirm?id=${notice.id}`)
-        .then((res)=>{
-          this.noti = res.data.obejct
-          console.log('res', res)
-        })
       },
       signup() {
         this.$router.push("/user/join")

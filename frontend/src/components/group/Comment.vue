@@ -86,6 +86,7 @@
               rightcomment.updateActive =!comment.updateActive
               :nudge-width="100"
               transition="slide-y-transition"
+              v-if="user.userPk === comment.userPk"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
