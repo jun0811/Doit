@@ -392,7 +392,7 @@ export default {
         this.CONNECT()
       },
       moveToChat(chatPk) {
-        this.$router.push({ name: 'ChatList', params : {chatPk:String(chatPk)}})
+        this.$router.push({ name: 'ChatList', params : {chatPk:String(chatPk), notiChat : true}})
       },
       moveToGroup(groupPk) {
         this.$router.push({ name: 'Community', params: { groupPk: String(groupPk) }}).catch(error => {

@@ -193,6 +193,7 @@ export default {
   },
   props : {
     chatPk: String,
+    notiChat: Boolean,
   },
   created() {
     http.get('/chat/getList')
@@ -200,9 +201,12 @@ export default {
       this.chattings = res.data.object
       // console.log(this.chattings)
     })
-    this.enterRoom(this.chatPk)
-    this.dialog = true;
-    console.log('props',this.chatPk)
+    if(this.notiChat) {
+      this.enterRoom(this.chatPk)
+      this.dialog = true;
+      console.log('props',this.chatPk)
+      this.notiChat = false
+    }
   },
   watch: {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역
