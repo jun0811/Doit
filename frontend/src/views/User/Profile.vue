@@ -2,10 +2,10 @@
   <div>
     <Header></Header>
     <v-container class="pa-3 pa-sm-16">
-      <v-row class="py-3 ma-0" style="width:100%">
+      <v-row class="py-3 ma-0 d-flex justify-center" style="width:100%">
         <!-- 개인 이미지 + 닉네임 시작 -->
         <v-col
-          cols="12" sm="12" md="4" lg="4" xl="4"
+          cols="12" sm="12" md="4" lg="4" xl="6"
           class="d-flex justify-center align-center flex-column image"
         >
           <div class= "group-image">
@@ -26,7 +26,7 @@
         </v-col>
         <!-- 개인 이미지 + 닉네임 끝 -->
         <!-- 잔디 시작 -->
-        <v-col cols="12" sm="8" md="8" lg="8" xl="8">
+        <v-col cols="12" sm="8" md="8" lg="8" xl="6">
           <Grass></Grass>
         </v-col>
         <!-- 잔디 끝 -->
@@ -53,7 +53,7 @@
         </v-col>
       </v-row >
       <!-- 프로필 버튼 끝 -->
-      <v-row class="py-16">
+      <v-row class="py-16 d-flex justify-center">
         <v-col 
           cols="defined"
           sm="7"
