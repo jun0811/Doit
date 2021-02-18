@@ -12,21 +12,28 @@
       <div v-for="(chatting, idx) in chattings" :key="idx">
         <v-row class="ma-3 d-flex align-center">
           <v-col cols="3" sm="2" class="pl-6">
-            <img 
-              :src="chatting.otherUser.image" 
-              alt="other-profile"
-              class="other-user-img"
-            >
+            <v-avatar>
+              <img 
+                :src="baseImg + chatting.otherUser.image" 
+                alt="other-profile"
+                class="other-user-img"
+                style="width:100%; height:100%;"
+              >
+
+            </v-avatar>
           </v-col>
           <v-col cols="6" sm="5">
             {{ chatting.otherUser.nickname }}
           </v-col>
           <v-col cols="3" sm="2" class="pr-6">
-            <img 
-              :src="chatting.product.image" 
-              alt="product-img"
-              class="list-prd-img"
-            >
+            <v-avatar>
+              <img 
+                :src="baseImg + chatting.product.image" 
+                alt="product-img"
+                class="list-prd-img"
+                style="width:100%; height:100%;"
+              >
+            </v-avatar>
           </v-col>
           <v-col cols="12" sm="3" class="d-flex justify-center">
             <v-dialog
@@ -51,11 +58,13 @@
                   <v-container>
                     <v-row>
                       <v-col cols="3" sm="2" class="mt-1">
-                        <img 
-                          :src="productImg" 
-                          alt="product-img"
-                          class="prd-img"
-                        >    
+                        <v-avatar>
+                          <img 
+                            :src="baseImg + productImg" 
+                            alt="product-img"
+                            class="prd-img"
+                          >    
+                        </v-avatar>
                       </v-col>
                       <v-col cols="6" sm="8" class="d-flex flex-column justify-center">
                         <v-row class="prd-name">
@@ -167,6 +176,7 @@ export default {
       // id : 84,
       // idx:0,
       // roomCheck: false,
+      baseImg : 'https://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
       chattings: [], 
       productImg: '',
       productName: '',
