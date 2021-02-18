@@ -21,9 +21,11 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    public final static long TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 24;
+    public final static long TOKEN_VALIDATION_SECOND = 1000L * 60;
+    public final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 24;
 
     final static public String ACCESS_TOKEN_NAME = "accessToken";
+    final static public String REFRESH_TOKEN_NAME = "refreshToken";
 
     @Value("${spring.jwt.secret}")
     private String SECRET_KEY;
@@ -45,12 +47,7 @@ public class JwtUtil {
     }
 
     public String getUser(String token) {
-        return (String) extractAllClaims(token).get("User");
-    }
-
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getUser(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return extractAllClaims(token).get("user", String.class);
     }
 
     public Boolean isTokenExpired(String token) throws ExpiredJwtException{
@@ -58,14 +55,15 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-    public String generateToken(User user) {
+    public String generateToken(String user) {
         return doGenerateToken(user, TOKEN_VALIDATION_SECOND);
     }
+    public String generateRefreshToken(String user) { return doGenerateToken(user, REFRESH_TOKEN_VALIDATION_SECOND); }
 
-    public String doGenerateToken(User user, long expireTime) {
+    public String doGenerateToken(String user, long expireTime) {
 
         Claims claims = Jwts.claims();
-        claims.put("User", user.getEmail());
+        claims.put("user", user);
 
         String jwt = Jwts.builder()
                 .setClaims(claims)
@@ -77,7 +75,8 @@ public class JwtUtil {
         return jwt;
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader(ACCESS_TOKEN_NAME);
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        final String username = getUser(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
