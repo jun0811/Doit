@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { api, response } from './api/index'
+import { api, response } from './api/account/index'
 import account from './store/modules/account'
 
 const http = axios.create({
