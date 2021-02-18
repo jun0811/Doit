@@ -11,13 +11,20 @@
         <v-row class="ma-3 d-flex align-center">
           <v-col cols="3" sm="2" class="pl-6 d-flex justify-end">
             <v-avatar>
-              <img 
+              <img
+                v-if="chatting.otherUser.image !== null"
                 :src="baseImg + chatting.otherUser.image" 
                 alt="other-profile"
                 class="other-user-img"
                 style="width:100%; height:100%;"
               >
-
+              <img
+                v-else
+                src="@/assets/img/profile_temp.png"
+                alt="other-profile"
+                class="other-user-img"
+                style="width:100%; height:100%;"
+              >
             </v-avatar>
           </v-col>
           <v-col cols="6" sm="2">

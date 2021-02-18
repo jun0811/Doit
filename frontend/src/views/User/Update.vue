@@ -7,7 +7,7 @@
             <v-col cols="12" sm="3">
               <div class="text-center d-flex align-center flex-column" >
                 <v-img v-if="imageUrl" :src="imageUrl" class="profile-img"></v-img>
-                <v-img v-else-if="image" :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ image" class="profile-img"> </v-img>
+                <v-img v-else-if="image !=='undefined' " :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ image" class="profile-img"> </v-img>
                 <v-img v-else src="@/assets/img/profile_temp.png" class="profile-img"> </v-img>
                 <!-- 사진변경 버튼 시작 -->
                 <div class="pt-3 text-center">
