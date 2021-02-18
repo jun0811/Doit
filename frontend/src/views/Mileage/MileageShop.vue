@@ -33,10 +33,11 @@
         </v-col>
       </v-row >
       <!--카테고리 클릭시 페이지 1로 초기화 하고 프로덕트 리스트도 다시 바꿔주기 -->
-      <v-row class="mt-3 py-3 mx-3 mx-sm-16 d-flex justify-space-between">
+      <v-row class="mt-3 py-3 mx-3 mx-sm-16 d-flex justify-end">
         <v-btn 
           depressed
-          class="d-flex justify-center ma-1 category"
+          text
+          class="d-flex justify-center ma-1 category "
           v-for="(category, idx) in categories"
           :key="idx"
           value ="category"
@@ -99,6 +100,12 @@ export default {
   created() {
     this.getMileage()
     this.getProducts()
+    this.keywordclass()
+  },
+  watch : {
+    selectedKeyword: function (){
+      this.keywordclass()
+    }
   },
   methods: {
     getProducts() {
@@ -110,22 +117,32 @@ export default {
         this.empty = res.data.object.sort.empty
       })
     },
-    keywordSearch(idx) {
-      const selectedKeyword = this.categories[idx]
+    keywordclass () {
       const categoriesBtn = document.querySelectorAll('.category')
       categoriesBtn.forEach(category => {
-        if (category.innerText === selectedKeyword) {
+        if (category.innerText === this.selectedKeyword) {
           category.classList.add('selelctedKeyword')
         } else {
           category.classList.remove('selelctedKeyword')
         }
       })
-      if (selectedKeyword ==="전체") {
+    },
+    keywordSearch(idx) {
+      this.selectedKeyword = this.categories[idx]
+      const categoriesBtn = document.querySelectorAll('.category')
+      categoriesBtn.forEach(category => {
+        if (category.innerText === this.selectedKeyword) {
+          category.classList.add('selelctedKeyword')
+        } else {
+          category.classList.remove('selelctedKeyword')
+        }
+      })
+      if (this.selectedKeyword ==="전체") {
         this.keyword = ""
         this.option = ""
         this.getProducts()
       } else {
-        this.keyword = selectedKeyword
+        this.keyword = this.selectedKeyword
         this.option = 'category'
         this.getProducts()
       }
@@ -167,6 +184,6 @@ export default {
 
 .selelctedKeyword {
   color: #F9802D;
-  background-color: rgb(248, 227, 188) !important
+  /* background-color: rgb(248, 227, 188) !important */
 }
 </style>

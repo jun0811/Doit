@@ -105,6 +105,8 @@ public class SignupController {
                     .authKey(authKey)
                     .build());
 
+            beforeCommitUser(user.getId());
+            
             mileageRepository.save(Mileage.builder()
                     .content("회원가입 축하 마일리지 지급")
                     .date(LocalDateTime.now())
@@ -143,7 +145,6 @@ public class SignupController {
                 selectUser.setUserRole(UserRole.USER);
                 userRepository.save(selectUser);
             });
-            beforeCommitUser(user.get().getId());
             result = new ResponseBasic( true, "success", null);
         }catch (Exception e){
             e.printStackTrace();

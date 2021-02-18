@@ -89,11 +89,13 @@
                   <v-container>
                     <v-row>
                       <v-col cols="3" sm="2" class="mt-1">
-                        <img 
-                          :src="productImg" 
-                          alt="product-img"
-                          class="prd-img"
-                        >    
+                        <v-avatar>
+                          <img 
+                            :src="baseImg + productImg" 
+                            alt="product-img"
+                            class="prd-img"
+                          >    
+                        </v-avatar>
                       </v-col>
                       <v-col cols="6" sm="8" class="d-flex flex-column justify-center">
                         <v-row class="prd-name">
@@ -193,6 +195,8 @@ export default {
     return {
       product: '',
       user : 'nickname',
+      baseImg : 'https://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
+      chattings: [], 
       seller: '',
       roomid : 0,
       id : 84,
@@ -222,7 +226,7 @@ export default {
     .then((res)=>{
       this.product = res.data.object
       this.seller = this.product.user_pk
-      this.image =  this.product.image
+      this.productImg =  this.product.image
       this.profile = this.product.profile
     })   
     // var objDiv = document.getElementById("scroll"); 

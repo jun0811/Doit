@@ -1,6 +1,6 @@
 <template>
   <div class="header-navbar">
-    <header class="header">
+    <header class="header pl-0">
       <div class="d-flex align-center">
         <!-- navigation drawer 시작-->
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -392,7 +392,7 @@ export default {
         this.CONNECT()
       },
       moveToChat(chatPk) {
-        this.$router.push({ name: 'ChatList', params : {chatPk:String(chatPk)}})
+        this.$router.push({ name: 'ChatList', params : {chatPk:String(chatPk), notiChat : true}})
       },
       moveToGroup(groupPk) {
         this.$router.push({ name: 'Community', params: { groupPk: String(groupPk) }}).catch(error => {
