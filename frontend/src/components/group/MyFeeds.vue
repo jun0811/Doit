@@ -78,12 +78,14 @@ import http from '../../http-common'
     },
     methods: {
       feedDelete(){
-        http.delete(`feed/deleteFeed?feedPk=${this.card.feedPk}`)
-        .then(()=>{
-          this.$router.go()
-          alert("삭제되었습니다.")
-          }
-        )
+        if(confirm("피드를 삭제하시겠습니까?")==true) {
+          http.delete(`feed/deleteFeed?feedPk=${this.card.feedPk}`)
+          .then(()=>{
+            alert("피드가 삭제되었습니다.")
+            this.$router.go()
+            }
+          )
+        }      
       },
       feedUpdate(){
         this.$router.push({name:"FeedUpdate",params:{feedPk:Number(this.card.feedPk),"content":this.card.content, "writer":this.card.writer}})

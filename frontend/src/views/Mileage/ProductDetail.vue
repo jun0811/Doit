@@ -309,11 +309,14 @@ export default {
       }
     },
     deleteProduct() {
-      http.delete(`/product/${this.product_id}`)
-      .then((res) => {
-        console.log(res)
-        this.$router.push('/mileageshop')
-      })
+      if(confirm("등록하신 물품을 삭제하시겠습니까?")==true) {
+        http.delete(`/product/${this.product_id}`)
+        .then(()=>{
+            alert("해당 물품이 삭제되었습니다.")
+            this.$router.push('/mileageshop')
+          }
+        )
+      }      
     },
     updateProduct() {
       this.$router.push({name:"ProductUpdate",params:{product_id:this.product_id}})

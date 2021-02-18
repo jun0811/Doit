@@ -252,14 +252,17 @@ export default {
         })
     },
     deleteComment(commentPk){
-      http.delete(`comment/deleteComment?commentPk=${commentPk}`)
+      if(confirm("댓글을 삭제하시겠습니까?")==true) {
+        http.delete(`comment/deleteComment?commentPk=${commentPk}`)
         .then((res)=>{
           if(res.data.status){
+            alert("댓글이 삭제되었습니다.")
             this.getComment()
           }
         }).catch((err) => {
           console.log(err)
         })
+      }         
     },
     updateComment(comment) {
       const params = {

@@ -98,14 +98,15 @@ export default {
         alert("탈퇴 안내를 확인하고 동의해 주세요.")
       }
       else {
-        http.put('/user/deleteUser')
-
-        this.LOGOUT()
-        .then((response) => {
-          console.log(response)
-          this.DISCONNECT();
-          this.$router.push("/user/delete/complete")
-        })
+        if(confirm("정말 Doit을 탈퇴하시겠습니까?")==true) {
+          http.put('/user/deleteUser')
+  
+          this.LOGOUT()
+          .then(() => {
+            this.DISCONNECT();
+            this.$router.push("/user/delete/complete")
+          })
+        }      
       }
 
     }
