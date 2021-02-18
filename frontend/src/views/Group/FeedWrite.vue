@@ -10,12 +10,22 @@
                     <v-row class="text-left">
                         <v-col cols="3" sm="2" class="d-flex align-center">
                             <v-img
+                            v-if="profile"
+                            id="profile"
+                            :src="'http://ssafydoit.s3.ap-northeast-2.amazonaws.com/'+profile"
+                            alt="profile-img"
+                            class="profile-img my-auto mx-auto"
+                            max-height="50"
+                            max-width="50"
+                            />
+                            <v-img
+                            v-else
                             id="profile"
                             src="@/assets/img/profile_temp.png"
                             alt="profile-img"
                             class="profile-img my-auto mx-auto"
-                            max-height="44"
-                            max-width="44"
+                            max-height="50"
+                            max-width="50"
                             />
                         </v-col>
                         <v-col cols="9" sm="10" class="pa-0 my-auto">
@@ -106,10 +116,13 @@ export default {
         feedType: true,
         file: {},
         status: true,
+        profile:""
       }
     },
     created(){
       // this.selected = "인증"
+      this.profile = sessionStorage.getItem("userimg")
+      
     },
     watch: {
       selected: function() {
@@ -170,6 +183,15 @@ export default {
 </script>
 
 <style scoped>
+
+.profile-img{
+    width: 200px;
+    height: 200px;
+    border-radius: 70%;
+    overflow: hidden;
+    border: 1px solid #FFB685
+}
+
 .complete-btn {
     border: 2px solid #F9802D;
     color: #F9802D;
