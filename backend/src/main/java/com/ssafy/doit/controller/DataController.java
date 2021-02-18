@@ -91,7 +91,7 @@ public class DataController {
         try {
             LocalDate today = LocalDate.now();
             LocalDate before = today.minusDays(29); //59
-            List<CommitUser> list = commitUserRepository.findByUserPkAndDateBetweenOrderByDate(userPk,before,today);
+            List<CommitUser> list = commitUserRepository.findTop30ByUserPkAndDateBetweenOrderByDate(userPk,before,today);
             List<Integer> resGrass = new ArrayList<>();
             for(CommitUser cu : list){
                 resGrass.add(cu.getCnt());
