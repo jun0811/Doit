@@ -19,6 +19,9 @@
                 <p class="ma-0 mr-1" > #{{tag}}</p>
               </router-link>
             </div>
+            <div class="create-style">
+              그룹 생성 날짜: {{ createDate }}
+            </div>
           </v-col>
           <v-col cols="3" sm="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
             <v-btn class="group" outlined width="75" v-if="loginUser==leader" @click="updateGroup">그룹 수정</v-btn>
@@ -101,7 +104,7 @@
             </v-col>
           </v-row>
           <v-row class="" style="width: 100%">
-            <v-col v-if="cards.length" cols="12" sm="10" class="d-flex justify-end pr-sm-16">
+            <v-col v-if="cards.length" cols="12" sm="10" xl="8" class="write-btn d-flex justify-end pr-sm-16 pr-xl-0">
               <v-btn text x-large class="mt-5" @click="feedWrite"> 글작성 <img src="@/assets/img/edit.png" alt="writing" class="write-icon"></v-btn>
             </v-col>
             <!-- <v-col cols="1" class="d-flex align-center">
@@ -172,6 +175,7 @@ export default {
       leader:'',
       loginUser:'',
       tags:[],
+      createDate: '',
     }
   },
   watch: {
@@ -310,6 +314,7 @@ export default {
       this.tags = res.data.object.tags
       this.loginUser = this.$store.state.account.userpk
       this.image = res.data.object.image
+      this.createDate = res.data.object.createDate
     }),
     http.get('group/currentUserGroup')
       .then((res)=>{
@@ -351,6 +356,13 @@ export default {
     border: 1px solid #E0E0E0;
     margin-left: 0px;
     margin-right: 0px;
+    } 
+  }
+  @media only screen and (min-width: 1500px) {
+  .group-intro {
+    border: 1px solid #E0E0E0;
+    margin-left: 30%;
+    margin-right: 30%;
     } 
   }
   .group-image {
@@ -403,4 +415,15 @@ export default {
     height:20px;
     margin-left: 5px;
   }
+  .create-style {
+    font-size: 80%;
+    color: #616161;
+  }
+
+  /* @media only screen and (min-width: 1500px) {
+  .write-btn {
+    width: 10%;
+  }
+  } */
+
 </style>
