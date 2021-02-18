@@ -3,10 +3,11 @@
         <Header></Header>
         <!-- 그룹 간략 소개 시작 -->
         <v-container class="pa-3 pa-sm-16">
-            <v-card  class="d-flex align-center flex-column my-15 mx-sm-auto px-5 col-sm-10" width=100%>
+            <v-card  class="d-flex align-center flex-column my-15 mx-sm-auto px-5 col-sm-10" width=100% max-width="600">
                 <h3 class="mt-5 mb-3">피드 수정</h3>
                 <v-divider style="width:100%;"></v-divider>
-                 <v-col cols="12" lg="8" xl="6" class="my-5">
+                 <v-container cols="12" lg="8" xl="6" class="my-2">
+                 <!-- <v-col cols="12" lg="8" xl="6" class="my-5"> -->
                     <v-row class="text-left">
                         <v-col cols="3" sm="2">
                             <v-img
@@ -61,12 +62,13 @@
                             <input type="file" ref="imageInput" hidden  @change="onImages"  accept="image/*">
                             <v-btn outlined type="button"
                             @click="onClickImageUpload">인증 이미지 </v-btn>
-
                         </v-col>
                     </v-row>
                     <v-row>
+                      <!-- 이미지 띄우기 -->
                         <v-col>
                           <v-img v-if="imageUrl" :src="imageUrl"></v-img>
+                          <v-img v-else :src="image"> </v-img>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -78,7 +80,9 @@
                           >수정 완료</v-btn>
                       </v-col>
                     </v-row>
-                </v-col>
+                <!-- </v-col> -->
+                </v-container>
+
             </v-card>
         </v-container>
         <Footer></Footer>
@@ -101,13 +105,14 @@ export default {
         feedPk: Number,
         content: String,
         writer: String,
-  
+        image: String
     },
     created() {
+        console.log(this.feedPk);
         this.feed= this.feedPk;
         this.nick = this.writer;
         this.new_content = this.content;
-        this.profile = sessionStorage.getItem("userimg")
+        this.image = 'http://ssafydoit.s3.ap-northeast-2.amazonaws.com/' + this.image
     },
     data() {
       return {
@@ -130,6 +135,7 @@ export default {
         updateDate: new Date(), // 이게 업데이트 후 변경! 
         userPk: '',
         file: {},
+        // image: '',
       }
     },
     watch: {
