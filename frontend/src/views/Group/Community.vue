@@ -20,7 +20,7 @@
               </router-link>
             </div>
             <div class="create-style">
-              그룹 생성 날짜: {{ createDate }}
+              그룹 시작 날짜: {{ createDate }}
             </div>
           </v-col>
           <v-col cols="3" sm="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
@@ -347,22 +347,21 @@ export default {
 <style scoped>
   .group-intro {
     border: 1px solid #E0E0E0;
-    margin-left: 240px;
-    margin-right: 240px;
+    
   } 
 
   @media only screen and (min-width: 300px) and (max-width: 599px) {
   .group-intro {
     border: 1px solid #E0E0E0;
-    margin-left: 0px;
-    margin-right: 0px;
+    /* margin-left: 0px;
+    margin-right: 0px; */
     } 
   }
-  @media only screen and (min-width: 1500px) {
+  @media only screen and (min-width: 2000px) {
   .group-intro {
     border: 1px solid #E0E0E0;
-    margin-left: 30%;
-    margin-right: 30%;
+    margin-left: 10%;
+    margin-right: 10%;
     } 
   }
   .group-image {
