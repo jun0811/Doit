@@ -16,11 +16,11 @@
             <p class="ma-0"> {{user_info.startDate}} ~ {{user_info.endDate}}</p>
             <div class="" style="display:inline-block" v-for="(tag,idx) in user_info.tags" :key="idx">
               <router-link :to="{name: 'GroupList', params: {word: tag, page: 1}}" style="display:inline-block">
-                <p class="ma-0 mr-1" > #{{tag}}</p>
+                <p class="ma-0 mr-1 tag-style tag-effect" > #{{tag}}</p>
               </router-link>
             </div>
             <div class="create-style">
-              그룹 생성 날짜: {{ createDate }}
+              그룹 시작 날짜: {{ createDate }}
             </div>
           </v-col>
           <v-col cols="3" sm="2" class="d-flex flex-column justify-end" v-if="this.$store.state.account.accessToken">
@@ -347,22 +347,21 @@ export default {
 <style scoped>
   .group-intro {
     border: 1px solid #E0E0E0;
-    margin-left: 240px;
-    margin-right: 240px;
+    
   } 
 
   @media only screen and (min-width: 300px) and (max-width: 599px) {
   .group-intro {
     border: 1px solid #E0E0E0;
-    margin-left: 0px;
-    margin-right: 0px;
+    /* margin-left: 0px;
+    margin-right: 0px; */
     } 
   }
-  @media only screen and (min-width: 1500px) {
+  @media only screen and (min-width: 2000px) {
   .group-intro {
     border: 1px solid #E0E0E0;
-    margin-left: 30%;
-    margin-right: 30%;
+    margin-left: 10%;
+    margin-right: 10%;
     } 
   }
   .group-image {
@@ -419,11 +418,34 @@ export default {
     font-size: 80%;
     color: #616161;
   }
+ .tag-style {
+  /* text-shadow: 0 0 2px yellow;  */
+  background-color: #F9802D;
+  border-radius: 5px;
+  padding: 3px;
+  color: white;
+  /* font-size: 90%; */
+ }
 
-  /* @media only screen and (min-width: 1500px) {
-  .write-btn {
-    width: 10%;
-  }
-  } */
+.tag-effect{
+    -webkit-transform:scale(1);
+    -moz-transform:scale(1);
+    -ms-transform:scale(1); 
+    -o-transform:scale(1);  
+    transform:scale(1);
+    -webkit-transition:.3s;
+    -moz-transition:.3s;
+    -ms-transition:.3s;
+    -o-transition:.3s;
+    transition:.1s;
+}
+.tag-effect:hover {
+    -webkit-transform:scale(1.2);
+    -moz-transform:scale(1.2);
+    -ms-transform:scale(1.2);   
+    -o-transform:scale(1.2);
+    transform:scale(1.05);
+}
 
+ 
 </style>
