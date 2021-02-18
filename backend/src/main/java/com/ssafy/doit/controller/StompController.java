@@ -6,10 +6,12 @@ import com.ssafy.doit.model.response.ResMyFeed;
 import com.ssafy.doit.model.store.ChatMessage;
 import com.ssafy.doit.model.notification.NotiType;
 import com.ssafy.doit.model.notification.Notification;
+import com.ssafy.doit.model.user.User;
 import com.ssafy.doit.repository.group.GroupRepository;
 import com.ssafy.doit.repository.UserRepository;
 import com.ssafy.doit.service.NotiService;
 import com.ssafy.doit.service.jwt.JwtUtil;
+import com.ssafy.doit.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
@@ -20,6 +22,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
@@ -35,14 +38,15 @@ public class StompController {
     private final NotiService notiService;
     @Autowired
     private final GroupRepository groupRepository;
+    @Autowired
 
     private final SimpMessagingTemplate template;
     private final String MESSAGE_KEY = "Room_idx:";
 
     @MessageMapping("/chat")
-    public void message(ChatMessage chatMessage, @Header("accessToken") String Token){
-        String currentUser = jwtUtil.getUser(Token);
-        chatMessage.setUserPk(userRepository.findByEmail(currentUser).get().getId());
+    public void message(Principal principal, ChatMessage chatMessage){
+        User currentUser = userRepository.findByEmail(principal.getName()).get();
+        chatMessage.setUserPk(currentUser.getId());
         chatMessage.setLocalDateTime(LocalDateTime.now());
 
         ListOperations<String, ChatMessage> listOperations = redisTemplate.opsForList();
@@ -53,8 +57,8 @@ public class StompController {
 
     @Transactional
     @MessageMapping("/noti")
-    public void notify(Notification notification, @Header("accessToken") String Token){
-        Long currentUser = userRepository.findByEmail(jwtUtil.getUser(Token)).get().getId();
+    public void notify(Principal principal, Notification notification){
+        User currentUser = userRepository.findByEmail(principal.getName()).get();
         notification = notiService.setTarget(notification);
 
         if(notification.getNotiType() == NotiType.NEWFEED) {
@@ -63,7 +67,7 @@ public class StompController {
 
             for(GroupUser g : group.getUserList()){
                 Long user = g.getUser().getId();
-                if(user == currentUser) continue;
+                if(user.equals(currentUser.getId())) continue;
 
                 Notification noti = new Notification();
                 noti.setNotiType(notification.getNotiType());
