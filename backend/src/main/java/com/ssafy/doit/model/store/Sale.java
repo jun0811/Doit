@@ -19,11 +19,7 @@ public class Sale {
     @Column(name = "sale_pk")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "product_pk")
-    private Product product;
-
     @ManyToOne
-    @JoinColumn(name = "user_pk")
-    private User user;
+    @JoinColumn(name = "room_pk")
+    private ChatRoom chatRoom;
 }
