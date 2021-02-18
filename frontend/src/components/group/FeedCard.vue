@@ -28,8 +28,10 @@
           작성자:<span> {{this.card.writer}}</span>
          <div> 작성날짜: {{this.card.createDate.slice(0,10)}}</div>
         </v-col>
-        <v-col  class="col-4 d-flex justify-end">
-          <img v-if="check" src="@/assets/img/stamp.png" class="stamp">
+        <v-col class="col-4 d-flex flex-column align-center justify-end auth-icon">
+          <!-- <img v-if="check" src="@/assets/img/stamp.png" class="stamp"> -->
+            <font-awesome-icon v-if="check" class="fa-3x  " :icon="['far', 'smile']" />
+            <div v-if="check" style="font-size:14px;" class="">인증</div>
         </v-col>
       </v-row>
       <v-row class="d-flex justify-space-between  align-center mx-3">
@@ -131,6 +133,7 @@ import { notiType, sendNotify } from "../../api/notification/index"
             })
           }
         })
+        
       },
       feedDelete(){
         http.delete(`feed/deleteFeed?feedPk=${this.card.feedPk}`)
@@ -174,6 +177,18 @@ color: #F9802D
 .card_content{
   white-space: pre-wrap;
 }
+
+.auth-icon {
+  color:#5dc9b6;
+  /* opacity: 0.2; */
+  text-align: center;
+  transform: rotate(-30deg);
+  top:0;
+  left:110px;
+  z-index: 2;
+}
+
+
 
 
 </style>
