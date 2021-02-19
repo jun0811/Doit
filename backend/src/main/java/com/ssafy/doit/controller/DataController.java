@@ -73,13 +73,16 @@ public class DataController {
     public void initCommitUser(){
         List<User> userList = userRepository.findByUserRole(UserRole.USER);
         for(User user : userList){
-            System.out.println(user.getNickname());
+            Long userPk = user.getId();
             LocalDate date = LocalDate.now();
-            commitUserRepository.save(CommitUser.builder()
-                    .date(date)
-                    .userPk(user.getId())
-                    .cnt(0)
-                    .build());
+            Optional<CommitUser> opt = commitUserRepository.findByUserPkAndDate(userPk,date);
+            if(!opt.isPresent()) {
+                commitUserRepository.save(CommitUser.builder()
+                        .date(date)
+                        .userPk(userPk)
+                        .cnt(0)
+                        .build());
+            }
         }
     }
 
