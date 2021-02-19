@@ -83,6 +83,7 @@
               class="notice-dialog"
               max-width="600px"
               v-model="dialog"
+              :retain-focus="false"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -248,6 +249,9 @@ export default {
       this.chattings = res.data.object
       // console.log(res);
     })
+  },
+  mounted() {
+    
   },
   watch: {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역

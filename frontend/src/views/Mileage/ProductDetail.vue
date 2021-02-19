@@ -71,6 +71,7 @@
               scrollable
               persistent
               max-width="600px"
+              :retain-focus="false"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -206,7 +207,7 @@ export default {
       user1: {'userPk' : 0, 'userNick' : ''},
       user2: {'userPk' : 0, 'userNick' : ''},
       roomCheck: false,
-      bottom_flag: true,
+      // bottom_flag: true,
       subscribe: '',
       defaultAddress: 'http://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
       image: '',
@@ -232,11 +233,11 @@ export default {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역
     msg(){
       var objDiv = document.getElementById("app_chat_list");
-      if(this.bottom_flag){
+      // if(this.bottom_flag){
         // 채팅창 스크롤 바닥 유지
-          objDiv.scrollTop = objDiv.scrollHeight;
+      objDiv.scrollTop = objDiv.scrollHeight;
 
-      }
+      // }
     }
   },
   methods: {
@@ -408,6 +409,7 @@ width: 600px;
   padding-left: 12px;
   padding-right: 12px;
   margin:6px;
+  white-space: pre-wrap;
 }
 
 

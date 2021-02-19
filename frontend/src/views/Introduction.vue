@@ -9,11 +9,11 @@
       </v-row>
     </v-container>
     <v-container class="content-width">
-      <v-row class="d-flex justify-space-between content-reverse">
-        <v-col cols="12" sm="4">
-          <img src="@/assets/img/career.png" alt="group-img" class="img-style">
+      <v-row class="d-flex justify-space-between content-reverse align-center">
+        <v-col cols="12" sm="4" xl="7">
+          <img src="@/assets/img/grouplist.png" alt="group-img" class="group-img">
         </v-col>
-        <v-col cols="12" sm="7">
+        <v-col cols="12" sm="7" xl="5" class="">
           <div class="font-size1 pb-8">01 만들고 싶은 습관을 고르세요.</div>
           <div class="font-size2 pl-sm-16 mb-2">카테고리별 그룹 보기 및 검색을 통해 원하는 그룹을 찾아보실 수 있습니다.</div>
           <div class="font-size2 pl-sm-16 mb-2">각 그룹의 설명을 둘러보고 원하는 그룹을 선택하세요.</div>
@@ -22,30 +22,30 @@
       </v-row>
     </v-container>
     <v-container class="content-width">
-      <v-row class="d-flex justify-space-between">
-        <v-col cols="12" sm="8">
+      <v-row class="d-flex justify-space-between align-center">
+        <v-col cols="12" sm="7">
           <div class="font-size1 pb-8">02 그룹 규칙에 따라 습관 인증을 해보세요.</div>
           <div class="font-size2 pl-sm-16 mb-2">각 그룹의 규칙에 따라 습관 인증 피드를 올려보세요.</div>
           <div class="font-size2 pl-sm-16">그룹원의 70% 이상에게 인증을 받으면 인증 완료!</div>
         </v-col>
-        <v-col cols="12" sm="4">
-          <img src="@/assets/img/career.png" alt="group-img" class="img-style">
+        <v-col cols="12" sm="5">
+          <img src="@/assets/img/feed.png" alt="feed-img" class="feed-img">
         </v-col>
       </v-row>
     </v-container>
     <v-container class="content-width">
-      <v-row class="d-flex justify-space-between content-reverse">
-        <v-col cols="12" sm="4">
-          <img src="@/assets/img/career.png" alt="group-img" class="img-style">
+      <v-row class="d-flex justify-space-between content-reverse align-center">
+        <v-col cols="12" sm="6">
+          <img src="@/assets/img/grass.png" alt="grass-img" class="grass-img">
         </v-col>
-        <v-col cols="12" sm="8">
-          <div class="font-size1 pb-8">03 인증 할수록 채워지는 잔디를 확인하세요.</div>
-          <div class="font-size2 pl-sm-16 mb-2">일별로 인증된 피드들을 체크하여 자신의 잔디가 채워집니다.</div>
-          <div class="font-size2 pl-sm-16">알록달록하게 자신의 잔디를 채우는 재미!</div>
+        <v-col cols="12" sm="6">
+          <div class="font-size1 pb-8">03 인증 할수록 채워지는 금잔디를 확인하세요.</div>
+          <div class="font-size2 pl-sm-16 mb-2">일별로 인증된 피드들을 체크하여 자신의 금잔디가 채워집니다.</div>
+          <div class="font-size2 pl-sm-16">알록달록하게 자신의 금잔디를 채우는 재미!</div>
         </v-col>
       </v-row>
     </v-container>
-    <v-container class="content-width">
+    <!-- <v-container class="content-width">
       <v-row class="d-flex justify-space-between">
         <v-col cols="12" sm="7">
           <div class="font-size1 pb-8">04 그룹 내 정보 공유도 가능해요.</div>
@@ -55,17 +55,32 @@
           <img src="@/assets/img/career.png" alt="group-img" class="img-style">
         </v-col>
       </v-row>
-    </v-container>
+    </v-container> -->
     <v-container class="content-width">
-      <v-row class="d-flex justify-space-between content-reverse">
-        <v-col cols="12" sm="4">
-          <img src="@/assets/img/career.png" alt="group-img" class="img-style">
-        </v-col>
-        <v-col cols="12" sm="8">
-          <div class="font-size1 pb-8">05 마일리지를 모아 필요한 물품을 사보세요!</div>
+      <v-row class="d-flex justify-space-between  align-center">
+        <v-col cols="12" sm="7">
+          <div class="font-size1 pb-8">04 마일리지를 모아 필요한 물품을 사보세요!</div>
           <div class="font-size2 pl-sm-16 mb-2">그룹 활동을 통해 얻은 결과물을 SHOP에서 마일리지로 사고 팔 수 있습니다.</div>
-          <div class="font-size2 pl-sm-16">실시간 채팅으로 판매자와 구매자가 거래할 수 있어요!</div>
+          <div class="font-size2 pl-sm-16 mb-2">실시간 채팅으로 판매자와 구매자가 거래할 수 있어요</div>
+          <div class="font-size2 pl-sm-16">판매 예약/구매확정/취소 시스템으로 안전하게 거래할 수 있어요</div>
         </v-col>
+        <v-col cols="12" sm="5">
+          <img src="@/assets/img/product.png" alt="prd-img" class="prd-img">
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container class="end-style">
+      <v-row class="d-flex flex-column align-center pa-10 pa-sm-0">
+        <div class="title-size">그동안 이루지 못했던 습관 만들기 목표, Doit과 함께 만들어보아요 :D</div>
+        <br>
+        <div class="word-break-style mb-2 keycolor">지금 당장 그룹 둘러보기!</div>
+        <v-btn
+          text
+          plain         
+          x-large
+          @click="goToGroup"
+        >Click</v-btn>
+        <!-- <div class="word-break-style">다른사람들과 함께 습관을 만들어가는 참여형 플랫폼을 <span class="keycolor">Doit</span>이 제안합니다!</div> -->
       </v-row>
     </v-container>
      <v-btn v-show="visible" 
@@ -108,6 +123,9 @@ export default {
     scrollListener() {
       this.visible = window.scrollY > 150
     },
+    goToGroup() {
+      this.$router.push({name: 'CategoryList', params: {category: 'study'}})
+    }
   },
   mounted: function () {
     window.addEventListener('scroll', this.scrollListener)
@@ -140,12 +158,51 @@ export default {
 }
 }
 
-.img-style {
-  width: 100%;
+.group-img {
+  width: 120%;
+}
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .group-img {
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 1800px) {
+  .group-img {
+    width: 80%;
+  }
 }
 
+.feed-img {
+  width: 100%;
+}
+@media only screen and (min-width: 1800px) {
+  .feed-img {
+    width: 90%;
+  }
+}
+
+.grass-img {
+  width: 100%;
+}
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .grass-img {
+    width: 100%;
+  }
+}
+
+.prd-img {
+  width: 90%;
+  padding-left: 15px;
+}
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .prd-img {
+    width: 100%;
+  }
+}
+
+
 .title-size {
-  font-size: 250%;
+  font-size: 180%;
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
@@ -154,16 +211,26 @@ export default {
     word-break: keep-all;
   }
 }
+@media only screen and (min-width: 1800px) {
+  .title-size {
+    font-size: 250%;
+    word-break: keep-all;
+  }
+}
 
 .font-size1 {
   font-size: 250%;
 }
-
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .font-size1 {
     font-size: 130%;
     word-break: keep-all;
 
+  }
+}
+@media only screen and (min-width: 1800px) {
+  .font-size1 {
+    font-size: 300%;
   }
 }
 
@@ -175,6 +242,11 @@ export default {
     font-size: 90%;
   }
 }
+@media only screen and (min-width: 1800px) {
+  .font-size2 {
+    font-size: 120%;
+  }
+}
 
 .font-size3 {
   font-size: 100%;
@@ -184,9 +256,14 @@ export default {
     font-size: 70%;
   }
 }
+@media only screen and (min-width: 1800px) {
+  .font-size3 {
+    font-size: 100%;
+  }
+}
 
 .title-style {
-  /* margin-top: 10%; */
+  margin-top: 10%;
   margin-bottom: 20%;
   font-size: 130%;
 }
@@ -198,6 +275,29 @@ export default {
     text-align: center;
   }
 }
+
+.end-style {
+  margin-top: 15%;
+  margin-bottom: 10%;
+  font-size: 130%;
+}
+@media only screen and (min-width: 300px) and (max-width: 599px) {
+  .end-style {
+    margin-top: 20%;
+    margin-bottom: 10%;
+    font-size: 110%;
+    text-align: center;
+  }
+}
+@media only screen and (min-width: 1800px) {
+  .end-style {
+    margin-top: 15%;
+    margin-bottom: 10%;
+    font-size: 130%;
+    text-align: center;
+  }
+}
+
 @media only screen and (min-width: 300px) and (max-width: 599px) {
   .content-reverse {
     flex-direction: column-reverse;
@@ -212,5 +312,9 @@ export default {
   position: fixed;
   bottom: 50px;
   right: 50px;
+}
+
+.keycolor {
+  color: #F9802D;
 }
 </style>
