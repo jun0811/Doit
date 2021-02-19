@@ -96,6 +96,7 @@
                     <v-text-field 
                       v-model="word"
                       hide-details=""
+                      @keyup.enter="add"
                       label="해쉬태그"></v-text-field>
                     <v-btn
                       outlined
@@ -244,13 +245,10 @@ export default {
             "category": this.category
           })
           .then((res) =>{
-            console.log(res)
+            console.log(res.data.object)
             alert('생성완료')
             http.post(`/group/updateImg?groupPk=${res.data.object}`,formData)
-            .then((res)=>{
-            console.log(res);
-            this.$router.go(-1)
-            })
+            this.$router.push({name:"Community", params:{groupPk:res.data.object}})
           })
         }else{
           if(this.name.length<1) alert('그룹명을 입력해주세요')

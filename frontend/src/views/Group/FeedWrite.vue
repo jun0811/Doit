@@ -35,13 +35,13 @@
                     <v-row>
                         <v-container fluid class="py-5">
                             <v-textarea
-                                label="인증 내용 입력"
-                                hide-details=""
-                                v-model="content"
-                                auto-grow
-                                outlined
-                                rows="3"
-                                row-height="50"
+                              label="인증 내용 입력"
+                              hide-details=""
+                              v-model="content"
+                              auto-grow
+                              outlined
+                              rows="3"
+                              row-height="50"
                             ></v-textarea>                            
                         </v-container>
                     </v-row>
