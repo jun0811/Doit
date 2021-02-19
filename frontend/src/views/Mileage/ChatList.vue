@@ -31,11 +31,11 @@
             {{ chatting.otherUser.nickname }}
           </v-col>
           <v-col cols="3" sm="2" class="pr-6">
-            <router-link 
+            <!-- <router-link 
               :to="{name: 'ProductDetail', params: {product_id: chatting.id}}"
-            >
+            > -->
               <v-avatar 
-                class="list-prd-img-effect"             
+                class=""             
               >
                 <img 
                   :src="baseImg + chatting.product.image" 
@@ -44,7 +44,7 @@
                   style="width:100%; height:100%;"
                 >               
               </v-avatar>
-            </router-link>
+            <!-- </router-link> -->
           </v-col>
           <v-col cols="6" sm="3" class="deal--btn">
             <v-btn
@@ -335,14 +335,14 @@ width: 55%;
 .list-prd-img {
   width: 50%;
   height: auto;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
 .list-prd-img {
   width: 100%;
   height: auto;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 }
 

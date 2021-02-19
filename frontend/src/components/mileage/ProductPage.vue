@@ -64,6 +64,12 @@ import http from "../../http-common";
     created() {
       this.getProducts()
     },
+    updated() {
+      http.get(`/product/${this.product_id}`)
+      .then((res) => {
+        this.product = res.data.object
+      })
+    },
     methods: {
       getProducts() {
         http.get(`/product/search?direction=${this.direction}&keyword=${this.keyword}&option=${this.option}&pg=${this.page}`)

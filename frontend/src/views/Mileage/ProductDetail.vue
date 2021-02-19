@@ -27,13 +27,13 @@
               {{product.nickname}}
             </span>
 
-            <div v-if="product.status==`SOLDOUT`" class="ml-5 keycolor">
+            <div v-if="product.status==`SOLDOUT`" class="ml-5 keycolor status-style">
               판매완료
             </div>
-            <div v-else-if="product.status==`WAITING`" class="ml-5 keycolor">
+            <div v-else-if="product.status==`WAITING`" class="ml-5 keycolor status-style">
               판매 예약중
             </div>
-            <div v-else-if="product.status==`ONSALE`" class="ml-5 keycolor">
+            <div v-else-if="product.status==`ONSALE`" class="ml-5 keycolor status-style">
               판매중
             </div>
           </v-col>
@@ -232,13 +232,19 @@ export default {
     http.get(`/product/${this.product_id}`)
     .then((res)=>{
       this.product = res.data.object
-      console.log(this.product);
+      // console.log(this.product);
       this.seller = this.product.user_pk
       this.productImg =  this.product.image
       this.profile = this.product.profile
     })   
     // var objDiv = document.getElementById("scroll"); 
     // objDiv.scrollTop = objDiv.scrollHeight;
+  },
+  updated() {
+    http.get(`/product/${this.product_id}`)
+    .then((res) => {
+      this.product = res.data.object
+    })
   },
   watch: {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역
@@ -489,5 +495,9 @@ width: 600px;
 
 .keycolor {
   color: #F9802D;
+}
+
+.status-style {
+  font-size: 80%;
 }
 </style>
