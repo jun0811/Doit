@@ -70,6 +70,7 @@ export default {
   },
   data() {
     return {
+      member:false,
       results: {},
       page:1,
       pageCount:0,
