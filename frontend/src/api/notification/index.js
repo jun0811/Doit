@@ -12,7 +12,7 @@ const notiType = {
 }
 
     async function connect() {
-      let serverURL = "http://i4c108.p.ssafy.io/api/ws";
+      let serverURL = "http://localhost:8080/ws";
       let socket = new SockJS(serverURL);
       let stompClient = Stomp.over(socket);
       await stompClient.connect({},
