@@ -3,6 +3,7 @@
     <v-row
       class="d-flex align-center flex-wrap justify-center justify-sm-start justify-md-start justify-lg-start justify-xl-start"
     > 
+       <span v-if="!member" class="login">상세히 보고 싶다면 "로그인"해주세요.</span>
       <v-col
         xs="12"
         sm="4"
@@ -11,8 +12,29 @@
         :key="idx"
         class="d-flex justify-center pa-4"
       >
+         
           <v-card 
+            v-if="member"
             router-link :to="{name: 'ProductDetail', params: {product_id: product.id}}"
+            height="100%" width="100%"
+          >
+            <v-img
+              :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/` + product.image"
+              class="white--text align-end"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="200px"
+            >
+              <!-- <v-card-title v-text="item.title"></v-card-title> -->
+            </v-img>
+            <v-card-actions  class="card-text">
+              <v-card-text>
+                {{product.title}}
+              </v-card-text>
+            </v-card-actions>
+
+          </v-card>
+          <v-card 
+            v-else
             height="100%" width="100%"
           >
             <v-img
@@ -46,6 +68,7 @@ import http from "../../http-common";
       direction:'DESC',
       totalElements:0,
       totalPages:0,
+      member: false,
     }),
     props: {
       page:Number,
@@ -53,6 +76,7 @@ import http from "../../http-common";
       option:String,
     }, 
     created() {
+      this.member = sessionStorage.getItem("accessToken")
       this.getProducts()
     },
     methods: {
@@ -79,6 +103,8 @@ import http from "../../http-common";
 .product-image {
   width: 100%;
   height:100%;
-
+}
+.login{
+  color: #F9802D;
 }
 </style>
