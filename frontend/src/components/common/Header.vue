@@ -356,7 +356,7 @@ export default {
             http.get('/noti/getList')
             .then((res) => {
                 this.noti = res.data.object;
-                console.log(res)
+                // console.log(res)
                 console.logt('watch',this.noti)
                 this.notiCount = this.noti.length
             })
@@ -378,7 +378,7 @@ export default {
           http.get('/noti/getList')
           .then((res) => {
               this.noti = res.data.object;
-              console.log(this.noti)
+              // console.log(this.noti)
               this.notiCount = this.noti.length
           })
           // 소켓 연결
@@ -414,7 +414,7 @@ export default {
         .then((res)=>{
           this.noti = res.data.object
           this.notiCount = this.noti.length
-          console.log('res', res)
+          // console.log('res', res)
         })
         // const index = this.noti.indexOf(notice)
         // this.noti.splice(index, 1)
@@ -460,9 +460,9 @@ export default {
       },
       logout() {
         this.LOGOUT()
-        .then((response) => {
+        .then(() => {
           alert("로그아웃 되었습니다😒");
-          console.log(response)
+          // console.log(response)
           this.DISCONNECT();
           this.$router.push('/')
           this.$router.go()

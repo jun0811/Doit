@@ -23,7 +23,7 @@
           <div>참여한 그룹에 인증글을 올려</div>
           <div>인증마크를 획득하고 그룹 랭킹을 높여보세요!</div>
           <div
-            class="d-flex flex-column align-center justify-end ml-8 auth-icon">
+            class="d-flex flex-column align-center justify-end auth-icon">
             <font-awesome-icon class="fa-3x " :icon="['far', 'smile']" />
             <div style="font-size:14px;">오늘인증</div>
           </div>

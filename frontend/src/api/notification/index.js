@@ -12,7 +12,7 @@ const notiType = {
 }
 
     async function connect() {
-      let serverURL = "http://localhost:8000/ws";
+      let serverURL = "http://localhost:8080/ws";
       let socket = new SockJS(serverURL);
       let stompClient = Stomp.over(socket);
       await stompClient.connect({},
