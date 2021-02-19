@@ -11,8 +11,7 @@
         :key="idx"
         class="d-flex justify-center pa-4"
       >
-          <v-card 
-            router-link :to="{name: 'ProductDetail', params: {product_id: product.id}}"
+          <v-card           
             height="100%" width="100%"
           >
             <v-img
@@ -24,8 +23,10 @@
               <!-- <v-card-title v-text="item.title"></v-card-title> -->
             </v-img>
             <v-card-actions  class="card-text">
-              <v-card-text>
-                {{product.title}}
+              <v-card-text v-if="token">
+                <v-btn plain router-link :to="{name: 'ProductDetail', params: {product_id: product.id}}">
+                  {{product.title}}
+                </v-btn>
               <span v-if="product.status==`SOLDOUT`" class="ml-5 keycolor status-style">
                 판매완료
               </span>
@@ -35,6 +36,9 @@
               <span v-else-if="product.status==`ONSALE`" class="ml-5 keycolor status-style">
                 판매중
               </span>
+              </v-card-text>
+              <v-card-text v-else>
+                <span>로그인을 하면 더 자세한 정보를 확인 하실수 있습니다.</span>
               </v-card-text>
             </v-card-actions>
 
@@ -55,6 +59,7 @@ import http from "../../http-common";
       direction:'DESC',
       totalElements:0,
       totalPages:0,
+      token: '',
     }),
     props: {
       page:Number,
@@ -62,6 +67,7 @@ import http from "../../http-common";
       option:String,
     }, 
     created() {
+      this.token = this.$store.state.account.accessToken
       this.getProducts()
     },
     updated() {
