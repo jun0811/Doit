@@ -26,6 +26,15 @@
             <v-card-actions  class="card-text">
               <v-card-text>
                 {{product.title}}
+              <span v-if="product.status==`SOLDOUT`" class="ml-5 keycolor status-style">
+                판매완료
+              </span>
+              <span v-else-if="product.status==`WAITING`" class="ml-5 keycolor status-style">
+                판매 예약중
+              </span>
+              <span v-else-if="product.status==`ONSALE`" class="ml-5 keycolor status-style">
+                판매중
+              </span>
               </v-card-text>
             </v-card-actions>
 
@@ -79,6 +88,13 @@ import http from "../../http-common";
 .product-image {
   width: 100%;
   height:100%;
+}
 
+.keycolor {
+  color: #F9802D;
+}
+
+.status-style {
+  font-size: 10%;
 }
 </style>

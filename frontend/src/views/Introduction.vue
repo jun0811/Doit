@@ -80,7 +80,6 @@
           x-large
           @click="goToGroup"
         >Click</v-btn>
-        <!-- <div class="word-break-style">다른사람들과 함께 습관을 만들어가는 참여형 플랫폼을 <span class="keycolor">Doit</span>이 제안합니다!</div> -->
       </v-row>
     </v-container>
      <v-btn v-show="visible" 

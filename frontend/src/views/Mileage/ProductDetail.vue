@@ -26,6 +26,16 @@
             <span class="pl-4">
               {{product.nickname}}
             </span>
+
+            <div v-if="product.status==`SOLDOUT`" class="ml-5 keycolor">
+              판매완료
+            </div>
+            <div v-else-if="product.status==`WAITING`" class="ml-5 keycolor">
+              판매 예약중
+            </div>
+            <div v-else-if="product.status==`ONSALE`" class="ml-5 keycolor">
+              판매중
+            </div>
           </v-col>
           <v-col cols="2" sm="1" v-if="id==seller">
             <v-menu offset-y>
@@ -222,6 +232,7 @@ export default {
     http.get(`/product/${this.product_id}`)
     .then((res)=>{
       this.product = res.data.object
+      console.log(this.product);
       this.seller = this.product.user_pk
       this.productImg =  this.product.image
       this.profile = this.product.profile
@@ -474,5 +485,9 @@ width: 600px;
 
 .card-style {
   height: 900px;
+}
+
+.keycolor {
+  color: #F9802D;
 }
 </style>
