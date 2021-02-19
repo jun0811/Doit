@@ -31,11 +31,11 @@
             {{ chatting.otherUser.nickname }}
           </v-col>
           <v-col cols="3" sm="2" class="pr-6">
-            <router-link 
+            <!-- <router-link 
               :to="{name: 'ProductDetail', params: {product_id: chatting.id}}"
-            >
+            > -->
               <v-avatar 
-                class="list-prd-img-effect"             
+                class=""             
               >
                 <img 
                   :src="baseImg + chatting.product.image" 
@@ -44,7 +44,7 @@
                   style="width:100%; height:100%;"
                 >               
               </v-avatar>
-            </router-link>
+            <!-- </router-link> -->
           </v-col>
           <v-col cols="6" sm="3" class="deal--btn">
             <v-btn
@@ -83,6 +83,7 @@
               class="notice-dialog"
               max-width="600px"
               v-model="dialog"
+              :retain-focus="false"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -249,6 +250,9 @@ export default {
       // console.log(res);
     })
   },
+  mounted() {
+    
+  },
   watch: {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역
     msg(){
@@ -331,14 +335,14 @@ width: 55%;
 .list-prd-img {
   width: 50%;
   height: auto;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 @media only screen and (min-width: 300px) and (max-width: 599px) {
 .list-prd-img {
   width: 100%;
   height: auto;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 }
 

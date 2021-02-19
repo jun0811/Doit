@@ -26,6 +26,16 @@
             <span class="pl-4">
               {{product.nickname}}
             </span>
+
+            <div v-if="product.status==`SOLDOUT`" class="ml-5 keycolor status-style">
+              판매완료
+            </div>
+            <div v-else-if="product.status==`WAITING`" class="ml-5 keycolor status-style">
+              판매 예약중
+            </div>
+            <div v-else-if="product.status==`ONSALE`" class="ml-5 keycolor status-style">
+              판매중
+            </div>
           </v-col>
           <v-col cols="2" sm="1" v-if="id==seller">
             <v-menu offset-y>
@@ -71,6 +81,7 @@
               scrollable
               persistent
               max-width="600px"
+              :retain-focus="false"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -206,7 +217,7 @@ export default {
       user1: {'userPk' : 0, 'userNick' : ''},
       user2: {'userPk' : 0, 'userNick' : ''},
       roomCheck: false,
-      bottom_flag: true,
+      // bottom_flag: true,
       subscribe: '',
       defaultAddress: 'http://ssafydoit.s3.ap-northeast-2.amazonaws.com/',
       image: '',
@@ -221,6 +232,7 @@ export default {
     http.get(`/product/${this.product_id}`)
     .then((res)=>{
       this.product = res.data.object
+      // console.log(this.product);
       this.seller = this.product.user_pk
       this.productImg =  this.product.image
       this.profile = this.product.profile
@@ -228,15 +240,21 @@ export default {
     // var objDiv = document.getElementById("scroll"); 
     // objDiv.scrollTop = objDiv.scrollHeight;
   },
+  updated() {
+    http.get(`/product/${this.product_id}`)
+    .then((res) => {
+      this.product = res.data.object
+    })
+  },
   watch: {
       // app_chat_list 의 변화가 발생할때마다 수행되는 영역
     msg(){
       var objDiv = document.getElementById("app_chat_list");
-      if(this.bottom_flag){
+      // if(this.bottom_flag){
         // 채팅창 스크롤 바닥 유지
-          objDiv.scrollTop = objDiv.scrollHeight;
+      objDiv.scrollTop = objDiv.scrollHeight;
 
-      }
+      // }
     }
   },
   methods: {
@@ -408,6 +426,7 @@ width: 600px;
   padding-left: 12px;
   padding-right: 12px;
   margin:6px;
+  white-space: pre-wrap;
 }
 
 
@@ -472,5 +491,13 @@ width: 600px;
 
 .card-style {
   height: 900px;
+}
+
+.keycolor {
+  color: #F9802D;
+}
+
+.status-style {
+  font-size: 80%;
 }
 </style>

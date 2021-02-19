@@ -70,6 +70,7 @@ export default {
   },
   data() {
     return {
+      member:false,
       results: {},
       page:1,
       pageCount:0,
@@ -83,6 +84,7 @@ export default {
     }
   },
   created() {
+    this.member = sessionStorage.getItem("accessToken")
     categoryGroup(
       {
         "category":this.category,
