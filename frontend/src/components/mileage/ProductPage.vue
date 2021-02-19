@@ -126,7 +126,7 @@ import http from "../../http-common";
 
 .status-style {
   font-size: 10%;
-
+}
 .login{
   color: #F9802D;
 }

@@ -61,7 +61,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/data/rankingGroup").permitAll()
                 .antMatchers("/group/searchGroup").permitAll()
                 .antMatchers("/group/categoryGroup").permitAll()
-                .antMatchers("/product/search").permitAll()
+                .antMatchers("/product/*").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
