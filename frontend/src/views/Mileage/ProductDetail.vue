@@ -74,7 +74,7 @@
         <v-row class="d-flex justify-center">
           <hr class="mt-4 line">
         </v-row>
-        <v-row class="d-flex justify-center">
+        <v-row v-if="product.status!==`SOLDOUT`" class="d-flex justify-center">
           <v-col class="d-flex justify-center">
             <!-- <ChatRoom :product_id="product_id"></ChatRoom> -->
             <v-dialog
