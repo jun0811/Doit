@@ -23,25 +23,25 @@
 
 저희 Doit은 반응형 디자인을 통해 웹, 모바일 환경 모두에서 이용할 수 있게 디자인 하였습니다.
 
-`웹` 💻
+​																															`웹` 💻
 
 ---
 
-![README%2003ad24f6b5814e05ad1ade397b193453/2.png](README%2003ad24f6b5814e05ad1ade397b193453/2.png)
+<img src="README%2003ad24f6b5814e05ad1ade397b193453/2.png" alt="README%2003ad24f6b5814e05ad1ade397b193453/2.png" style="zoom: 33%;" /><img src="README%2003ad24f6b5814e05ad1ade397b193453/1.png" alt="README%2003ad24f6b5814e05ad1ade397b193453/1.png" style="zoom: 33%;" />  <img src="README%2003ad24f6b5814e05ad1ade397b193453/1%201.png" alt="README%2003ad24f6b5814e05ad1ade397b193453/1%201.png" style="zoom: 25%;" />
 
-![README%2003ad24f6b5814e05ad1ade397b193453/1.png](README%2003ad24f6b5814e05ad1ade397b193453/1.png)
 
-![README%2003ad24f6b5814e05ad1ade397b193453/1%201.png](README%2003ad24f6b5814e05ad1ade397b193453/1%201.png)
+
+
 
 ---
 
-`모바일` 📱
+​																															`모바일` 📱
 
-![README%2003ad24f6b5814e05ad1ade397b193453/1%202.png](README%2003ad24f6b5814e05ad1ade397b193453/1%202.png)
+​                                                                       <img src="README%2003ad24f6b5814e05ad1ade397b193453/1%202.png" alt="README%2003ad24f6b5814e05ad1ade397b193453/1%202.png" style="zoom:50%;" /><img src="README%2003ad24f6b5814e05ad1ade397b193453/2%201.png" alt="README%2003ad24f6b5814e05ad1ade397b193453/2%201.png" style="zoom:50%;" /> <img src="README%2003ad24f6b5814e05ad1ade397b193453/2%202.png" alt="README%2003ad24f6b5814e05ad1ade397b193453/2%202.png" style="zoom:50%;" /> 
 
-![README%2003ad24f6b5814e05ad1ade397b193453/2%201.png](README%2003ad24f6b5814e05ad1ade397b193453/2%201.png)
 
-![README%2003ad24f6b5814e05ad1ade397b193453/2%202.png](README%2003ad24f6b5814e05ad1ade397b193453/2%202.png)
+
+
 
 ---
 
@@ -218,7 +218,7 @@ const actions = {
 
 ### **1. 메인 페이지**
 
-![README%2003ad24f6b5814e05ad1ade397b193453/2%203.png](README%2003ad24f6b5814e05ad1ade397b193453/2%203.png)
+<img src="README%2003ad24f6b5814e05ad1ade397b193453/2%203.png" alt="README%2003ad24f6b5814e05ad1ade397b193453/2%203.png" style="zoom:50%;" />
 
 1. 워드클라우드 기능
     - 그룹에서 지정한 해쉬태그를 기반으로 워드 클라우드를 구성하고 해당 단어를 선택하면 관련 그룹이 검색되어진다.
@@ -247,7 +247,7 @@ const actions = {
 2. 회원가입, 로그인, 비밀번호 찾기, 프로필 기능이 제공됩니다.
 3. 프로필 페이지에서는 자기의 최근 30일간의 활동이력을 재미있게 볼 수 있는 `금잔디` 를 제공하며 유저가 쓴 글, 가입한 그룹을 확인할 수 있습니다.
 
-![README%2003ad24f6b5814e05ad1ade397b193453/1.jpg](README%2003ad24f6b5814e05ad1ade397b193453/1.jpg)
+<img src="README%2003ad24f6b5814e05ad1ade397b193453/1.jpg" alt="README%2003ad24f6b5814e05ad1ade397b193453/1.jpg" style="zoom:25%;" />
 
 ### 4. 물품 거래
 
@@ -255,13 +255,13 @@ const actions = {
 - 알림을 통해 채팅리스트 페이지로 이동하고 다른 사람들과 해당 물품에 대한 대화를 할 수 있습니다.
 - 판매자는 물품판매 에약, 완료, 취소를 할 수 있습니다.\
 
-![README%2003ad24f6b5814e05ad1ade397b193453/1%203.png](README%2003ad24f6b5814e05ad1ade397b193453/1%203.png)
+<img src="README%2003ad24f6b5814e05ad1ade397b193453/1%203.png" alt="README%2003ad24f6b5814e05ad1ade397b193453/1%203.png" style="zoom: 50%;" />
 
-                        [**물품상세페이지**]
+​																														[**물품상세페이지**]
 
-![README%2003ad24f6b5814e05ad1ade397b193453/1%201.jpg](README%2003ad24f6b5814e05ad1ade397b193453/1%201.jpg)
+<img src="README%2003ad24f6b5814e05ad1ade397b193453/1%201.jpg" alt="README%2003ad24f6b5814e05ad1ade397b193453/1%201.jpg" style="zoom: 33%;" />
 
-                           **[채팅리스트]**
+ 																														 **[채팅리스트]**
 
 ---
 
