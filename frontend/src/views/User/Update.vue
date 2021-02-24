@@ -5,6 +5,7 @@
         <v-col cols="12">
           <v-row justify="center">
             <v-col cols="12" sm="3">
+              <!-- 케이스별 이미지 -->
               <div class="text-center d-flex align-center flex-column" >
                 <v-img v-if="imageUrl" :src="imageUrl" class="profile-img"></v-img>
                 <v-img v-else-if="image !=='undefined' " :src="`http://ssafydoit.s3.ap-northeast-2.amazonaws.com/`+ image" class="profile-img"> </v-img>
@@ -213,7 +214,6 @@ export default {
      onImages(e) {
         this.file = e.target.files[0];
         this.imageUrl = URL.createObjectURL(this.file)
-        
       },
       onClickImageUpload() {
         this.$refs.imageInput.click();

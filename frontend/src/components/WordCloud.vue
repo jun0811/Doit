@@ -4,11 +4,6 @@
       <h4>Doit에서 가장 많이 나온 키워드를 확인해보세요!</h4>
     </v-row>
     <v-row class="mx-0 px-3 px-sm-0">
-      <!-- <img 
-        src="@/assets/img/wordcloud.png"  
-        alt="word-cloud"
-        class="word-cloud-img"
-      > -->
        <vuewordcloud
         :data="defaultWords"
         nameKey="name"
@@ -36,7 +31,6 @@ export default {
       return {
         words : [],
         defaultWords :[],
-        // myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
         myColors: ['#FA8223', '#FD9A24', '#FBB124', '#FCCF3E'],
       }
     },
@@ -55,7 +49,6 @@ export default {
             var tempword = {'name': word, 'value': (this.words[word]+1)}
             this.defaultWords.push(tempword)
           }
-          // console.log(this.defaultWords)
         })
       },
       wordClickHandler(name, value) {
