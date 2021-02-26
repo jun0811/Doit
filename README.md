@@ -257,11 +257,11 @@ const actions = {
 
 <img src="README%2003ad24f6b5814e05ad1ade397b193453/1%203.png" alt="README%2003ad24f6b5814e05ad1ade397b193453/1%203.png" style="zoom: 50%;" />
 
-​																														[**물품상세페이지**]
+​																									[**물품상세페이지**]
 
 <img src="README%2003ad24f6b5814e05ad1ade397b193453/1%201.jpg" alt="README%2003ad24f6b5814e05ad1ade397b193453/1%201.jpg" style="zoom: 33%;" />
 
- 																														 **[채팅리스트]**
+​																										 **[채팅리스트]**
 
 ---
 
