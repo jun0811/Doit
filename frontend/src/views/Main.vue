@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <!-- 메인페이지 -->
     <div>
       <SearchBar></SearchBar>
       <Category></Category>

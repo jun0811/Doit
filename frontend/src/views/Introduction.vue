@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 웹 서비스 소개 페이지 -->
     <v-container class="title-style">
       <v-row class="d-flex flex-column align-center pa-10 pa-sm-0">
         <div class="title-size">만들고 싶은 습관, 바꾸고 싶은 습관이 있나요?</div>
