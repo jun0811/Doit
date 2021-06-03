@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS `doit`.`user` (
   `feed_open` VARCHAR(20) NULL,
   `group_open` VARCHAR(20) NULL,
   PRIMARY KEY (`user_pk`),
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
-  UNIQUE INDEX `nickname_UNIQUE` (`nickname` ASC) VISIBLE)
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
+  UNIQUE INDEX `nickname_UNIQUE` (`nickname` ASC))
 ENGINE = InnoDB;
 
 
@@ -69,8 +69,8 @@ CREATE TABLE IF NOT EXISTS `doit`.`group_has_user` (
   `group_pk` INT NOT NULL,
   `user_pk` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_group_has_user_user1_idx` (`user_pk` ASC) VISIBLE,
-  INDEX `fk_group_has_user_group1_idx` (`group_pk` ASC) VISIBLE,
+  INDEX `fk_group_has_user_user1_idx` (`user_pk` ASC) ,
+  INDEX `fk_group_has_user_group1_idx` (`group_pk` ASC) ,
   CONSTRAINT `fk_group_has_user_group1`
     FOREIGN KEY (`group_pk`)
     REFERENCES `doit`.`group` (`group_pk`)
@@ -101,8 +101,8 @@ CREATE TABLE IF NOT EXISTS `doit`.`feed` (
   `group_pk` INT NOT NULL,
   `user_pk` INT NOT NULL,
   PRIMARY KEY (`feed_pk`),
-  INDEX `fk_feed_group1_idx` (`group_pk` ASC) VISIBLE,
-  INDEX `fk_feed_user1_idx` (`user_pk` ASC) VISIBLE,
+  INDEX `fk_feed_group1_idx` (`group_pk` ASC) ,
+  INDEX `fk_feed_user1_idx` (`user_pk` ASC) ,
   CONSTRAINT `fk_feed_group1`
     FOREIGN KEY (`group_pk`)
     REFERENCES `doit`.`group` (`group_pk`)
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `doit`.`comment` (
   `feed_pk` INT NOT NULL,
   `user_pk` INT NOT NULL,
   PRIMARY KEY (`comment_pk`),
-  INDEX `fk_comment_user1_idx` (`user_pk` ASC) VISIBLE,
+  INDEX `fk_comment_user1_idx` (`user_pk` ASC) ,
   CONSTRAINT `fk_comment_user1`
     FOREIGN KEY (`user_pk`)
     REFERENCES `doit`.`user` (`user_pk`)
@@ -153,8 +153,8 @@ CREATE TABLE IF NOT EXISTS `doit`.`group_has_tag` (
   `group_pk` INT NOT NULL,
   `tag_pk` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_group_has_tag_tag1_idx` (`tag_pk` ASC) VISIBLE,
-  INDEX `fk_group_has_tag_group1_idx` (`group_pk` ASC) VISIBLE,
+  INDEX `fk_group_has_tag_tag1_idx` (`tag_pk` ASC) ,
+  INDEX `fk_group_has_tag_group1_idx` (`group_pk` ASC) ,
   CONSTRAINT `fk_group_has_tag_group1`
     FOREIGN KEY (`group_pk`)
     REFERENCES `doit`.`group` (`group_pk`)
@@ -179,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `doit`.`product` (
   `content` LONGTEXT NULL,
   `image` BLOB NULL,
   PRIMARY KEY (`product_pk`),
-  INDEX `fk_product_user1_idx` (`user_pk` ASC) VISIBLE,
+  INDEX `fk_product_user1_idx` (`user_pk` ASC) ,
   CONSTRAINT `fk_product_user1`
     FOREIGN KEY (`user_pk`)
     REFERENCES `doit`.`user` (`user_pk`)
@@ -197,8 +197,8 @@ CREATE TABLE IF NOT EXISTS `doit`.`commit` (
   `user_pk` INT NOT NULL,
   `group_pk` INT NOT NULL,
   PRIMARY KEY (`commit_pk`),
-  INDEX `fk_commit_user1_idx` (`user_pk` ASC) VISIBLE,
-  INDEX `fk_commit_group1_idx` (`group_pk` ASC) VISIBLE,
+  INDEX `fk_commit_user1_idx` (`user_pk` ASC) ,
+  INDEX `fk_commit_group1_idx` (`group_pk` ASC) ,
   CONSTRAINT `fk_commit_user1`
     FOREIGN KEY (`user_pk`)
     REFERENCES `doit`.`user` (`user_pk`)
@@ -220,8 +220,8 @@ CREATE TABLE IF NOT EXISTS `doit`.`feed_has_user` (
   `feed_pk` INT NOT NULL,
   `user_pk` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_feed_has_user_user1_idx` (`user_pk` ASC) VISIBLE,
-  INDEX `fk_feed_has_user_feed1_idx` (`feed_pk` ASC) VISIBLE,
+  INDEX `fk_feed_has_user_user1_idx` (`user_pk` ASC) ,
+  INDEX `fk_feed_has_user_feed1_idx` (`feed_pk` ASC) ,
   CONSTRAINT `fk_feed_has_user_feed1`
     FOREIGN KEY (`feed_pk`)
     REFERENCES `doit`.`feed` (`feed_pk`)
@@ -244,7 +244,7 @@ CREATE TABLE IF NOT EXISTS `doit`.`mileage` (
   `date` DATETIME NULL,
   `user_pk` INT NOT NULL,
   PRIMARY KEY (`mileage_pk`),
-  INDEX `fk_mileage_user1_idx` (`user_pk` ASC) VISIBLE,
+  INDEX `fk_mileage_user1_idx` (`user_pk` ASC) ,
   CONSTRAINT `fk_mileage_user1`
     FOREIGN KEY (`user_pk`)
     REFERENCES `doit`.`user` (`user_pk`)
@@ -263,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `doit`.`profile` (
   `fileUrl` VARCHAR(200) NULL,
   `user_pk` INT NOT NULL,
   PRIMARY KEY (`profile_pk`),
-  INDEX `fk_profile_user1_idx` (`user_pk` ASC) VISIBLE,
+  INDEX `fk_profile_user1_idx` (`user_pk` ASC) ,
   CONSTRAINT `fk_profile_user1`
     FOREIGN KEY (`user_pk`)
     REFERENCES `doit`.`user` (`user_pk`)
